@@ -1,0 +1,5346 @@
+{
+  "date": "2026-11-25T18:06:35.292Z",
+  "browser": "HeadlessChrome/156.0.8078.47",
+  "node": "v26.13.0",
+  "os": "linux 6.12.111 x64",
+  "cpu": "Intel(R) Xeon(R) Processor @ 2.60GHz",
+  "rounds": 7,
+  "workloads": {
+    "attribute-churn": {
+      "elements": 2000,
+      "iters": 10
+    },
+    "canvas-draw": {
+      "rects": 50000
+    },
+    "canvas-pixels": {
+      "size": 256,
+      "minMs": 10
+    },
+    "dom-query": {
+      "numElements": 2000,
+      "iters": 10
+    },
+    "dom-traversal": {
+      "depth": 6,
+      "numChildren": 5
+    },
+    "string-marshalling": {
+      "minMs": 10
+    },
+    "table-update": {
+      "rows": 2000
+    }
+  },
+  "baseline": "1.13.0",
+  "main": "16f8fe4805367bb5591f2fc23e7fbe42de61cff5",
+  "sizesSha256": "32ceb1667133d063c16d0090ec830b2bd6032384a2d128beab18026e4e56b6ba",
+  "samples": [
+    {
+      "demo": "attribute-churn",
+      "implementation": "JS",
+      "round": 1,
+      "loadMs": null,
+      "seconds": {
+        "total time": 0.086665,
+        "per setAttribute()": 0.000001083
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "C++ emscripten",
+      "round": 1,
+      "loadMs": 71.33999997377396,
+      "seconds": {
+        "total time": 0.35253500000000004,
+        "per setAttribute()": 0.000004407
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "c baseline",
+      "round": 1,
+      "loadMs": 102.62000000476837,
+      "seconds": {
+        "total time": 0.35408999999999996,
+        "per setAttribute()": 0.0000044260000000000005
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "c main",
+      "round": 1,
+      "loadMs": 89.65499997138977,
+      "seconds": {
+        "total time": 1.49639,
+        "per setAttribute()": 0.000018704999999999998
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "cpp baseline",
+      "round": 1,
+      "loadMs": 49.62999999523163,
+      "seconds": {
+        "total time": 0.36099000000000003,
+        "per setAttribute()": 0.000004511999999999999
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "cpp main",
+      "round": 1,
+      "loadMs": 144.4549999833107,
+      "seconds": {
+        "total time": 1.6976900000000001,
+        "per setAttribute()": 0.000021221
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "rust baseline",
+      "round": 1,
+      "loadMs": 97.10999995470047,
+      "seconds": {
+        "total time": 0.48489499999999996,
+        "per setAttribute()": 0.000006061
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "rust main",
+      "round": 1,
+      "loadMs": 116.26499998569489,
+      "seconds": {
+        "total time": 1.56161,
+        "per setAttribute()": 0.00001952
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "C++ emscripten",
+      "round": 2,
+      "loadMs": 107.97499996423721,
+      "seconds": {
+        "total time": 0.31858,
+        "per setAttribute()": 0.000003982
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "JS",
+      "round": 2,
+      "loadMs": null,
+      "seconds": {
+        "total time": 0.09106,
+        "per setAttribute()": 0.000001138
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "rust main",
+      "round": 2,
+      "loadMs": 74.33500003814697,
+      "seconds": {
+        "total time": 1.363745,
+        "per setAttribute()": 0.000017047
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "rust baseline",
+      "round": 2,
+      "loadMs": 53.42500001192093,
+      "seconds": {
+        "total time": 0.349115,
+        "per setAttribute()": 0.000004364
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "cpp main",
+      "round": 2,
+      "loadMs": 101.4650000333786,
+      "seconds": {
+        "total time": 1.36229,
+        "per setAttribute()": 0.000017029
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "cpp baseline",
+      "round": 2,
+      "loadMs": 46.44499999284744,
+      "seconds": {
+        "total time": 0.28445,
+        "per setAttribute()": 0.000003556
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "c main",
+      "round": 2,
+      "loadMs": 70.98499995470047,
+      "seconds": {
+        "total time": 1.399435,
+        "per setAttribute()": 0.000017493
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "c baseline",
+      "round": 2,
+      "loadMs": 58.3850000500679,
+      "seconds": {
+        "total time": 0.34102,
+        "per setAttribute()": 0.000004263
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "c baseline",
+      "round": 3,
+      "loadMs": 138.75999999046326,
+      "seconds": {
+        "total time": 0.627765,
+        "per setAttribute()": 0.000007847
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "c main",
+      "round": 3,
+      "loadMs": 172.53999996185303,
+      "seconds": {
+        "total time": 1.3696949999999999,
+        "per setAttribute()": 0.000017120999999999998
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "cpp baseline",
+      "round": 3,
+      "loadMs": 54.47500002384186,
+      "seconds": {
+        "total time": 0.40396499999999996,
+        "per setAttribute()": 0.00000505
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "cpp main",
+      "round": 3,
+      "loadMs": 154.87999999523163,
+      "seconds": {
+        "total time": 1.3009849999999998,
+        "per setAttribute()": 0.000016262
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "rust baseline",
+      "round": 3,
+      "loadMs": 52.810000002384186,
+      "seconds": {
+        "total time": 0.3318,
+        "per setAttribute()": 0.000004148
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "rust main",
+      "round": 3,
+      "loadMs": 61.049999952316284,
+      "seconds": {
+        "total time": 1.23783,
+        "per setAttribute()": 0.000015473
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "JS",
+      "round": 3,
+      "loadMs": null,
+      "seconds": {
+        "total time": 0.053950000000000005,
+        "per setAttribute()": 6.74e-7
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "C++ emscripten",
+      "round": 3,
+      "loadMs": 38.5,
+      "seconds": {
+        "total time": 0.337495,
+        "per setAttribute()": 0.000004219000000000001
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "c main",
+      "round": 4,
+      "loadMs": 70.45999997854233,
+      "seconds": {
+        "total time": 1.03074,
+        "per setAttribute()": 0.000012884
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "c baseline",
+      "round": 4,
+      "loadMs": 47.09999996423721,
+      "seconds": {
+        "total time": 0.245335,
+        "per setAttribute()": 0.000003067
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "C++ emscripten",
+      "round": 4,
+      "loadMs": 50.41500002145767,
+      "seconds": {
+        "total time": 0.28091000000000005,
+        "per setAttribute()": 0.000003511
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "JS",
+      "round": 4,
+      "loadMs": null,
+      "seconds": {
+        "total time": 0.05726,
+        "per setAttribute()": 7.16e-7
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "rust main",
+      "round": 4,
+      "loadMs": 94.06000000238419,
+      "seconds": {
+        "total time": 1.161995,
+        "per setAttribute()": 0.000014525
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "rust baseline",
+      "round": 4,
+      "loadMs": 43.61500000953674,
+      "seconds": {
+        "total time": 0.29679500000000003,
+        "per setAttribute()": 0.00000371
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "cpp main",
+      "round": 4,
+      "loadMs": 88.40499997138977,
+      "seconds": {
+        "total time": 0.967505,
+        "per setAttribute()": 0.000012094
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "cpp baseline",
+      "round": 4,
+      "loadMs": 86.08499997854233,
+      "seconds": {
+        "total time": 0.278805,
+        "per setAttribute()": 0.0000034849999999999997
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "cpp baseline",
+      "round": 5,
+      "loadMs": 34.87999999523163,
+      "seconds": {
+        "total time": 0.31817,
+        "per setAttribute()": 0.000003977
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "cpp main",
+      "round": 5,
+      "loadMs": 76.66500002145767,
+      "seconds": {
+        "total time": 1.03126,
+        "per setAttribute()": 0.000012891
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "rust baseline",
+      "round": 5,
+      "loadMs": 41.4549999833107,
+      "seconds": {
+        "total time": 0.356825,
+        "per setAttribute()": 0.00000446
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "rust main",
+      "round": 5,
+      "loadMs": 93.14500004053116,
+      "seconds": {
+        "total time": 1.0624500000000001,
+        "per setAttribute()": 0.000013281
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "JS",
+      "round": 5,
+      "loadMs": null,
+      "seconds": {
+        "total time": 0.08529,
+        "per setAttribute()": 0.000001066
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "C++ emscripten",
+      "round": 5,
+      "loadMs": 59.014999985694885,
+      "seconds": {
+        "total time": 0.28678,
+        "per setAttribute()": 0.000003585
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "c baseline",
+      "round": 5,
+      "loadMs": 38.325000047683716,
+      "seconds": {
+        "total time": 0.289205,
+        "per setAttribute()": 0.000003615
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "c main",
+      "round": 5,
+      "loadMs": 83.76999998092651,
+      "seconds": {
+        "total time": 1.10433,
+        "per setAttribute()": 0.000013804
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "cpp main",
+      "round": 6,
+      "loadMs": 71.0450000166893,
+      "seconds": {
+        "total time": 1.193125,
+        "per setAttribute()": 0.000014914
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "cpp baseline",
+      "round": 6,
+      "loadMs": 70.54000002145767,
+      "seconds": {
+        "total time": 0.30401999999999996,
+        "per setAttribute()": 0.0000037999999999999996
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "c main",
+      "round": 6,
+      "loadMs": 92.80500000715256,
+      "seconds": {
+        "total time": 1.28457,
+        "per setAttribute()": 0.000016057
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "c baseline",
+      "round": 6,
+      "loadMs": 42.99500000476837,
+      "seconds": {
+        "total time": 0.32819,
+        "per setAttribute()": 0.000004102000000000001
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "C++ emscripten",
+      "round": 6,
+      "loadMs": 44.589999973773956,
+      "seconds": {
+        "total time": 0.29808,
+        "per setAttribute()": 0.000003726
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "JS",
+      "round": 6,
+      "loadMs": null,
+      "seconds": {
+        "total time": 0.073135,
+        "per setAttribute()": 9.140000000000001e-7
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "rust main",
+      "round": 6,
+      "loadMs": 125.00499999523163,
+      "seconds": {
+        "total time": 1.148765,
+        "per setAttribute()": 0.00001436
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "rust baseline",
+      "round": 6,
+      "loadMs": 37.85000002384186,
+      "seconds": {
+        "total time": 0.34402499999999997,
+        "per setAttribute()": 0.0000042999999999999995
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "rust baseline",
+      "round": 7,
+      "loadMs": 38.69999998807907,
+      "seconds": {
+        "total time": 0.335475,
+        "per setAttribute()": 0.0000041929999999999995
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "rust main",
+      "round": 7,
+      "loadMs": 70.59499996900558,
+      "seconds": {
+        "total time": 1.64013,
+        "per setAttribute()": 0.000020501999999999998
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "JS",
+      "round": 7,
+      "loadMs": null,
+      "seconds": {
+        "total time": 0.084295,
+        "per setAttribute()": 0.000001054
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "C++ emscripten",
+      "round": 7,
+      "loadMs": 78.88499999046326,
+      "seconds": {
+        "total time": 0.41698,
+        "per setAttribute()": 0.000005211999999999999
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "c baseline",
+      "round": 7,
+      "loadMs": 38.67500001192093,
+      "seconds": {
+        "total time": 0.37454000000000004,
+        "per setAttribute()": 0.000004682
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "c main",
+      "round": 7,
+      "loadMs": 91.8299999833107,
+      "seconds": {
+        "total time": 1.361145,
+        "per setAttribute()": 0.000017014
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "cpp baseline",
+      "round": 7,
+      "loadMs": 153.50499999523163,
+      "seconds": {
+        "total time": 0.5876849999999999,
+        "per setAttribute()": 0.0000073460000000000005
+      }
+    },
+    {
+      "demo": "attribute-churn",
+      "implementation": "cpp main",
+      "round": 7,
+      "loadMs": 212.6850000023842,
+      "seconds": {
+        "total time": 2.90802,
+        "per setAttribute()": 0.00003635
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "JS",
+      "round": 1,
+      "loadMs": null,
+      "seconds": {
+        "total": 0.328535,
+        "per fill_rect()": 0.0000065709999999999994
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "C++ emscripten",
+      "round": 1,
+      "loadMs": 127.94500005245209,
+      "seconds": {
+        "total": 0.55884,
+        "per fill_rect()": 0.000011177
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "c baseline",
+      "round": 1,
+      "loadMs": 95.58999997377396,
+      "seconds": {
+        "total": 0.22774,
+        "per fill_rect()": 0.000004555
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "c main",
+      "round": 1,
+      "loadMs": 201.9749999642372,
+      "seconds": {
+        "total": 2.048825,
+        "per fill_rect()": 0.000040977
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "cpp baseline",
+      "round": 1,
+      "loadMs": 130.91500002145767,
+      "seconds": {
+        "total": 0.43712,
+        "per fill_rect()": 0.000008742
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "cpp main",
+      "round": 1,
+      "loadMs": 182.47000002861023,
+      "seconds": {
+        "total": 2.071205,
+        "per fill_rect()": 0.000041424
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "rust baseline",
+      "round": 1,
+      "loadMs": 96.0900000333786,
+      "seconds": {
+        "total": 0.26125,
+        "per fill_rect()": 0.000005225
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "rust main",
+      "round": 1,
+      "loadMs": 217.30000001192093,
+      "seconds": {
+        "total": 0.904815,
+        "per fill_rect()": 0.000018096
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "C++ emscripten",
+      "round": 2,
+      "loadMs": 78.5900000333786,
+      "seconds": {
+        "total": 0.29873,
+        "per fill_rect()": 0.0000059749999999999995
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "JS",
+      "round": 2,
+      "loadMs": null,
+      "seconds": {
+        "total": 0.15203999999999998,
+        "per fill_rect()": 0.0000030409999999999998
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "rust main",
+      "round": 2,
+      "loadMs": 100.40499997138977,
+      "seconds": {
+        "total": 0.9415549999999999,
+        "per fill_rect()": 0.000018831
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "rust baseline",
+      "round": 2,
+      "loadMs": 61.060000002384186,
+      "seconds": {
+        "total": 0.15703999999999999,
+        "per fill_rect()": 0.000003141
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "cpp main",
+      "round": 2,
+      "loadMs": 151.1350000500679,
+      "seconds": {
+        "total": 0.8007150000000001,
+        "per fill_rect()": 0.000016014
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "cpp baseline",
+      "round": 2,
+      "loadMs": 52.50499999523163,
+      "seconds": {
+        "total": 0.16615,
+        "per fill_rect()": 0.0000033229999999999998
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "c main",
+      "round": 2,
+      "loadMs": 94.56999999284744,
+      "seconds": {
+        "total": 0.78514,
+        "per fill_rect()": 0.000015703
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "c baseline",
+      "round": 2,
+      "loadMs": 41.935000002384186,
+      "seconds": {
+        "total": 0.19987,
+        "per fill_rect()": 0.000003997
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "c baseline",
+      "round": 3,
+      "loadMs": 52.535000026226044,
+      "seconds": {
+        "total": 0.18159,
+        "per fill_rect()": 0.000003632
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "c main",
+      "round": 3,
+      "loadMs": 91.48500001430511,
+      "seconds": {
+        "total": 0.6831050000000001,
+        "per fill_rect()": 0.000013662
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "cpp baseline",
+      "round": 3,
+      "loadMs": 46.90499997138977,
+      "seconds": {
+        "total": 0.173275,
+        "per fill_rect()": 0.000003465
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "cpp main",
+      "round": 3,
+      "loadMs": 83.32499998807907,
+      "seconds": {
+        "total": 0.6848150000000001,
+        "per fill_rect()": 0.000013695999999999999
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "rust baseline",
+      "round": 3,
+      "loadMs": 29.710000038146973,
+      "seconds": {
+        "total": 0.166055,
+        "per fill_rect()": 0.000003321
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "rust main",
+      "round": 3,
+      "loadMs": 86.64499998092651,
+      "seconds": {
+        "total": 0.6371100000000001,
+        "per fill_rect()": 0.000012742000000000001
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "JS",
+      "round": 3,
+      "loadMs": null,
+      "seconds": {
+        "total": 0.15096500000000002,
+        "per fill_rect()": 0.0000030190000000000002
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "C++ emscripten",
+      "round": 3,
+      "loadMs": 48.74500000476837,
+      "seconds": {
+        "total": 0.284265,
+        "per fill_rect()": 0.000005685
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "c main",
+      "round": 4,
+      "loadMs": 109.63499999046326,
+      "seconds": {
+        "total": 1.974885,
+        "per fill_rect()": 0.000039498
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "c baseline",
+      "round": 4,
+      "loadMs": 48.060000002384186,
+      "seconds": {
+        "total": 0.44065499999999996,
+        "per fill_rect()": 0.000008813
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "C++ emscripten",
+      "round": 4,
+      "loadMs": 107.07499998807907,
+      "seconds": {
+        "total": 0.705005,
+        "per fill_rect()": 0.000014099999999999999
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "JS",
+      "round": 4,
+      "loadMs": null,
+      "seconds": {
+        "total": 0.39992500000000003,
+        "per fill_rect()": 0.000007998999999999999
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "rust main",
+      "round": 4,
+      "loadMs": 158.66500002145767,
+      "seconds": {
+        "total": 1.70473,
+        "per fill_rect()": 0.000034095
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "rust baseline",
+      "round": 4,
+      "loadMs": 162.25999999046326,
+      "seconds": {
+        "total": 0.35539499999999996,
+        "per fill_rect()": 0.0000071079999999999995
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "cpp main",
+      "round": 4,
+      "loadMs": 172.9800000190735,
+      "seconds": {
+        "total": 1.819885,
+        "per fill_rect()": 0.000036398000000000006
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "cpp baseline",
+      "round": 4,
+      "loadMs": 97.35999995470047,
+      "seconds": {
+        "total": 0.433565,
+        "per fill_rect()": 0.000008670999999999999
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "cpp baseline",
+      "round": 5,
+      "loadMs": 102.31999999284744,
+      "seconds": {
+        "total": 0.32005500000000003,
+        "per fill_rect()": 0.000006401
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "cpp main",
+      "round": 5,
+      "loadMs": 228.90500003099442,
+      "seconds": {
+        "total": 1.7905550000000001,
+        "per fill_rect()": 0.000035811
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "rust baseline",
+      "round": 5,
+      "loadMs": 112.23499995470047,
+      "seconds": {
+        "total": 0.53753,
+        "per fill_rect()": 0.000010751
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "rust main",
+      "round": 5,
+      "loadMs": 221.2849999666214,
+      "seconds": {
+        "total": 1.8272449999999998,
+        "per fill_rect()": 0.000036545
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "JS",
+      "round": 5,
+      "loadMs": null,
+      "seconds": {
+        "total": 0.34489,
+        "per fill_rect()": 0.000006898
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "C++ emscripten",
+      "round": 5,
+      "loadMs": 161.07500004768372,
+      "seconds": {
+        "total": 1.00697,
+        "per fill_rect()": 0.000020138999999999998
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "c baseline",
+      "round": 5,
+      "loadMs": 136.3949999809265,
+      "seconds": {
+        "total": 0.38033,
+        "per fill_rect()": 0.000007607
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "c main",
+      "round": 5,
+      "loadMs": 227.03500002622604,
+      "seconds": {
+        "total": 1.9482300000000001,
+        "per fill_rect()": 0.000038965000000000004
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "cpp main",
+      "round": 6,
+      "loadMs": 235.1950000524521,
+      "seconds": {
+        "total": 1.612595,
+        "per fill_rect()": 0.000032252
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "cpp baseline",
+      "round": 6,
+      "loadMs": 112.06499999761581,
+      "seconds": {
+        "total": 0.32377999999999996,
+        "per fill_rect()": 0.000006476
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "c main",
+      "round": 6,
+      "loadMs": 176.69499999284744,
+      "seconds": {
+        "total": 1.714115,
+        "per fill_rect()": 0.000034281999999999995
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "c baseline",
+      "round": 6,
+      "loadMs": 167.7699999809265,
+      "seconds": {
+        "total": 0.39172,
+        "per fill_rect()": 0.000007834
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "C++ emscripten",
+      "round": 6,
+      "loadMs": 151.9350000023842,
+      "seconds": {
+        "total": 0.46367,
+        "per fill_rect()": 0.000009272999999999999
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "JS",
+      "round": 6,
+      "loadMs": null,
+      "seconds": {
+        "total": 0.378645,
+        "per fill_rect()": 0.000007573
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "rust main",
+      "round": 6,
+      "loadMs": 167.12999999523163,
+      "seconds": {
+        "total": 1.4107349999999999,
+        "per fill_rect()": 0.000028215
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "rust baseline",
+      "round": 6,
+      "loadMs": 81.39500004053116,
+      "seconds": {
+        "total": 0.573275,
+        "per fill_rect()": 0.000011466
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "rust baseline",
+      "round": 7,
+      "loadMs": 104.48500001430511,
+      "seconds": {
+        "total": 0.291225,
+        "per fill_rect()": 0.000005825
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "rust main",
+      "round": 7,
+      "loadMs": 316.31999999284744,
+      "seconds": {
+        "total": 1.957295,
+        "per fill_rect()": 0.000039146
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "JS",
+      "round": 7,
+      "loadMs": null,
+      "seconds": {
+        "total": 0.139905,
+        "per fill_rect()": 0.000002798
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "C++ emscripten",
+      "round": 7,
+      "loadMs": 140.28000003099442,
+      "seconds": {
+        "total": 0.778215,
+        "per fill_rect()": 0.000015564
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "c baseline",
+      "round": 7,
+      "loadMs": 90.97999995946884,
+      "seconds": {
+        "total": 0.41734,
+        "per fill_rect()": 0.000008347
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "c main",
+      "round": 7,
+      "loadMs": 131.96000003814697,
+      "seconds": {
+        "total": 1.55822,
+        "per fill_rect()": 0.000031164
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "cpp baseline",
+      "round": 7,
+      "loadMs": 229.86500000953674,
+      "seconds": {
+        "total": 0.522635,
+        "per fill_rect()": 0.000010453
+      }
+    },
+    {
+      "demo": "canvas-draw",
+      "implementation": "cpp main",
+      "round": 7,
+      "loadMs": 274.92500001192093,
+      "seconds": {
+        "total": 1.38587,
+        "per fill_rect()": 0.000027717
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "JS",
+      "round": 1,
+      "loadMs": null,
+      "seconds": {
+        "getImageData(): µs/call": 0.0012925,
+        "putImageData(): µs/call": 0.0001041
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "C++ emscripten",
+      "round": 1,
+      "loadMs": 120.30500000715256,
+      "seconds": {
+        "getImageData(): µs/call": 0.0059675,
+        "putImageData(): µs/call": 0.0016131
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c baseline",
+      "round": 1,
+      "loadMs": 173.26499998569489,
+      "seconds": {
+        "getImageData(): µs/call": 0.003045,
+        "putImageData(): µs/call": 0.0008034
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c main",
+      "round": 1,
+      "loadMs": 270.49000000953674,
+      "seconds": {
+        "getImageData(): µs/call": 0.012145,
+        "putImageData(): µs/call": 0.00853
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp baseline",
+      "round": 1,
+      "loadMs": 135.23500001430511,
+      "seconds": {
+        "getImageData(): µs/call": 0.009385,
+        "putImageData(): µs/call": 0.00564
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp main",
+      "round": 1,
+      "loadMs": 206.06999999284744,
+      "seconds": {
+        "getImageData(): µs/call": 0.011255,
+        "putImageData(): µs/call": 0.0039712
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust baseline",
+      "round": 1,
+      "loadMs": 34.2049999833107,
+      "seconds": {
+        "getImageData(): µs/call": 0.00148,
+        "putImageData(): µs/call": 0.0006769
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust main",
+      "round": 1,
+      "loadMs": 79.47499996423721,
+      "seconds": {
+        "getImageData(): µs/call": 0.0010497,
+        "putImageData(): µs/call": 0.0008556
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "C++ emscripten",
+      "round": 2,
+      "loadMs": 45.9899999499321,
+      "seconds": {
+        "getImageData(): µs/call": 0.0006186000000000001,
+        "putImageData(): µs/call": 0.00042669999999999996
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "JS",
+      "round": 2,
+      "loadMs": null,
+      "seconds": {
+        "getImageData(): µs/call": 0.000467,
+        "putImageData(): µs/call": 0.000032200000000000003
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust main",
+      "round": 2,
+      "loadMs": 71.11000001430511,
+      "seconds": {
+        "getImageData(): µs/call": 0.0014119,
+        "putImageData(): µs/call": 0.000775
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust baseline",
+      "round": 2,
+      "loadMs": 40.35000002384186,
+      "seconds": {
+        "getImageData(): µs/call": 0.0009891,
+        "putImageData(): µs/call": 0.0006414
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp main",
+      "round": 2,
+      "loadMs": 159.52000004053116,
+      "seconds": {
+        "getImageData(): µs/call": 0.0020644,
+        "putImageData(): µs/call": 0.0030375
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp baseline",
+      "round": 2,
+      "loadMs": 74.28999996185303,
+      "seconds": {
+        "getImageData(): µs/call": 0.0009869,
+        "putImageData(): µs/call": 0.0008144
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c main",
+      "round": 2,
+      "loadMs": 104.5,
+      "seconds": {
+        "getImageData(): µs/call": 0.0014469,
+        "putImageData(): µs/call": 0.0009475
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c baseline",
+      "round": 2,
+      "loadMs": 46.63499999046326,
+      "seconds": {
+        "getImageData(): µs/call": 0.0010244000000000002,
+        "putImageData(): µs/call": 0.0007503
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c baseline",
+      "round": 3,
+      "loadMs": 32.26500004529953,
+      "seconds": {
+        "getImageData(): µs/call": 0.0014475,
+        "putImageData(): µs/call": 0.0010247000000000001
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c main",
+      "round": 3,
+      "loadMs": 86.36500000953674,
+      "seconds": {
+        "getImageData(): µs/call": 0.0012837,
+        "putImageData(): µs/call": 0.0007747
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp baseline",
+      "round": 3,
+      "loadMs": 43.52999997138977,
+      "seconds": {
+        "getImageData(): µs/call": 0.0006843999999999999,
+        "putImageData(): µs/call": 0.0006912999999999999
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp main",
+      "round": 3,
+      "loadMs": 102.23499995470047,
+      "seconds": {
+        "getImageData(): µs/call": 0.0013844,
+        "putImageData(): µs/call": 0.0008541
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust baseline",
+      "round": 3,
+      "loadMs": 56.64500004053116,
+      "seconds": {
+        "getImageData(): µs/call": 0.0012680999999999999,
+        "putImageData(): µs/call": 0.0014602999999999999
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust main",
+      "round": 3,
+      "loadMs": 79.89999997615814,
+      "seconds": {
+        "getImageData(): µs/call": 0.0009588,
+        "putImageData(): µs/call": 0.0009062
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "JS",
+      "round": 3,
+      "loadMs": null,
+      "seconds": {
+        "getImageData(): µs/call": 0.0005934,
+        "putImageData(): µs/call": 0.0000313
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "C++ emscripten",
+      "round": 3,
+      "loadMs": 39.2950000166893,
+      "seconds": {
+        "getImageData(): µs/call": 0.0006152999999999999,
+        "putImageData(): µs/call": 0.0003764
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c main",
+      "round": 4,
+      "loadMs": 94.125,
+      "seconds": {
+        "getImageData(): µs/call": 0.0012919000000000001,
+        "putImageData(): µs/call": 0.0011562999999999999
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c baseline",
+      "round": 4,
+      "loadMs": 39.52499997615814,
+      "seconds": {
+        "getImageData(): µs/call": 0.0050725,
+        "putImageData(): µs/call": 0.0009975
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "C++ emscripten",
+      "round": 4,
+      "loadMs": 56.4549999833107,
+      "seconds": {
+        "getImageData(): µs/call": 0.0004466,
+        "putImageData(): µs/call": 0.000437
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "JS",
+      "round": 4,
+      "loadMs": null,
+      "seconds": {
+        "getImageData(): µs/call": 0.0005463999999999999,
+        "putImageData(): µs/call": 0.0000303
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust main",
+      "round": 4,
+      "loadMs": 89.12000000476837,
+      "seconds": {
+        "getImageData(): µs/call": 0.0012194,
+        "putImageData(): µs/call": 0.0008775
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust baseline",
+      "round": 4,
+      "loadMs": 70.62000000476837,
+      "seconds": {
+        "getImageData(): µs/call": 0.0010509,
+        "putImageData(): µs/call": 0.0007131
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp main",
+      "round": 4,
+      "loadMs": 66.01499998569489,
+      "seconds": {
+        "getImageData(): µs/call": 0.0010797,
+        "putImageData(): µs/call": 0.0008472
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp baseline",
+      "round": 4,
+      "loadMs": 33.32499998807907,
+      "seconds": {
+        "getImageData(): µs/call": 0.002555,
+        "putImageData(): µs/call": 0.0007028
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp baseline",
+      "round": 5,
+      "loadMs": 31.94999998807907,
+      "seconds": {
+        "getImageData(): µs/call": 0.0006703,
+        "putImageData(): µs/call": 0.0005297
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp main",
+      "round": 5,
+      "loadMs": 116.90500003099442,
+      "seconds": {
+        "getImageData(): µs/call": 0.0014009,
+        "putImageData(): µs/call": 0.0009231
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust baseline",
+      "round": 5,
+      "loadMs": 37.13499999046326,
+      "seconds": {
+        "getImageData(): µs/call": 0.0010397,
+        "putImageData(): µs/call": 0.0007012
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust main",
+      "round": 5,
+      "loadMs": 75.53000003099442,
+      "seconds": {
+        "getImageData(): µs/call": 0.0010894000000000001,
+        "putImageData(): µs/call": 0.0006552999999999999
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "JS",
+      "round": 5,
+      "loadMs": null,
+      "seconds": {
+        "getImageData(): µs/call": 0.0005402,
+        "putImageData(): µs/call": 0.0000359
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "C++ emscripten",
+      "round": 5,
+      "loadMs": 48.87000000476837,
+      "seconds": {
+        "getImageData(): µs/call": 0.0006073,
+        "putImageData(): µs/call": 0.0005136
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c baseline",
+      "round": 5,
+      "loadMs": 44.12999999523163,
+      "seconds": {
+        "getImageData(): µs/call": 0.000915,
+        "putImageData(): µs/call": 0.0006656
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c main",
+      "round": 5,
+      "loadMs": 82.34499996900558,
+      "seconds": {
+        "getImageData(): µs/call": 0.0012741,
+        "putImageData(): µs/call": 0.0009769
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp main",
+      "round": 6,
+      "loadMs": 90.4650000333786,
+      "seconds": {
+        "getImageData(): µs/call": 0.0032188000000000004,
+        "putImageData(): µs/call": 0.0015719
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp baseline",
+      "round": 6,
+      "loadMs": 54.64999997615814,
+      "seconds": {
+        "getImageData(): µs/call": 0.0013781,
+        "putImageData(): µs/call": 0.0009672000000000001
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c main",
+      "round": 6,
+      "loadMs": 109.46499997377396,
+      "seconds": {
+        "getImageData(): µs/call": 0.0015344,
+        "putImageData(): µs/call": 0.0010056
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c baseline",
+      "round": 6,
+      "loadMs": 58.09999996423721,
+      "seconds": {
+        "getImageData(): µs/call": 0.00255,
+        "putImageData(): µs/call": 0.0007744
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "C++ emscripten",
+      "round": 6,
+      "loadMs": 63.30500000715256,
+      "seconds": {
+        "getImageData(): µs/call": 0.0006703,
+        "putImageData(): µs/call": 0.0004927
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "JS",
+      "round": 6,
+      "loadMs": null,
+      "seconds": {
+        "getImageData(): µs/call": 0.0015562,
+        "putImageData(): µs/call": 0.0000398
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust main",
+      "round": 6,
+      "loadMs": 76.60500001907349,
+      "seconds": {
+        "getImageData(): µs/call": 0.001265,
+        "putImageData(): µs/call": 0.0031694
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust baseline",
+      "round": 6,
+      "loadMs": 112.76999998092651,
+      "seconds": {
+        "getImageData(): µs/call": 0.0015284,
+        "putImageData(): µs/call": 0.0027386999999999997
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust baseline",
+      "round": 7,
+      "loadMs": 58.564999997615814,
+      "seconds": {
+        "getImageData(): µs/call": 0.0012806,
+        "putImageData(): µs/call": 0.0007677999999999999
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust main",
+      "round": 7,
+      "loadMs": 106.375,
+      "seconds": {
+        "getImageData(): µs/call": 0.0018156,
+        "putImageData(): µs/call": 0.00137
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "JS",
+      "round": 7,
+      "loadMs": null,
+      "seconds": {
+        "getImageData(): µs/call": 0.0005392000000000001,
+        "putImageData(): µs/call": 0.0000371
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "C++ emscripten",
+      "round": 7,
+      "loadMs": 38.144999980926514,
+      "seconds": {
+        "getImageData(): µs/call": 0.0026681,
+        "putImageData(): µs/call": 0.0015394
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c baseline",
+      "round": 7,
+      "loadMs": 31.394999980926514,
+      "seconds": {
+        "getImageData(): µs/call": 0.0010119,
+        "putImageData(): µs/call": 0.0007837
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c main",
+      "round": 7,
+      "loadMs": 76.75,
+      "seconds": {
+        "getImageData(): µs/call": 0.0014763,
+        "putImageData(): µs/call": 0.0008809
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp baseline",
+      "round": 7,
+      "loadMs": 30.099999964237213,
+      "seconds": {
+        "getImageData(): µs/call": 0.0009684,
+        "putImageData(): µs/call": 0.0006956
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp main",
+      "round": 7,
+      "loadMs": 93.04999995231628,
+      "seconds": {
+        "getImageData(): µs/call": 0.0012580999999999998,
+        "putImageData(): µs/call": 0.0007928
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "JS",
+      "round": 1,
+      "loadMs": null,
+      "seconds": {
+        "individual: total ms": 0.01786,
+        "bulk: total ms": 0.000035000000000000004,
+        "individual: µs/element": 8.930000000000001e-7
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "C++ emscripten",
+      "round": 1,
+      "loadMs": 40.160000026226044,
+      "seconds": {
+        "individual: total ms": 0.07834,
+        "bulk: total ms": 0.00006500000000000001,
+        "individual: µs/element": 0.000003917
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "c baseline",
+      "round": 1,
+      "loadMs": 40.20999997854233,
+      "seconds": {
+        "individual: total ms": 0.09512000000000001,
+        "bulk: total ms": 0.044969999999999996,
+        "individual: µs/element": 0.000004756
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "c main",
+      "round": 1,
+      "loadMs": 77.99000000953674,
+      "seconds": {
+        "individual: total ms": 0.36145499999999997,
+        "bulk: total ms": 0.05967,
+        "individual: µs/element": 0.000018073
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "cpp baseline",
+      "round": 1,
+      "loadMs": 79.68500000238419,
+      "seconds": {
+        "individual: total ms": 0.12153,
+        "bulk: total ms": 0.032799999999999996,
+        "individual: µs/element": 0.000006077
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "cpp main",
+      "round": 1,
+      "loadMs": 84.74000000953674,
+      "seconds": {
+        "individual: total ms": 0.33609500000000003,
+        "bulk: total ms": 0.047455,
+        "individual: µs/element": 0.000016805
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "rust baseline",
+      "round": 1,
+      "loadMs": 37.310000002384186,
+      "seconds": {
+        "individual: total ms": 0.08055,
+        "bulk: total ms": 0.037689999999999994,
+        "individual: µs/element": 0.000004027999999999999
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "rust main",
+      "round": 1,
+      "loadMs": 87.5,
+      "seconds": {
+        "individual: total ms": 0.378675,
+        "bulk: total ms": 0.053939999999999995,
+        "individual: µs/element": 0.000018934000000000002
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "C++ emscripten",
+      "round": 2,
+      "loadMs": 66.30000001192093,
+      "seconds": {
+        "individual: total ms": 0.07658,
+        "bulk: total ms": 0.000055,
+        "individual: µs/element": 0.000003829
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "JS",
+      "round": 2,
+      "loadMs": null,
+      "seconds": {
+        "individual: total ms": 0.0261,
+        "bulk: total ms": 0.000029999999999999997,
+        "individual: µs/element": 0.000001305
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "rust main",
+      "round": 2,
+      "loadMs": 68.8299999833107,
+      "seconds": {
+        "individual: total ms": 0.338155,
+        "bulk: total ms": 0.056049999999999996,
+        "individual: µs/element": 0.000016908
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "rust baseline",
+      "round": 2,
+      "loadMs": 34.935000002384186,
+      "seconds": {
+        "individual: total ms": 0.07680500000000001,
+        "bulk: total ms": 0.03779,
+        "individual: µs/element": 0.00000384
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "cpp main",
+      "round": 2,
+      "loadMs": 105.42500001192093,
+      "seconds": {
+        "individual: total ms": 0.40937,
+        "bulk: total ms": 0.056659999999999995,
+        "individual: µs/element": 0.000020469
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "cpp baseline",
+      "round": 2,
+      "loadMs": 61.02500003576279,
+      "seconds": {
+        "individual: total ms": 0.08379,
+        "bulk: total ms": 0.028184999999999998,
+        "individual: µs/element": 0.0000041900000000000005
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "c main",
+      "round": 2,
+      "loadMs": 85.91999995708466,
+      "seconds": {
+        "individual: total ms": 0.40707,
+        "bulk: total ms": 0.07639,
+        "individual: µs/element": 0.000020353000000000003
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "c baseline",
+      "round": 2,
+      "loadMs": 48.5900000333786,
+      "seconds": {
+        "individual: total ms": 0.07936499999999999,
+        "bulk: total ms": 0.030359999999999998,
+        "individual: µs/element": 0.000003968
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "c baseline",
+      "round": 3,
+      "loadMs": 69.20999997854233,
+      "seconds": {
+        "individual: total ms": 0.087585,
+        "bulk: total ms": 0.03805,
+        "individual: µs/element": 0.000004379
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "c main",
+      "round": 3,
+      "loadMs": 108.9650000333786,
+      "seconds": {
+        "individual: total ms": 0.43499,
+        "bulk: total ms": 0.058275,
+        "individual: µs/element": 0.00002175
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "cpp baseline",
+      "round": 3,
+      "loadMs": 62.56999999284744,
+      "seconds": {
+        "individual: total ms": 0.09297499999999999,
+        "bulk: total ms": 0.03607,
+        "individual: µs/element": 0.000004649
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "cpp main",
+      "round": 3,
+      "loadMs": 72.60500001907349,
+      "seconds": {
+        "individual: total ms": 0.40959500000000004,
+        "bulk: total ms": 0.0685,
+        "individual: µs/element": 0.00002048
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "rust baseline",
+      "round": 3,
+      "loadMs": 59.314999997615814,
+      "seconds": {
+        "individual: total ms": 0.071015,
+        "bulk: total ms": 0.032350000000000004,
+        "individual: µs/element": 0.000003551
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "rust main",
+      "round": 3,
+      "loadMs": 96.49500000476837,
+      "seconds": {
+        "individual: total ms": 0.448275,
+        "bulk: total ms": 0.06649,
+        "individual: µs/element": 0.000022414000000000003
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "JS",
+      "round": 3,
+      "loadMs": null,
+      "seconds": {
+        "individual: total ms": 0.030289999999999997,
+        "bulk: total ms": 0.000035000000000000004,
+        "individual: µs/element": 0.000001515
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "C++ emscripten",
+      "round": 3,
+      "loadMs": 118.43999999761581,
+      "seconds": {
+        "individual: total ms": 0.12405,
+        "bulk: total ms": 0.000044999999999999996,
+        "individual: µs/element": 0.000006203000000000001
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "c main",
+      "round": 4,
+      "loadMs": 113.93500000238419,
+      "seconds": {
+        "individual: total ms": 0.403355,
+        "bulk: total ms": 0.047104999999999994,
+        "individual: µs/element": 0.000020168
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "c baseline",
+      "round": 4,
+      "loadMs": 36.74000000953674,
+      "seconds": {
+        "individual: total ms": 0.08719,
+        "bulk: total ms": 0.030019999999999998,
+        "individual: µs/element": 0.000004359
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "C++ emscripten",
+      "round": 4,
+      "loadMs": 51.6599999666214,
+      "seconds": {
+        "individual: total ms": 0.0846,
+        "bulk: total ms": 0.000059999999999999995,
+        "individual: µs/element": 0.00000423
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "JS",
+      "round": 4,
+      "loadMs": null,
+      "seconds": {
+        "individual: total ms": 0.019059999999999997,
+        "bulk: total ms": 0.000029999999999999997,
+        "individual: µs/element": 9.529999999999999e-7
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "rust main",
+      "round": 4,
+      "loadMs": 82.59500002861023,
+      "seconds": {
+        "individual: total ms": 0.39248,
+        "bulk: total ms": 0.05923,
+        "individual: µs/element": 0.000019623999999999997
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "rust baseline",
+      "round": 4,
+      "loadMs": 42.19999998807907,
+      "seconds": {
+        "individual: total ms": 0.10102,
+        "bulk: total ms": 0.05813,
+        "individual: µs/element": 0.0000050510000000000004
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "cpp main",
+      "round": 4,
+      "loadMs": 154.81999999284744,
+      "seconds": {
+        "individual: total ms": 0.38824000000000003,
+        "bulk: total ms": 0.048715,
+        "individual: µs/element": 0.000019412
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "cpp baseline",
+      "round": 4,
+      "loadMs": 63.09500002861023,
+      "seconds": {
+        "individual: total ms": 0.09665,
+        "bulk: total ms": 0.03075,
+        "individual: µs/element": 0.000004832
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "cpp baseline",
+      "round": 5,
+      "loadMs": 29.15499997138977,
+      "seconds": {
+        "individual: total ms": 0.081795,
+        "bulk: total ms": 0.041925,
+        "individual: µs/element": 0.00000409
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "cpp main",
+      "round": 5,
+      "loadMs": 78.8299999833107,
+      "seconds": {
+        "individual: total ms": 0.3548,
+        "bulk: total ms": 0.049925,
+        "individual: µs/element": 0.00001774
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "rust baseline",
+      "round": 5,
+      "loadMs": 46.1599999666214,
+      "seconds": {
+        "individual: total ms": 0.07583,
+        "bulk: total ms": 0.046479999999999994,
+        "individual: µs/element": 0.0000037909999999999998
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "rust main",
+      "round": 5,
+      "loadMs": 91.76499998569489,
+      "seconds": {
+        "individual: total ms": 0.448995,
+        "bulk: total ms": 0.047935000000000005,
+        "individual: µs/element": 0.00002245
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "JS",
+      "round": 5,
+      "loadMs": null,
+      "seconds": {
+        "individual: total ms": 0.019469999999999998,
+        "bulk: total ms": 0.000035000000000000004,
+        "individual: µs/element": 9.74e-7
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "C++ emscripten",
+      "round": 5,
+      "loadMs": 50.24000000953674,
+      "seconds": {
+        "individual: total ms": 0.0696,
+        "bulk: total ms": 0.00007000000000000001,
+        "individual: µs/element": 0.00000348
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "c baseline",
+      "round": 5,
+      "loadMs": 49.5799999833107,
+      "seconds": {
+        "individual: total ms": 0.08045999999999999,
+        "bulk: total ms": 0.031785,
+        "individual: µs/element": 0.0000040229999999999994
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "c main",
+      "round": 5,
+      "loadMs": 102.74000000953674,
+      "seconds": {
+        "individual: total ms": 0.464235,
+        "bulk: total ms": 0.061454999999999996,
+        "individual: µs/element": 0.000023212
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "cpp main",
+      "round": 6,
+      "loadMs": 126.79000002145767,
+      "seconds": {
+        "individual: total ms": 0.46781,
+        "bulk: total ms": 0.063545,
+        "individual: µs/element": 0.000023390999999999997
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "cpp baseline",
+      "round": 6,
+      "loadMs": 38.5799999833107,
+      "seconds": {
+        "individual: total ms": 0.073575,
+        "bulk: total ms": 0.028005,
+        "individual: µs/element": 0.000003679
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "c main",
+      "round": 6,
+      "loadMs": 124.15000003576279,
+      "seconds": {
+        "individual: total ms": 0.616645,
+        "bulk: total ms": 0.08622,
+        "individual: µs/element": 0.000030832
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "c baseline",
+      "round": 6,
+      "loadMs": 84.76999998092651,
+      "seconds": {
+        "individual: total ms": 0.11945,
+        "bulk: total ms": 0.039509999999999997,
+        "individual: µs/element": 0.000005973
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "C++ emscripten",
+      "round": 6,
+      "loadMs": 88.40499997138977,
+      "seconds": {
+        "individual: total ms": 0.12875999999999999,
+        "bulk: total ms": 0.000055,
+        "individual: µs/element": 0.000006438
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "JS",
+      "round": 6,
+      "loadMs": null,
+      "seconds": {
+        "individual: total ms": 0.03599,
+        "bulk: total ms": 0.000029999999999999997,
+        "individual: µs/element": 0.0000018000000000000001
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "rust main",
+      "round": 6,
+      "loadMs": 140.0450000166893,
+      "seconds": {
+        "individual: total ms": 0.6247849999999999,
+        "bulk: total ms": 0.073185,
+        "individual: µs/element": 0.000031239000000000004
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "rust baseline",
+      "round": 6,
+      "loadMs": 116.62000000476837,
+      "seconds": {
+        "individual: total ms": 0.09378,
+        "bulk: total ms": 0.05307,
+        "individual: µs/element": 0.000004689
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "rust baseline",
+      "round": 7,
+      "loadMs": 101.22000002861023,
+      "seconds": {
+        "individual: total ms": 0.116075,
+        "bulk: total ms": 0.054305,
+        "individual: µs/element": 0.000005804000000000001
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "rust main",
+      "round": 7,
+      "loadMs": 175.5649999976158,
+      "seconds": {
+        "individual: total ms": 0.51763,
+        "bulk: total ms": 0.0669,
+        "individual: µs/element": 0.000025881000000000002
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "JS",
+      "round": 7,
+      "loadMs": null,
+      "seconds": {
+        "individual: total ms": 0.020965,
+        "bulk: total ms": 0.000029999999999999997,
+        "individual: µs/element": 0.000001048
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "C++ emscripten",
+      "round": 7,
+      "loadMs": 141.97000002861023,
+      "seconds": {
+        "individual: total ms": 0.087825,
+        "bulk: total ms": 0.00005,
+        "individual: µs/element": 0.000004391
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "c baseline",
+      "round": 7,
+      "loadMs": 79.23499995470047,
+      "seconds": {
+        "individual: total ms": 0.11125499999999999,
+        "bulk: total ms": 0.03816,
+        "individual: µs/element": 0.000005563
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "c main",
+      "round": 7,
+      "loadMs": 167.30000001192093,
+      "seconds": {
+        "individual: total ms": 0.471785,
+        "bulk: total ms": 0.05841,
+        "individual: µs/element": 0.000023588999999999997
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "cpp baseline",
+      "round": 7,
+      "loadMs": 43.41500002145767,
+      "seconds": {
+        "individual: total ms": 0.09159,
+        "bulk: total ms": 0.03626,
+        "individual: µs/element": 0.00000458
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "cpp main",
+      "round": 7,
+      "loadMs": 88.97500002384186,
+      "seconds": {
+        "individual: total ms": 0.392625,
+        "bulk: total ms": 0.062235,
+        "individual: µs/element": 0.000019631
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "JS",
+      "round": 1,
+      "loadMs": null,
+      "seconds": {
+        "build": 0.035265,
+        "traverse (total)": 0.004275,
+        "traverse (per node)": 2.19e-7
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "C++ em-js",
+      "round": 1,
+      "loadMs": 42.07499998807907,
+      "seconds": {
+        "build": 0.06620000000000001,
+        "traverse (total)": 0.01201,
+        "traverse (per node)": 6.15e-7
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "C++ emscripten",
+      "round": 1,
+      "loadMs": 59.00999999046326,
+      "seconds": {
+        "build": 0.0988,
+        "traverse (total)": 0.06012,
+        "traverse (per node)": 0.000003078
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "Rust wasm-bindgen",
+      "round": 1,
+      "loadMs": 39.34999996423721,
+      "seconds": {
+        "build": 0.08838,
+        "traverse (total)": 0.02,
+        "traverse (per node)": 0.000001024
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "c baseline",
+      "round": 1,
+      "loadMs": 37.47999995946884,
+      "seconds": {
+        "build": 0.17787999999999998,
+        "traverse (total)": 0.054009999999999996,
+        "traverse (per node)": 0.000002765
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "c main",
+      "round": 1,
+      "loadMs": 108.07499998807907,
+      "seconds": {
+        "build": 0.78553,
+        "traverse (total)": 0.32019,
+        "traverse (per node)": 0.000016394
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "cpp baseline",
+      "round": 1,
+      "loadMs": 45.74000000953674,
+      "seconds": {
+        "build": 0.22365000000000002,
+        "traverse (total)": 0.054380000000000005,
+        "traverse (per node)": 0.000002784
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "cpp main",
+      "round": 1,
+      "loadMs": 105.38499999046326,
+      "seconds": {
+        "build": 0.87517,
+        "traverse (total)": 0.33147000000000004,
+        "traverse (per node)": 0.000016971
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust baseline",
+      "round": 1,
+      "loadMs": 45.49500000476837,
+      "seconds": {
+        "build": 0.14901,
+        "traverse (total)": 0.06527,
+        "traverse (per node)": 0.000003342
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust main",
+      "round": 1,
+      "loadMs": 119.66999995708466,
+      "seconds": {
+        "build": 0.92355,
+        "traverse (total)": 0.53561,
+        "traverse (per node)": 0.000027424
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "C++ em-js",
+      "round": 2,
+      "loadMs": 55.72000002861023,
+      "seconds": {
+        "build": 0.08592,
+        "traverse (total)": 0.018420000000000002,
+        "traverse (per node)": 9.429999999999999e-7
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "JS",
+      "round": 2,
+      "loadMs": null,
+      "seconds": {
+        "build": 0.048815,
+        "traverse (total)": 0.00242,
+        "traverse (per node)": 1.24e-7
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust main",
+      "round": 2,
+      "loadMs": 219.375,
+      "seconds": {
+        "build": 1.00814,
+        "traverse (total)": 0.5590499999999999,
+        "traverse (per node)": 0.000028624
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust baseline",
+      "round": 2,
+      "loadMs": 62.10499995946884,
+      "seconds": {
+        "build": 0.33785000000000004,
+        "traverse (total)": 0.07281,
+        "traverse (per node)": 0.000003728
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "cpp main",
+      "round": 2,
+      "loadMs": 133.57499998807907,
+      "seconds": {
+        "build": 1.50725,
+        "traverse (total)": 0.5925,
+        "traverse (per node)": 0.000030336
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "cpp baseline",
+      "round": 2,
+      "loadMs": 85.98499995470047,
+      "seconds": {
+        "build": 0.30613,
+        "traverse (total)": 0.07662000000000001,
+        "traverse (per node)": 0.000003923
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "c main",
+      "round": 2,
+      "loadMs": 176.125,
+      "seconds": {
+        "build": 1.25725,
+        "traverse (total)": 0.6200800000000001,
+        "traverse (per node)": 0.000031749
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "c baseline",
+      "round": 2,
+      "loadMs": 85.62999999523163,
+      "seconds": {
+        "build": 0.36238,
+        "traverse (total)": 0.07437,
+        "traverse (per node)": 0.000003808
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "Rust wasm-bindgen",
+      "round": 2,
+      "loadMs": 103.90499997138977,
+      "seconds": {
+        "build": 0.13657,
+        "traverse (total)": 0.03649,
+        "traverse (per node)": 0.0000018680000000000002
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "C++ emscripten",
+      "round": 2,
+      "loadMs": 107.9200000166893,
+      "seconds": {
+        "build": 0.25243,
+        "traverse (total)": 0.08672,
+        "traverse (per node)": 0.000004440000000000001
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "C++ emscripten",
+      "round": 3,
+      "loadMs": 113.60500001907349,
+      "seconds": {
+        "build": 0.3291,
+        "traverse (total)": 0.16738999999999998,
+        "traverse (per node)": 0.000008570000000000001
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "Rust wasm-bindgen",
+      "round": 3,
+      "loadMs": 46.19999998807907,
+      "seconds": {
+        "build": 0.11383,
+        "traverse (total)": 0.02139,
+        "traverse (per node)": 0.0000010949999999999999
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "c baseline",
+      "round": 3,
+      "loadMs": 60.25999999046326,
+      "seconds": {
+        "build": 0.18757,
+        "traverse (total)": 0.07572,
+        "traverse (per node)": 0.0000038769999999999995
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "c main",
+      "round": 3,
+      "loadMs": 168.0199999809265,
+      "seconds": {
+        "build": 1.75438,
+        "traverse (total)": 0.65155,
+        "traverse (per node)": 0.00003336
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "cpp baseline",
+      "round": 3,
+      "loadMs": 83.53000003099442,
+      "seconds": {
+        "build": 0.47552,
+        "traverse (total)": 0.08909,
+        "traverse (per node)": 0.000004561
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "cpp main",
+      "round": 3,
+      "loadMs": 195.7699999809265,
+      "seconds": {
+        "build": 1.81274,
+        "traverse (total)": 0.56821,
+        "traverse (per node)": 0.000029093
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust baseline",
+      "round": 3,
+      "loadMs": 87.15499997138977,
+      "seconds": {
+        "build": 0.26630000000000004,
+        "traverse (total)": 0.08742,
+        "traverse (per node)": 0.000004476
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust main",
+      "round": 3,
+      "loadMs": 105.98499995470047,
+      "seconds": {
+        "build": 2.02569,
+        "traverse (total)": 0.90227,
+        "traverse (per node)": 0.000046197000000000005
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "JS",
+      "round": 3,
+      "loadMs": null,
+      "seconds": {
+        "build": 0.04733,
+        "traverse (total)": 0.004175,
+        "traverse (per node)": 2.1399999999999998e-7
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "C++ em-js",
+      "round": 3,
+      "loadMs": 94.96499997377396,
+      "seconds": {
+        "build": 0.16244999999999998,
+        "traverse (total)": 0.01394,
+        "traverse (per node)": 7.14e-7
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "Rust wasm-bindgen",
+      "round": 4,
+      "loadMs": 56.97999995946884,
+      "seconds": {
+        "build": 0.08846,
+        "traverse (total)": 0.020980000000000002,
+        "traverse (per node)": 0.000001074
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "C++ emscripten",
+      "round": 4,
+      "loadMs": 102.2049999833107,
+      "seconds": {
+        "build": 0.17709,
+        "traverse (total)": 0.19943,
+        "traverse (per node)": 0.000010211000000000001
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "C++ em-js",
+      "round": 4,
+      "loadMs": 103.36500000953674,
+      "seconds": {
+        "build": 0.09742,
+        "traverse (total)": 0.01504,
+        "traverse (per node)": 7.7e-7
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "JS",
+      "round": 4,
+      "loadMs": null,
+      "seconds": {
+        "build": 0.050445000000000004,
+        "traverse (total)": 0.002535,
+        "traverse (per node)": 1.3e-7
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust main",
+      "round": 4,
+      "loadMs": 183.4549999833107,
+      "seconds": {
+        "build": 1.459,
+        "traverse (total)": 0.7559400000000001,
+        "traverse (per node)": 0.000038704
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust baseline",
+      "round": 4,
+      "loadMs": 69.9549999833107,
+      "seconds": {
+        "build": 0.31733999999999996,
+        "traverse (total)": 0.09179000000000001,
+        "traverse (per node)": 0.0000047
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "cpp main",
+      "round": 4,
+      "loadMs": 149.97999995946884,
+      "seconds": {
+        "build": 1.5178900000000002,
+        "traverse (total)": 0.41375,
+        "traverse (per node)": 0.000021184000000000002
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "cpp baseline",
+      "round": 4,
+      "loadMs": 47.689999997615814,
+      "seconds": {
+        "build": 0.33586,
+        "traverse (total)": 0.11814,
+        "traverse (per node)": 0.000006049
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "c main",
+      "round": 4,
+      "loadMs": 192.2300000190735,
+      "seconds": {
+        "build": 1.5924200000000002,
+        "traverse (total)": 0.50498,
+        "traverse (per node)": 0.000025855
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "c baseline",
+      "round": 4,
+      "loadMs": 88.61500000953674,
+      "seconds": {
+        "build": 0.32187,
+        "traverse (total)": 0.08408,
+        "traverse (per node)": 0.0000043049999999999994
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "c baseline",
+      "round": 5,
+      "loadMs": 85.18500000238419,
+      "seconds": {
+        "build": 0.23252,
+        "traverse (total)": 0.04624,
+        "traverse (per node)": 0.000002368
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "c main",
+      "round": 5,
+      "loadMs": 138.46999996900558,
+      "seconds": {
+        "build": 0.8851100000000001,
+        "traverse (total)": 0.46588999999999997,
+        "traverse (per node)": 0.000023854
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "cpp baseline",
+      "round": 5,
+      "loadMs": 51.314999997615814,
+      "seconds": {
+        "build": 0.24589,
+        "traverse (total)": 0.04311,
+        "traverse (per node)": 0.000002207
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "cpp main",
+      "round": 5,
+      "loadMs": 140.6950000524521,
+      "seconds": {
+        "build": 1.0386199999999999,
+        "traverse (total)": 0.39321,
+        "traverse (per node)": 0.000020133
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust baseline",
+      "round": 5,
+      "loadMs": 75.63499999046326,
+      "seconds": {
+        "build": 0.22518000000000002,
+        "traverse (total)": 0.0485,
+        "traverse (per node)": 0.000002483
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust main",
+      "round": 5,
+      "loadMs": 125.26499998569489,
+      "seconds": {
+        "build": 0.90385,
+        "traverse (total)": 0.40837,
+        "traverse (per node)": 0.000020909
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "JS",
+      "round": 5,
+      "loadMs": null,
+      "seconds": {
+        "build": 0.03395,
+        "traverse (total)": 0.00237,
+        "traverse (per node)": 1.2099999999999998e-7
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "C++ em-js",
+      "round": 5,
+      "loadMs": 49.34500002861023,
+      "seconds": {
+        "build": 0.05747,
+        "traverse (total)": 0.01263,
+        "traverse (per node)": 6.47e-7
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "C++ emscripten",
+      "round": 5,
+      "loadMs": 45.785000026226044,
+      "seconds": {
+        "build": 0.15275,
+        "traverse (total)": 0.10214,
+        "traverse (per node)": 0.000005229
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "Rust wasm-bindgen",
+      "round": 5,
+      "loadMs": 37.77499997615814,
+      "seconds": {
+        "build": 0.08767,
+        "traverse (total)": 0.02509,
+        "traverse (per node)": 0.000001285
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "c main",
+      "round": 6,
+      "loadMs": 84.91500002145767,
+      "seconds": {
+        "build": 0.84484,
+        "traverse (total)": 0.40520999999999996,
+        "traverse (per node)": 0.000020747
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "c baseline",
+      "round": 6,
+      "loadMs": 48.830000042915344,
+      "seconds": {
+        "build": 0.20029,
+        "traverse (total)": 0.04428,
+        "traverse (per node)": 0.000002267
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "Rust wasm-bindgen",
+      "round": 6,
+      "loadMs": 37.37000000476837,
+      "seconds": {
+        "build": 0.09923,
+        "traverse (total)": 0.03404,
+        "traverse (per node)": 0.000001743
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "C++ emscripten",
+      "round": 6,
+      "loadMs": 114.56499999761581,
+      "seconds": {
+        "build": 0.15399000000000002,
+        "traverse (total)": 0.07343999999999999,
+        "traverse (per node)": 0.0000037599999999999996
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "C++ em-js",
+      "round": 6,
+      "loadMs": 34.02500003576279,
+      "seconds": {
+        "build": 0.06666,
+        "traverse (total)": 0.01374,
+        "traverse (per node)": 7.03e-7
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "JS",
+      "round": 6,
+      "loadMs": null,
+      "seconds": {
+        "build": 0.07895999999999999,
+        "traverse (total)": 0.0057350000000000005,
+        "traverse (per node)": 2.9399999999999996e-7
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust main",
+      "round": 6,
+      "loadMs": 121.60500001907349,
+      "seconds": {
+        "build": 1.47096,
+        "traverse (total)": 0.71016,
+        "traverse (per node)": 0.00003636
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust baseline",
+      "round": 6,
+      "loadMs": 168.80500000715256,
+      "seconds": {
+        "build": 0.27837,
+        "traverse (total)": 0.06902,
+        "traverse (per node)": 0.000003534
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "cpp main",
+      "round": 6,
+      "loadMs": 134.8400000333786,
+      "seconds": {
+        "build": 1.00811,
+        "traverse (total)": 0.42225999999999997,
+        "traverse (per node)": 0.00002162
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "cpp baseline",
+      "round": 6,
+      "loadMs": 84.06000000238419,
+      "seconds": {
+        "build": 0.23094,
+        "traverse (total)": 0.04217,
+        "traverse (per node)": 0.000002159
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "cpp baseline",
+      "round": 7,
+      "loadMs": 59.7049999833107,
+      "seconds": {
+        "build": 0.22986,
+        "traverse (total)": 0.060090000000000005,
+        "traverse (per node)": 0.000003076
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "cpp main",
+      "round": 7,
+      "loadMs": 126.72500002384186,
+      "seconds": {
+        "build": 1.0301300000000002,
+        "traverse (total)": 0.39094,
+        "traverse (per node)": 0.000020016
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust baseline",
+      "round": 7,
+      "loadMs": 86.1700000166893,
+      "seconds": {
+        "build": 0.23789,
+        "traverse (total)": 0.04987,
+        "traverse (per node)": 0.000002553
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust main",
+      "round": 7,
+      "loadMs": 127.68999999761581,
+      "seconds": {
+        "build": 1.02119,
+        "traverse (total)": 0.50402,
+        "traverse (per node)": 0.000025806
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "JS",
+      "round": 7,
+      "loadMs": null,
+      "seconds": {
+        "build": 0.045649999999999996,
+        "traverse (total)": 0.0023650000000000003,
+        "traverse (per node)": 1.2099999999999998e-7
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "C++ em-js",
+      "round": 7,
+      "loadMs": 57.22500002384186,
+      "seconds": {
+        "build": 0.06739,
+        "traverse (total)": 0.01444,
+        "traverse (per node)": 7.4e-7
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "C++ emscripten",
+      "round": 7,
+      "loadMs": 69.5,
+      "seconds": {
+        "build": 0.20389,
+        "traverse (total)": 0.11204,
+        "traverse (per node)": 0.000005737
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "Rust wasm-bindgen",
+      "round": 7,
+      "loadMs": 72.23500001430511,
+      "seconds": {
+        "build": 0.10790000000000001,
+        "traverse (total)": 0.027710000000000002,
+        "traverse (per node)": 0.000001419
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "c baseline",
+      "round": 7,
+      "loadMs": 42.325000047683716,
+      "seconds": {
+        "build": 0.27375,
+        "traverse (total)": 0.07662000000000001,
+        "traverse (per node)": 0.000003923
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "c main",
+      "round": 7,
+      "loadMs": 117.11000001430511,
+      "seconds": {
+        "build": 1.2578699999999998,
+        "traverse (total)": 0.4111,
+        "traverse (per node)": 0.000021048999999999998
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "JS",
+      "round": 1,
+      "loadMs": null,
+      "seconds": {
+        "set 8 B": 6.34e-7,
+        "get 8 B": 2.0799999999999998e-7,
+        "set 128 B": 0.000001215,
+        "get 128 B": 2.58e-7,
+        "set 1024 B": 0.000003186,
+        "get 1024 B": 2.6900000000000004e-7,
+        "set 16384 B": 0.000040039,
+        "get 16384 B": 0.0000013380000000000001,
+        "set 262144 B": 0.000516719,
+        "get 262144 B": 0.000041914
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "C++ em-js",
+      "round": 1,
+      "loadMs": 65.87000000476837,
+      "seconds": {
+        "set 8 B": 0.000001179,
+        "get 8 B": 8.319999999999999e-7,
+        "set 128 B": 0.00000264,
+        "get 128 B": 0.000004148,
+        "set 1024 B": 0.000007581000000000001,
+        "get 1024 B": 0.00002975,
+        "set 16384 B": 0.00009054999999999999,
+        "get 16384 B": 0.0004773,
+        "set 262144 B": 0.0014755999999999999,
+        "get 262144 B": 0.006994350000000001
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "C++ emscripten",
+      "round": 1,
+      "loadMs": 46.4099999666214,
+      "seconds": {
+        "set 8 B": 0.000006472,
+        "get 8 B": 0.000003314,
+        "set 128 B": 0.000003236,
+        "get 128 B": 0.0000064340000000000006,
+        "set 1024 B": 0.000004056,
+        "get 1024 B": 0.00002955,
+        "set 16384 B": 0.000018725,
+        "get 16384 B": 0.000385,
+        "set 262144 B": 0.0007483500000000001,
+        "get 262144 B": 0.00693445
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "Rust wasm-bindgen",
+      "round": 1,
+      "loadMs": 31.37000000476837,
+      "seconds": {
+        "set 8 B": 0.000002028,
+        "get 8 B": 8.84e-7,
+        "set 128 B": 0.000001981,
+        "get 128 B": 0.000003051,
+        "set 1024 B": 0.000002791,
+        "get 1024 B": 0.000020956,
+        "set 16384 B": 0.000019413,
+        "get 16384 B": 0.00024265000000000002,
+        "set 262144 B": 0.00081045,
+        "get 262144 B": 0.0043225
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "c baseline",
+      "round": 1,
+      "loadMs": 35.44499999284744,
+      "seconds": {
+        "set 8 B": 0.000003158,
+        "get 8 B": 0.000007672,
+        "set 128 B": 0.000003513,
+        "get 128 B": 0.000008178,
+        "set 1024 B": 0.000003256,
+        "get 1024 B": 0.000019906,
+        "set 16384 B": 0.000021281,
+        "get 16384 B": 0.0001085,
+        "set 262144 B": 0.00066935,
+        "get 262144 B": 0.00324895
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "c main",
+      "round": 1,
+      "loadMs": 105.22500002384186,
+      "seconds": {
+        "set 8 B": 0.0000382,
+        "get 8 B": 0.000027913000000000002,
+        "set 128 B": 0.000044937,
+        "get 128 B": 0.000060537999999999995,
+        "set 1024 B": 0.0000262,
+        "get 1024 B": 0.000062875,
+        "set 16384 B": 0.000042088,
+        "get 16384 B": 0.00019585,
+        "set 262144 B": 0.0008273,
+        "get 262144 B": 0.0021648
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "cpp baseline",
+      "round": 1,
+      "loadMs": 40.42500001192093,
+      "seconds": {
+        "set 8 B": 0.000001935,
+        "get 8 B": 0.000006628,
+        "set 128 B": 0.00000201,
+        "get 128 B": 0.000013244,
+        "set 1024 B": 0.000003252,
+        "get 1024 B": 0.000015688,
+        "set 16384 B": 0.000018731,
+        "get 16384 B": 0.00013130000000000002,
+        "set 262144 B": 0.0007052,
+        "get 262144 B": 0.00275475
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "cpp main",
+      "round": 1,
+      "loadMs": 124.56000000238419,
+      "seconds": {
+        "set 8 B": 0.000041262,
+        "get 8 B": 0.000035938,
+        "set 128 B": 0.0000174,
+        "get 128 B": 0.000027475,
+        "set 1024 B": 0.000020619,
+        "get 1024 B": 0.000028961999999999998,
+        "set 16384 B": 0.000037125,
+        "get 16384 B": 0.00017659999999999998,
+        "set 262144 B": 0.00068415,
+        "get 262144 B": 0.0026123
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "rust baseline",
+      "round": 1,
+      "loadMs": 51.2849999666214,
+      "seconds": {
+        "set 8 B": 0.000003259,
+        "get 8 B": 0.000008175,
+        "set 128 B": 0.000003634,
+        "get 128 B": 0.000006786,
+        "set 1024 B": 0.000005352000000000001,
+        "get 1024 B": 0.000013062,
+        "set 16384 B": 0.000013631,
+        "get 16384 B": 0.00010570000000000001,
+        "set 262144 B": 0.0007392000000000001,
+        "get 262144 B": 0.0030166
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "rust main",
+      "round": 1,
+      "loadMs": 88.25999999046326,
+      "seconds": {
+        "set 8 B": 0.000045025,
+        "get 8 B": 0.000027111999999999997,
+        "set 128 B": 0.000015487999999999998,
+        "get 128 B": 0.000053987,
+        "set 1024 B": 0.000018888000000000003,
+        "get 1024 B": 0.000029638000000000003,
+        "set 16384 B": 0.000032987,
+        "get 16384 B": 0.00019475,
+        "set 262144 B": 0.0008119500000000001,
+        "get 262144 B": 0.00249555
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "C++ em-js",
+      "round": 2,
+      "loadMs": 54.8400000333786,
+      "seconds": {
+        "set 8 B": 0.000004369,
+        "get 8 B": 0.000001985,
+        "set 128 B": 0.00000775,
+        "get 128 B": 0.000006519999999999999,
+        "set 1024 B": 0.000013474999999999999,
+        "get 1024 B": 0.0000317,
+        "set 16384 B": 0.00010545,
+        "get 16384 B": 0.0007511,
+        "set 262144 B": 0.0016295,
+        "get 262144 B": 0.0068792
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "JS",
+      "round": 2,
+      "loadMs": null,
+      "seconds": {
+        "set 8 B": 6.520000000000001e-7,
+        "get 8 B": 3.42e-7,
+        "set 128 B": 0.000001375,
+        "get 128 B": 2.66e-7,
+        "set 1024 B": 0.000003314,
+        "get 1024 B": 3.07e-7,
+        "set 16384 B": 0.000049727,
+        "get 16384 B": 0.000001395,
+        "set 262144 B": 0.000608906,
+        "get 262144 B": 0.000061914
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "rust main",
+      "round": 2,
+      "loadMs": 85.68999999761581,
+      "seconds": {
+        "set 8 B": 0.000053411999999999996,
+        "get 8 B": 0.000040113,
+        "set 128 B": 0.000016487,
+        "get 128 B": 0.00006625,
+        "set 1024 B": 0.000016969,
+        "get 1024 B": 0.000032888,
+        "set 16384 B": 0.00003615,
+        "get 16384 B": 0.00024319999999999998,
+        "set 262144 B": 0.0010132000000000001,
+        "get 262144 B": 0.00290835
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "rust baseline",
+      "round": 2,
+      "loadMs": 74.74500000476837,
+      "seconds": {
+        "set 8 B": 0.000004059999999999999,
+        "get 8 B": 0.000007878,
+        "set 128 B": 0.000007172,
+        "get 128 B": 0.000013534000000000001,
+        "set 1024 B": 0.000013181,
+        "get 1024 B": 0.000017100000000000002,
+        "set 16384 B": 0.000016388000000000003,
+        "get 16384 B": 0.0001129,
+        "set 262144 B": 0.0007785,
+        "get 262144 B": 0.0028215500000000004
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "cpp main",
+      "round": 2,
+      "loadMs": 84.10499995946884,
+      "seconds": {
+        "set 8 B": 0.000036137,
+        "get 8 B": 0.000017969,
+        "set 128 B": 0.000014488,
+        "get 128 B": 0.0000259,
+        "set 1024 B": 0.000017638000000000003,
+        "get 1024 B": 0.000024738,
+        "set 16384 B": 0.000027013,
+        "get 16384 B": 0.00015005000000000002,
+        "set 262144 B": 0.00088105,
+        "get 262144 B": 0.00222385
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "cpp baseline",
+      "round": 2,
+      "loadMs": 33.19499999284744,
+      "seconds": {
+        "set 8 B": 0.000004044,
+        "get 8 B": 0.000008109,
+        "set 128 B": 0.0000052409999999999995,
+        "get 128 B": 0.0000265,
+        "set 1024 B": 0.000006783,
+        "get 1024 B": 0.00010905,
+        "set 16384 B": 0.000100425,
+        "get 16384 B": 0.00019659999999999998,
+        "set 262144 B": 0.00103305,
+        "get 262144 B": 0.00359765
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "c main",
+      "round": 2,
+      "loadMs": 99.14000004529953,
+      "seconds": {
+        "set 8 B": 0.000031337,
+        "get 8 B": 0.000027888,
+        "set 128 B": 0.000030438,
+        "get 128 B": 0.000040062,
+        "set 1024 B": 0.000018881,
+        "get 1024 B": 0.000034175,
+        "set 16384 B": 0.000031,
+        "get 16384 B": 0.0001627,
+        "set 262144 B": 0.0007406499999999999,
+        "get 262144 B": 0.0023538499999999998
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "c baseline",
+      "round": 2,
+      "loadMs": 46.27499997615814,
+      "seconds": {
+        "set 8 B": 0.00000287,
+        "get 8 B": 0.000012766,
+        "set 128 B": 0.000008397000000000001,
+        "get 128 B": 0.000009615999999999999,
+        "set 1024 B": 0.000003342,
+        "get 1024 B": 0.000016419,
+        "set 16384 B": 0.000020144,
+        "get 16384 B": 0.00012770000000000001,
+        "set 262144 B": 0.0007341,
+        "get 262144 B": 0.0030798
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "Rust wasm-bindgen",
+      "round": 2,
+      "loadMs": 46.189999997615814,
+      "seconds": {
+        "set 8 B": 0.000003794,
+        "get 8 B": 0.000003603,
+        "set 128 B": 0.00000603,
+        "get 128 B": 0.000007111,
+        "set 1024 B": 0.000007475,
+        "get 1024 B": 0.00009915000000000001,
+        "set 16384 B": 0.000021269,
+        "get 16384 B": 0.00031435,
+        "set 262144 B": 0.0007425499999999999,
+        "get 262144 B": 0.00425825
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "C++ emscripten",
+      "round": 2,
+      "loadMs": 105.38499999046326,
+      "seconds": {
+        "set 8 B": 0.000014413,
+        "get 8 B": 0.000022463,
+        "set 128 B": 0.0000124,
+        "get 128 B": 0.0000593,
+        "set 1024 B": 0.000020181000000000002,
+        "get 1024 B": 0.0001099,
+        "set 16384 B": 0.000060562,
+        "get 16384 B": 0.00128195,
+        "set 262144 B": 0.0014348,
+        "get 262144 B": 0.012043
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "C++ emscripten",
+      "round": 3,
+      "loadMs": 57.71000003814697,
+      "seconds": {
+        "set 8 B": 0.0000074530000000000005,
+        "get 8 B": 0.000010946999999999999,
+        "set 128 B": 0.000006469,
+        "get 128 B": 0.0000093,
+        "set 1024 B": 0.0000074409999999999996,
+        "get 1024 B": 0.000044862000000000005,
+        "set 16384 B": 0.00004255,
+        "get 16384 B": 0.0007155499999999999,
+        "set 262144 B": 0.0009805,
+        "get 262144 B": 0.00982735
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "Rust wasm-bindgen",
+      "round": 3,
+      "loadMs": 60.049999952316284,
+      "seconds": {
+        "set 8 B": 0.000002206,
+        "get 8 B": 8.659999999999999e-7,
+        "set 128 B": 0.000002549,
+        "get 128 B": 0.000003491,
+        "set 1024 B": 0.0000028050000000000002,
+        "get 1024 B": 0.000014006,
+        "set 16384 B": 0.000015756,
+        "get 16384 B": 0.00023225,
+        "set 262144 B": 0.0007335,
+        "get 262144 B": 0.0036596999999999997
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "c baseline",
+      "round": 3,
+      "loadMs": 107.0349999666214,
+      "seconds": {
+        "set 8 B": 0.000002423,
+        "get 8 B": 0.000007172,
+        "set 128 B": 0.000003477,
+        "get 128 B": 0.000016106,
+        "set 1024 B": 0.000006934,
+        "get 1024 B": 0.000015525,
+        "set 16384 B": 0.000017338000000000002,
+        "get 16384 B": 0.00010665,
+        "set 262144 B": 0.00076935,
+        "get 262144 B": 0.0029138000000000002
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "c main",
+      "round": 3,
+      "loadMs": 75.52000004053116,
+      "seconds": {
+        "set 8 B": 0.000034938,
+        "get 8 B": 0.0000542,
+        "set 128 B": 0.000029775,
+        "get 128 B": 0.000029863,
+        "set 1024 B": 0.000016637,
+        "get 1024 B": 0.000029925000000000002,
+        "set 16384 B": 0.000033175,
+        "get 16384 B": 0.0001884,
+        "set 262144 B": 0.00077475,
+        "get 262144 B": 0.0023145
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "cpp baseline",
+      "round": 3,
+      "loadMs": 30.985000014305115,
+      "seconds": {
+        "set 8 B": 0.0000027,
+        "get 8 B": 0.000009403000000000001,
+        "set 128 B": 0.000002655,
+        "get 128 B": 0.000007712,
+        "set 1024 B": 0.0000036829999999999997,
+        "get 1024 B": 0.000013625,
+        "set 16384 B": 0.000015063000000000001,
+        "get 16384 B": 0.00009995,
+        "set 262144 B": 0.00075525,
+        "get 262144 B": 0.00286975
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "cpp main",
+      "round": 3,
+      "loadMs": 134.9399999976158,
+      "seconds": {
+        "set 8 B": 0.0000529,
+        "get 8 B": 0.000051088,
+        "set 128 B": 0.000016725,
+        "get 128 B": 0.000054625,
+        "set 1024 B": 0.000018731,
+        "get 1024 B": 0.000037424999999999995,
+        "set 16384 B": 0.0000669,
+        "get 16384 B": 0.00020705000000000002,
+        "set 262144 B": 0.00115555,
+        "get 262144 B": 0.0021284
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "rust baseline",
+      "round": 3,
+      "loadMs": 62.535000026226044,
+      "seconds": {
+        "set 8 B": 0.0000023,
+        "get 8 B": 0.000007922,
+        "set 128 B": 0.000002334,
+        "get 128 B": 0.000006978,
+        "set 1024 B": 0.000003592,
+        "get 1024 B": 0.000012956,
+        "set 16384 B": 0.00001755,
+        "get 16384 B": 0.0001027,
+        "set 262144 B": 0.0007040499999999999,
+        "get 262144 B": 0.0028411
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "rust main",
+      "round": 3,
+      "loadMs": 82.01499998569489,
+      "seconds": {
+        "set 8 B": 0.000056674999999999995,
+        "get 8 B": 0.000033687,
+        "set 128 B": 0.000014574999999999999,
+        "get 128 B": 0.00002585,
+        "set 1024 B": 0.000016081,
+        "get 1024 B": 0.000027738,
+        "set 16384 B": 0.000033238,
+        "get 16384 B": 0.00018355000000000002,
+        "set 262144 B": 0.00068605,
+        "get 262144 B": 0.0023264
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "JS",
+      "round": 3,
+      "loadMs": null,
+      "seconds": {
+        "set 8 B": 5.1e-7,
+        "get 8 B": 1.81e-7,
+        "set 128 B": 8.5e-7,
+        "get 128 B": 2.21e-7,
+        "set 1024 B": 0.0000030689999999999998,
+        "get 1024 B": 3.2600000000000003e-7,
+        "set 16384 B": 0.00009193399999999999,
+        "get 16384 B": 0.000001276,
+        "set 262144 B": 0.00136625,
+        "get 262144 B": 0.000045254
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "C++ em-js",
+      "round": 3,
+      "loadMs": 27.710000038146973,
+      "seconds": {
+        "set 8 B": 9.01e-7,
+        "get 8 B": 8.82e-7,
+        "set 128 B": 0.000001963,
+        "get 128 B": 0.000003686,
+        "set 1024 B": 0.000007049999999999999,
+        "get 1024 B": 0.00003185,
+        "set 16384 B": 0.0000904,
+        "get 16384 B": 0.00041935000000000003,
+        "set 262144 B": 0.001232,
+        "get 262144 B": 0.0072383000000000005
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "Rust wasm-bindgen",
+      "round": 4,
+      "loadMs": 39.1599999666214,
+      "seconds": {
+        "set 8 B": 0.00000155,
+        "get 8 B": 8.52e-7,
+        "set 128 B": 0.000001685,
+        "get 128 B": 0.0000025400000000000002,
+        "set 1024 B": 0.000002607,
+        "get 1024 B": 0.000017419,
+        "set 16384 B": 0.000016681000000000002,
+        "get 16384 B": 0.0002553,
+        "set 262144 B": 0.0006268,
+        "get 262144 B": 0.00378165
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "C++ emscripten",
+      "round": 4,
+      "loadMs": 62.19499999284744,
+      "seconds": {
+        "set 8 B": 0.000002441,
+        "get 8 B": 0.0000033250000000000004,
+        "set 128 B": 0.00000458,
+        "get 128 B": 0.000006612,
+        "set 1024 B": 0.0000036960000000000003,
+        "get 1024 B": 0.000028306,
+        "set 16384 B": 0.000016844,
+        "get 16384 B": 0.000384,
+        "set 262144 B": 0.00072185,
+        "get 262144 B": 0.0064381
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "C++ em-js",
+      "round": 4,
+      "loadMs": 30.655000030994415,
+      "seconds": {
+        "set 8 B": 0.000003097,
+        "get 8 B": 8.41e-7,
+        "set 128 B": 0.000002775,
+        "get 128 B": 0.0000040590000000000004,
+        "set 1024 B": 0.000006844,
+        "get 1024 B": 0.000027013,
+        "set 16384 B": 0.000082475,
+        "get 16384 B": 0.00042510000000000003,
+        "set 262144 B": 0.0013636,
+        "get 262144 B": 0.00625805
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "JS",
+      "round": 4,
+      "loadMs": null,
+      "seconds": {
+        "set 8 B": 4.83e-7,
+        "get 8 B": 1.92e-7,
+        "set 128 B": 8.23e-7,
+        "get 128 B": 2.6400000000000003e-7,
+        "set 1024 B": 0.000003088,
+        "get 1024 B": 3.11e-7,
+        "set 16384 B": 0.0000375,
+        "get 16384 B": 0.000001172,
+        "set 262144 B": 0.00043890600000000003,
+        "get 262144 B": 0.000034043
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "rust main",
+      "round": 4,
+      "loadMs": 69.64499998092651,
+      "seconds": {
+        "set 8 B": 0.000032975,
+        "get 8 B": 0.000038013,
+        "set 128 B": 0.000015094,
+        "get 128 B": 0.000015081,
+        "set 1024 B": 0.000010702999999999999,
+        "get 1024 B": 0.000021394,
+        "set 16384 B": 0.000023775,
+        "get 16384 B": 0.00011509999999999999,
+        "set 262144 B": 0.0006119,
+        "get 262144 B": 0.0021173000000000003
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "rust baseline",
+      "round": 4,
+      "loadMs": 35.27999997138977,
+      "seconds": {
+        "set 8 B": 0.0000022839999999999996,
+        "get 8 B": 0.000007328,
+        "set 128 B": 0.0000025659999999999997,
+        "get 128 B": 0.000011272,
+        "set 1024 B": 0.000002647,
+        "get 1024 B": 0.000010087999999999999,
+        "set 16384 B": 0.000014256,
+        "get 16384 B": 0.0001041,
+        "set 262144 B": 0.0005525,
+        "get 262144 B": 0.0024494499999999997
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "cpp main",
+      "round": 4,
+      "loadMs": 65.64999997615814,
+      "seconds": {
+        "set 8 B": 0.000018125,
+        "get 8 B": 0.000013231,
+        "set 128 B": 0.000008843999999999999,
+        "get 128 B": 0.000017012,
+        "set 1024 B": 0.000011916,
+        "get 1024 B": 0.000028794,
+        "set 16384 B": 0.000033863,
+        "get 16384 B": 0.00022444999999999998,
+        "set 262144 B": 0.00074855,
+        "get 262144 B": 0.00172045
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "cpp baseline",
+      "round": 4,
+      "loadMs": 32.839999973773956,
+      "seconds": {
+        "set 8 B": 0.000002146,
+        "get 8 B": 0.000006531,
+        "set 128 B": 0.000002815,
+        "get 128 B": 0.000007940999999999999,
+        "set 1024 B": 0.0000032879999999999997,
+        "get 1024 B": 0.000014025,
+        "set 16384 B": 0.000016925,
+        "get 16384 B": 0.00016225,
+        "set 262144 B": 0.00073125,
+        "get 262144 B": 0.00256865
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "c main",
+      "round": 4,
+      "loadMs": 123.98500001430511,
+      "seconds": {
+        "set 8 B": 0.00004225,
+        "get 8 B": 0.000024611999999999997,
+        "set 128 B": 0.000014993999999999999,
+        "get 128 B": 0.000026663,
+        "set 1024 B": 0.000014725,
+        "get 1024 B": 0.000028961999999999998,
+        "set 16384 B": 0.00003145,
+        "get 16384 B": 0.00016775,
+        "set 262144 B": 0.00071175,
+        "get 262144 B": 0.00243175
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "c baseline",
+      "round": 4,
+      "loadMs": 38.064999997615814,
+      "seconds": {
+        "set 8 B": 0.000002282,
+        "get 8 B": 0.000007428,
+        "set 128 B": 0.000002375,
+        "get 128 B": 0.0000067969999999999995,
+        "set 1024 B": 0.000003664,
+        "get 1024 B": 0.000013131,
+        "set 16384 B": 0.000016613,
+        "get 16384 B": 0.00010515000000000001,
+        "set 262144 B": 0.00068065,
+        "get 262144 B": 0.0027018000000000003
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "c baseline",
+      "round": 5,
+      "loadMs": 31.839999973773956,
+      "seconds": {
+        "set 8 B": 0.000002638,
+        "get 8 B": 0.000006769,
+        "set 128 B": 0.000002463,
+        "get 128 B": 0.000007209,
+        "set 1024 B": 0.0000037109999999999997,
+        "get 1024 B": 0.000013384000000000001,
+        "set 16384 B": 0.000018631000000000002,
+        "get 16384 B": 0.0001292,
+        "set 262144 B": 0.0007247999999999999,
+        "get 262144 B": 0.0028087
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "c main",
+      "round": 5,
+      "loadMs": 72.30500000715256,
+      "seconds": {
+        "set 8 B": 0.000030050000000000002,
+        "get 8 B": 0.00010779999999999999,
+        "set 128 B": 0.000013237,
+        "get 128 B": 0.000025562,
+        "set 1024 B": 0.000015856,
+        "get 1024 B": 0.000026850000000000002,
+        "set 16384 B": 0.0000295,
+        "get 16384 B": 0.0001654,
+        "set 262144 B": 0.00067515,
+        "get 262144 B": 0.0021949
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "cpp baseline",
+      "round": 5,
+      "loadMs": 42.92999994754791,
+      "seconds": {
+        "set 8 B": 0.0000014790000000000002,
+        "get 8 B": 0.000009259,
+        "set 128 B": 0.00000273,
+        "get 128 B": 0.000008453,
+        "set 1024 B": 0.000002996,
+        "get 1024 B": 0.000013813000000000001,
+        "set 16384 B": 0.000016344,
+        "get 16384 B": 0.00010565,
+        "set 262144 B": 0.0006487999999999999,
+        "get 262144 B": 0.0023775
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "cpp main",
+      "round": 5,
+      "loadMs": 73.2399999499321,
+      "seconds": {
+        "set 8 B": 0.000044275,
+        "get 8 B": 0.000020025,
+        "set 128 B": 0.000014099999999999999,
+        "get 128 B": 0.000021194,
+        "set 1024 B": 0.000015613,
+        "get 1024 B": 0.000027575,
+        "set 16384 B": 0.000029963,
+        "get 16384 B": 0.0001729,
+        "set 262144 B": 0.0007386000000000001,
+        "get 262144 B": 0.00228705
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "rust baseline",
+      "round": 5,
+      "loadMs": 35.230000019073486,
+      "seconds": {
+        "set 8 B": 0.0000022839999999999996,
+        "get 8 B": 0.000009069,
+        "set 128 B": 0.000001887,
+        "get 128 B": 0.000007641,
+        "set 1024 B": 0.000004072,
+        "get 1024 B": 0.000022094000000000002,
+        "set 16384 B": 0.000014550000000000001,
+        "get 16384 B": 0.0000814,
+        "set 262144 B": 0.0005605,
+        "get 262144 B": 0.00246745
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "rust main",
+      "round": 5,
+      "loadMs": 83.125,
+      "seconds": {
+        "set 8 B": 0.000035938,
+        "get 8 B": 0.0000457,
+        "set 128 B": 0.000017106000000000002,
+        "get 128 B": 0.00005315,
+        "set 1024 B": 0.0000207,
+        "get 1024 B": 0.000031412,
+        "set 16384 B": 0.000033662,
+        "get 16384 B": 0.00018030000000000002,
+        "set 262144 B": 0.0006887000000000001,
+        "get 262144 B": 0.00235045
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "JS",
+      "round": 5,
+      "loadMs": null,
+      "seconds": {
+        "set 8 B": 5.490000000000001e-7,
+        "get 8 B": 2.29e-7,
+        "set 128 B": 8.76e-7,
+        "get 128 B": 2.34e-7,
+        "set 1024 B": 0.0000030360000000000002,
+        "get 1024 B": 2.72e-7,
+        "set 16384 B": 0.000036698999999999995,
+        "get 16384 B": 0.000001395,
+        "set 262144 B": 0.00046718700000000004,
+        "get 262144 B": 0.000033125
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "C++ em-js",
+      "round": 5,
+      "loadMs": 27.37000000476837,
+      "seconds": {
+        "set 8 B": 0.0000010500000000000001,
+        "get 8 B": 8.559999999999999e-7,
+        "set 128 B": 0.000002217,
+        "get 128 B": 0.000003827,
+        "set 1024 B": 0.000007803,
+        "get 1024 B": 0.0000298,
+        "set 16384 B": 0.00008872499999999999,
+        "get 16384 B": 0.0004614,
+        "set 262144 B": 0.0013309,
+        "get 262144 B": 0.0068416499999999995
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "C++ emscripten",
+      "round": 5,
+      "loadMs": 41.4549999833107,
+      "seconds": {
+        "set 8 B": 0.0000023,
+        "get 8 B": 0.000003214,
+        "set 128 B": 0.000003647,
+        "get 128 B": 0.0000068529999999999994,
+        "set 1024 B": 0.000004705,
+        "get 1024 B": 0.000034587000000000006,
+        "set 16384 B": 0.000019036999999999997,
+        "get 16384 B": 0.00044075,
+        "set 262144 B": 0.00027405,
+        "get 262144 B": 0.0072248
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "Rust wasm-bindgen",
+      "round": 5,
+      "loadMs": 33.58500003814697,
+      "seconds": {
+        "set 8 B": 0.000001387,
+        "get 8 B": 6.19e-7,
+        "set 128 B": 0.00000148,
+        "get 128 B": 0.000002186,
+        "set 1024 B": 0.00000225,
+        "get 1024 B": 0.000015081,
+        "set 16384 B": 0.000015555999999999998,
+        "get 16384 B": 0.00023045,
+        "set 262144 B": 0.0006824,
+        "get 262144 B": 0.00351855
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "c main",
+      "round": 6,
+      "loadMs": 80.43500000238419,
+      "seconds": {
+        "set 8 B": 0.000033325000000000004,
+        "get 8 B": 0.000014556,
+        "set 128 B": 0.000012359,
+        "get 128 B": 0.000018094,
+        "set 1024 B": 0.000015838,
+        "get 1024 B": 0.000033388,
+        "set 16384 B": 0.000026925,
+        "get 16384 B": 0.0001563,
+        "set 262144 B": 0.00061455,
+        "get 262144 B": 0.0016331
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "c baseline",
+      "round": 6,
+      "loadMs": 31.585000038146973,
+      "seconds": {
+        "set 8 B": 0.000001877,
+        "get 8 B": 0.000005402,
+        "set 128 B": 0.000001685,
+        "get 128 B": 0.000007344,
+        "set 1024 B": 0.000003664,
+        "get 1024 B": 0.000011175,
+        "set 16384 B": 0.000014813,
+        "get 16384 B": 0.000088425,
+        "set 262144 B": 0.0005552,
+        "get 262144 B": 0.00257635
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "Rust wasm-bindgen",
+      "round": 6,
+      "loadMs": 35.2150000333786,
+      "seconds": {
+        "set 8 B": 0.000001601,
+        "get 8 B": 6.32e-7,
+        "set 128 B": 0.000001597,
+        "get 128 B": 0.0000022810000000000003,
+        "set 1024 B": 0.0000022810000000000003,
+        "get 1024 B": 0.00001435,
+        "set 16384 B": 0.000015175000000000001,
+        "get 16384 B": 0.00022025,
+        "set 262144 B": 0.0006807,
+        "get 262144 B": 0.00348125
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "C++ emscripten",
+      "round": 6,
+      "loadMs": 44.92500001192093,
+      "seconds": {
+        "set 8 B": 0.000004838,
+        "get 8 B": 0.0000034569999999999997,
+        "set 128 B": 0.000004173,
+        "get 128 B": 0.000006766,
+        "set 1024 B": 0.00000432,
+        "get 1024 B": 0.000027913000000000002,
+        "set 16384 B": 0.000020244,
+        "get 16384 B": 0.00041675,
+        "set 262144 B": 0.0006721499999999999,
+        "get 262144 B": 0.00679365
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "C++ em-js",
+      "round": 6,
+      "loadMs": 57.63499999046326,
+      "seconds": {
+        "set 8 B": 9.97e-7,
+        "get 8 B": 5.47e-7,
+        "set 128 B": 0.000001887,
+        "get 128 B": 0.0000035369999999999998,
+        "set 1024 B": 0.000007528,
+        "get 1024 B": 0.000023125,
+        "set 16384 B": 0.00007209999999999999,
+        "get 16384 B": 0.0003466,
+        "set 262144 B": 0.0011872999999999999,
+        "get 262144 B": 0.0063253
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "JS",
+      "round": 6,
+      "loadMs": null,
+      "seconds": {
+        "set 8 B": 5.420000000000001e-7,
+        "get 8 B": 2.02e-7,
+        "set 128 B": 9.02e-7,
+        "get 128 B": 2.3499999999999997e-7,
+        "set 1024 B": 0.000003252,
+        "get 1024 B": 2.8499999999999997e-7,
+        "set 16384 B": 0.000036465000000000004,
+        "get 16384 B": 0.0000013229999999999999,
+        "set 262144 B": 0.00046718700000000004,
+        "get 262144 B": 0.000039531
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "rust main",
+      "round": 6,
+      "loadMs": 61.91500002145767,
+      "seconds": {
+        "set 8 B": 0.000033087000000000004,
+        "get 8 B": 0.000021062999999999998,
+        "set 128 B": 0.000014675000000000001,
+        "get 128 B": 0.000027475,
+        "set 1024 B": 0.000014969,
+        "get 1024 B": 0.000026581,
+        "set 16384 B": 0.00003455,
+        "get 16384 B": 0.0001649,
+        "set 262144 B": 0.0006894,
+        "get 262144 B": 0.0019664
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "rust baseline",
+      "round": 6,
+      "loadMs": 28.72000002861023,
+      "seconds": {
+        "set 8 B": 0.000002025,
+        "get 8 B": 0.000005614,
+        "set 128 B": 0.00000263,
+        "get 128 B": 0.000007119,
+        "set 1024 B": 0.000002683,
+        "get 1024 B": 0.000013675,
+        "set 16384 B": 0.000017944,
+        "get 16384 B": 0.000103,
+        "set 262144 B": 0.0006967999999999999,
+        "get 262144 B": 0.0027460500000000003
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "cpp main",
+      "round": 6,
+      "loadMs": 139.25,
+      "seconds": {
+        "set 8 B": 0.000053924999999999996,
+        "get 8 B": 0.000029425,
+        "set 128 B": 0.000013238,
+        "get 128 B": 0.000027236999999999997,
+        "set 1024 B": 0.000018256,
+        "get 1024 B": 0.00002775,
+        "set 16384 B": 0.00005025,
+        "get 16384 B": 0.00018235,
+        "set 262144 B": 0.0006972,
+        "get 262144 B": 0.00225785
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "cpp baseline",
+      "round": 6,
+      "loadMs": 59.310000002384186,
+      "seconds": {
+        "set 8 B": 0.000003669,
+        "get 8 B": 0.000007466,
+        "set 128 B": 0.000003639,
+        "get 128 B": 0.000009744,
+        "set 1024 B": 0.000010172,
+        "get 1024 B": 0.000014599999999999999,
+        "set 16384 B": 0.00001725,
+        "get 16384 B": 0.0001126,
+        "set 262144 B": 0.00068375,
+        "get 262144 B": 0.0031680500000000004
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "cpp baseline",
+      "round": 7,
+      "loadMs": 45.02000004053116,
+      "seconds": {
+        "set 8 B": 0.0000032999999999999997,
+        "get 8 B": 0.000007966,
+        "set 128 B": 0.000003158,
+        "get 128 B": 0.000011086999999999999,
+        "set 1024 B": 0.0000033130000000000003,
+        "get 1024 B": 0.000016056,
+        "set 16384 B": 0.000028644,
+        "get 16384 B": 0.00011077500000000001,
+        "set 262144 B": 0.000684,
+        "get 262144 B": 0.00280035
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "cpp main",
+      "round": 7,
+      "loadMs": 95.74500000476837,
+      "seconds": {
+        "set 8 B": 0.000041700000000000004,
+        "get 8 B": 0.000053275,
+        "set 128 B": 0.000017681000000000002,
+        "get 128 B": 0.000031111999999999996,
+        "set 1024 B": 0.000018225000000000003,
+        "get 1024 B": 0.000033625,
+        "set 16384 B": 0.000038462000000000005,
+        "get 16384 B": 0.0002063,
+        "set 262144 B": 0.00083875,
+        "get 262144 B": 0.0024750500000000003
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "rust baseline",
+      "round": 7,
+      "loadMs": 45.94999998807907,
+      "seconds": {
+        "set 8 B": 0.000002048,
+        "get 8 B": 0.000008156000000000001,
+        "set 128 B": 0.000002756,
+        "get 128 B": 0.000011387000000000001,
+        "set 1024 B": 0.000004833,
+        "get 1024 B": 0.000017631,
+        "set 16384 B": 0.000018594000000000002,
+        "get 16384 B": 0.000111575,
+        "set 262144 B": 0.0006718,
+        "get 262144 B": 0.0029666
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "rust main",
+      "round": 7,
+      "loadMs": 78.35500001907349,
+      "seconds": {
+        "set 8 B": 0.0000374,
+        "get 8 B": 0.000021444,
+        "set 128 B": 0.000011359,
+        "get 128 B": 0.0000315,
+        "set 1024 B": 0.000015969,
+        "get 1024 B": 0.000031188,
+        "set 16384 B": 0.0000323,
+        "get 16384 B": 0.00019675,
+        "set 262144 B": 0.0008387000000000001,
+        "get 262144 B": 0.00251565
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "JS",
+      "round": 7,
+      "loadMs": null,
+      "seconds": {
+        "set 8 B": 5.23e-7,
+        "get 8 B": 1.85e-7,
+        "set 128 B": 6.15e-7,
+        "get 128 B": 1.71e-7,
+        "set 1024 B": 0.000002451,
+        "get 1024 B": 2.8e-7,
+        "set 16384 B": 0.000038759999999999995,
+        "get 16384 B": 9.99e-7,
+        "set 262144 B": 0.000500625,
+        "get 262144 B": 0.000033594000000000004
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "C++ em-js",
+      "round": 7,
+      "loadMs": 31.225000023841858,
+      "seconds": {
+        "set 8 B": 0.00000159,
+        "get 8 B": 8.74e-7,
+        "set 128 B": 0.000001947,
+        "get 128 B": 0.00000313,
+        "set 1024 B": 0.000006453,
+        "get 1024 B": 0.000022663,
+        "set 16384 B": 0.000084875,
+        "get 16384 B": 0.00040865,
+        "set 262144 B": 0.0014105,
+        "get 262144 B": 0.0073186499999999995
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "C++ emscripten",
+      "round": 7,
+      "loadMs": 58.77000004053116,
+      "seconds": {
+        "set 8 B": 0.0000030360000000000002,
+        "get 8 B": 0.000003681,
+        "set 128 B": 0.000005394,
+        "get 128 B": 0.000008081,
+        "set 1024 B": 0.000008025,
+        "get 1024 B": 0.000054674999999999994,
+        "set 16384 B": 0.000021893999999999997,
+        "get 16384 B": 0.0004485,
+        "set 262144 B": 0.00091885,
+        "get 262144 B": 0.0068352
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "Rust wasm-bindgen",
+      "round": 7,
+      "loadMs": 19.75,
+      "seconds": {
+        "set 8 B": 0.000001466,
+        "get 8 B": 6.71e-7,
+        "set 128 B": 0.000001562,
+        "get 128 B": 0.000005198,
+        "set 1024 B": 0.000002621,
+        "get 1024 B": 0.000013075,
+        "set 16384 B": 0.000017425,
+        "get 16384 B": 0.0001772,
+        "set 262144 B": 0.00058125,
+        "get 262144 B": 0.0032646
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "c baseline",
+      "round": 7,
+      "loadMs": 29.35499995946884,
+      "seconds": {
+        "set 8 B": 0.000001923,
+        "get 8 B": 0.0000057800000000000006,
+        "set 128 B": 0.000002864,
+        "get 128 B": 0.000007775000000000001,
+        "set 1024 B": 0.000002443,
+        "get 1024 B": 0.000015288,
+        "set 16384 B": 0.00001695,
+        "get 16384 B": 0.0001236,
+        "set 262144 B": 0.0006347000000000001,
+        "get 262144 B": 0.0024630999999999998
+      }
+    },
+    {
+      "demo": "string-marshalling",
+      "implementation": "c main",
+      "round": 7,
+      "loadMs": 112.83499997854233,
+      "seconds": {
+        "set 8 B": 0.000038938000000000006,
+        "get 8 B": 0.000018094,
+        "set 128 B": 0.000016294,
+        "get 128 B": 0.00006175,
+        "set 1024 B": 0.000015641,
+        "get 1024 B": 0.000027387,
+        "set 16384 B": 0.000030725,
+        "get 16384 B": 0.0001528,
+        "set 262144 B": 0.00068785,
+        "get 262144 B": 0.002093
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "JS",
+      "round": 1,
+      "loadMs": null,
+      "seconds": {
+        "create: total ms": 0.013099999999999999,
+        "create: µs/row": 0.00000655,
+        "update (selected): total ms": 0.00114,
+        "update (selected): µs/row": 5.699999999999999e-7,
+        "clear (unselected): total ms": 0.00263,
+        "clear (unselected): µs/row": 0.000001315
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "C++ em-js",
+      "round": 1,
+      "loadMs": 37.87999999523163,
+      "seconds": {
+        "create: total ms": 0.018085,
+        "create: µs/row": 0.000009043,
+        "update (selected): total ms": 0.0035099999999999997,
+        "update (selected): µs/row": 0.000001755,
+        "clear (unselected): total ms": 0.009155,
+        "clear (unselected): µs/row": 0.0000045769999999999995
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "C++ emscripten",
+      "round": 1,
+      "loadMs": 42.674999952316284,
+      "seconds": {
+        "create: total ms": 0.047994999999999996,
+        "create: µs/row": 0.000023998,
+        "update (selected): total ms": 0.003695,
+        "update (selected): µs/row": 0.000001847,
+        "clear (unselected): total ms": 0.011980000000000001,
+        "clear (unselected): µs/row": 0.00000599
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "Rust wasm-bindgen",
+      "round": 1,
+      "loadMs": 41.39500004053116,
+      "seconds": {
+        "create: total ms": 0.02776,
+        "create: µs/row": 0.000013880000000000001,
+        "update (selected): total ms": 0.001905,
+        "update (selected): µs/row": 9.529999999999999e-7,
+        "clear (unselected): total ms": 0.0048200000000000005,
+        "clear (unselected): µs/row": 0.0000024100000000000002
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "c baseline",
+      "round": 1,
+      "loadMs": 33.55000001192093,
+      "seconds": {
+        "create: total ms": 0.047735,
+        "create: µs/row": 0.000023868,
+        "update (selected): total ms": 0.003455,
+        "update (selected): µs/row": 0.0000017270000000000002,
+        "clear (unselected): total ms": 0.014755,
+        "clear (unselected): µs/row": 0.000007377
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "c main",
+      "round": 1,
+      "loadMs": 112,
+      "seconds": {
+        "create: total ms": 0.237225,
+        "create: µs/row": 0.000118612,
+        "update (selected): total ms": 0.00928,
+        "update (selected): µs/row": 0.00000464,
+        "clear (unselected): total ms": 0.04215,
+        "clear (unselected): µs/row": 0.000021075
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "cpp baseline",
+      "round": 1,
+      "loadMs": 31.735000014305115,
+      "seconds": {
+        "create: total ms": 0.042385,
+        "create: µs/row": 0.000021193000000000002,
+        "update (selected): total ms": 0.005,
+        "update (selected): µs/row": 0.0000025,
+        "clear (unselected): total ms": 0.016195,
+        "clear (unselected): µs/row": 0.000008096999999999999
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "cpp main",
+      "round": 1,
+      "loadMs": 85.43000000715256,
+      "seconds": {
+        "create: total ms": 0.23556,
+        "create: µs/row": 0.00011778,
+        "update (selected): total ms": 0.011775,
+        "update (selected): µs/row": 0.000005888,
+        "clear (unselected): total ms": 0.057505,
+        "clear (unselected): µs/row": 0.000028752
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "rust baseline",
+      "round": 1,
+      "loadMs": 38.93000000715256,
+      "seconds": {
+        "create: total ms": 0.048530000000000004,
+        "create: µs/row": 0.000024265,
+        "update (selected): total ms": 0.00372,
+        "update (selected): µs/row": 0.0000018600000000000002,
+        "clear (unselected): total ms": 0.014495,
+        "clear (unselected): µs/row": 0.000007248
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "rust main",
+      "round": 1,
+      "loadMs": 91.69499999284744,
+      "seconds": {
+        "create: total ms": 0.24021,
+        "create: µs/row": 0.000120105,
+        "update (selected): total ms": 0.00903,
+        "update (selected): µs/row": 0.000004515,
+        "clear (unselected): total ms": 0.043385,
+        "clear (unselected): µs/row": 0.000021693
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "C++ em-js",
+      "round": 2,
+      "loadMs": 40.735000014305115,
+      "seconds": {
+        "create: total ms": 0.019635000000000003,
+        "create: µs/row": 0.000009817,
+        "update (selected): total ms": 0.00704,
+        "update (selected): µs/row": 0.00000352,
+        "clear (unselected): total ms": 0.014505,
+        "clear (unselected): µs/row": 0.000007252
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "JS",
+      "round": 2,
+      "loadMs": null,
+      "seconds": {
+        "create: total ms": 0.00882,
+        "create: µs/row": 0.00000441,
+        "update (selected): total ms": 0.00122,
+        "update (selected): µs/row": 6.1e-7,
+        "clear (unselected): total ms": 0.003705,
+        "clear (unselected): µs/row": 0.000001852
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "rust main",
+      "round": 2,
+      "loadMs": 81.80000001192093,
+      "seconds": {
+        "create: total ms": 0.261445,
+        "create: µs/row": 0.00013072300000000002,
+        "update (selected): total ms": 0.01292,
+        "update (selected): µs/row": 0.00000646,
+        "clear (unselected): total ms": 0.054560000000000004,
+        "clear (unselected): µs/row": 0.00002728
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "rust baseline",
+      "round": 2,
+      "loadMs": 57.035000026226044,
+      "seconds": {
+        "create: total ms": 0.043,
+        "create: µs/row": 0.0000215,
+        "update (selected): total ms": 0.003315,
+        "update (selected): µs/row": 0.000001657,
+        "clear (unselected): total ms": 0.01231,
+        "clear (unselected): µs/row": 0.000006155
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "cpp main",
+      "round": 2,
+      "loadMs": 73.11500000953674,
+      "seconds": {
+        "create: total ms": 0.28672000000000003,
+        "create: µs/row": 0.00014336,
+        "update (selected): total ms": 0.010385,
+        "update (selected): µs/row": 0.0000051920000000000004,
+        "clear (unselected): total ms": 0.06372,
+        "clear (unselected): µs/row": 0.000031859999999999997
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "cpp baseline",
+      "round": 2,
+      "loadMs": 36.280000030994415,
+      "seconds": {
+        "create: total ms": 0.04759,
+        "create: µs/row": 0.000023795000000000002,
+        "update (selected): total ms": 0.003545,
+        "update (selected): µs/row": 0.000001773,
+        "clear (unselected): total ms": 0.013335000000000001,
+        "clear (unselected): µs/row": 0.000006667
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "c main",
+      "round": 2,
+      "loadMs": 75.35000002384186,
+      "seconds": {
+        "create: total ms": 0.25722,
+        "create: µs/row": 0.00012861,
+        "update (selected): total ms": 0.01094,
+        "update (selected): µs/row": 0.00000547,
+        "clear (unselected): total ms": 0.055525,
+        "clear (unselected): µs/row": 0.000027762
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "c baseline",
+      "round": 2,
+      "loadMs": 32.92500001192093,
+      "seconds": {
+        "create: total ms": 0.035859999999999996,
+        "create: µs/row": 0.00001793,
+        "update (selected): total ms": 0.002245,
+        "update (selected): µs/row": 0.000001123,
+        "clear (unselected): total ms": 0.013994999999999999,
+        "clear (unselected): µs/row": 0.000006998000000000001
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "Rust wasm-bindgen",
+      "round": 2,
+      "loadMs": 25.710000038146973,
+      "seconds": {
+        "create: total ms": 0.027710000000000002,
+        "create: µs/row": 0.000013855,
+        "update (selected): total ms": 0.007655,
+        "update (selected): µs/row": 0.000003828,
+        "clear (unselected): total ms": 0.00877,
+        "clear (unselected): µs/row": 0.0000043849999999999995
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "C++ emscripten",
+      "round": 2,
+      "loadMs": 39.160000026226044,
+      "seconds": {
+        "create: total ms": 0.05661,
+        "create: µs/row": 0.000028305,
+        "update (selected): total ms": 0.00296,
+        "update (selected): µs/row": 0.00000148,
+        "clear (unselected): total ms": 0.01225,
+        "clear (unselected): µs/row": 0.000006125
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "C++ emscripten",
+      "round": 3,
+      "loadMs": 37.5349999666214,
+      "seconds": {
+        "create: total ms": 0.062255000000000005,
+        "create: µs/row": 0.000031127,
+        "update (selected): total ms": 0.003915,
+        "update (selected): µs/row": 0.000001958,
+        "clear (unselected): total ms": 0.01007,
+        "clear (unselected): µs/row": 0.000005035
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "Rust wasm-bindgen",
+      "round": 3,
+      "loadMs": 28.689999997615814,
+      "seconds": {
+        "create: total ms": 0.028345,
+        "create: µs/row": 0.000014173,
+        "update (selected): total ms": 0.003195,
+        "update (selected): µs/row": 0.000001597,
+        "clear (unselected): total ms": 0.0077800000000000005,
+        "clear (unselected): µs/row": 0.00000389
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "c baseline",
+      "round": 3,
+      "loadMs": 41.81999999284744,
+      "seconds": {
+        "create: total ms": 0.050485,
+        "create: µs/row": 0.000025243,
+        "update (selected): total ms": 0.00484,
+        "update (selected): µs/row": 0.00000242,
+        "clear (unselected): total ms": 0.01712,
+        "clear (unselected): µs/row": 0.000008560000000000001
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "c main",
+      "round": 3,
+      "loadMs": 69.90000003576279,
+      "seconds": {
+        "create: total ms": 0.255305,
+        "create: µs/row": 0.000127653,
+        "update (selected): total ms": 0.01319,
+        "update (selected): µs/row": 0.0000065949999999999995,
+        "clear (unselected): total ms": 0.062090000000000006,
+        "clear (unselected): µs/row": 0.000031045
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "cpp baseline",
+      "round": 3,
+      "loadMs": 32.714999973773956,
+      "seconds": {
+        "create: total ms": 0.054795,
+        "create: µs/row": 0.000027398,
+        "update (selected): total ms": 0.003835,
+        "update (selected): µs/row": 0.000001917,
+        "clear (unselected): total ms": 0.015235,
+        "clear (unselected): µs/row": 0.000007618000000000001
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "cpp main",
+      "round": 3,
+      "loadMs": 72.68000000715256,
+      "seconds": {
+        "create: total ms": 0.27502,
+        "create: µs/row": 0.00013751,
+        "update (selected): total ms": 0.012095,
+        "update (selected): µs/row": 0.000006047,
+        "clear (unselected): total ms": 0.062745,
+        "clear (unselected): µs/row": 0.000031373
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "rust baseline",
+      "round": 3,
+      "loadMs": 47.86500000953674,
+      "seconds": {
+        "create: total ms": 0.04056,
+        "create: µs/row": 0.000020280000000000002,
+        "update (selected): total ms": 0.002205,
+        "update (selected): µs/row": 0.000001102,
+        "clear (unselected): total ms": 0.010805,
+        "clear (unselected): µs/row": 0.000005403
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "rust main",
+      "round": 3,
+      "loadMs": 75.12000000476837,
+      "seconds": {
+        "create: total ms": 0.272115,
+        "create: µs/row": 0.000136058,
+        "update (selected): total ms": 0.012095,
+        "update (selected): µs/row": 0.000006047,
+        "clear (unselected): total ms": 0.05546,
+        "clear (unselected): µs/row": 0.00002773
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "JS",
+      "round": 3,
+      "loadMs": null,
+      "seconds": {
+        "create: total ms": 0.01244,
+        "create: µs/row": 0.00000622,
+        "update (selected): total ms": 0.001785,
+        "update (selected): µs/row": 8.92e-7,
+        "clear (unselected): total ms": 0.0065,
+        "clear (unselected): µs/row": 0.00000325
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "C++ em-js",
+      "round": 3,
+      "loadMs": 31.855000019073486,
+      "seconds": {
+        "create: total ms": 0.0162,
+        "create: µs/row": 0.0000081,
+        "update (selected): total ms": 0.0028799999999999997,
+        "update (selected): µs/row": 0.00000144,
+        "clear (unselected): total ms": 0.00917,
+        "clear (unselected): µs/row": 0.000004585
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "Rust wasm-bindgen",
+      "round": 4,
+      "loadMs": 29.084999978542328,
+      "seconds": {
+        "create: total ms": 0.02987,
+        "create: µs/row": 0.000014935,
+        "update (selected): total ms": 0.00401,
+        "update (selected): µs/row": 0.000002005,
+        "clear (unselected): total ms": 0.00928,
+        "clear (unselected): µs/row": 0.00000464
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "C++ emscripten",
+      "round": 4,
+      "loadMs": 65.69999998807907,
+      "seconds": {
+        "create: total ms": 0.056119999999999996,
+        "create: µs/row": 0.00002806,
+        "update (selected): total ms": 0.0038799999999999998,
+        "update (selected): µs/row": 0.00000194,
+        "clear (unselected): total ms": 0.014164999999999999,
+        "clear (unselected): µs/row": 0.000007082
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "C++ em-js",
+      "round": 4,
+      "loadMs": 29.819999992847443,
+      "seconds": {
+        "create: total ms": 0.014635,
+        "create: µs/row": 0.000007317,
+        "update (selected): total ms": 0.00289,
+        "update (selected): µs/row": 0.0000014450000000000001,
+        "clear (unselected): total ms": 0.009980000000000001,
+        "clear (unselected): µs/row": 0.0000049900000000000005
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "JS",
+      "round": 4,
+      "loadMs": null,
+      "seconds": {
+        "create: total ms": 0.014150000000000001,
+        "create: µs/row": 0.000007075,
+        "update (selected): total ms": 0.00182,
+        "update (selected): µs/row": 9.100000000000001e-7,
+        "clear (unselected): total ms": 0.007245,
+        "clear (unselected): µs/row": 0.0000036230000000000003
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "rust main",
+      "round": 4,
+      "loadMs": 83.94500005245209,
+      "seconds": {
+        "create: total ms": 0.31113999999999997,
+        "create: µs/row": 0.00015557,
+        "update (selected): total ms": 0.012525,
+        "update (selected): µs/row": 0.0000062619999999999995,
+        "clear (unselected): total ms": 0.05891,
+        "clear (unselected): µs/row": 0.000029455
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "rust baseline",
+      "round": 4,
+      "loadMs": 34.610000014305115,
+      "seconds": {
+        "create: total ms": 0.060365,
+        "create: µs/row": 0.000030183,
+        "update (selected): total ms": 0.0028799999999999997,
+        "update (selected): µs/row": 0.00000144,
+        "clear (unselected): total ms": 0.00919,
+        "clear (unselected): µs/row": 0.000004595
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "cpp main",
+      "round": 4,
+      "loadMs": 72.375,
+      "seconds": {
+        "create: total ms": 0.240875,
+        "create: µs/row": 0.000120438,
+        "update (selected): total ms": 0.016015,
+        "update (selected): µs/row": 0.000008007,
+        "clear (unselected): total ms": 0.064625,
+        "clear (unselected): µs/row": 0.000032313
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "cpp baseline",
+      "round": 4,
+      "loadMs": 38.839999973773956,
+      "seconds": {
+        "create: total ms": 0.040565,
+        "create: µs/row": 0.000020282,
+        "update (selected): total ms": 0.003315,
+        "update (selected): µs/row": 0.000001657,
+        "clear (unselected): total ms": 0.0123,
+        "clear (unselected): µs/row": 0.00000615
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "c main",
+      "round": 4,
+      "loadMs": 89.27499997615814,
+      "seconds": {
+        "create: total ms": 0.21005500000000002,
+        "create: µs/row": 0.00010502800000000001,
+        "update (selected): total ms": 0.00959,
+        "update (selected): µs/row": 0.000004795,
+        "clear (unselected): total ms": 0.04203,
+        "clear (unselected): µs/row": 0.000021015
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "c baseline",
+      "round": 4,
+      "loadMs": 34.105000019073486,
+      "seconds": {
+        "create: total ms": 0.03947,
+        "create: µs/row": 0.000019735,
+        "update (selected): total ms": 0.00227,
+        "update (selected): µs/row": 0.000001135,
+        "clear (unselected): total ms": 0.00994,
+        "clear (unselected): µs/row": 0.00000497
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "c baseline",
+      "round": 5,
+      "loadMs": 27.935000002384186,
+      "seconds": {
+        "create: total ms": 0.05208,
+        "create: µs/row": 0.000026039999999999998,
+        "update (selected): total ms": 0.003285,
+        "update (selected): µs/row": 0.000001642,
+        "clear (unselected): total ms": 0.019170000000000003,
+        "clear (unselected): µs/row": 0.000009585
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "c main",
+      "round": 5,
+      "loadMs": 64.39500004053116,
+      "seconds": {
+        "create: total ms": 0.216795,
+        "create: µs/row": 0.000108398,
+        "update (selected): total ms": 0.010455,
+        "update (selected): µs/row": 0.000005227,
+        "clear (unselected): total ms": 0.051055,
+        "clear (unselected): µs/row": 0.000025528
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "cpp baseline",
+      "round": 5,
+      "loadMs": 44.435000002384186,
+      "seconds": {
+        "create: total ms": 0.06699,
+        "create: µs/row": 0.000033495,
+        "update (selected): total ms": 0.004105,
+        "update (selected): µs/row": 0.000002053,
+        "clear (unselected): total ms": 0.01645,
+        "clear (unselected): µs/row": 0.000008225
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "cpp main",
+      "round": 5,
+      "loadMs": 66.89499998092651,
+      "seconds": {
+        "create: total ms": 0.246055,
+        "create: µs/row": 0.00012302800000000002,
+        "update (selected): total ms": 0.010625,
+        "update (selected): µs/row": 0.000005313,
+        "clear (unselected): total ms": 0.060969999999999996,
+        "clear (unselected): µs/row": 0.000030485
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "rust baseline",
+      "round": 5,
+      "loadMs": 31.49500000476837,
+      "seconds": {
+        "create: total ms": 0.038134999999999995,
+        "create: µs/row": 0.000019067,
+        "update (selected): total ms": 0.002145,
+        "update (selected): µs/row": 0.000001073,
+        "clear (unselected): total ms": 0.008525,
+        "clear (unselected): µs/row": 0.000004261999999999999
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "rust main",
+      "round": 5,
+      "loadMs": 81.02000004053116,
+      "seconds": {
+        "create: total ms": 0.279505,
+        "create: µs/row": 0.000139752,
+        "update (selected): total ms": 0.015035,
+        "update (selected): µs/row": 0.000007517,
+        "clear (unselected): total ms": 0.07098499999999999,
+        "clear (unselected): µs/row": 0.000035493
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "JS",
+      "round": 5,
+      "loadMs": null,
+      "seconds": {
+        "create: total ms": 0.010375,
+        "create: µs/row": 0.000005188,
+        "update (selected): total ms": 0.001555,
+        "update (selected): µs/row": 7.78e-7,
+        "clear (unselected): total ms": 0.004605000000000001,
+        "clear (unselected): µs/row": 0.000002302
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "C++ em-js",
+      "round": 5,
+      "loadMs": 31.319999992847443,
+      "seconds": {
+        "create: total ms": 0.021725,
+        "create: µs/row": 0.000010863,
+        "update (selected): total ms": 0.003175,
+        "update (selected): µs/row": 0.000001587,
+        "clear (unselected): total ms": 0.010539999999999999,
+        "clear (unselected): µs/row": 0.0000052699999999999995
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "C++ emscripten",
+      "round": 5,
+      "loadMs": 34.9099999666214,
+      "seconds": {
+        "create: total ms": 0.053869999999999994,
+        "create: µs/row": 0.000026935,
+        "update (selected): total ms": 0.003625,
+        "update (selected): µs/row": 0.000001812,
+        "clear (unselected): total ms": 0.01262,
+        "clear (unselected): µs/row": 0.00000631
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "Rust wasm-bindgen",
+      "round": 5,
+      "loadMs": 25.910000026226044,
+      "seconds": {
+        "create: total ms": 0.02915,
+        "create: µs/row": 0.000014574999999999999,
+        "update (selected): total ms": 0.003045,
+        "update (selected): µs/row": 0.0000015229999999999999,
+        "clear (unselected): total ms": 0.007465,
+        "clear (unselected): µs/row": 0.000003732
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "c main",
+      "round": 6,
+      "loadMs": 87.06999999284744,
+      "seconds": {
+        "create: total ms": 0.245025,
+        "create: µs/row": 0.000122512,
+        "update (selected): total ms": 0.01383,
+        "update (selected): µs/row": 0.000006915,
+        "clear (unselected): total ms": 0.057395,
+        "clear (unselected): µs/row": 0.000028697
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "c baseline",
+      "round": 6,
+      "loadMs": 40.48499995470047,
+      "seconds": {
+        "create: total ms": 0.038795,
+        "create: µs/row": 0.000019398,
+        "update (selected): total ms": 0.0034950000000000003,
+        "update (selected): µs/row": 0.000001748,
+        "clear (unselected): total ms": 0.00856,
+        "clear (unselected): µs/row": 0.0000042800000000000005
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "Rust wasm-bindgen",
+      "round": 6,
+      "loadMs": 29.089999973773956,
+      "seconds": {
+        "create: total ms": 0.032515,
+        "create: µs/row": 0.000016257,
+        "update (selected): total ms": 0.00244,
+        "update (selected): µs/row": 0.00000122,
+        "clear (unselected): total ms": 0.00679,
+        "clear (unselected): µs/row": 0.000003395
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "C++ emscripten",
+      "round": 6,
+      "loadMs": 39.66499996185303,
+      "seconds": {
+        "create: total ms": 0.06744,
+        "create: µs/row": 0.000033719999999999996,
+        "update (selected): total ms": 0.008205,
+        "update (selected): µs/row": 0.000004102000000000001,
+        "clear (unselected): total ms": 0.0161,
+        "clear (unselected): µs/row": 0.000008050000000000001
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "C++ em-js",
+      "round": 6,
+      "loadMs": 40.47500002384186,
+      "seconds": {
+        "create: total ms": 0.02154,
+        "create: µs/row": 0.00001077,
+        "update (selected): total ms": 0.004,
+        "update (selected): µs/row": 0.000002,
+        "clear (unselected): total ms": 0.013529999999999999,
+        "clear (unselected): µs/row": 0.000006765
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "JS",
+      "round": 6,
+      "loadMs": null,
+      "seconds": {
+        "create: total ms": 0.011065,
+        "create: µs/row": 0.000005532,
+        "update (selected): total ms": 0.00173,
+        "update (selected): µs/row": 8.65e-7,
+        "clear (unselected): total ms": 0.00438,
+        "clear (unselected): µs/row": 0.0000021899999999999998
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "rust main",
+      "round": 6,
+      "loadMs": 78.34499996900558,
+      "seconds": {
+        "create: total ms": 0.22209,
+        "create: µs/row": 0.000111045,
+        "update (selected): total ms": 0.012035,
+        "update (selected): µs/row": 0.000006018,
+        "clear (unselected): total ms": 0.038090000000000006,
+        "clear (unselected): µs/row": 0.000019045
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "rust baseline",
+      "round": 6,
+      "loadMs": 34.9549999833107,
+      "seconds": {
+        "create: total ms": 0.04124,
+        "create: µs/row": 0.000020620000000000002,
+        "update (selected): total ms": 0.003195,
+        "update (selected): µs/row": 0.000001597,
+        "clear (unselected): total ms": 0.009075,
+        "clear (unselected): µs/row": 0.0000045380000000000004
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "cpp main",
+      "round": 6,
+      "loadMs": 71.56499999761581,
+      "seconds": {
+        "create: total ms": 0.217815,
+        "create: µs/row": 0.00010890699999999999,
+        "update (selected): total ms": 0.011235,
+        "update (selected): µs/row": 0.000005618,
+        "clear (unselected): total ms": 0.0729,
+        "clear (unselected): µs/row": 0.000036450000000000005
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "cpp baseline",
+      "round": 6,
+      "loadMs": 60.44499999284744,
+      "seconds": {
+        "create: total ms": 0.051755,
+        "create: µs/row": 0.000025877,
+        "update (selected): total ms": 0.003765,
+        "update (selected): µs/row": 0.000001882,
+        "clear (unselected): total ms": 0.022609999999999998,
+        "clear (unselected): µs/row": 0.000011305
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "cpp baseline",
+      "round": 7,
+      "loadMs": 39.200000047683716,
+      "seconds": {
+        "create: total ms": 0.047994999999999996,
+        "create: µs/row": 0.000023998,
+        "update (selected): total ms": 0.003625,
+        "update (selected): µs/row": 0.000001813,
+        "clear (unselected): total ms": 0.01349,
+        "clear (unselected): µs/row": 0.000006745
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "cpp main",
+      "round": 7,
+      "loadMs": 122.22500002384186,
+      "seconds": {
+        "create: total ms": 0.314025,
+        "create: µs/row": 0.000157013,
+        "update (selected): total ms": 0.008150000000000001,
+        "update (selected): µs/row": 0.000004075,
+        "clear (unselected): total ms": 0.11429500000000001,
+        "clear (unselected): µs/row": 0.000057147
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "rust baseline",
+      "round": 7,
+      "loadMs": 32.07499998807907,
+      "seconds": {
+        "create: total ms": 0.036295,
+        "create: µs/row": 0.000018146999999999998,
+        "update (selected): total ms": 0.00244,
+        "update (selected): µs/row": 0.00000122,
+        "clear (unselected): total ms": 0.00942,
+        "clear (unselected): µs/row": 0.00000471
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "rust main",
+      "round": 7,
+      "loadMs": 79.86000001430511,
+      "seconds": {
+        "create: total ms": 0.275715,
+        "create: µs/row": 0.000137857,
+        "update (selected): total ms": 0.008060000000000001,
+        "update (selected): µs/row": 0.00000403,
+        "clear (unselected): total ms": 0.055564999999999996,
+        "clear (unselected): µs/row": 0.000027783
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "JS",
+      "round": 7,
+      "loadMs": null,
+      "seconds": {
+        "create: total ms": 0.016225,
+        "create: µs/row": 0.000008113,
+        "update (selected): total ms": 0.001445,
+        "update (selected): µs/row": 7.219999999999999e-7,
+        "clear (unselected): total ms": 0.003055,
+        "clear (unselected): µs/row": 0.000001527
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "C++ em-js",
+      "round": 7,
+      "loadMs": 25.0450000166893,
+      "seconds": {
+        "create: total ms": 0.01099,
+        "create: µs/row": 0.000005495,
+        "update (selected): total ms": 0.002435,
+        "update (selected): µs/row": 0.000001218,
+        "clear (unselected): total ms": 0.0081,
+        "clear (unselected): µs/row": 0.00000405
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "C++ emscripten",
+      "round": 7,
+      "loadMs": 48.2150000333786,
+      "seconds": {
+        "create: total ms": 0.046825000000000006,
+        "create: µs/row": 0.000023412,
+        "update (selected): total ms": 0.0029950000000000003,
+        "update (selected): µs/row": 0.000001498,
+        "clear (unselected): total ms": 0.015385,
+        "clear (unselected): µs/row": 0.000007692
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "Rust wasm-bindgen",
+      "round": 7,
+      "loadMs": 29.14500004053116,
+      "seconds": {
+        "create: total ms": 0.02309,
+        "create: µs/row": 0.000011545,
+        "update (selected): total ms": 0.003085,
+        "update (selected): µs/row": 0.000001542,
+        "clear (unselected): total ms": 0.0070750000000000006,
+        "clear (unselected): µs/row": 0.0000035369999999999998
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "c baseline",
+      "round": 7,
+      "loadMs": 58.110000014305115,
+      "seconds": {
+        "create: total ms": 0.04833,
+        "create: µs/row": 0.000024165,
+        "update (selected): total ms": 0.002475,
+        "update (selected): µs/row": 0.0000012370000000000002,
+        "clear (unselected): total ms": 0.016114999999999997,
+        "clear (unselected): µs/row": 0.000008058
+      }
+    },
+    {
+      "demo": "table-update",
+      "implementation": "c main",
+      "round": 7,
+      "loadMs": 89.24500000476837,
+      "seconds": {
+        "create: total ms": 0.36563999999999997,
+        "create: µs/row": 0.00018282,
+        "update (selected): total ms": 0.01572,
+        "update (selected): µs/row": 0.000007860000000000001,
+        "clear (unselected): total ms": 0.057715,
+        "clear (unselected): µs/row": 0.000028857
+      }
+    }
+  ]
+}

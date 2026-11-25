@@ -1,0 +1,16 @@
+document Document
+dom-token-list DomTokenList
+canvas-rendering-context2d CanvasRenderingContext2d
+element Element
+html-element HtmlElement
+node Node
+text Text
+trusted-html TrustedHtml
+trusted-script TrustedScript
+trusted-script-url TrustedScriptUrl
+window Window
+get-window getWindow
+get-performance getPerformance
+performance-mark PerformanceMark
+performance-measure PerformanceMeasure
+performance Performance

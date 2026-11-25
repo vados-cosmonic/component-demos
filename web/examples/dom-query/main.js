@@ -133,4 +133,6 @@ function getMeasurements() {
   return measurements;
 }
 
-init(runAll, clear, getMeasurements);
+export { runRawJs, getMeasurements };
+
+if (document.querySelector("#benchmark")) init(runAll, clear, getMeasurements);

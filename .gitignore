@@ -14,3 +14,9 @@ pkg/
 _wasi-sdk/
 # Emscripten SDK (emsdk + pinned toolchain), installed via install_emscripten.sh
 _emsdk/
+
+# Locally prepared benchmark tools and side-by-side generated bindings
+web/bench/main/build.*/
+web/bench/main/current
+web/*/*/jco-baseline/
+web/*/*/jco-main/

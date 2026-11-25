@@ -13,24 +13,12 @@ outdir="$2"
 
 host="../../../host/web-host.js"
 
-./node_modules/.bin/jco transpile "$component" \
-    --no-nodejs-compat \
-    --map document="$host#Document" \
-    --map dom-token-list="$host#DomTokenList" \
-    --map canvas-rendering-context2d="$host#CanvasRenderingContext2d" \
-    --map element="$host#Element" \
-    --map html-element="$host#HtmlElement" \
-    --map node="$host#Node" \
-    --map text="$host#Text" \
-    --map trusted-html="$host#TrustedHtml" \
-    --map trusted-script="$host#TrustedScript" \
-    --map trusted-script-url="$host#TrustedScriptUrl" \
-    --map window="$host#Window" \
-    --map get-window="$host#getWindow" \
-    --map get-performance="$host#getPerformance" \
-    --map performance-mark="$host#PerformanceMark" \
-    --map performance-measure="$host#PerformanceMeasure" \
-    --map performance="$host#Performance" \
+map_args=()
+while read -r name symbol; do
+    map_args+=(--map "$name=$host#$symbol")
+done < host/imports.txt
+
+./node_modules/.bin/jco transpile "$component" --no-nodejs-compat "${map_args[@]}" \
     -o "$outdir"
 
 # Emit a .wat next to each core wasm as a debugging aid (needs wasm-tools).

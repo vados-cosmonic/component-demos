@@ -1,0 +1,1650 @@
+{
+  "baseline": "1.13.0",
+  "main": "16f8fe4805367bb5591f2fc23e7fbe42de61cff5",
+  "components": [
+    {
+      "input": {
+        "path": "c/attribute-churn/native/attribute_churn.wasm",
+        "bytes": 66620,
+        "sha256": "a689c8ed3531ee53c4c5ae1f9d1d39da01eaf693b2071d87bae86d3974b9613c",
+        "gzip": 26934,
+        "brotli": 22135
+      },
+      "variants": {
+        "baseline": [
+          {
+            "path": "c/attribute-churn/jco-baseline/attribute_churn.core.wasm",
+            "bytes": 62908,
+            "sha256": "1a2784fe914f00594f4b2571d1d048c43b503345a46d3de9c02456da13ba97da",
+            "gzip": 25760,
+            "brotli": 21113
+          },
+          {
+            "path": "c/attribute-churn/jco-baseline/attribute_churn.js",
+            "bytes": 19474,
+            "sha256": "bd845c9c5f46b756ed753386b5eca3505957314554ae1e0e176db0db24b80f9c",
+            "gzip": 3323,
+            "brotli": 2789
+          }
+        ],
+        "main": [
+          {
+            "path": "c/attribute-churn/jco-main/attribute_churn.core.wasm",
+            "bytes": 62908,
+            "sha256": "1a2784fe914f00594f4b2571d1d048c43b503345a46d3de9c02456da13ba97da",
+            "gzip": 25760,
+            "brotli": 21113
+          },
+          {
+            "path": "c/attribute-churn/jco-main/attribute_churn.js",
+            "bytes": 178867,
+            "sha256": "41a420f8c63abb1a7cbd10c89220a0b1ab4eb973ad80dde735efbfe01c6f1049",
+            "gzip": 30961,
+            "brotli": 25860
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "c/calculator/native/calculator.wasm",
+        "bytes": 969,
+        "sha256": "9c4d4056292d53ac7a86ed2ca9bece1cd529b59150be801bb747693350f6b12d",
+        "gzip": 601,
+        "brotli": 528
+      },
+      "variants": {
+        "baseline": [
+          {
+            "path": "c/calculator/jco-baseline/calculator.js",
+            "bytes": 2398,
+            "sha256": "10e9051ad1d4505888f72ff23f628899adbefb9f27335bdc19777ebc5262f7fc",
+            "gzip": 1352,
+            "brotli": 1263
+          }
+        ],
+        "main": [
+          {
+            "path": "c/calculator/jco-main/calculator.js",
+            "bytes": 100878,
+            "sha256": "c081a43299ee5c793bb4eb3fcc97dce227447fad9a373fdafa89d545f3d3ae4f",
+            "gzip": 21554,
+            "brotli": 18484
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "c/canvas-draw/native/canvas_draw.wasm",
+        "bytes": 68072,
+        "sha256": "a3029272153a432fe91742383627f4c8a3b6e48dd7dc91a4fd9dd370f7c97960",
+        "gzip": 27204,
+        "brotli": 22308
+      },
+      "variants": {
+        "baseline": [
+          {
+            "path": "c/canvas-draw/jco-baseline/canvas_draw.core.wasm",
+            "bytes": 63389,
+            "sha256": "bf2dd3bd129a69dad4c3185d2821d55770e1c8530f6355277e27b433aee4ca04",
+            "gzip": 25801,
+            "brotli": 21179
+          },
+          {
+            "path": "c/canvas-draw/jco-baseline/canvas_draw.js",
+            "bytes": 23193,
+            "sha256": "25763c6ed386b910d7c0746e867e1c6a0c21039d312c532bc7485b266c8790d5",
+            "gzip": 3517,
+            "brotli": 2957
+          }
+        ],
+        "main": [
+          {
+            "path": "c/canvas-draw/jco-main/canvas_draw.core.wasm",
+            "bytes": 63389,
+            "sha256": "bf2dd3bd129a69dad4c3185d2821d55770e1c8530f6355277e27b433aee4ca04",
+            "gzip": 25801,
+            "brotli": 21179
+          },
+          {
+            "path": "c/canvas-draw/jco-main/canvas_draw.js",
+            "bytes": 193670,
+            "sha256": "77aabae2784fcbfc577f8312031420d9a18caf601c12da9589bcff612d6d131e",
+            "gzip": 31599,
+            "brotli": 26332
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "c/canvas-pixels/native/canvas_pixels.wasm",
+        "bytes": 71738,
+        "sha256": "bf13780bba53cc756c55a5539c235f5b004a7ef78f9cc868aca0b96b57873e82",
+        "gzip": 28146,
+        "brotli": 23004
+      },
+      "variants": {
+        "baseline": [
+          {
+            "path": "c/canvas-pixels/jco-baseline/canvas_pixels.core.wasm",
+            "bytes": 66246,
+            "sha256": "dc5c244ccabee52fcc8f750aa772081652b503f18e2e9cedd4dde4294e3e2bf7",
+            "gzip": 26605,
+            "brotli": 21879
+          },
+          {
+            "path": "c/canvas-pixels/jco-baseline/canvas_pixels.js",
+            "bytes": 24749,
+            "sha256": "a51bc93c561e2f2f0b9b69b52edf22811b779cc29a3aa796130cec2d203c0a69",
+            "gzip": 3858,
+            "brotli": 3243
+          }
+        ],
+        "main": [
+          {
+            "path": "c/canvas-pixels/jco-main/canvas_pixels.core.wasm",
+            "bytes": 66246,
+            "sha256": "dc5c244ccabee52fcc8f750aa772081652b503f18e2e9cedd4dde4294e3e2bf7",
+            "gzip": 26605,
+            "brotli": 21879
+          },
+          {
+            "path": "c/canvas-pixels/jco-main/canvas_pixels.js",
+            "bytes": 212550,
+            "sha256": "6f180855175dd2f27145d9fe8b3b1a6103e34bd4cce90166204ddcf3a30a0ecd",
+            "gzip": 34914,
+            "brotli": 29049
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "c/dom-query/native/dom_query.wasm",
+        "bytes": 69584,
+        "sha256": "dd956ec8952b486151363a55404b1527c6673063395d541b68f82733c77db15a",
+        "gzip": 27603,
+        "brotli": 22632
+      },
+      "variants": {
+        "baseline": [
+          {
+            "path": "c/dom-query/jco-baseline/dom_query.core.wasm",
+            "bytes": 65203,
+            "sha256": "aaf5fab64c469017aaa049d09b13bcfa24b14be3754c7cddab010cffdf1da381",
+            "gzip": 26259,
+            "brotli": 21543
+          },
+          {
+            "path": "c/dom-query/jco-baseline/dom_query.js",
+            "bytes": 22486,
+            "sha256": "022b6d1bf45a31c84b56c0613956907186c25edd62f9b3c84b9bdd756ec4d658",
+            "gzip": 3636,
+            "brotli": 3039
+          }
+        ],
+        "main": [
+          {
+            "path": "c/dom-query/jco-main/dom_query.core.wasm",
+            "bytes": 65203,
+            "sha256": "aaf5fab64c469017aaa049d09b13bcfa24b14be3754c7cddab010cffdf1da381",
+            "gzip": 26259,
+            "brotli": 21543
+          },
+          {
+            "path": "c/dom-query/jco-main/dom_query.js",
+            "bytes": 195490,
+            "sha256": "349e7a00500828182a083bef3d223ff7b28c7a3f624a29225ae122006e8a982e",
+            "gzip": 33042,
+            "brotli": 27554
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "c/dom-traversal/native/dom_traversal.wasm",
+        "bytes": 67542,
+        "sha256": "dae31c5c0b3ef88a0b8afbf828901f0faec0dfa2a6875dd12733e57fd0327ae8",
+        "gzip": 26983,
+        "brotli": 22163
+      },
+      "variants": {
+        "baseline": [
+          {
+            "path": "c/dom-traversal/jco-baseline/dom_traversal.core.wasm",
+            "bytes": 63501,
+            "sha256": "19a7cbcf733cdc5bfccf875cf27dab31ff3b4ee6fe9efc75c7e49e9f050eb8c3",
+            "gzip": 25722,
+            "brotli": 21095
+          },
+          {
+            "path": "c/dom-traversal/jco-baseline/dom_traversal.js",
+            "bytes": 21639,
+            "sha256": "34763bbce62691a72a7b13bdd1b1cbcf1840965602e4419930993da887d30481",
+            "gzip": 3413,
+            "brotli": 2864
+          }
+        ],
+        "main": [
+          {
+            "path": "c/dom-traversal/jco-main/dom_traversal.core.wasm",
+            "bytes": 63501,
+            "sha256": "19a7cbcf733cdc5bfccf875cf27dab31ff3b4ee6fe9efc75c7e49e9f050eb8c3",
+            "gzip": 25722,
+            "brotli": 21095
+          },
+          {
+            "path": "c/dom-traversal/jco-main/dom_traversal.js",
+            "bytes": 186470,
+            "sha256": "365b66e9f0b6c15e2544a97042cb01eaff693c0b2d39cb457b73b6087932fe42",
+            "gzip": 31205,
+            "brotli": 26040
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "c/greet-bindgen/native/greet.wasm",
+        "bytes": 57663,
+        "sha256": "ea0db0b8271111b0578ccad4962eb562520e5694a524b4c1399c480d0ecf08e1",
+        "gzip": 23981,
+        "brotli": 19670
+      },
+      "variants": {
+        "baseline": [
+          {
+            "path": "c/greet-bindgen/jco-baseline/greet.core.wasm",
+            "bytes": 57257,
+            "sha256": "1e3179af6ef86aaca56a41bc06bfb108370f8c2476a6d7c8a744980601cf9c13",
+            "gzip": 23788,
+            "brotli": 19461
+          },
+          {
+            "path": "c/greet-bindgen/jco-baseline/greet.js",
+            "bytes": 2614,
+            "sha256": "c8ce0a95c2f253a078a1f658532f41d5b9756da34a334c6f0753473c8c034e47",
+            "gzip": 1074,
+            "brotli": 987
+          }
+        ],
+        "main": [
+          {
+            "path": "c/greet-bindgen/jco-main/greet.core.wasm",
+            "bytes": 57257,
+            "sha256": "1e3179af6ef86aaca56a41bc06bfb108370f8c2476a6d7c8a744980601cf9c13",
+            "gzip": 23788,
+            "brotli": 19461
+          },
+          {
+            "path": "c/greet-bindgen/jco-main/greet.js",
+            "bytes": 108523,
+            "sha256": "0326dd3e2bf08c361da78b2a40baa2853e9d52ffd3a1955b3bd67a1677ee9e77",
+            "gzip": 23124,
+            "brotli": 19884
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "c/greet-freestanding/native/greet.wasm",
+        "bytes": 925,
+        "sha256": "ee2f0aff336bb7f5e5cce99a25947b292cf945fe17ecfc0fd55cfc0ccce0f32b",
+        "gzip": 629,
+        "brotli": 553
+      },
+      "variants": {
+        "baseline": [
+          {
+            "path": "c/greet-freestanding/jco-baseline/greet.js",
+            "bytes": 3080,
+            "sha256": "484a56585847554ffbfad8034a8ef7faf7f9995ba1b7856d9dc921b97db5af1b",
+            "gzip": 1625,
+            "brotli": 1491
+          }
+        ],
+        "main": [
+          {
+            "path": "c/greet-freestanding/jco-main/greet.js",
+            "bytes": 105511,
+            "sha256": "e1915e5b3f246ef73b55607d12e5ce092802dbd7dddd923532dfa021d185d16a",
+            "gzip": 23241,
+            "brotli": 19887
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "c/greet-libc/native/greet.wasm",
+        "bytes": 56218,
+        "sha256": "12d6b148cf7bd6d46f54bb8f41a32df6571ef37288bdf3f4f2c77152ca381210",
+        "gzip": 23463,
+        "brotli": 19125
+      },
+      "variants": {
+        "baseline": [
+          {
+            "path": "c/greet-libc/jco-baseline/greet.core.wasm",
+            "bytes": 55812,
+            "sha256": "623d4f316621b31995b2b6979c97731787aa1ba92342de9d205bbfe1ff823b99",
+            "gzip": 23277,
+            "brotli": 19009
+          },
+          {
+            "path": "c/greet-libc/jco-baseline/greet.js",
+            "bytes": 2614,
+            "sha256": "c8ce0a95c2f253a078a1f658532f41d5b9756da34a334c6f0753473c8c034e47",
+            "gzip": 1074,
+            "brotli": 987
+          }
+        ],
+        "main": [
+          {
+            "path": "c/greet-libc/jco-main/greet.core.wasm",
+            "bytes": 55812,
+            "sha256": "623d4f316621b31995b2b6979c97731787aa1ba92342de9d205bbfe1ff823b99",
+            "gzip": 23277,
+            "brotli": 19009
+          },
+          {
+            "path": "c/greet-libc/jco-main/greet.js",
+            "bytes": 108523,
+            "sha256": "0326dd3e2bf08c361da78b2a40baa2853e9d52ffd3a1955b3bd67a1677ee9e77",
+            "gzip": 23124,
+            "brotli": 19884
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "c/hello-world/native/hello_world.wasm",
+        "bytes": 61865,
+        "sha256": "d810b3664a8b34832a2b3f13674c5486a567a683ba88ed2e2a380989fca51d42",
+        "gzip": 25325,
+        "brotli": 20693
+      },
+      "variants": {
+        "baseline": [
+          {
+            "path": "c/hello-world/jco-baseline/hello_world.core.wasm",
+            "bytes": 59214,
+            "sha256": "fb24fe5d1baed70dfbf3b77261133f20c4270517b79938868aaf15c4738a33aa",
+            "gzip": 24454,
+            "brotli": 20035
+          },
+          {
+            "path": "c/hello-world/jco-baseline/hello_world.js",
+            "bytes": 14129,
+            "sha256": "a473d3b2d4728a19970ff3f4a2dbc3ec8a0ba4a1f9392979e0768e35b23574bf",
+            "gzip": 2890,
+            "brotli": 2483
+          }
+        ],
+        "main": [
+          {
+            "path": "c/hello-world/jco-main/hello_world.core.wasm",
+            "bytes": 59214,
+            "sha256": "fb24fe5d1baed70dfbf3b77261133f20c4270517b79938868aaf15c4738a33aa",
+            "gzip": 24454,
+            "brotli": 20035
+          },
+          {
+            "path": "c/hello-world/jco-main/hello_world.js",
+            "bytes": 164827,
+            "sha256": "b1ec3690e670d8889d8c6e74cb88334bc8cbba29c776afda720277e04301fdea",
+            "gzip": 30823,
+            "brotli": 26023
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "c/string-marshalling/native/string_marshalling.wasm",
+        "bytes": 67807,
+        "sha256": "7e1b1f266e5ae2a0c16f7e99ee8e5115e591bd373fc42ddcea41d272e035336b",
+        "gzip": 27251,
+        "brotli": 22404
+      },
+      "variants": {
+        "baseline": [
+          {
+            "path": "c/string-marshalling/jco-baseline/string_marshalling.core.wasm",
+            "bytes": 64132,
+            "sha256": "4d69142dd7ae155cef9b3cdec1a2914f2475bde00c681050b1373e0351649ede",
+            "gzip": 26108,
+            "brotli": 21525
+          },
+          {
+            "path": "c/string-marshalling/jco-baseline/string_marshalling.js",
+            "bytes": 19821,
+            "sha256": "77bb8da8b94ff090b26eab323a4900dc95b29c695ea4b8a5bb2c3f193855d2c6",
+            "gzip": 3471,
+            "brotli": 2944
+          }
+        ],
+        "main": [
+          {
+            "path": "c/string-marshalling/jco-main/string_marshalling.core.wasm",
+            "bytes": 64132,
+            "sha256": "4d69142dd7ae155cef9b3cdec1a2914f2475bde00c681050b1373e0351649ede",
+            "gzip": 26108,
+            "brotli": 21525
+          },
+          {
+            "path": "c/string-marshalling/jco-main/string_marshalling.js",
+            "bytes": 186047,
+            "sha256": "a0702bc16445be5228b0bec10b3d4235ef1f82ff37839ba3b4b7cd3b6d51ffcf",
+            "gzip": 32593,
+            "brotli": 27281
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "c/table-update/native/table_update.wasm",
+        "bytes": 72349,
+        "sha256": "715c5bd62c50267daf4837dff49b3305b76317be42742352e63b1ae2223364c3",
+        "gzip": 27749,
+        "brotli": 22716
+      },
+      "variants": {
+        "baseline": [
+          {
+            "path": "c/table-update/jco-baseline/table_update.core.wasm",
+            "bytes": 68208,
+            "sha256": "dc2fc3462a0a2b2a3cffbc06c0c718d5f1b6c86ff76a7504a839c79c752b5b4a",
+            "gzip": 26427,
+            "brotli": 21735
+          },
+          {
+            "path": "c/table-update/jco-baseline/table_update.js",
+            "bytes": 21743,
+            "sha256": "679a7aa74be648916f7bd862c7a011f9cc73269d467d4c225722f7f958a138a6",
+            "gzip": 3609,
+            "brotli": 3039
+          }
+        ],
+        "main": [
+          {
+            "path": "c/table-update/jco-main/table_update.core.wasm",
+            "bytes": 68208,
+            "sha256": "dc2fc3462a0a2b2a3cffbc06c0c718d5f1b6c86ff76a7504a839c79c752b5b4a",
+            "gzip": 26427,
+            "brotli": 21735
+          },
+          {
+            "path": "c/table-update/jco-main/table_update.js",
+            "bytes": 193682,
+            "sha256": "09f5450370999d367d53f31d35058ae37834912a06c597c2a5865b65fde5b324",
+            "gzip": 32923,
+            "brotli": 27471
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "cpp/attribute-churn/native/attribute_churn.wasm",
+        "bytes": 70602,
+        "sha256": "2cf2b34342405df2f63daf94b7ac606e42c966d37bccbfe1cc0dd670c09677ec",
+        "gzip": 28240,
+        "brotli": 23153
+      },
+      "variants": {
+        "baseline": [
+          {
+            "path": "cpp/attribute-churn/jco-baseline/attribute_churn.core.wasm",
+            "bytes": 66887,
+            "sha256": "97cb526a3b1eef01c3e1104dbc43974ce930a40ba5797aace830a2215e6f093a",
+            "gzip": 27049,
+            "brotli": 22189
+          },
+          {
+            "path": "cpp/attribute-churn/jco-baseline/attribute_churn.js",
+            "bytes": 19474,
+            "sha256": "76a1b6f9c620f5c3757ad6efec9769ee6094b596df17cd8d7a9766e79eba2411",
+            "gzip": 3331,
+            "brotli": 2787
+          }
+        ],
+        "main": [
+          {
+            "path": "cpp/attribute-churn/jco-main/attribute_churn.core.wasm",
+            "bytes": 66887,
+            "sha256": "97cb526a3b1eef01c3e1104dbc43974ce930a40ba5797aace830a2215e6f093a",
+            "gzip": 27049,
+            "brotli": 22189
+          },
+          {
+            "path": "cpp/attribute-churn/jco-main/attribute_churn.js",
+            "bytes": 178862,
+            "sha256": "ef1d1669dbbd2271bbb14cc3fb80a3f870d6e05a4b6905f21458a614f61c8fd1",
+            "gzip": 30913,
+            "brotli": 25892
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "cpp/canvas-draw/native/canvas_draw.wasm",
+        "bytes": 70124,
+        "sha256": "89ce6cb8f080010ad7411930b3cbbf1f7c154ddb08977657f183cd2dab18906f",
+        "gzip": 27719,
+        "brotli": 22622
+      },
+      "variants": {
+        "baseline": [
+          {
+            "path": "cpp/canvas-draw/jco-baseline/canvas_draw.core.wasm",
+            "bytes": 65438,
+            "sha256": "afaa5b6281bdd6cf4d33ff9904ad6e5ab8d96ff14cca6ec37dbcd0aa65c10c7a",
+            "gzip": 26300,
+            "brotli": 21633
+          },
+          {
+            "path": "cpp/canvas-draw/jco-baseline/canvas_draw.js",
+            "bytes": 23193,
+            "sha256": "fa5e2b0c537b647a4c642c7d64e1656e9077c6a485ae052c5610d2c97bccf2b3",
+            "gzip": 3531,
+            "brotli": 2974
+          }
+        ],
+        "main": [
+          {
+            "path": "cpp/canvas-draw/jco-main/canvas_draw.core.wasm",
+            "bytes": 65438,
+            "sha256": "afaa5b6281bdd6cf4d33ff9904ad6e5ab8d96ff14cca6ec37dbcd0aa65c10c7a",
+            "gzip": 26300,
+            "brotli": 21633
+          },
+          {
+            "path": "cpp/canvas-draw/jco-main/canvas_draw.js",
+            "bytes": 193655,
+            "sha256": "18e884a5dc06117ffc1a7c067b03159b114ab12801784e6a61ff288482ff6a12",
+            "gzip": 31598,
+            "brotli": 26312
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "cpp/canvas-pixels/native/canvas_pixels.wasm",
+        "bytes": 74887,
+        "sha256": "490081424394c4543ead94e4992442386e1f44c74a3e69bd6424430d91a19f12",
+        "gzip": 29037,
+        "brotli": 23625
+      },
+      "variants": {
+        "baseline": [
+          {
+            "path": "cpp/canvas-pixels/jco-baseline/canvas_pixels.core.wasm",
+            "bytes": 69392,
+            "sha256": "6f825890677d5a575634dca799565c9c7b2957ddc30094b7d5ff077c1d29db89",
+            "gzip": 27492,
+            "brotli": 22411
+          },
+          {
+            "path": "cpp/canvas-pixels/jco-baseline/canvas_pixels.js",
+            "bytes": 24749,
+            "sha256": "7ff8ab934fb689a2a6f6b39dae70beaed9c289ac28a18979519902bc010d0512",
+            "gzip": 3861,
+            "brotli": 3245
+          }
+        ],
+        "main": [
+          {
+            "path": "cpp/canvas-pixels/jco-main/canvas_pixels.core.wasm",
+            "bytes": 69392,
+            "sha256": "6f825890677d5a575634dca799565c9c7b2957ddc30094b7d5ff077c1d29db89",
+            "gzip": 27492,
+            "brotli": 22411
+          },
+          {
+            "path": "cpp/canvas-pixels/jco-main/canvas_pixels.js",
+            "bytes": 212535,
+            "sha256": "8d3360ce42541c36a744f2158b6ea9f22a77fcb6e875712bcebfb5d672b73be0",
+            "gzip": 34900,
+            "brotli": 29054
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "cpp/dom-query/native/dom_query.wasm",
+        "bytes": 73432,
+        "sha256": "8f6cf97cdb6a426ef5e74eb60f12e3564a835b80f0062f01ff650953395e96c9",
+        "gzip": 29145,
+        "brotli": 23762
+      },
+      "variants": {
+        "baseline": [
+          {
+            "path": "cpp/dom-query/jco-baseline/dom_query.core.wasm",
+            "bytes": 69048,
+            "sha256": "65bad7a4a8f3c1608f2fe3f4efbe9be706c420c44dd69c119e84aee29657340f",
+            "gzip": 27804,
+            "brotli": 22716
+          },
+          {
+            "path": "cpp/dom-query/jco-baseline/dom_query.js",
+            "bytes": 22486,
+            "sha256": "4728580bdb69a0ae4609eacded4a30b36831fa64c3f4b732a19a04199ded810b",
+            "gzip": 3635,
+            "brotli": 3034
+          }
+        ],
+        "main": [
+          {
+            "path": "cpp/dom-query/jco-main/dom_query.core.wasm",
+            "bytes": 69048,
+            "sha256": "65bad7a4a8f3c1608f2fe3f4efbe9be706c420c44dd69c119e84aee29657340f",
+            "gzip": 27804,
+            "brotli": 22716
+          },
+          {
+            "path": "cpp/dom-query/jco-main/dom_query.js",
+            "bytes": 195485,
+            "sha256": "fb48d445c98f3c7cd1f70da2656aa173c9fed8ecaf1bb69c6772357a8ad57466",
+            "gzip": 33036,
+            "brotli": 27554
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "cpp/dom-traversal/native/dom_traversal.wasm",
+        "bytes": 69598,
+        "sha256": "03aec9949fd9c345ac1d80eaca82eae8717f63d3ebbd9ec8fb843cc1a727bfa1",
+        "gzip": 27527,
+        "brotli": 22505
+      },
+      "variants": {
+        "baseline": [
+          {
+            "path": "cpp/dom-traversal/jco-baseline/dom_traversal.core.wasm",
+            "bytes": 65554,
+            "sha256": "0dee1c7c6c955fb6610df1ec0124002fca296f10148078d164319b0e2924b04a",
+            "gzip": 26263,
+            "brotli": 21550
+          },
+          {
+            "path": "cpp/dom-traversal/jco-baseline/dom_traversal.js",
+            "bytes": 21639,
+            "sha256": "c57484952932c9717ce86d2a2e48b028b3494faf2bc498c4c67a3123b01492c4",
+            "gzip": 3403,
+            "brotli": 2860
+          }
+        ],
+        "main": [
+          {
+            "path": "cpp/dom-traversal/jco-main/dom_traversal.core.wasm",
+            "bytes": 65554,
+            "sha256": "0dee1c7c6c955fb6610df1ec0124002fca296f10148078d164319b0e2924b04a",
+            "gzip": 26263,
+            "brotli": 21550
+          },
+          {
+            "path": "cpp/dom-traversal/jco-main/dom_traversal.js",
+            "bytes": 186465,
+            "sha256": "4657fc9da14bf4c7e3ad04f1d6ed7045b213f2d6052c3066d2a4331f40c04b0f",
+            "gzip": 31159,
+            "brotli": 26029
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "cpp/hello-world/native/hello_world.wasm",
+        "bytes": 61820,
+        "sha256": "ffaa7002a47170941bcbd9063147367c1de69c0fcc4f650bdd2326c9d889f239",
+        "gzip": 25253,
+        "brotli": 20627
+      },
+      "variants": {
+        "baseline": [
+          {
+            "path": "cpp/hello-world/jco-baseline/hello_world.core.wasm",
+            "bytes": 59163,
+            "sha256": "809ae810bc39b7fc1aa5c9f3274eaed32cdf085f1bcef6614666b48a9ce5610e",
+            "gzip": 24368,
+            "brotli": 19903
+          },
+          {
+            "path": "cpp/hello-world/jco-baseline/hello_world.js",
+            "bytes": 14129,
+            "sha256": "be1e6277f7f7b96398a8e15d99885b7571d2f1af1b0843afff2d281aa6c1634b",
+            "gzip": 2899,
+            "brotli": 2477
+          }
+        ],
+        "main": [
+          {
+            "path": "cpp/hello-world/jco-main/hello_world.core.wasm",
+            "bytes": 59163,
+            "sha256": "809ae810bc39b7fc1aa5c9f3274eaed32cdf085f1bcef6614666b48a9ce5610e",
+            "gzip": 24368,
+            "brotli": 19903
+          },
+          {
+            "path": "cpp/hello-world/jco-main/hello_world.js",
+            "bytes": 164827,
+            "sha256": "7e08f167b1ac365df7bf55c49e65778d37ebd18b15cf2a13b6845c42fef9de32",
+            "gzip": 30778,
+            "brotli": 26060
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "cpp/string-marshalling/native/string_marshalling.wasm",
+        "bytes": 69988,
+        "sha256": "ebc95f3cc732eb8cc6f8f99c6ebe1cfb4e169e44d02772fd29f94235cfb76b6f",
+        "gzip": 27924,
+        "brotli": 22785
+      },
+      "variants": {
+        "baseline": [
+          {
+            "path": "cpp/string-marshalling/jco-baseline/string_marshalling.core.wasm",
+            "bytes": 66310,
+            "sha256": "cd52291c02cb65000946f9a9343399c829ee3f201e14682110484691197c4bc3",
+            "gzip": 26754,
+            "brotli": 21912
+          },
+          {
+            "path": "cpp/string-marshalling/jco-baseline/string_marshalling.js",
+            "bytes": 19821,
+            "sha256": "1c47e012f9e1d42e9dda0c5c0af94ebec1f2988462fe1fdccaa0879a1562b625",
+            "gzip": 3471,
+            "brotli": 2924
+          }
+        ],
+        "main": [
+          {
+            "path": "cpp/string-marshalling/jco-main/string_marshalling.core.wasm",
+            "bytes": 66310,
+            "sha256": "cd52291c02cb65000946f9a9343399c829ee3f201e14682110484691197c4bc3",
+            "gzip": 26754,
+            "brotli": 21912
+          },
+          {
+            "path": "cpp/string-marshalling/jco-main/string_marshalling.js",
+            "bytes": 186042,
+            "sha256": "cb3bb363755a63b2b60f0669040ca96b815802ae2737298741eb1d1fb92586dc",
+            "gzip": 32562,
+            "brotli": 27195
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "cpp/table-update/native/table_update.wasm",
+        "bytes": 76707,
+        "sha256": "41b5f2acf727e15bd91d72934adaa8db0428391d090fe7502295ff885683c0a1",
+        "gzip": 29625,
+        "brotli": 24177
+      },
+      "variants": {
+        "baseline": [
+          {
+            "path": "cpp/table-update/jco-baseline/table_update.core.wasm",
+            "bytes": 72563,
+            "sha256": "29d0a70d144ecbf8c9e094c762b79ebeabf6ed7da057ddecd327701bc0491339",
+            "gzip": 28300,
+            "brotli": 22929
+          },
+          {
+            "path": "cpp/table-update/jco-baseline/table_update.js",
+            "bytes": 21743,
+            "sha256": "373d5da64f414d48a318c67fba00c2fefbb8cd35ed150c784ebc60c30fbe4d9e",
+            "gzip": 3621,
+            "brotli": 3043
+          }
+        ],
+        "main": [
+          {
+            "path": "cpp/table-update/jco-main/table_update.core.wasm",
+            "bytes": 72563,
+            "sha256": "29d0a70d144ecbf8c9e094c762b79ebeabf6ed7da057ddecd327701bc0491339",
+            "gzip": 28300,
+            "brotli": 22929
+          },
+          {
+            "path": "cpp/table-update/jco-main/table_update.js",
+            "bytes": 193677,
+            "sha256": "a8fee9f5b72e683afb4dc7f53d0fef9cca0e12885eabe41144aac8b98c33ea7c",
+            "gzip": 32883,
+            "brotli": 27452
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "rust/attribute-churn/native/attribute_churn.wasm",
+        "bytes": 155682,
+        "sha256": "bba99da654bb31cbeacf6c132c5b059d8be0e07e40a8dc147a80050e13bf7a6c",
+        "gzip": 55060,
+        "brotli": 45155
+      },
+      "variants": {
+        "baseline": [
+          {
+            "path": "rust/attribute-churn/jco-baseline/attribute_churn.core.wasm",
+            "bytes": 152087,
+            "sha256": "4caf77895217e1e6f48f0a4ee72e5833697f048245c9b6a5fd9757490ddefee7",
+            "gzip": 53888,
+            "brotli": 44237
+          },
+          {
+            "path": "rust/attribute-churn/jco-baseline/attribute_churn.js",
+            "bytes": 19257,
+            "sha256": "4cb506d4c71d5639323a56566ddec83c05fb4a6d47f7c95f8c9a5e19ad1f096f",
+            "gzip": 3271,
+            "brotli": 2748
+          }
+        ],
+        "main": [
+          {
+            "path": "rust/attribute-churn/jco-main/attribute_churn.core.wasm",
+            "bytes": 152087,
+            "sha256": "4caf77895217e1e6f48f0a4ee72e5833697f048245c9b6a5fd9757490ddefee7",
+            "gzip": 53888,
+            "brotli": 44237
+          },
+          {
+            "path": "rust/attribute-churn/jco-main/attribute_churn.js",
+            "bytes": 177446,
+            "sha256": "484b613f49c3e67eb0bb7dac2812384d7017341f4403c129173a718c415c29b1",
+            "gzip": 30692,
+            "brotli": 25651
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "rust/calculator-raw/native/calculator.wasm",
+        "bytes": 264868,
+        "sha256": "f79af7967b0694d37c5164eac24b84d5f6d2db631fff2ce39617741f043bd9ec",
+        "gzip": 86907,
+        "brotli": 73590
+      },
+      "variants": {
+        "baseline": [
+          {
+            "path": "rust/calculator-raw/jco-baseline/calculator.core.wasm",
+            "bytes": 264592,
+            "sha256": "11803595c81982f4d337a3f769b02679edcb2886c4b5890c7e422cd0ca756460",
+            "gzip": 86777,
+            "brotli": 73428
+          },
+          {
+            "path": "rust/calculator-raw/jco-baseline/calculator.js",
+            "bytes": 1453,
+            "sha256": "ca01abe79becb6339cdfd32d4be1e886b56197ede74db068d03fe56ebf6a64b8",
+            "gzip": 647,
+            "brotli": 579
+          }
+        ],
+        "main": [
+          {
+            "path": "rust/calculator-raw/jco-main/calculator.core.wasm",
+            "bytes": 264592,
+            "sha256": "11803595c81982f4d337a3f769b02679edcb2886c4b5890c7e422cd0ca756460",
+            "gzip": 86777,
+            "brotli": 73428
+          },
+          {
+            "path": "rust/calculator-raw/jco-main/calculator.js",
+            "bytes": 100434,
+            "sha256": "75eb311a1c39c08ba605bc814de37707bc1392ade5171a9b9d15ffb9d3cfe8e4",
+            "gzip": 20827,
+            "brotli": 17932
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "rust/calculator/native/calculator.wasm",
+        "bytes": 264183,
+        "sha256": "e3fe579c2971ca8afdab3395c2bf81a548c4d6fc094e3e0b7180dbcf083e23f8",
+        "gzip": 86681,
+        "brotli": 73344
+      },
+      "variants": {
+        "baseline": [
+          {
+            "path": "rust/calculator/jco-baseline/calculator.core.wasm",
+            "bytes": 263907,
+            "sha256": "36ab0077060d4e794cd29806ddf5cc0545e8c236af982ee4389cc9498cf56ce8",
+            "gzip": 86542,
+            "brotli": 73217
+          },
+          {
+            "path": "rust/calculator/jco-baseline/calculator.js",
+            "bytes": 1453,
+            "sha256": "ca01abe79becb6339cdfd32d4be1e886b56197ede74db068d03fe56ebf6a64b8",
+            "gzip": 647,
+            "brotli": 579
+          }
+        ],
+        "main": [
+          {
+            "path": "rust/calculator/jco-main/calculator.core.wasm",
+            "bytes": 263907,
+            "sha256": "36ab0077060d4e794cd29806ddf5cc0545e8c236af982ee4389cc9498cf56ce8",
+            "gzip": 86542,
+            "brotli": 73217
+          },
+          {
+            "path": "rust/calculator/jco-main/calculator.js",
+            "bytes": 100434,
+            "sha256": "75eb311a1c39c08ba605bc814de37707bc1392ade5171a9b9d15ffb9d3cfe8e4",
+            "gzip": 20827,
+            "brotli": 17932
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "rust/canvas-draw/native/canvas_draw.wasm",
+        "bytes": 144254,
+        "sha256": "ed742ed7bc3cb486b4727b14ee51431a45f1fb0cbdefdba0c7c8e938c4586c1c",
+        "gzip": 52222,
+        "brotli": 43042
+      },
+      "variants": {
+        "baseline": [
+          {
+            "path": "rust/canvas-draw/jco-baseline/canvas_draw.core.wasm",
+            "bytes": 139682,
+            "sha256": "90a3cf1e82b75e75b711bc1e51ada1c5aa41118b72399486bc5a3121d14f961c",
+            "gzip": 50842,
+            "brotli": 41960
+          },
+          {
+            "path": "rust/canvas-draw/jco-baseline/canvas_draw.js",
+            "bytes": 22976,
+            "sha256": "f3bb6f70ce64648bedc495cfb4276063d3d9a9fb0d418de9c1e73f244c80fd3f",
+            "gzip": 3478,
+            "brotli": 2937
+          }
+        ],
+        "main": [
+          {
+            "path": "rust/canvas-draw/jco-main/canvas_draw.core.wasm",
+            "bytes": 139682,
+            "sha256": "90a3cf1e82b75e75b711bc1e51ada1c5aa41118b72399486bc5a3121d14f961c",
+            "gzip": 50842,
+            "brotli": 41960
+          },
+          {
+            "path": "rust/canvas-draw/jco-main/canvas_draw.js",
+            "bytes": 192233,
+            "sha256": "85d8568adc564c8bd58e897f6b35d6c2c8ea40b2b1e64543e75d3b26613e8f3e",
+            "gzip": 31341,
+            "brotli": 26173
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "rust/canvas-pixels/native/canvas_pixels.wasm",
+        "bytes": 146343,
+        "sha256": "feb41d914f7539c1a7e2041b4e528fc08c7ff3469ce04bb9dc22a99ac03d702c",
+        "gzip": 52662,
+        "brotli": 43083
+      },
+      "variants": {
+        "baseline": [
+          {
+            "path": "rust/canvas-pixels/jco-baseline/canvas_pixels.core.wasm",
+            "bytes": 140956,
+            "sha256": "f427f76b7d366add1b27588aa2ee5ef966f8c32d40edfae6fc73863fcc9db59a",
+            "gzip": 51140,
+            "brotli": 42026
+          },
+          {
+            "path": "rust/canvas-pixels/jco-baseline/canvas_pixels.js",
+            "bytes": 24532,
+            "sha256": "f46565e9cbca2a85e3acb67489eba38b89e47a920f7e07a0e8ab051b9fcc6e8b",
+            "gzip": 3819,
+            "brotli": 3209
+          }
+        ],
+        "main": [
+          {
+            "path": "rust/canvas-pixels/jco-main/canvas_pixels.core.wasm",
+            "bytes": 140956,
+            "sha256": "f427f76b7d366add1b27588aa2ee5ef966f8c32d40edfae6fc73863fcc9db59a",
+            "gzip": 51140,
+            "brotli": 42026
+          },
+          {
+            "path": "rust/canvas-pixels/jco-main/canvas_pixels.js",
+            "bytes": 211106,
+            "sha256": "6f019a960a0c192e1d77203c3e328271da5ffd49d94b7e3e1da24e75aad71753",
+            "gzip": 34665,
+            "brotli": 28865
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "rust/dom-query/native/dom_query.wasm",
+        "bytes": 152411,
+        "sha256": "fd41c560495162971304f6d2e37efccadcad86986c9e7cd89ae63f63f1a4883e",
+        "gzip": 55024,
+        "brotli": 45141
+      },
+      "variants": {
+        "baseline": [
+          {
+            "path": "rust/dom-query/jco-baseline/dom_query.core.wasm",
+            "bytes": 148135,
+            "sha256": "a27a0a4f740bfe2788482913820b371da42f55a144e74ab67610de4f5b1b517e",
+            "gzip": 53698,
+            "brotli": 44136
+          },
+          {
+            "path": "rust/dom-query/jco-baseline/dom_query.js",
+            "bytes": 22269,
+            "sha256": "dcb7d60f6cdb0aa410fc360e3d2a6eaa1777da05bea4eefc844a63c00d9a8825",
+            "gzip": 3593,
+            "brotli": 2997
+          }
+        ],
+        "main": [
+          {
+            "path": "rust/dom-query/jco-main/dom_query.core.wasm",
+            "bytes": 148135,
+            "sha256": "a27a0a4f740bfe2788482913820b371da42f55a144e74ab67610de4f5b1b517e",
+            "gzip": 53698,
+            "brotli": 44136
+          },
+          {
+            "path": "rust/dom-query/jco-main/dom_query.js",
+            "bytes": 194061,
+            "sha256": "8494207fc9df505f593032fcfb6554fa1bacde4ba404279afb747853c7303217",
+            "gzip": 32798,
+            "brotli": 27387
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "rust/dom-traversal/native/dom_traversal.my.component.wasm",
+        "bytes": 141998,
+        "sha256": "0d2138945670e0b683de6cc2b002dad120d407132fe2426502140ad58e565397",
+        "gzip": 51837,
+        "brotli": 42664
+      },
+      "variants": {
+        "baseline": [
+          {
+            "path": "rust/dom-traversal/jco-baseline/dom_traversal.my.component.core.wasm",
+            "bytes": 138980,
+            "sha256": "1f5789019de3722f0ef8283c432b44d4226f3824f53ee4dda04a3e6c4c981735",
+            "gzip": 50895,
+            "brotli": 42001
+          },
+          {
+            "path": "rust/dom-traversal/jco-baseline/dom_traversal.my.component.js",
+            "bytes": 20679,
+            "sha256": "36100f309f378f23bbe292edd7c987752f01c4248d9eb20fb59a46c67a45865f",
+            "gzip": 3030,
+            "brotli": 2553
+          }
+        ],
+        "main": [
+          {
+            "path": "rust/dom-traversal/jco-main/dom_traversal.my.component.core.wasm",
+            "bytes": 138980,
+            "sha256": "1f5789019de3722f0ef8283c432b44d4226f3824f53ee4dda04a3e6c4c981735",
+            "gzip": 50895,
+            "brotli": 42001
+          },
+          {
+            "path": "rust/dom-traversal/jco-main/dom_traversal.my.component.js",
+            "bytes": 185018,
+            "sha256": "6a265953af967d28b79f039ad26c51532a27445e553523af70471a6f05c38d3c",
+            "gzip": 30718,
+            "brotli": 25739
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "rust/dom-traversal/native/dom_traversal.wasm",
+        "bytes": 141998,
+        "sha256": "0d2138945670e0b683de6cc2b002dad120d407132fe2426502140ad58e565397",
+        "gzip": 51837,
+        "brotli": 42664
+      },
+      "variants": {
+        "baseline": [
+          {
+            "path": "rust/dom-traversal/jco-baseline/dom_traversal.core.wasm",
+            "bytes": 138980,
+            "sha256": "1f5789019de3722f0ef8283c432b44d4226f3824f53ee4dda04a3e6c4c981735",
+            "gzip": 50895,
+            "brotli": 42001
+          },
+          {
+            "path": "rust/dom-traversal/jco-baseline/dom_traversal.js",
+            "bytes": 20666,
+            "sha256": "fe8359cf6fb5977774b773670ddd7a2d538d441a143ea5d7717f6b2ab1f00820",
+            "gzip": 3022,
+            "brotli": 2549
+          }
+        ],
+        "main": [
+          {
+            "path": "rust/dom-traversal/jco-main/dom_traversal.core.wasm",
+            "bytes": 138980,
+            "sha256": "1f5789019de3722f0ef8283c432b44d4226f3824f53ee4dda04a3e6c4c981735",
+            "gzip": 50895,
+            "brotli": 42001
+          },
+          {
+            "path": "rust/dom-traversal/jco-main/dom_traversal.js",
+            "bytes": 185005,
+            "sha256": "733897990d1e422a4caa61263f620d7ba87ee93a8f9c73e7889e1ab27787d94b",
+            "gzip": 30712,
+            "brotli": 25699
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "rust/hello-world/native/hello_world.wasm",
+        "bytes": 17782,
+        "sha256": "838af683aa33c1f56d214946f7a11bc554218e8a5f851e137f6e95c11add524d",
+        "gzip": 6957,
+        "brotli": 5783
+      },
+      "variants": {
+        "baseline": [
+          {
+            "path": "rust/hello-world/jco-baseline/hello_world.core.wasm",
+            "bytes": 15249,
+            "sha256": "db512871c1fabcad4e75274b89b5df3bfd4d25d9fa1a56e61f6eba2b5399ff57",
+            "gzip": 6231,
+            "brotli": 5166
+          },
+          {
+            "path": "rust/hello-world/jco-baseline/hello_world.js",
+            "bytes": 13912,
+            "sha256": "b27fbfb4a1f7de7af1bb801c3c3f91525d0b364083e80dbea7a521aa0a7a315c",
+            "gzip": 2846,
+            "brotli": 2457
+          }
+        ],
+        "main": [
+          {
+            "path": "rust/hello-world/jco-main/hello_world.core.wasm",
+            "bytes": 15249,
+            "sha256": "db512871c1fabcad4e75274b89b5df3bfd4d25d9fa1a56e61f6eba2b5399ff57",
+            "gzip": 6231,
+            "brotli": 5166
+          },
+          {
+            "path": "rust/hello-world/jco-main/hello_world.js",
+            "bytes": 163429,
+            "sha256": "531ecaecad2560e0285334e6b18ac49e2aa8be9b0358e0bb7945bcb936d42765",
+            "gzip": 30578,
+            "brotli": 25858
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "rust/string-marshalling/native/string_marshalling.wasm",
+        "bytes": 150398,
+        "sha256": "16d8681b55095b57bdbbcd21279ca8a1cc322accfbb55d1175eefaa0ade89382",
+        "gzip": 54239,
+        "brotli": 44743
+      },
+      "variants": {
+        "baseline": [
+          {
+            "path": "rust/string-marshalling/jco-baseline/string_marshalling.core.wasm",
+            "bytes": 146834,
+            "sha256": "ca99ee91981daebb2253f16bca5ac85d21ba45c28531d69641007bfefe31084f",
+            "gzip": 53091,
+            "brotli": 43834
+          },
+          {
+            "path": "rust/string-marshalling/jco-baseline/string_marshalling.js",
+            "bytes": 19604,
+            "sha256": "536443a55db591133114b96ec231cec31096f3eb208dcab2ee7e95affbf3d280",
+            "gzip": 3426,
+            "brotli": 2896
+          }
+        ],
+        "main": [
+          {
+            "path": "rust/string-marshalling/jco-main/string_marshalling.core.wasm",
+            "bytes": 146834,
+            "sha256": "ca99ee91981daebb2253f16bca5ac85d21ba45c28531d69641007bfefe31084f",
+            "gzip": 53091,
+            "brotli": 43834
+          },
+          {
+            "path": "rust/string-marshalling/jco-main/string_marshalling.js",
+            "bytes": 184622,
+            "sha256": "6b89f7470b23f6f515c5b3eaeb4eebe7cad8aec3a967a6c11da045937b268bf5",
+            "gzip": 32343,
+            "brotli": 27099
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "rust/table-rows/native/table_rows.wasm",
+        "bytes": 34143,
+        "sha256": "14fd1914321236b7834bd0b842ea60c1ea000c550d1048606be7bfde089b0dc8",
+        "gzip": 14578,
+        "brotli": 12605
+      },
+      "variants": {
+        "baseline": [
+          {
+            "path": "rust/table-rows/jco-baseline/table_rows.core.wasm",
+            "bytes": 31837,
+            "sha256": "4e420ca1bc8dc5c52871d1094ded0bb29e49d8d446b613f8460754f3e89b2b95",
+            "gzip": 13836,
+            "brotli": 12009
+          },
+          {
+            "path": "rust/table-rows/jco-baseline/table_rows.js",
+            "bytes": 13412,
+            "sha256": "0c04cc0a8fba723259dd9cd0998cd3ee3aa1077ecbc7dae77318c223914dd930",
+            "gzip": 2741,
+            "brotli": 2343
+          }
+        ],
+        "main": [
+          {
+            "path": "rust/table-rows/jco-main/table_rows.core.wasm",
+            "bytes": 31837,
+            "sha256": "4e420ca1bc8dc5c52871d1094ded0bb29e49d8d446b613f8460754f3e89b2b95",
+            "gzip": 13836,
+            "brotli": 12009
+          },
+          {
+            "path": "rust/table-rows/jco-main/table_rows.js",
+            "bytes": 160756,
+            "sha256": "edfa98309390eb81f95341641bf6b5c425039e95295bb5dd9c9d15eddc1c0a2b",
+            "gzip": 29703,
+            "brotli": 25088
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "rust/table-update/native/table_update.wasm",
+        "bytes": 153088,
+        "sha256": "8c1d69801f337ee6cb8d87762657382a5e20f6902d2a0a4be7ee70aebd126438",
+        "gzip": 55200,
+        "brotli": 45310
+      },
+      "variants": {
+        "baseline": [
+          {
+            "path": "rust/table-update/jco-baseline/table_update.core.wasm",
+            "bytes": 149690,
+            "sha256": "780122d26fa2f30f89df42eb8b49907a5e2b511eb71ee65c33a66c36302d5b27",
+            "gzip": 54077,
+            "brotli": 44561
+          },
+          {
+            "path": "rust/table-update/jco-baseline/table_update.js",
+            "bytes": 21123,
+            "sha256": "1a4441fd6f2c31a4def6e9c22b488f13b34d03f2f8152c40f9c173fc15035fe9",
+            "gzip": 3402,
+            "brotli": 2897
+          }
+        ],
+        "main": [
+          {
+            "path": "rust/table-update/jco-main/table_update.core.wasm",
+            "bytes": 149690,
+            "sha256": "780122d26fa2f30f89df42eb8b49907a5e2b511eb71ee65c33a66c36302d5b27",
+            "gzip": 54077,
+            "brotli": 44561
+          },
+          {
+            "path": "rust/table-update/jco-main/table_update.js",
+            "bytes": 192845,
+            "sha256": "55a6de20d91d353e167c1ab6a73e02aa5459799f711e908f6c196a76369860d7",
+            "gzip": 32616,
+            "brotli": 27375
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "rust/todomvc/native/todomvc.wasm",
+        "bytes": 14796,
+        "sha256": "7615929722562bef49d4eb03abfb5ea2a54f0b300322298b97c0335c997cc17c",
+        "gzip": 5682,
+        "brotli": 4856
+      },
+      "variants": {
+        "baseline": [
+          {
+            "path": "rust/todomvc/jco-baseline/todomvc.core.wasm",
+            "bytes": 11837,
+            "sha256": "fac2fbd34eb6c5e6d9606aa3b217a76df57bf644856426732a0ae2ddf28f1c68",
+            "gzip": 4864,
+            "brotli": 4177
+          },
+          {
+            "path": "rust/todomvc/jco-baseline/todomvc.js",
+            "bytes": 15623,
+            "sha256": "ca75e7de04786ab0ab1ce878560400d7dbd61290c503512c83a9d41a5e163e82",
+            "gzip": 2909,
+            "brotli": 2478
+          }
+        ],
+        "main": [
+          {
+            "path": "rust/todomvc/jco-main/todomvc.core.wasm",
+            "bytes": 11837,
+            "sha256": "fac2fbd34eb6c5e6d9606aa3b217a76df57bf644856426732a0ae2ddf28f1c68",
+            "gzip": 4864,
+            "brotli": 4177
+          },
+          {
+            "path": "rust/todomvc/jco-main/todomvc.js",
+            "bytes": 165418,
+            "sha256": "ecfabef4e672484481a5842fc1ad0d48d07c6c4fe16f8f6b89b06d08a71e8844",
+            "gzip": 29904,
+            "brotli": 25251
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "rust/vdom-diff/native/vdom_diff.wasm",
+        "bytes": 41912,
+        "sha256": "8827aa24fb34130a222726efa4c8e2ace3b8cf78c7c131eadab1ee0495f38318",
+        "gzip": 18225,
+        "brotli": 15669
+      },
+      "variants": {
+        "baseline": [
+          {
+            "path": "rust/vdom-diff/jco-baseline/vdom_diff.core.wasm",
+            "bytes": 39441,
+            "sha256": "8bd4788d6e44eb76a112d900fa3cc694a039238cb6b3233a02c15bf128dadc35",
+            "gzip": 17291,
+            "brotli": 15008
+          },
+          {
+            "path": "rust/vdom-diff/jco-baseline/vdom_diff.js",
+            "bytes": 15132,
+            "sha256": "53f73b3e161991cdd5d4c77fc0f02e1907e87b6a4da8ec80e9e10a0546dffc5b",
+            "gzip": 2849,
+            "brotli": 2448
+          }
+        ],
+        "main": [
+          {
+            "path": "rust/vdom-diff/jco-main/vdom_diff.core.wasm",
+            "bytes": 39441,
+            "sha256": "8bd4788d6e44eb76a112d900fa3cc694a039238cb6b3233a02c15bf128dadc35",
+            "gzip": 17291,
+            "brotli": 15008
+          },
+          {
+            "path": "rust/vdom-diff/jco-main/vdom_diff.js",
+            "bytes": 165254,
+            "sha256": "5c67cd2be9d75ae12f5618fb20f0da15da756b844a4a5e3640f11c6fb03bbd2a",
+            "gzip": 29918,
+            "brotli": 25195
+          }
+        ]
+      }
+    }
+  ],
+  "alternatives": {
+    "cpp/attribute-churn/emscripten": [
+      {
+        "path": "cpp/attribute-churn/emscripten/attribute_churn.mjs",
+        "bytes": 29331,
+        "sha256": "f192b6eafaaa63792d74ff88221cc67674eb09903cb15741d7cbfb194d287c8a",
+        "gzip": 8433,
+        "brotli": 7678
+      },
+      {
+        "path": "cpp/attribute-churn/emscripten/attribute_churn.wasm",
+        "bytes": 30742,
+        "sha256": "e7b01aa3dcbc3cbc1e25f96f786ed9e99a5a5dd2d45d526a4f2943e0c749ece0",
+        "gzip": 14216,
+        "brotli": 12268
+      }
+    ],
+    "cpp/canvas-draw/emscripten": [
+      {
+        "path": "cpp/canvas-draw/emscripten/canvas_draw.mjs",
+        "bytes": 29323,
+        "sha256": "d14834e2f12971464597dd56f2e2427452ad800ff08f3b4c3fb73fe30070692f",
+        "gzip": 8430,
+        "brotli": 7675
+      },
+      {
+        "path": "cpp/canvas-draw/emscripten/canvas_draw.wasm",
+        "bytes": 29773,
+        "sha256": "91a9aa2ae4b66458e16eb554bc736194a0052b5ddc957af964067f911a29dd31",
+        "gzip": 13377,
+        "brotli": 11477
+      }
+    ],
+    "cpp/canvas-pixels/emscripten": [
+      {
+        "path": "cpp/canvas-pixels/emscripten/canvas_pixels.mjs",
+        "bytes": 29489,
+        "sha256": "08eef5017ad197b4c5f14ffce829b72dc97ec09b629cb7987cac8431a933a326",
+        "gzip": 8478,
+        "brotli": 7721
+      },
+      {
+        "path": "cpp/canvas-pixels/emscripten/canvas_pixels.wasm",
+        "bytes": 35850,
+        "sha256": "2d5a4eec0a381517315b0b4a4f12e4466687741c9eba0a1ab8244be3277d5eda",
+        "gzip": 15494,
+        "brotli": 13158
+      }
+    ],
+    "cpp/dom-query/emscripten": [
+      {
+        "path": "cpp/dom-query/emscripten/dom_query.mjs",
+        "bytes": 29319,
+        "sha256": "94f5862f89dd37ccfac31f23ddb6b7d541c75fef555cfe685947c14f2842fe21",
+        "gzip": 8429,
+        "brotli": 7675
+      },
+      {
+        "path": "cpp/dom-query/emscripten/dom_query.wasm",
+        "bytes": 32163,
+        "sha256": "f87af1aaf95823888509bb2efc7dda8607de371b40841de56a859398d0b620be",
+        "gzip": 14445,
+        "brotli": 12360
+      }
+    ],
+    "cpp/dom-traversal/em-js": [
+      {
+        "path": "cpp/dom-traversal/em-js/dom_traversal.mjs",
+        "bytes": 9969,
+        "sha256": "857234e6c3a8dcfe3a913d4a6c4682d34491b1aaf8224a7e67e1ca2a3cc598e2",
+        "gzip": 3331,
+        "brotli": 3035
+      },
+      {
+        "path": "cpp/dom-traversal/em-js/dom_traversal.wasm",
+        "bytes": 22659,
+        "sha256": "b202dcd03c129463a0ac5bc443db2763edfafe051eaec9fdc6a5749008f1b0ff",
+        "gzip": 11169,
+        "brotli": 9692
+      }
+    ],
+    "cpp/dom-traversal/emscripten": [
+      {
+        "path": "cpp/dom-traversal/emscripten/dom_traversal.mjs",
+        "bytes": 29327,
+        "sha256": "a9221d5d40032c3303deb1d4631fe49283ee5cc3df61126cad85726e65c8a686",
+        "gzip": 8431,
+        "brotli": 7679
+      },
+      {
+        "path": "cpp/dom-traversal/emscripten/dom_traversal.wasm",
+        "bytes": 29496,
+        "sha256": "1441f731bd06cbe78b35d3747b01a618d88eeedd4f42959efce76986c51278a5",
+        "gzip": 13439,
+        "brotli": 11541
+      }
+    ],
+    "cpp/string-marshalling/em-js": [
+      {
+        "path": "cpp/string-marshalling/em-js/string_marshalling.mjs",
+        "bytes": 10828,
+        "sha256": "054fbdb45851c85fc3e9d94202021cea9b33c6479925ebfa2973ab064a82fe60",
+        "gzip": 3620,
+        "brotli": 3298
+      },
+      {
+        "path": "cpp/string-marshalling/em-js/string_marshalling.wasm",
+        "bytes": 23362,
+        "sha256": "66903ec98494d48b7b75c5117f5902c84e41c9c2fb5d6ce9f8b0ce6a8a275449",
+        "gzip": 11579,
+        "brotli": 10049
+      }
+    ],
+    "cpp/string-marshalling/emscripten": [
+      {
+        "path": "cpp/string-marshalling/emscripten/string_marshalling.mjs",
+        "bytes": 29337,
+        "sha256": "e34142c134291c967c415d3cc1cbf3a458d24270f41d68f251e6d8481cea117f",
+        "gzip": 8433,
+        "brotli": 7719
+      },
+      {
+        "path": "cpp/string-marshalling/emscripten/string_marshalling.wasm",
+        "bytes": 30459,
+        "sha256": "dc8e36a6d8b25c454870c414281bca9d6f6725d4c0c41fb94b8ceb79fc1ed017",
+        "gzip": 13928,
+        "brotli": 11929
+      }
+    ],
+    "cpp/table-update/em-js": [
+      {
+        "path": "cpp/table-update/em-js/table_update.mjs",
+        "bytes": 10075,
+        "sha256": "1035df9f72874d65fbc07f6371f439fd33119a50a7b4db9f8e93f7354224635d",
+        "gzip": 3362,
+        "brotli": 3069
+      },
+      {
+        "path": "cpp/table-update/em-js/table_update.wasm",
+        "bytes": 26372,
+        "sha256": "1a2a9ae25e0156f2f797b14c3de84324c060c4d6d3fb69fc74074dfc6b19d620",
+        "gzip": 12560,
+        "brotli": 10847
+      }
+    ],
+    "cpp/table-update/emscripten": [
+      {
+        "path": "cpp/table-update/emscripten/table_update.mjs",
+        "bytes": 29325,
+        "sha256": "b95ad1afaaf0a445486f75251e34a884ce8196da1afe57ae4ed002919662e299",
+        "gzip": 8427,
+        "brotli": 7676
+      },
+      {
+        "path": "cpp/table-update/emscripten/table_update.wasm",
+        "bytes": 35859,
+        "sha256": "6f7e52aeb69936a35f0ef31efc386f5f77bc1731a6c8a0a9153468223053a2a5",
+        "gzip": 15253,
+        "brotli": 12992
+      }
+    ],
+    "rust/dom-traversal-wasm-bindgen": [
+      {
+        "path": "rust/dom-traversal-wasm-bindgen/dom_traversal_wasm_bindgen.js",
+        "bytes": 13096,
+        "sha256": "7b56593fb0f71121f192993184329752500da9f6ce8ccebc6350b468c489ec7e",
+        "gzip": 3503,
+        "brotli": 3063
+      },
+      {
+        "path": "rust/dom-traversal-wasm-bindgen/dom_traversal_wasm_bindgen_bg.wasm",
+        "bytes": 60594,
+        "sha256": "e2056cea51f9fbae9ab793fe95e82c42ab7ea76f1f37d2b8d60ea1e8f21eb807",
+        "gzip": 24123,
+        "brotli": 20038
+      }
+    ],
+    "rust/string-marshalling-wasm-bindgen": [
+      {
+        "path": "rust/string-marshalling-wasm-bindgen/string_marshalling_wasm_bindgen.js",
+        "bytes": 13014,
+        "sha256": "1567a0757e92430ea91666a8c1589c8e23a1ecdbfa87c85a60e579a26181dac8",
+        "gzip": 3447,
+        "brotli": 3011
+      },
+      {
+        "path": "rust/string-marshalling-wasm-bindgen/string_marshalling_wasm_bindgen_bg.wasm",
+        "bytes": 61334,
+        "sha256": "1c788f953311a47a83a27eab514a3aecda4692a0022427d6c32bc757629178ac",
+        "gzip": 24263,
+        "brotli": 20077
+      }
+    ],
+    "rust/table-update-wasm-bindgen": [
+      {
+        "path": "rust/table-update-wasm-bindgen/table_update_wasm_bindgen.js",
+        "bytes": 13385,
+        "sha256": "554e2b407d62d07a3b1d7754e5af929335478116daf38be37448c8a78aa25ad4",
+        "gzip": 3523,
+        "brotli": 3106
+      },
+      {
+        "path": "rust/table-update-wasm-bindgen/table_update_wasm_bindgen_bg.wasm",
+        "bytes": 65780,
+        "sha256": "526ded3ecae360ae6e75eec25fcb7832b585fccb0b9cf50a61c58f1f4509580a",
+        "gzip": 25217,
+        "brotli": 20954
+      }
+    ]
+  }
+}
