@@ -86,6 +86,54 @@ left.invert_yaxis()
 fig.savefig(results / "candidate-runtime.png", dpi=155)
 plt.close(fig)
 
+paired_run = json.loads((results / "paired-browser.json").read_text())
+if paired_run["sizesSha256"] != run["sizesSha256"] or paired_run["candidate"] != run["candidate"]:
+    raise ValueError("Paired browser samples and candidate builds differ")
+for path, digest in paired_run["sources"].items():
+    if sha256((bench.parent / path).read_bytes()).hexdigest() != digest:
+        raise ValueError("Paired browser source changed: " + path)
+paired_samples = {}
+for sample in paired_run["samples"]:
+    key = (sample["demo"], sample["implementation"], sample["round"], sample["pass"])
+    if key in paired_samples:
+        raise ValueError("Repeated paired browser sample")
+    paired_samples[key] = sample["seconds"]
+if len(paired_samples) != len(focus) * len(languages) * 2 * paired_run["rounds"] * paired_run["passes"]:
+    raise ValueError("Unexpected number of paired samples")
+def paired_page_ratios(demo, lang, metric):
+    result = []
+    for n in range(1, paired_run["rounds"] + 1):
+        ratios = []
+        for visit in range(1, paired_run["passes"] + 1):
+            baseline, candidate = [paired_samples[demo, f"{lang} {v}", n, visit][metric]
+                                   for v in ("baseline", "candidate")]
+            if baseline <= 0:
+                raise ValueError(f"Cannot compare a zero baseline for {demo}/{lang}/{metric}")
+            ratios.append(candidate / baseline)
+        result.append(median(ratios))
+    return result
+
+paired_rows = []
+paired_intervals = defaultdict(list)
+paired_winners = 0
+for demo, (metric, label, unit) in focus.items():
+    for lang, title in languages.items():
+        per_page = paired_page_ratios(demo, lang, metric)
+        midpoint = median(per_page)
+        paired_winners += midpoint <= 1
+        paired_intervals[title].append((midpoint, quantile(per_page, .25), quantile(per_page, .75)))
+        paired_rows.append([label, title, f"{midpoint:.2f}×",
+                            f"{quantile(per_page, .25):.2f}–{quantile(per_page, .75):.2f}×",
+                            f"{sum(v <= 1 for v in per_page)}/{len(per_page)}"])
+all_paired = []
+for demo in focus:
+    for lang, title in languages.items():
+        metrics = paired_samples[demo, f"{lang} baseline", 1, 1]
+        for metric in metrics:
+            pages = paired_page_ratios(demo, lang, metric)
+            all_paired.append((median(pages), demo, title, metric, sum(r <= 1 for r in pages)))
+slow_paired = sorted((entry for entry in all_paired if entry[0] > 1), reverse=True)
+
 lines = []
 def para(s):
     lines.extend([s, ""])
@@ -103,6 +151,7 @@ para(f"The candidate uses js-component-bindgen’s internal Oxc bundler and the 
      "The internal Oxc bundle drops the general asynchronous import fallback for these components. "
      "The adapter holds direct references to its task stack and instance flags, checks the store for interruptions, "
      "and lifts short ASCII strings in groups of four bytes. "
+     "When lifting a borrowed host resource, the runtime validates the handle and reads its 32-bit representation directly. "
      "Imported host resources with automatically assigned representations use their guest handle as an array index. "
      "Explicit host representations and shared tables use a representation map. "
      "Components with async operations, cross-component resource transfers or call tracking keep the general adapter. "
@@ -111,9 +160,12 @@ para(f"All Jco builds used the same guest binaries. Each value is the median of 
      f"{run['rounds']} fresh-page samples with one warm-up per page. The run collected {len(run['samples'])} "
      f"samples on {run['date'][:10]} with {run['browser']} on {run['cpu']}.")
 para(f"The candidate finished within **10× of the fastest available compiled shim in "
-     f"{sum(r <= 10 for r in shim_ratios)}/{len(rows)}** headline comparisons. It matched or beat "
+     f"{sum(r <= 10 for r in shim_ratios)}/{len(rows)}** headline comparisons. The largest ratio was **{max(shim_ratios):.2f}×**. "
+     "On separate fresh pages it matched or beat "
      f"**1.13.0 in {sum(r <= 1 for r in baseline_ratios)}/{len(rows)}** and **stock main in "
-     f"{sum(r <= 1 for r in main_ratios)}/{len(rows)}**. The strictest shim comparison selects the lowest "
+     f"{sum(r <= 1 for r in main_ratios)}/{len(rows)}**. On the same warmed page it matched or beat "
+     f"**1.13.0 in {paired_winners}/{len(paired_rows)}** headline cases and {len(all_paired) - len(slow_paired)}/{len(all_paired)} "
+     "across all phases. The shim comparison selects the lowest "
      "median among Embind, EM_JS and wasm-bindgen for each operation, including shims written in a different guest language. "
      "The phase tables in the original comparison describe workload differences and include raw JavaScript.")
 para("![Candidate runtime relative to the two targets by operation and language](web/bench/results/candidate-runtime.png)")
@@ -139,39 +191,6 @@ if reference:
         [label, *[paired_change(demo, lang, metric) for lang in languages]]
         for demo, metric, label in comparisons
     ])
-paired_run = json.loads((results / "paired-browser.json").read_text())
-if paired_run["sizesSha256"] != run["sizesSha256"] or paired_run["candidate"] != run["candidate"]:
-    raise ValueError("Paired browser samples and candidate builds differ")
-for path, digest in paired_run["sources"].items():
-    if sha256((bench.parent / path).read_bytes()).hexdigest() != digest:
-        raise ValueError("Paired browser source changed: " + path)
-paired_samples = {}
-for sample in paired_run["samples"]:
-    key = (sample["demo"], sample["implementation"], sample["round"], sample["pass"])
-    if key in paired_samples:
-        raise ValueError("Repeated paired browser sample")
-    paired_samples[key] = sample["seconds"]
-if len(paired_samples) != len(focus) * len(languages) * 2 * paired_run["rounds"] * paired_run["passes"]:
-    raise ValueError("Unexpected number of paired samples")
-paired_rows = []
-paired_intervals = defaultdict(list)
-paired_winners = 0
-for demo, (metric, label, unit) in focus.items():
-    for lang, title in languages.items():
-        per_page = []
-        for n in range(1, paired_run["rounds"] + 1):
-            ratios = []
-            for visit in range(1, paired_run["passes"] + 1):
-                baseline, candidate = [paired_samples[demo, f"{lang} {v}", n, visit][metric]
-                                       for v in ("baseline", "candidate")]
-                ratios.append(candidate / baseline)
-            per_page.append(median(ratios))
-        midpoint = median(per_page)
-        paired_winners += midpoint <= 1
-        paired_intervals[title].append((midpoint, quantile(per_page, .25), quantile(per_page, .75)))
-        paired_rows.append([label, title, f"{midpoint:.2f}×",
-                            f"{quantile(per_page, .25):.2f}–{quantile(per_page, .75):.2f}×",
-                            f"{sum(v <= 1 for v in per_page)}/{len(per_page)}"])
 para("### Warm 1.13.0 comparison on the same page")
 para(f"For each guest and workload, both builds run once to warm up, then {paired_run['passes']} times each on the same page. "
      "Each pair alternates which build runs first. The runner clears the DOM and performance entries before every call. "
@@ -197,6 +216,12 @@ plt.close(fig)
 para("![Median paired time ratios by workload and guest, with bars spanning the middle half of page ratios]"
      "(web/bench/results/paired-runtime.png)")
 table(["Operation", "Guest", "Candidate / 1.13.0", "Middle 50% of page ratios", "Pages at or below 1×"], paired_rows)
+para(f"Across all {len(all_paired)} reported phases and string lengths, the same-page comparison matched or beat "
+     f"1.13.0 in **{len(all_paired) - len(slow_paired)}/{len(all_paired)}** cases. Totals and subphases overlap.")
+if slow_paired:
+    table(["Slower paired phase", "Guest", "Metric", "Candidate / 1.13.0", "Pages at or below 1×"],
+          [[demo, guest, metric, f"{ratio:.3f}×", f"{wins}/{paired_run['rounds']}"]
+           for ratio, demo, guest, metric, wins in slow_paired])
 phase_rows, phase_baseline, phase_shim, misses = [], [], [], []
 for demo in focus:
     for metric in dict.fromkeys(m for d, i, m in times if d == demo and i == "c candidate"):
