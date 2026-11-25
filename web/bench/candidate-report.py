@@ -99,6 +99,8 @@ commit = run["candidate"]["commit"]
 para("## Optimized browser bindings")
 para(f"The candidate uses js-component-bindgen’s internal Oxc bundler and the checked jco-cm-runtime. "
      "For eligible single-instance, synchronous components, a host import reuses the caller’s task. "
+     "Imported host resources with automatically assigned representations use their guest handle as an array index. "
+     "Explicit host representations and shared tables use a representation map. "
      "Components with async operations, cross-component resource transfers or call tracking keep the general adapter. "
      f"[Jco commit `{commit[:9]}`](https://github.com/vados-cosmonic/jco/commit/{commit})")
 para(f"All Jco builds used the same guest binaries. Each value is the median of "
@@ -120,6 +122,8 @@ if reference:
          "the candidate median by the previous revision’s median. Parentheses count the rounds in which the candidate finished faster. "
          f"[Compare `{ref[:9]}` and `{commit[:9]}`](https://github.com/vados-cosmonic/jco/compare/{ref}...{commit})")
     comparisons = [(demo, metric, label) for demo, (metric, label, _) in focus.items()]
+    comparisons += [("dom-query", "bulk: total ms", "Bulk DOM query"),
+                    ("dom-traversal", "build", "Tree construction")]
     comparisons += [("string-marshalling", metric, metric) for metric in ("set 8 B", "get 8 B")]
     def paired_change(demo, lang, metric):
         current = times[demo, f"{lang} candidate", metric]
@@ -176,7 +180,7 @@ if control_path.exists():
             durations[key][sample["round"]] = seconds
     para("### DOM bindings with identical guest code")
     para(f"These {len(control['samples'])} fresh-page samples compare each language’s exact core Wasm binary with "
-         "three sets of bindings. The direct JS shim calls the same DOM host, puts owned handles in guest memory "
+         "each set of bindings in the table. The direct JS shim calls the same DOM host, puts owned handles in guest memory "
          "and recycles them on guest drops. It implements the synchronous imports used by these guests. Jco also "
          "provides Canonical ABI checks, task tracking and instance shutdown. "
          "[Direct shim](web/bench/dom-core-shim.mjs) · [Raw timings and correctness checks](web/bench/results/dom-control-browser.json)")
@@ -187,25 +191,53 @@ if control_path.exists():
          f"Each traversal visits {nodes:,} nodes. The runner checks the rendered fixture or node count for "
          "each guest and verifies list counts and handle release for the direct shim after warm-up and measurement.")
     matched_rows, bulk_ratios = [], []
+    matched_plot = defaultdict(list)
+    previous = ["reference"] if control.get("reference") else []
     for demo, metric, title in [("dom-query", "individual: total ms", "DOM ID lookup"),
                                 ("dom-query", "bulk: total ms", "Bulk DOM query"),
                                 ("dom-traversal", "build", "Tree construction"),
                                 ("dom-traversal", "traverse (total)", "Tree traversal")]:
         for lang, guest in languages.items():
-            series = [durations[demo, f"{lang} {v}", metric] for v in ("direct", "baseline", "candidate")]
+            series = [durations[demo, f"{lang} {v}", metric] for v in ["direct", "baseline", "candidate", *previous]]
             if any(set(group) != control_rounds for group in series):
                 raise ValueError(f"Incomplete DOM control samples for {demo} / {lang}")
-            direct, baseline, candidate = [median(group.values()) for group in series]
+            direct, baseline, candidate = [median(group.values()) for group in series[:3]]
+            matched_plot[guest].append((title, baseline / direct, candidate / direct))
             if title == "Bulk DOM query":
                 bulk_ratios.append(candidate / direct)
             wins = sum(series[2][n] <= series[1][n] for n in control_rounds)
             matched_rows.append([title, guest, *[f"{v * 1000:.2f}" for v in (direct, baseline, candidate)],
                                  f"{candidate / direct:.2f}×", f"{candidate / baseline:.2f}×",
                                  f"{wins}/{len(control_rounds)}"])
+            if previous:
+                prior = series[3]
+                paired_wins = sum(series[2][n] <= prior[n] for n in control_rounds)
+                matched_rows[-1].extend([f"{candidate / median(prior.values()):.2f}×", f"{paired_wins}/{len(control_rounds)}"])
     para(f"With list materialization on both sides, the candidate took **{min(bulk_ratios):.2f}–{max(bulk_ratios):.2f}×** "
          "the direct shim’s bulk-query time across the three guests. Times below are per measured workload, after warm-up.")
+    fig, axes = plt.subplots(1, len(languages), figsize=(9.7, 3.2), layout="constrained", sharex=True, sharey=True)
+    for ax, guest in zip(axes, languages.values()):
+        phases, baseline, candidate = zip(*matched_plot[guest])
+        positions = list(range(len(phases)))
+        ax.axvline(1, color="#515151", linestyle="--", label="Direct shim")
+        ax.hlines(positions, baseline, candidate, color="#b4bdc7", linewidth=2)
+        ax.scatter(baseline, positions, color="#535d86", s=34, label="1.13.0", zorder=3)
+        ax.scatter(candidate, positions, color="#067c77", s=32, marker="D", label="Candidate", zorder=3)
+        ax.set_title(guest, fontsize=11)
+        ax.grid(axis="x", alpha=.18)
+        ax.set_yticks(positions, phases)
+    slowest = max(max(baseline, candidate) for group in matched_plot.values() for _, baseline, candidate in group)
+    axes[0].set_xlim(0, max(1, slowest) * 1.08)
+    axes[0].invert_yaxis()
+    fig.supxlabel("Median time / direct shim (lower is faster)", fontsize=10)
+    fig.legend(*axes[-1].get_legend_handles_labels(), loc="outside upper center", ncols=3, fontsize=9)
+    fig.savefig(results / "dom-control-runtime.png", dpi=155)
+    plt.close(fig)
+    para("![DOM phase times for Jco 1.13.0 and the candidate relative to the same-guest direct shim]"
+         "(web/bench/results/dom-control-runtime.png)")
     table(["Phase", "Guest", "Direct (ms)", "1.13.0 (ms)", "Candidate (ms)", "Candidate / direct",
-           "Candidate / 1.13.0", "Rounds at or below 1.13.0"], matched_rows)
+           "Candidate / 1.13.0", "Rounds at or below 1.13.0",
+           *(["Candidate / previous", "Rounds at or below previous"] if previous else [])], matched_rows)
 para("<details><summary>All timed phases and string lengths</summary>")
 table(["Demo", "Phase", "Guest", "Candidate time", "Candidate / 1.13.0", "Candidate / main", "Fastest shim", "Candidate / shim"], phase_rows)
 para("</details>")
@@ -223,11 +255,15 @@ table(["Build", "JS (KiB)", "Core Wasm (KiB)", "Total (KiB)", "Gzip (KiB)", "Bro
      f"{median(median(loads[d, f'{lang} {v}'].values()) for d in focus for lang in languages):.2f}"]
     for v, label in [("baseline", "1.13.0"), ("main", "Stock main"), ("candidate", "Candidate")]
 ])
-para("<details><summary>Candidate startup and run-to-run variation by workload</summary>")
-table(["Operation", "Guest", "Startup median (ms)", "Warm phase p25", "Warm phase p50", "Warm phase p75", "Phase unit"], [
+para("<details><summary>Candidate startup, variation and paired comparison to 1.13.0</summary>")
+para("The paired ratio divides the candidate time by the 1.13.0 time within each round, then takes the median. "
+     "The final column counts rounds where the candidate was at least as fast.")
+table(["Operation", "Guest", "Startup median (ms)", "Warm phase p25", "Warm phase p50", "Warm phase p75", "Phase unit", "Paired ratio to 1.13.0", "Rounds at or below 1.13.0"], [
     [label, title, f"{median(loads[demo, f'{lang} candidate'].values()):.2f}",
      *[f"{v * (1000 if unit == 'ms' else 1_000_000):,.2f}" for v in
-       [quantile(times[demo, f"{lang} candidate", metric].values(), q) for q in (.25, .5, .75)]], unit]
+       [quantile(times[demo, f"{lang} candidate", metric].values(), q) for q in (.25, .5, .75)]], unit,
+     f"{median(times[demo, f'{lang} candidate', metric][n] / times[demo, f'{lang} baseline', metric][n] for n in rounds):.2f}×",
+     f"{sum(times[demo, f'{lang} candidate', metric][n] <= times[demo, f'{lang} baseline', metric][n] for n in rounds)}/{len(rounds)}"]
     for demo, (metric, label, unit) in focus.items() for lang, title in languages.items()
 ])
 para("</details>")

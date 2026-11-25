@@ -87,13 +87,15 @@ function implementations(demo) {
     }
   }
   if (domControl) {
-    const controls = runs.filter(impl => /^\w+ (baseline|candidate)$/.test(impl.label));
+    const controls = runs.filter(impl => /^\w+ (baseline|candidate|reference)$/.test(impl.label));
     for (const lang of ["c", "cpp", "rust"]) {
       const stem = demo.replaceAll("-", "_");
       const path = `${lang}/${demo}/jco-baseline/${stem}.core.wasm`;
       const baseline = outputs.find(asset => asset.path === path);
-      const optimized = outputs.find(asset => asset.path === path.replace("/jco-baseline/", "/jco-candidate/"));
-      if (!baseline || optimized?.sha256 !== baseline.sha256) throw Error("Different guest cores for " + path);
+      for (const version of inventory.reference ? ["candidate", "reference"] : ["candidate"]) {
+        const core = outputs.find(asset => asset.path === path.replace("/jco-baseline/", `/jco-${version}/`));
+        if (!baseline || core?.sha256 !== baseline.sha256) throw Error("Different guest cores for " + path);
+      }
       controls.push({ label: lang + " direct", kind: "direct", path: "/" + path,
         importedPages: lang === "rust" && demo === "dom-traversal" ? 17 : undefined });
     }
