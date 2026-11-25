@@ -525,6 +525,13 @@ CHROME_BIN=/path/to/chrome node web/bench/coverage.mjs
 python3 web/bench/report.py --from-candidate
 python3 web/bench/candidate-report.py
 ```""")
+para("To verify that the packaged WebAssembly transpiler emits the same files as the native generator used for timing, "
+     "build it at the candidate commit and compare every generated JavaScript and core Wasm file against the recorded inventory.")
+para("""```sh
+pnpm -C ../jco-candidate install --frozen-lockfile
+pnpm -C ../jco-candidate --filter @bytecodealliance/jco-transpile run build
+node web/bench/candidate.mjs --verify-wasm ../jco-candidate
+```""")
 readme = bench.parents[1] / "README.md"
 text = readme.read_text()
 a, b = "<!-- candidate:start -->", "<!-- candidate:end -->"
