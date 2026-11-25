@@ -79,6 +79,7 @@ try {
         const host = {
           api: { Item }, number: { default: n => n & 255 },
           text: { default: s => s.charCodeAt(0) + s.charCodeAt(s.length - 1) },
+          maybe: { default: n => n % 2 === 0 ? pool[n & 255] : undefined },
           acquire: { default: n => pool[n & 255] }, value: { default: item => item.value },
         };
         for (const [name, files] of Object.entries(variants)) {
@@ -91,6 +92,7 @@ try {
         const storage = await WebAssembly.instantiate(await loadCore("loop.core.wasm"));
         const mem = storage.exports.mem;
         const decoder = new TextDecoder("utf-8", { fatal: true, ignoreBOM: true });
+        const memoryView = new DataView(mem.buffer);
         let live;
         guests.direct = (await WebAssembly.instantiate(await loadCore("loop.core2.wasm"), { "": {
           mem, number: host.number.default,
@@ -99,6 +101,12 @@ try {
             if (live !== undefined) throw Error("Live resource at acquire");
             live = host.acquire.default(n);
             return 1;
+          },
+          maybe(n, out) {
+            if (live !== undefined) throw Error("Live resource at optional acquire");
+            live = host.maybe.default(n);
+            memoryView.setUint8(out, Number(live !== undefined));
+            if (live !== undefined) memoryView.setUint32(out + 4, 1, true);
           },
           value(h) {
             if (h !== 1 || live === undefined) throw Error("Invalid borrow");
@@ -111,8 +119,9 @@ try {
         } })).exports;
         const names = Object.keys(guests);
         const rows = [];
-        for (const [op, length] of [["numbers"], ["strings", 2], ["strings", 9], ["strings", 32], ["resources"]]) {
-          const expected = iterations * (length ? 72.5 + sample.charCodeAt(length - 1) : 127.5);
+        for (const [op, length] of [["numbers"], ["strings", 2], ["strings", 9], ["strings", 32], ["resources"], ["options"]]) {
+          const mean = op === "options" ? 63.5 : 127.5;
+          const expected = iterations * (length ? 72.5 + sample.charCodeAt(length - 1) : mean);
           for (let pass = -warmups; pass < repeats; pass++) {
             for (let i = 0; i < names.length; i++) {
               const shift = round + pass + warmups;

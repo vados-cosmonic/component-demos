@@ -7,7 +7,9 @@ import puppeteer from "puppeteer-core";
 
 const web = resolve(import.meta.dirname, "..");
 const domControl = process.env.BENCH_DOM_CONTROL === "1";
-const candidate = domControl || process.env.BENCH_CANDIDATE === "1";
+const paired = process.env.BENCH_PAIRED === "1";
+if (paired && domControl) throw Error("Run the paired and DOM controls separately");
+const candidate = paired || domControl || process.env.BENCH_CANDIDATE === "1";
 const prefix = candidate ? "candidate-" : "";
 const sizeData = await readFile(resolve(import.meta.dirname, `results/${prefix}sizes.json`));
 const inventory = JSON.parse(sizeData);
@@ -104,6 +106,34 @@ function implementations(demo) {
   return runs;
 }
 
+// Interleave baseline and candidate on the same page. Clearing the DOM and
+// timing entries keeps each guest's work and result table independent.
+async function samplePair(page, demo, pair, args, round, passes) {
+  return page.evaluate(async ({ demo, pair, args, round, passes }) => {
+    const { getMeasurements } = await import(`/examples/${demo}/main.js`);
+    const builds = [];
+    for (const { label, path } of pair) builds.push({ label, run: (await import(path)).run });
+    const rows = [];
+    for (let pass = 0; pass <= passes; pass++) {
+      const order = (round + pass) % 2 ? [1, 0] : [0, 1];
+      for (const index of order) {
+        document.body.replaceChildren();
+        performance.clearMarks();
+        performance.clearMeasures();
+        const { label, run } = builds[index];
+        run(...args);
+        const reports = Object.values(getMeasurements());
+        if (reports.length !== 1 || !Object.keys(reports[0]).length ||
+            !Object.values(reports[0]).every(v => Number.isFinite(v) && v >= 0)) {
+          throw Error("Invalid paired report for " + label);
+        }
+        if (pass) rows.push({ demo, implementation: label, round: round + 1, pass, seconds: reports[0] });
+      }
+    }
+    return rows;
+  }, { demo, pair, args, round, passes });
+}
+
 async function sample(page, demo, impl, args) {
   return await page.evaluate(async (demo, impl, args, domControl) => {
     const { runRawJs, getMeasurements } = await import(`/examples/${demo}/main.js`);
@@ -176,16 +206,25 @@ try {
     baseline: inventory.baseline, main: inventory.main,
     candidate: inventory.candidate, reference: inventory.reference, sizesSha256: createHash("sha256").update(sizeData).digest("hex"), samples: [],
   };
-  if (domControl) {
+  if (paired) result.passes = 4;
+  if (domControl || paired) {
     result.sources = {};
-    for (const path of ["bench/dom-core-shim.mjs", "bench/browser.mjs", "host/web-host.js", "host/common.js",
+    for (const path of [...(domControl ? ["bench/dom-core-shim.mjs"] : []), "bench/browser.mjs", "host/web-host.js", "host/common.js",
                         ...Object.keys(workloads).map(d => `examples/${d}/main.js`)]) {
       result.sources[path] = createHash("sha256").update(await readFile(resolve(web, path))).digest("hex");
     }
   }
   for (const [demo, params] of Object.entries(workloads)) {
     console.log(demo);
-    const variants = implementations(demo);
+    let variants = implementations(demo);
+    if (paired) {
+      variants = ["c", "cpp", "rust"].map(lang => {
+        const builds = ["baseline", "candidate"].map(version =>
+          variants.find(v => v.label === lang + " " + version));
+        if (builds.some(v => !v)) throw Error("Missing binding pair for " + lang + "/" + demo);
+        return { label: lang, builds };
+      });
+    }
     for (let round = 0; round < rounds; round++) {
       // Rotate the starting implementation and alternate traversal direction.
       for (let i = 0; i < variants.length; i++) {
@@ -194,8 +233,12 @@ try {
         try {
           await page.setCacheEnabled(false);
           await page.goto(base);
-          const data = await sample(page, demo, impl, Object.values(params));
-          result.samples.push({ demo, implementation: impl.label, round: round + 1, ...data });
+          if (paired) {
+            result.samples.push(...await samplePair(page, demo, impl.builds, Object.values(params), round, result.passes));
+          } else {
+            const data = await sample(page, demo, impl, Object.values(params));
+            result.samples.push({ demo, implementation: impl.label, round: round + 1, ...data });
+          }
         } catch (err) {
           throw new Error(`${demo} / ${impl.label} / round ${round + 1}: ${err.message}`, { cause: err });
         } finally {
@@ -204,7 +247,7 @@ try {
       }
     }
   }
-  await writeFile(resolve(import.meta.dirname, `results/${domControl ? "dom-control-" : prefix}browser.json`), JSON.stringify(result, null, 2) + "\n");
+  await writeFile(resolve(import.meta.dirname, `results/${paired ? "paired-" : domControl ? "dom-control-" : prefix}browser.json`), JSON.stringify(result, null, 2) + "\n");
 } finally {
   server.close();
   await browser.close();

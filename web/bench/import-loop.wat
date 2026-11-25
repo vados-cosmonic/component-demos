@@ -4,6 +4,7 @@
   (import "text" (func $text (param "s" string) (result u32)))
   (import "number" (func $number (param "v" u32) (result u32)))
   (import "acquire" (func $acquire (param "i" u32) (result (own $item))))
+  (import "maybe" (func $maybe (param "i" u32) (result (option (own $item)))))
   (import "value" (func $value (param "r" (borrow $item)) (result u32)))
   (core module $storage
     (memory (export "mem") 1)
@@ -13,12 +14,14 @@
   (core func $text (canon lower (func $text) (memory $mem)))
   (core func $num (canon lower (func $number)))
   (core func $make (canon lower (func $acquire)))
+  (core func $maybe (canon lower (func $maybe) (memory $mem)))
   (core func $read (canon lower (func $value)))
   (core func $drop (canon resource.drop $item))
   (core module $loop
     (import "" "read-string" (func $text (param i32 i32) (result i32)))
     (import "" "number" (func $num (param i32) (result i32)))
     (import "" "acquire" (func $make (param i32) (result i32)))
+    (import "" "maybe" (func $maybe (param i32 i32)))
     (import "" "value" (func $read (param i32) (result i32)))
     (import "" "drop" (func $drop (param i32)))
     (import "" "mem" (memory 1))
@@ -35,6 +38,19 @@
         (local.set $sum (i32.add (local.get $sum) (call $num (local.get $n))))
         (br_if $again (local.tee $n (i32.sub (local.get $n) (i32.const 1)))))
       (local.get $sum))
+    (func (export "options") (param $n i32) (result i32)
+      (local $tag i32) (local $h i32) (local $sum i32)
+      (loop $again
+        (call $maybe (local.get $n) (i32.const 64))
+        (local.set $tag (i32.load8_u (i32.const 64)))
+        (if (i32.ne (local.get $tag) (i32.eqz (i32.and (local.get $n) (i32.const 1))))
+          (then unreachable))
+        (if (local.get $tag) (then
+          (local.set $h (i32.load (i32.const 68)))
+          (local.set $sum (i32.add (local.get $sum) (call $read (local.get $h))))
+          (call $drop (local.get $h))))
+        (br_if $again (local.tee $n (i32.sub (local.get $n) (i32.const 1)))))
+      (local.get $sum))
     (func (export "resources") (param $n i32) (result i32)
       (local $h i32) (local $sum i32)
       (loop $again
@@ -46,7 +62,8 @@
   (core instance $loop (instantiate $loop (with "" (instance
     (export "mem" (memory $mem)) (export "read-string" (func $text))
     (export "number" (func $num)) (export "acquire" (func $make))
-    (export "value" (func $read)) (export "drop" (func $drop))))))
+    (export "maybe" (func $maybe)) (export "value" (func $read)) (export "drop" (func $drop))))))
   (func (export "strings") (param "count" u32) (param "len" u32) (result u32) (canon lift (core func $loop "strings")))
+  (func (export "options") (param "count" u32) (result u32) (canon lift (core func $loop "options")))
   (func (export "numbers") (param "count" u32) (result u32) (canon lift (core func $loop "numbers")))
   (func (export "resources") (param "count" u32) (result u32) (canon lift (core func $loop "resources"))))
