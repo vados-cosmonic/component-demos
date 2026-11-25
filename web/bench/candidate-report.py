@@ -99,6 +99,8 @@ commit = run["candidate"]["commit"]
 para("## Optimized browser bindings")
 para(f"The candidate uses js-component-bindgen’s internal Oxc bundler and the checked jco-cm-runtime. "
      "For eligible single-instance, synchronous components, a host import reuses the caller’s task. "
+     "The adapter holds direct references to its task stack and instance flags, checks the store for interruptions, "
+     "and lifts short ASCII strings in groups of four bytes. "
      "Imported host resources with automatically assigned representations use their guest handle as an array index. "
      "Explicit host representations and shared tables use a representation map. "
      "Components with async operations, cross-component resource transfers or call tracking keep the general adapter. "
@@ -238,6 +240,42 @@ if control_path.exists():
     table(["Phase", "Guest", "Direct (ms)", "1.13.0 (ms)", "Candidate (ms)", "Candidate / direct",
            "Candidate / 1.13.0", "Rounds at or below 1.13.0",
            *(["Candidate / previous", "Rounds at or below previous"] if previous else [])], matched_rows)
+loop = json.loads((results / "import-loop.json").read_text())
+if any(loop[key] != sizes[key] for key in ("candidate", "main", "baseline")):
+    raise ValueError("Import loop and demo measurements use different builds")
+for key, filename in [("runnerSha256", "import-loop.mjs"), ("fixtureSha256", "import-loop.wat")]:
+    if sha256((bench / filename).read_bytes()).hexdigest() != loop[key]:
+        raise ValueError("Import loop source changed: " + filename)
+loop_rounds = range(1, loop["rounds"] + 1)
+loop_passes = set(range(1, loop["repeats"] + 1))
+loop_times = defaultdict(dict)
+for sample in loop["samples"]:
+    group = loop_times[sample["op"], sample.get("length"), sample["name"], sample["round"]]
+    if sample["pass"] in group or sample["elapsedMs"] <= 0:
+        raise ValueError("Duplicate or invalid import loop sample")
+    group[sample["pass"]] = sample["elapsedMs"] * 1e6 / loop["iterations"]
+loop_rows = []
+for op, length, label in [("numbers", None, "u32"), ("strings", 2, "2-byte string"), ("strings", 9, "9-byte string"),
+                          ("strings", 32, "32-byte string"), ("resources", None, "Acquire, borrow, drop")]:
+    medians = []
+    for version in ("direct", "baseline", "main", "candidate"):
+        groups = [loop_times[op, length, version, n] for n in loop_rounds]
+        if any(set(group) != loop_passes for group in groups):
+            raise ValueError("Missing import loop sample")
+        medians.append(median(median(group.values()) for group in groups))
+    direct, baseline, main, candidate = medians
+    loop_rows.append([label, *[f"{v:,.1f}" for v in medians],
+                      f"{candidate / baseline:.2f}×", f"{candidate / direct:.2f}×"])
+para("### Cost of a synchronous host import")
+para(f"A small guest runs {loop['iterations']:,} iterations per pass. The string loop changes the first byte "
+     "before each call. The resource loop acquires a host object, borrows it to read its value, and drops it. "
+     "Each pass checks its checksum. All four adapters use byte-identical core modules. The direct shim "
+     "keeps the fixture’s single live handle in one slot.")
+para(f"Times are nanoseconds per guest iteration, including the loop and host work. Each cell is the median "
+     f"of {loop['rounds']} fresh-page medians, with {loop['warmups']} warm-ups and {loop['repeats']} timed passes "
+     f"per page. The runner interleaves the four builds. [Raw timings and digests](web/bench/results/import-loop.json)")
+table(["Operation", "Direct", "1.13.0", "Stock main", "Candidate", "Candidate / 1.13.0", "Candidate / direct"], loop_rows)
+
 para("<details><summary>All timed phases and string lengths</summary>")
 table(["Demo", "Phase", "Guest", "Candidate time", "Candidate / 1.13.0", "Candidate / main", "Fastest shim", "Candidate / shim"], phase_rows)
 para("</details>")
@@ -282,6 +320,7 @@ git -C ../jco-candidate checkout {commit}
 node web/bench/candidate.mjs ../jco-candidate
 {reference_setup}CHROME_BIN=/path/to/chrome BENCH_CANDIDATE=1 ROUNDS={run['rounds']} node web/bench/browser.mjs
 CHROME_BIN=/path/to/chrome BENCH_DOM_CONTROL=1 ROUNDS={control["rounds"] if control_path.exists() else 9} node web/bench/browser.mjs
+CHROME_BIN=/path/to/chrome ROUNDS={loop["rounds"]} node web/bench/import-loop.mjs ../jco-candidate
 python3 web/bench/candidate-report.py
 ```""")
 readme = bench.parents[1] / "README.md"
