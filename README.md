@@ -142,7 +142,7 @@ With list materialization on both sides, the candidate took **1.54–1.65×** th
 
 The scalar, string and resource loops run 131,072 iterations per pass. The string loop changes the first byte before each call. The resource loop acquires a host object, borrows it to read its value, and drops it. The optional-resource loop checks the discriminant in guest memory every time and reads and drops each present handle. Each pass checks its checksum. All four adapters use byte-identical core modules. The direct shim keeps the fixture’s single live handle in one slot.
 
-The byte-list loop copies a 176 × 176 RGBA region (123,904 bytes) 2,048 times per pass, using a reusable host view and a fixed guest allocation. It sums the changing first byte across transfers and verifies every byte of the final result after each pass. The canvas demo also measures browser readback, host allocation and guest allocation.
+The byte-list loops copy a 176 × 176 RGBA region (123,904 bytes) 2,048 times per pass in each direction. The host-to-guest case uses a reusable host view and a fixed guest allocation. In the reverse direction the host keeps the final snapshot while the guest changes the source in Wasm. Both cases sum the changing first byte during the loop and verify the whole payload afterward. The canvas demo also measures browser readback, host allocation and guest allocation.
 
 The string-return loops make 1,024 calls per pass. Each result occupies 16 KiB in Wasm. One host returns a repeated ASCII string. The other rotates four strings containing two-, three-, and four-byte UTF-8 sequences. The guest checks each byte length, sums the first bytes, and hashes every distinct result outside the timer.
 
@@ -150,15 +150,16 @@ Times are nanoseconds per guest iteration, including the loop and host work. Eac
 
 | Operation | Direct | 1.13.0 | Stock main | Candidate | Candidate / 1.13.0 | Candidate / direct |
 | --- | --- | --- | --- | --- | --- | --- |
-| u32 | 18.3 | 16.0 | 2,581.0 | 21.4 | 1.33× | 1.17× |
-| 2-byte string | 594.3 | 598.9 | 3,463.0 | 155.6 | 0.26× | 0.26× |
-| 9-byte string | 574.5 | 580.6 | 3,348.5 | 228.1 | 0.39× | 0.40× |
-| 32-byte string | 518.8 | 557.7 | 3,340.1 | 525.7 | 0.94× | 1.01× |
-| Acquire, borrow, drop | 56.5 | 306.7 | 6,038.7 | 154.1 | 0.50× | 2.73× |
-| Optional resource, half present | 38.1 | 228.1 | 4,592.9 | 185.4 | 0.81× | 4.86× |
-| 121 KiB host-to-guest byte list | 6,347.7 | 6,445.3 | 12,109.4 | 6,982.4 | 1.08× | 1.10× |
-| 16 KiB UTF-8 result, repeated ASCII | 47,168.0 | 46,386.7 | 75,683.6 | 23,046.9 | 0.50× | 0.49× |
-| 16 KiB UTF-8 result, rotating Unicode | 62,890.6 | 58,789.1 | 100,293.0 | 38,378.9 | 0.65× | 0.61× |
+| u32 | 13.7 | 12.2 | 1,896.7 | 14.5 | 1.19× | 1.06× |
+| 2-byte string | 489.0 | 479.9 | 2,873.2 | 133.5 | 0.28× | 0.27× |
+| 9-byte string | 499.0 | 486.8 | 2,916.0 | 212.9 | 0.44× | 0.43× |
+| 32-byte string | 444.8 | 447.8 | 2,584.8 | 476.8 | 1.06× | 1.07× |
+| Acquire, borrow, drop | 51.1 | 334.2 | 5,252.8 | 144.2 | 0.43× | 2.82× |
+| Optional resource, half present | 32.0 | 235.7 | 3,295.9 | 142.7 | 0.61× | 4.45× |
+| 121 KiB host-to-guest byte list | 5,712.9 | 5,371.1 | 10,693.4 | 6,445.3 | 1.20× | 1.13× |
+| 121 KiB guest-to-host byte list | 111,767.6 | 112,939.5 | 118,066.4 | 113,037.1 | 1.00× | 1.01× |
+| 16 KiB UTF-8 result, repeated ASCII | 38,281.2 | 38,378.9 | 62,988.3 | 22,851.6 | 0.60× | 0.60× |
+| 16 KiB UTF-8 result, rotating Unicode | 53,710.9 | 51,074.2 | 84,375.0 | 35,546.9 | 0.70× | 0.66× |
 
 ### Where the canvas read spends its time
 

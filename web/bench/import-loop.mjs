@@ -92,9 +92,15 @@ try {
           if (bytes.length !== 16384) throw Error("Unexpected UTF-8 fixture length");
           return bytes.reduce((hash, byte) => Math.imul(hash ^ byte, 16777619), 2166136261) >>> 0;
         });
+        let lastPixelWrite;
         const host = {
           "get-text": { default: selector => texts[selector] },
           pixels: { default(n) { source[0] = n & 255; return source; } },
+          "send-pixels": { default(bytes) {
+            if (bytes.byteLength !== source.byteLength) throw Error("Wrong pixel write length");
+            lastPixelWrite = bytes;
+            return bytes[0];
+          } },
           api: { Item }, number: { default: n => n & 255 },
           text: { default: s => s.charCodeAt(0) + s.charCodeAt(s.length - 1) },
           maybe: { default: n => n % 2 === 0 ? pool[n & 255] : undefined },
@@ -123,6 +129,7 @@ try {
           "read-string": (ptr, len) => host.text.default(decoder.decode(new Uint8Array(mem.buffer, ptr, len))),
           "get-text"(selector, out) { writeBytes(encoder.encode(host["get-text"].default(selector)), out); },
           pixels(n, out) { writeBytes(host.pixels.default(n), out); },
+          "send-pixels"(ptr, len) { return host["send-pixels"].default(new Uint8Array(mem.buffer.slice(ptr, ptr + len))); },
           acquire(n) {
             if (live !== undefined) throw Error("Live resource at acquire");
             live = host.acquire.default(n);
@@ -143,7 +150,8 @@ try {
             live = undefined;
           },
         } })).exports;
-        guests.direct = { ...direct, checkPixels: direct["check-pixels"], textReturns: direct["text-returns"], textDigest: direct["text-digest"] };
+        guests.direct = { ...direct, checkPixels: direct["check-pixels"], pixelWrites: direct["pixel-writes"],
+          textReturns: direct["text-returns"], textDigest: direct["text-digest"] };
         for (const guest of Object.values(guests)) {
           guest.asciiResult = count => guest.textReturns(count, 0);
           guest.unicodeResult = count => guest.textReturns(count, 4);
@@ -156,6 +164,7 @@ try {
           { op: "resources", count: iterations, mean: 127.5 },
           { op: "options", count: iterations, mean: 63.5 },
           { op: "pixels", count: pixelCopies, mean: 127.5 },
+          { op: "pixelWrites", count: pixelCopies, mean: 127.5 },
           { op: "asciiResult", count: textCopies, mean: 120, selectors: [0] },
           { op: "unicodeResult", count: textCopies, mean: 66.5, selectors: [4, 5, 6, 7] },
         ];
@@ -166,11 +175,19 @@ try {
               const shift = round + pass + warmups;
               const name = names[(shift + (shift % 2 ? -i : i) + names.length) % names.length];
               const run = guests[name][op];
+              if (op === "pixelWrites") {
+                // Initialize the guest region outside the timer, including when this case runs alone.
+                guests[name].pixels(1);
+                lastPixelWrite = undefined;
+              }
               const start = performance.now();
               const result = length ? run(count, length) : run(count);
               const elapsedMs = performance.now() - start;
               if (result !== expected || live !== undefined) throw Error("Wrong result for " + name + "/" + op);
               if (op === "pixels" && guests[name].checkPixels() !== 1) throw Error("Invalid pixel bytes for " + name);
+              if (op === "pixelWrites" && (!lastPixelWrite || !lastPixelWrite.every((byte, i) => byte === (i ? i & 255 : 1)))) {
+                throw Error("Incorrect or aliased guest-to-host pixel snapshot for " + name);
+              }
               for (const selector of selectors ?? []) {
                 if ((guests[name].textDigest(selector) >>> 0) !== digests[selector]) throw Error("Wrong UTF-8 bytes for " + name + "/" + selector);
               }

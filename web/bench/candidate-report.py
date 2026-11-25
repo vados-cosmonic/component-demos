@@ -356,7 +356,8 @@ for key, filename in [("runnerSha256", "import-loop.mjs"), ("fixtureSha256", "im
 loop_rounds = range(1, loop["rounds"] + 1)
 loop_passes = set(range(1, loop["repeats"] + 1))
 loop_times = defaultdict(dict)
-transfer_counts = {"pixels": loop["pixelCopies"], "asciiResult": loop["textCopies"], "unicodeResult": loop["textCopies"]}
+transfer_counts = {"pixels": loop["pixelCopies"], "pixelWrites": loop["pixelCopies"],
+                   "asciiResult": loop["textCopies"], "unicodeResult": loop["textCopies"]}
 for sample in loop["samples"]:
     group = loop_times[sample["op"], sample.get("length"), sample["name"], sample["round"]]
     expected_count = transfer_counts.get(sample["op"], loop["iterations"])
@@ -368,6 +369,7 @@ for op, length, label in [("numbers", None, "u32"), ("strings", 2, "2-byte strin
                           ("strings", 32, "32-byte string"), ("resources", None, "Acquire, borrow, drop"),
                           ("options", None, "Optional resource, half present"),
                           ("pixels", None, "121 KiB host-to-guest byte list"),
+                          ("pixelWrites", None, "121 KiB guest-to-host byte list"),
                           ("asciiResult", None, "16 KiB UTF-8 result, repeated ASCII"),
                           ("unicodeResult", None, "16 KiB UTF-8 result, rotating Unicode")]:
     medians = []
@@ -385,10 +387,11 @@ para(f"The scalar, string and resource loops run {loop['iterations']:,} iteratio
      "The optional-resource loop checks the discriminant in guest memory every time and reads and drops each present handle. "
      "Each pass checks its checksum. All four adapters use byte-identical core modules. The direct shim "
      "keeps the fixture’s single live handle in one slot.")
-para(f"The byte-list loop copies a 176 × 176 RGBA region ({176 * 176 * 4:,} bytes) "
-     f"{loop['pixelCopies']:,} times per pass, using a reusable host view and a fixed guest allocation. "
-     "It sums the changing first byte across transfers and verifies every byte of the final result after each pass. "
-     "The canvas demo also measures browser readback, host allocation and guest allocation.")
+para(f"The byte-list loops copy a 176 × 176 RGBA region ({176 * 176 * 4:,} bytes) "
+     f"{loop['pixelCopies']:,} times per pass in each direction. The host-to-guest case uses a reusable host view "
+     "and a fixed guest allocation. In the reverse direction the host keeps the final snapshot while the guest "
+     "changes the source in Wasm. Both cases sum the changing first byte during the loop and verify the whole "
+     "payload afterward. The canvas demo also measures browser readback, host allocation and guest allocation.")
 para(f"The string-return loops make {loop['textCopies']:,} calls per pass. Each result occupies 16 KiB in Wasm. "
      "One host returns a repeated ASCII string. The other rotates four strings containing two-, three-, and four-byte "
      "UTF-8 sequences. The guest checks each byte length, sums the first bytes, and hashes every distinct result outside the timer.")
