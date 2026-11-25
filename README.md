@@ -66,6 +66,29 @@ Across all reported phases and string lengths, 81/84 comparable candidate median
 
 The bulk DOM query returns a live collection to Embind, which discards it. The component host materializes the collection with `Array.from`, then the bindings lower every element into a WIT resource handle. The ratio includes that difference in work. [Embind loop](cpp/dom-query/emscripten/main.cpp) · [Component host](web/host/web-host.js) · [C guest loop](c/dom-query/main.c)
 
+### DOM bindings with identical guest code
+
+These 162 fresh-page samples compare each language’s exact core Wasm binary with three sets of bindings. The direct JS shim calls the same DOM host, puts owned handles in guest memory and recycles them on guest drops. It implements the synchronous imports used by these guests. Jco also provides Canonical ABI checks, task tracking and instance shutdown. [Direct shim](web/bench/dom-core-shim.mjs) · [Raw timings and correctness checks](web/bench/results/dom-control-browser.json)
+
+The bulk query copies 2,000 handles per call, 10 times. Each traversal visits 19,531 nodes. The runner checks the rendered fixture or node count for each guest and verifies list counts and handle release for the direct shim after warm-up and measurement.
+
+With list materialization on both sides, the candidate took **2.32–2.86×** the direct shim’s bulk-query time across the three guests. Times below are per measured workload, after warm-up.
+
+| Phase | Guest | Direct (ms) | 1.13.0 (ms) | Candidate (ms) | Candidate / direct | Candidate / 1.13.0 | Rounds at or below 1.13.0 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| DOM ID lookup | C | 36.35 | 57.84 | 62.48 | 1.72× | 1.08× | 5/9 |
+| DOM ID lookup | C++ | 33.89 | 64.06 | 69.31 | 2.05× | 1.08× | 2/9 |
+| DOM ID lookup | Rust | 26.82 | 42.92 | 52.27 | 1.95× | 1.22× | 1/9 |
+| Bulk DOM query | C | 11.86 | 24.84 | 33.91 | 2.86× | 1.37× | 1/9 |
+| Bulk DOM query | C++ | 15.60 | 27.48 | 36.22 | 2.32× | 1.32× | 2/9 |
+| Bulk DOM query | Rust | 11.46 | 18.98 | 28.26 | 2.47× | 1.49× | 2/9 |
+| Tree construction | C | 56.13 | 106.92 | 124.25 | 2.21× | 1.16× | 2/9 |
+| Tree construction | C++ | 52.55 | 98.96 | 124.78 | 2.37× | 1.26× | 1/9 |
+| Tree construction | Rust | 54.78 | 86.08 | 109.60 | 2.00× | 1.27× | 0/9 |
+| Tree traversal | C | 13.91 | 26.47 | 40.44 | 2.91× | 1.53× | 1/9 |
+| Tree traversal | C++ | 12.95 | 27.29 | 34.49 | 2.66× | 1.26× | 0/9 |
+| Tree traversal | Rust | 15.65 | 32.00 | 39.51 | 2.52× | 1.23× | 1/9 |
+
 <details><summary>All timed phases and string lengths</summary>
 
 | Demo | Phase | Guest | Candidate time | Candidate / 1.13.0 | Candidate / main | Fastest shim | Candidate / shim |
@@ -208,6 +231,7 @@ node web/bench/candidate.mjs ../jco-candidate
 git -C ../jco-candidate worktree add --detach ../jco-reference ac28d5d481f3cfca94bc4c62f3571511c19386d9
 node web/bench/candidate.mjs --reference ../jco-reference
 CHROME_BIN=/path/to/chrome BENCH_CANDIDATE=1 ROUNDS=7 node web/bench/browser.mjs
+CHROME_BIN=/path/to/chrome BENCH_DOM_CONTROL=1 ROUNDS=9 node web/bench/browser.mjs
 python3 web/bench/candidate-report.py
 ```
 

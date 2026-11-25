@@ -6,7 +6,8 @@ import { extname, resolve, sep } from "node:path";
 import puppeteer from "puppeteer-core";
 
 const web = resolve(import.meta.dirname, "..");
-const candidate = process.env.BENCH_CANDIDATE === "1";
+const domControl = process.env.BENCH_DOM_CONTROL === "1";
+const candidate = domControl || process.env.BENCH_CANDIDATE === "1";
 const prefix = candidate ? "candidate-" : "";
 const sizeData = await readFile(resolve(import.meta.dirname, `results/${prefix}sizes.json`));
 const inventory = JSON.parse(sizeData);
@@ -23,7 +24,7 @@ for (const asset of [...outputs, ...Object.values(inventory.alternatives).flat()
 }
 
 // Arguments are passed unchanged to each implementation's exported run function.
-const workloads = {
+const allWorkloads = {
   "attribute-churn": { elements: 2000, iters: 10 },
   "canvas-draw": { rects: 50000 },
   "canvas-pixels": { size: 256, minMs: 10 },
@@ -32,6 +33,11 @@ const workloads = {
   "string-marshalling": { minMs: 10 },
   "table-update": { rows: 2000 },
 };
+
+const workloads = domControl ? {
+  "dom-query": allWorkloads["dom-query"],
+  "dom-traversal": allWorkloads["dom-traversal"],
+} : allWorkloads;
 
 const server = http.createServer(async (req, res) => {
   try {
@@ -80,15 +86,36 @@ function implementations(demo) {
       runs.push({ label: `${lang} ${version}`, kind: "jco", path: "/" + entry.path });
     }
   }
+  if (domControl) {
+    const controls = runs.filter(impl => /^\w+ (baseline|candidate)$/.test(impl.label));
+    for (const lang of ["c", "cpp", "rust"]) {
+      const stem = demo.replaceAll("-", "_");
+      const path = `${lang}/${demo}/jco-baseline/${stem}.core.wasm`;
+      const baseline = outputs.find(asset => asset.path === path);
+      const optimized = outputs.find(asset => asset.path === path.replace("/jco-baseline/", "/jco-candidate/"));
+      if (!baseline || optimized?.sha256 !== baseline.sha256) throw Error("Different guest cores for " + path);
+      controls.push({ label: lang + " direct", kind: "direct", path: "/" + path,
+        importedPages: lang === "rust" && demo === "dom-traversal" ? 17 : undefined });
+    }
+    return controls;
+  }
   return runs;
 }
 
 async function sample(page, demo, impl, args) {
-  return await page.evaluate(async (demo, impl, args) => {
+  return await page.evaluate(async (demo, impl, args, domControl) => {
     const { runRawJs, getMeasurements } = await import(`/examples/${demo}/main.js`);
     let run = runRawJs;
     let loadMs = null;
-    if (impl.path) {
+    let counts;
+    if (impl.kind === "direct") {
+      const start = performance.now();
+      const { instantiateDomGuest } = await import("/bench/dom-core-shim.mjs");
+      const guest = await instantiateDomGuest(impl.path, impl.importedPages);
+      run = guest.run;
+      counts = guest.counts;
+      loadMs = performance.now() - start;
+    } else if (impl.path) {
       const start = performance.now();
       const mod = await import(impl.path);
       if (impl.kind === "emscripten" || impl.kind === "em-js") {
@@ -111,8 +138,31 @@ async function sample(page, demo, impl, args) {
         !Object.values(reports[0]).every(v => Number.isFinite(v) && v >= 0)) {
       throw new Error("Missing or invalid workload report");
     }
-    return { loadMs, seconds: reports[0] };
-  }, demo, impl, args);
+    let checks;
+    if (domControl) {
+      if (demo === "dom-traversal") {
+        const { getTableRowValuesByName } = await import("/host/common.js");
+        const nodes = Number(getTableRowValuesByName(document.querySelector("table"), "nodes")[0]);
+        const [depth, children] = args;
+        let expected = 1;
+        for (let i = 0; i < depth; i++) expected = 1 + children * expected;
+        if (nodes !== expected) throw Error("Incorrect traversal node count: " + nodes);
+        checks = { nodes };
+      } else {
+        const elements = document.querySelectorAll('[id^="item-"]').length;
+        if (elements !== args[0]) throw Error("Incorrect query fixture size: " + elements);
+        checks = { elements };
+      }
+      if (counts) {
+        Object.assign(checks, counts());
+        const lists = demo === "dom-query" ? 2 * args[1] : 0;
+        if (checks.liveHandles || checks.listCount !== lists || checks.listElements !== lists * args[0]) {
+          throw Error("Unexpected direct shim counts: " + JSON.stringify(checks));
+        }
+      }
+    }
+    return { loadMs, seconds: reports[0], checks };
+  }, demo, impl, args, domControl);
 }
 
 try {
@@ -124,6 +174,13 @@ try {
     baseline: inventory.baseline, main: inventory.main,
     candidate: inventory.candidate, reference: inventory.reference, sizesSha256: createHash("sha256").update(sizeData).digest("hex"), samples: [],
   };
+  if (domControl) {
+    result.sources = {};
+    for (const path of ["bench/dom-core-shim.mjs", "bench/browser.mjs", "host/web-host.js", "host/common.js",
+                        ...Object.keys(workloads).map(d => `examples/${d}/main.js`)]) {
+      result.sources[path] = createHash("sha256").update(await readFile(resolve(web, path))).digest("hex");
+    }
+  }
   for (const [demo, params] of Object.entries(workloads)) {
     console.log(demo);
     const variants = implementations(demo);
@@ -145,7 +202,7 @@ try {
       }
     }
   }
-  await writeFile(resolve(import.meta.dirname, `results/${prefix}browser.json`), JSON.stringify(result, null, 2) + "\n");
+  await writeFile(resolve(import.meta.dirname, `results/${domControl ? "dom-control-" : prefix}browser.json`), JSON.stringify(result, null, 2) + "\n");
 } finally {
   server.close();
   await browser.close();

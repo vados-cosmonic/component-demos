@@ -158,6 +158,54 @@ para("The bulk DOM query returns a live collection to Embind, which discards it.
      "the collection with `Array.from`, then the bindings lower every element into a WIT resource handle. "
      "The ratio includes that difference in work. [Embind loop](cpp/dom-query/emscripten/main.cpp) · "
      "[Component host](web/host/web-host.js) · [C guest loop](c/dom-query/main.c)")
+control_path = results / "dom-control-browser.json"
+if control_path.exists():
+    control = json.loads(control_path.read_text())
+    if control["sizesSha256"] != run["sizesSha256"] or control["candidate"] != run["candidate"]:
+        raise ValueError("Rerun BENCH_DOM_CONTROL=1 for this candidate")
+    for path, digest in control["sources"].items():
+        if sha256((bench.parent / path).read_bytes()).hexdigest() != digest:
+            raise ValueError(f"DOM control source has changed: {path}")
+    control_rounds = set(range(1, control["rounds"] + 1))
+    durations = defaultdict(dict)
+    for sample in control["samples"]:
+        for metric, seconds in sample["seconds"].items():
+            key = (sample["demo"], sample["implementation"], metric)
+            if sample["round"] in durations[key]:
+                raise ValueError(f"Repeated DOM control sample for {key}")
+            durations[key][sample["round"]] = seconds
+    para("### DOM bindings with identical guest code")
+    para(f"These {len(control['samples'])} fresh-page samples compare each language’s exact core Wasm binary with "
+         "three sets of bindings. The direct JS shim calls the same DOM host, puts owned handles in guest memory "
+         "and recycles them on guest drops. It implements the synchronous imports used by these guests. Jco also "
+         "provides Canonical ABI checks, task tracking and instance shutdown. "
+         "[Direct shim](web/bench/dom-core-shim.mjs) · [Raw timings and correctness checks](web/bench/results/dom-control-browser.json)")
+    query = control["workloads"]["dom-query"]
+    traversal = control["workloads"]["dom-traversal"]
+    nodes = sum(traversal["numChildren"] ** level for level in range(traversal["depth"] + 1))
+    para(f"The bulk query copies {query['numElements']:,} handles per call, {query['iters']} times. "
+         f"Each traversal visits {nodes:,} nodes. The runner checks the rendered fixture or node count for "
+         "each guest and verifies list counts and handle release for the direct shim after warm-up and measurement.")
+    matched_rows, bulk_ratios = [], []
+    for demo, metric, title in [("dom-query", "individual: total ms", "DOM ID lookup"),
+                                ("dom-query", "bulk: total ms", "Bulk DOM query"),
+                                ("dom-traversal", "build", "Tree construction"),
+                                ("dom-traversal", "traverse (total)", "Tree traversal")]:
+        for lang, guest in languages.items():
+            series = [durations[demo, f"{lang} {v}", metric] for v in ("direct", "baseline", "candidate")]
+            if any(set(group) != control_rounds for group in series):
+                raise ValueError(f"Incomplete DOM control samples for {demo} / {lang}")
+            direct, baseline, candidate = [median(group.values()) for group in series]
+            if title == "Bulk DOM query":
+                bulk_ratios.append(candidate / direct)
+            wins = sum(series[2][n] <= series[1][n] for n in control_rounds)
+            matched_rows.append([title, guest, *[f"{v * 1000:.2f}" for v in (direct, baseline, candidate)],
+                                 f"{candidate / direct:.2f}×", f"{candidate / baseline:.2f}×",
+                                 f"{wins}/{len(control_rounds)}"])
+    para(f"With list materialization on both sides, the candidate took **{min(bulk_ratios):.2f}–{max(bulk_ratios):.2f}×** "
+         "the direct shim’s bulk-query time across the three guests. Times below are per measured workload, after warm-up.")
+    table(["Phase", "Guest", "Direct (ms)", "1.13.0 (ms)", "Candidate (ms)", "Candidate / direct",
+           "Candidate / 1.13.0", "Rounds at or below 1.13.0"], matched_rows)
 para("<details><summary>All timed phases and string lengths</summary>")
 table(["Demo", "Phase", "Guest", "Candidate time", "Candidate / 1.13.0", "Candidate / main", "Fastest shim", "Candidate / shim"], phase_rows)
 para("</details>")
@@ -197,6 +245,7 @@ git clone https://github.com/vados-cosmonic/jco ../jco-candidate
 git -C ../jco-candidate checkout {commit}
 node web/bench/candidate.mjs ../jco-candidate
 {reference_setup}CHROME_BIN=/path/to/chrome BENCH_CANDIDATE=1 ROUNDS={run['rounds']} node web/bench/browser.mjs
+CHROME_BIN=/path/to/chrome BENCH_DOM_CONTROL=1 ROUNDS={control["rounds"] if control_path.exists() else 9} node web/bench/browser.mjs
 python3 web/bench/candidate-report.py
 ```""")
 readme = bench.parents[1] / "README.md"
