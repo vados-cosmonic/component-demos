@@ -99,6 +99,8 @@ commit = run["candidate"]["commit"]
 para("## Optimized browser bindings")
 para(f"The candidate uses js-component-bindgen’s internal Oxc bundler and the checked jco-cm-runtime. "
      "For eligible single-instance, synchronous components, a host import reuses the caller’s task. "
+     "Resource drops use a one-argument trampoline that checks the instance flag and records traps. "
+     "The internal Oxc bundle drops the general asynchronous import fallback for these components. "
      "The adapter holds direct references to its task stack and instance flags, checks the store for interruptions, "
      "and lifts short ASCII strings in groups of four bytes. "
      "Imported host resources with automatically assigned representations use their guest handle as an array index. "
@@ -137,6 +139,64 @@ if reference:
         [label, *[paired_change(demo, lang, metric) for lang in languages]]
         for demo, metric, label in comparisons
     ])
+paired_run = json.loads((results / "paired-browser.json").read_text())
+if paired_run["sizesSha256"] != run["sizesSha256"] or paired_run["candidate"] != run["candidate"]:
+    raise ValueError("Paired browser samples and candidate builds differ")
+for path, digest in paired_run["sources"].items():
+    if sha256((bench.parent / path).read_bytes()).hexdigest() != digest:
+        raise ValueError("Paired browser source changed: " + path)
+paired_samples = {}
+for sample in paired_run["samples"]:
+    key = (sample["demo"], sample["implementation"], sample["round"], sample["pass"])
+    if key in paired_samples:
+        raise ValueError("Repeated paired browser sample")
+    paired_samples[key] = sample["seconds"]
+if len(paired_samples) != len(focus) * len(languages) * 2 * paired_run["rounds"] * paired_run["passes"]:
+    raise ValueError("Unexpected number of paired samples")
+paired_rows = []
+paired_intervals = defaultdict(list)
+paired_winners = 0
+for demo, (metric, label, unit) in focus.items():
+    for lang, title in languages.items():
+        per_page = []
+        for n in range(1, paired_run["rounds"] + 1):
+            ratios = []
+            for visit in range(1, paired_run["passes"] + 1):
+                baseline, candidate = [paired_samples[demo, f"{lang} {v}", n, visit][metric]
+                                       for v in ("baseline", "candidate")]
+                ratios.append(candidate / baseline)
+            per_page.append(median(ratios))
+        midpoint = median(per_page)
+        paired_winners += midpoint <= 1
+        paired_intervals[title].append((midpoint, quantile(per_page, .25), quantile(per_page, .75)))
+        paired_rows.append([label, title, f"{midpoint:.2f}×",
+                            f"{quantile(per_page, .25):.2f}–{quantile(per_page, .75):.2f}×",
+                            f"{sum(v <= 1 for v in per_page)}/{len(per_page)}"])
+para("### Warm 1.13.0 comparison on the same page")
+para(f"For each guest and workload, both builds run once to warm up, then {paired_run['passes']} times each on the same page. "
+     "Each pair alternates which build runs first. The runner clears the DOM and performance entries before every call. "
+     f"It repeats this on {paired_run['rounds']} fresh pages. Each page contributes the median of its candidate / 1.13.0 "
+     f"ratios. The median across pages was at or below 1× for **{paired_winners}/{len(paired_rows)}** headline cases. "
+     "[Raw paired timings](web/bench/results/paired-browser.json)")
+fig, ax = plt.subplots(figsize=(8.5, 4.8), layout="constrained")
+for (guest, observations), offset, color, marker in zip(paired_intervals.items(), (-.23, 0, .23),
+                                                        ("#005f73", "#a34b13", "#614a8d"), ("o", "s", "D")):
+    centers, left, right = zip(*observations)
+    ax.errorbar(centers, [i + offset for i in range(len(focus))],
+                xerr=[[c - lo for c, lo in zip(centers, left)], [hi - c for c, hi in zip(centers, right)]],
+                fmt=marker, markersize=4, capsize=2, color=color, label=guest)
+ax.set_yticks(range(len(focus)), [label for _, label, _ in focus.values()])
+ax.invert_yaxis()
+ax.axvline(1, linestyle="--", color="#545454", linewidth=1, label="1.13.0")
+ax.set_xlim(left=0)
+ax.set_xlabel("Candidate time / 1.13.0 time (lower is faster)")
+ax.grid(axis="x", alpha=.18)
+ax.legend(ncols=4, loc="lower center", bbox_to_anchor=(.5, 1))
+fig.savefig(results / "paired-runtime.png", dpi=155)
+plt.close(fig)
+para("![Median paired time ratios by workload and guest, with bars spanning the middle half of page ratios]"
+     "(web/bench/results/paired-runtime.png)")
+table(["Operation", "Guest", "Candidate / 1.13.0", "Middle 50% of page ratios", "Pages at or below 1×"], paired_rows)
 phase_rows, phase_baseline, phase_shim, misses = [], [], [], []
 for demo in focus:
     for metric in dict.fromkeys(m for d, i, m in times if d == demo and i == "c candidate"):
@@ -256,7 +316,8 @@ for sample in loop["samples"]:
     group[sample["pass"]] = sample["elapsedMs"] * 1e6 / loop["iterations"]
 loop_rows = []
 for op, length, label in [("numbers", None, "u32"), ("strings", 2, "2-byte string"), ("strings", 9, "9-byte string"),
-                          ("strings", 32, "32-byte string"), ("resources", None, "Acquire, borrow, drop")]:
+                          ("strings", 32, "32-byte string"), ("resources", None, "Acquire, borrow, drop"),
+                          ("options", None, "Optional resource, half present")]:
     medians = []
     for version in ("direct", "baseline", "main", "candidate"):
         groups = [loop_times[op, length, version, n] for n in loop_rounds]
@@ -269,6 +330,7 @@ for op, length, label in [("numbers", None, "u32"), ("strings", 2, "2-byte strin
 para("### Cost of a synchronous host import")
 para(f"A small guest runs {loop['iterations']:,} iterations per pass. The string loop changes the first byte "
      "before each call. The resource loop acquires a host object, borrows it to read its value, and drops it. "
+     "The optional-resource loop checks the discriminant in guest memory every time and reads and drops each present handle. "
      "Each pass checks its checksum. All four adapters use byte-identical core modules. The direct shim "
      "keeps the fixture’s single live handle in one slot.")
 para(f"Times are nanoseconds per guest iteration, including the loop and host work. Each cell is the median "
@@ -320,6 +382,7 @@ git -C ../jco-candidate checkout {commit}
 node web/bench/candidate.mjs ../jco-candidate
 {reference_setup}CHROME_BIN=/path/to/chrome BENCH_CANDIDATE=1 ROUNDS={run['rounds']} node web/bench/browser.mjs
 CHROME_BIN=/path/to/chrome BENCH_DOM_CONTROL=1 ROUNDS={control["rounds"] if control_path.exists() else 9} node web/bench/browser.mjs
+CHROME_BIN=/path/to/chrome BENCH_PAIRED=1 ROUNDS={paired_run["rounds"]} node web/bench/browser.mjs
 CHROME_BIN=/path/to/chrome ROUNDS={loop["rounds"]} node web/bench/import-loop.mjs ../jco-candidate
 python3 web/bench/candidate-report.py
 ```""")
