@@ -1,5 +1,5 @@
 target/
-node_modules/
+node_modules
 *.wat
 web/dist/
 **/src/bindings.rs
@@ -20,3 +20,4 @@ web/bench/main/build.*/
 web/bench/main/current
 web/*/*/jco-baseline/
 web/*/*/jco-main/
+web/*/*/jco-candidate/

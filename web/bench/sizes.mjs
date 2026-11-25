@@ -1,7 +1,6 @@
-import { createHash } from "node:crypto";
+import { sizes } from "./asset-sizes.mjs";
 import { globSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, dirname, join, relative, resolve } from "node:path";
-import { brotliCompressSync, constants, gzipSync } from "node:zlib";
 import { transpile } from "@bytecodealliance/jco";
 import { transpileBytes } from "./main/current/dist/transpile.js";
 
@@ -16,16 +15,6 @@ const map = Object.fromEntries(mappings.map(line => {
   const [name, hostExport] = line.split(/\s+/);
   return [name, `../../../host/web-host.js#${hostExport}`];
 }));
-const sha256 = bytes => createHash("sha256").update(bytes).digest("hex");
-
-function sizes(path, bytes) {
-  return {
-    path, bytes: bytes.length, sha256: sha256(bytes),
-    gzip: gzipSync(bytes, { level: 9 }).length,
-    brotli: brotliCompressSync(bytes, { params: { [constants.BROTLI_PARAM_QUALITY]: 11 } }).length,
-  };
-}
-
 const components = [];
 for (const input of globSync("{c,cpp,rust}/*/native/*.wasm", { cwd: web }).sort()) {
   const bytes = readFileSync(join(web, input));

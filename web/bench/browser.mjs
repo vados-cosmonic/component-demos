@@ -6,7 +6,9 @@ import { extname, resolve, sep } from "node:path";
 import puppeteer from "puppeteer-core";
 
 const web = resolve(import.meta.dirname, "..");
-const sizeData = await readFile(resolve(import.meta.dirname, "results/sizes.json"));
+const candidate = process.env.BENCH_CANDIDATE === "1";
+const prefix = candidate ? "candidate-" : "";
+const sizeData = await readFile(resolve(import.meta.dirname, `results/${prefix}sizes.json`));
 const inventory = JSON.parse(sizeData);
 const rounds = Number(process.env.ROUNDS ?? 7);
 if (!Number.isInteger(rounds) || rounds < 1) throw new Error("ROUNDS must be a positive integer");
@@ -120,7 +122,7 @@ try {
     date: new Date().toISOString(), browser: await browser.version(), node: process.version,
     os: [platform(), release(), arch()].join(" "), cpu: cpus()[0].model, rounds, workloads,
     baseline: inventory.baseline, main: inventory.main,
-    sizesSha256: createHash("sha256").update(sizeData).digest("hex"), samples: [],
+    candidate: inventory.candidate, sizesSha256: createHash("sha256").update(sizeData).digest("hex"), samples: [],
   };
   for (const [demo, params] of Object.entries(workloads)) {
     console.log(demo);
@@ -143,7 +145,7 @@ try {
       }
     }
   }
-  await writeFile(resolve(import.meta.dirname, "results/browser.json"), JSON.stringify(result, null, 2) + "\n");
+  await writeFile(resolve(import.meta.dirname, `results/${prefix}browser.json`), JSON.stringify(result, null, 2) + "\n");
 } finally {
   server.close();
   await browser.close();
