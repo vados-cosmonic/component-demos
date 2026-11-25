@@ -94,10 +94,13 @@ def table(headers, rows):
 
 commit = run["candidate"]["commit"]
 para("## Optimized browser bindings")
-para(f"The [Jco candidate at `{commit[:9]}`](https://github.com/vados-cosmonic/jco/commit/{commit}) "
-     f"uses the checked jco-cm-runtime bundled by Oxc. All three Jco builds used the same guest binaries. "
-     f"Each value is the median of {run['rounds']} fresh-page samples with one warm-up per page. "
-     f"The run collected {len(run['samples'])} samples with {run['browser']} on {run['cpu']}.")
+para(f"The candidate uses js-component-bindgen’s internal Oxc bundler and the checked jco-cm-runtime. "
+     "For eligible single-instance, synchronous components, a host import reuses the caller’s task. "
+     "Components with async operations, cross-component resource transfers or call tracking keep the general adapter. "
+     f"[Jco commit `{commit[:9]}`](https://github.com/vados-cosmonic/jco/commit/{commit})")
+para(f"All three Jco builds used the same guest binaries. Each value is the median of "
+     f"{run['rounds']} fresh-page samples with one warm-up per page. The run collected {len(run['samples'])} "
+     f"samples on {run['date'][:10]} with {run['browser']} on {run['cpu']}.")
 para(f"The candidate finished within **10× of the fastest available compiled shim in "
      f"{sum(r <= 10 for r in shim_ratios)}/{len(rows)}** headline comparisons. It matched or beat "
      f"**1.13.0 in {sum(r <= 1 for r in baseline_ratios)}/{len(rows)}** and **stock main in "
@@ -107,7 +110,7 @@ para(f"The candidate finished within **10× of the fastest available compiled sh
 para("![Candidate runtime relative to the two targets by operation and language](web/bench/results/candidate-runtime.png)")
 table(["Operation", "Guest", "Unit", "1.13.0", "Stock main", "Candidate", "Candidate / 1.13.0",
        "Fastest shim", "Shim time", "Candidate / shim"], rows)
-phase_rows, phase_baseline, phase_shim = [], [], []
+phase_rows, phase_baseline, phase_shim, misses = [], [], [], []
 for demo in focus:
     for metric in dict.fromkeys(m for d, i, m in times if d == demo and i == "c candidate"):
         for lang, title in languages.items():
@@ -119,13 +122,23 @@ for demo in focus:
                 phase_baseline.append(cand / base)
             if shim:
                 phase_shim.append(cand / shim)
-            phase_rows.append([demo, metric.replace("|", r"\|"), title, f"{cand * 1_000_000:,.2f}", ratio(base), ratio(main), name, ratio(shim)])
+                if cand > 10 * shim:
+                    misses.append([demo, metric, title, name, f"{cand / shim:.2f}×"])
+            unit = "ms" if "total" in metric or metric == "build" else "µs"
+            duration = cand * (1000 if unit == "ms" else 1_000_000)
+            phase_rows.append([demo, metric.replace("|", r"\|"), title, f"{duration:,.2f} {unit}", ratio(base), ratio(main), name, ratio(shim)])
 para(f"Across all reported phases and string lengths, {sum(v <= 10 for v in phase_shim)}/{len(phase_shim)} "
      f"comparable candidate medians were within 10× of the fastest compiled shim and "
      f"{sum(v <= 1 for v in phase_baseline)}/{len(phase_baseline)} matched or beat 1.13.0. "
      "Totals and their subphases overlap. Each ratio compares the same phase on both sides.")
+if misses:
+    table(["Phases above 10×", "Phase", "Guest", "Shim", "Candidate / shim"], misses)
+para("The bulk DOM query returns a live collection to Embind, which discards it. The component host materializes "
+     "the collection with `Array.from`, then the bindings lower every element into a WIT resource handle. "
+     "The ratio includes that difference in work. [Embind loop](cpp/dom-query/emscripten/main.cpp) · "
+     "[Component host](web/host/web-host.js) · [C guest loop](c/dom-query/main.c)")
 para("<details><summary>All timed phases and string lengths</summary>")
-table(["Demo", "Phase", "Guest", "Candidate (µs)", "Candidate / 1.13.0", "Candidate / main", "Fastest shim", "Candidate / shim"], phase_rows)
+table(["Demo", "Phase", "Guest", "Candidate time", "Candidate / 1.13.0", "Candidate / main", "Fastest shim", "Candidate / shim"], phase_rows)
 para("</details>")
 paired = [c["variants"] for c in sizes["components"]]
 def payload(files, field, suffix):
