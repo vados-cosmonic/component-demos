@@ -118,7 +118,7 @@ if reference:
     para("### Change from the previous branch revision")
     para("Both revisions ran on the same guest binaries in the same browser session. Each cell divides "
          "the candidate median by the previous revision’s median. Parentheses count the rounds in which the candidate finished faster. "
-         f"[Previous Jco revision `{ref[:9]}`](https://github.com/vados-cosmonic/jco/commit/{ref})")
+         f"[Compare `{ref[:9]}` and `{commit[:9]}`](https://github.com/vados-cosmonic/jco/compare/{ref}...{commit})")
     comparisons = [(demo, metric, label) for demo, (metric, label, _) in focus.items()]
     comparisons += [("string-marshalling", metric, metric) for metric in ("set 8 B", "get 8 B")]
     def paired_change(demo, lang, metric):
