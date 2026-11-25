@@ -132,6 +132,7 @@ for demo in focus:
         for metric in metrics:
             pages = paired_page_ratios(demo, lang, metric)
             all_paired.append((median(pages), demo, title, metric, sum(r <= 1 for r in pages)))
+paired_medians = {(demo, guest, metric): value for value, demo, guest, metric, _ in all_paired}
 slow_paired = sorted((entry for entry in all_paired if entry[0] > 1), reverse=True)
 
 lines = []
@@ -151,6 +152,8 @@ para(f"The candidate uses js-component-bindgen’s internal Oxc bundler and the 
      "The internal Oxc bundle drops the general asynchronous import fallback for these components. "
      "The adapter holds direct references to its task stack and instance flags, checks the store for interruptions, "
      "and lifts short ASCII strings in groups of four bytes. "
+     "Synchronous UTF-8 results of 256 to 262,144 code units can reuse a per-instance byte buffer, capped at 256 KiB. "
+     "The runtime encodes there before requesting the exact guest allocation. Nested calls and larger results use the ordinary encoder. "
      "When lifting a borrowed host resource, the runtime validates the handle and reads its 32-bit representation directly. "
      "Imported host resources with automatically assigned representations use their guest handle as an array index. "
      "Explicit host representations and shared tables use a representation map. "
@@ -177,10 +180,28 @@ if reference:
     para("Both revisions ran on the same guest binaries in the same browser session. Each cell divides "
          "the candidate median by the previous revision’s median. Parentheses count the rounds in which the candidate finished faster. "
          f"[Compare `{ref[:9]}` and `{commit[:9]}`](https://github.com/vados-cosmonic/jco/compare/{ref}...{commit})")
+    unchanged = {}
+    for component in sizes["components"]:
+        path = Path(component["input"]["path"])
+        lang, demo = path.parts[:2]
+        if demo not in focus or path.name != demo.replace("-", "_") + ".wasm":
+            continue
+        outputs = [{Path(asset["path"]).name: asset["sha256"] for asset in component["variants"][version]}
+                   for version in ("candidate", "reference")]
+        unchanged[demo, lang] = outputs[0] == outputs[1]
+    if len(unchanged) != len(focus) * len(languages):
+        raise ValueError("No corresponding generated files for a headline workload")
+    controls = [time(demo, lang + " candidate", focus[demo][0]) / time(demo, lang + " reference", focus[demo][0])
+                for (demo, lang), identical in unchanged.items() if identical]
+    if controls:
+        para(f"The generated JavaScript and Wasm were byte-identical for {len(controls)}/{len(unchanged)} headline cases. "
+             f"On separate fresh pages, the ratios for those identical builds ranged from {min(controls):.2f}× to "
+             f"{max(controls):.2f}×. That spread measures run-to-run variation on this machine. "
+             "[Output hashes](web/bench/results/candidate-sizes.json)")
     comparisons = [(demo, metric, label) for demo, (metric, label, _) in focus.items()]
     comparisons += [("dom-query", "bulk: total ms", "Bulk DOM query"),
                     ("dom-traversal", "build", "Tree construction")]
-    comparisons += [("string-marshalling", metric, metric) for metric in ("set 8 B", "get 8 B")]
+    comparisons += [("string-marshalling", metric, metric) for metric in ("set 8 B", "get 8 B", "get 16384 B", "get 262144 B")]
     def paired_change(demo, lang, metric):
         current = times[demo, f"{lang} candidate", metric]
         previous = times[demo, f"{lang} reference", metric]
@@ -238,7 +259,8 @@ for demo in focus:
                     misses.append([demo, metric, title, name, f"{cand / shim:.2f}×"])
             unit = "ms" if "total" in metric or metric == "build" else "µs"
             duration = cand * (1000 if unit == "ms" else 1_000_000)
-            phase_rows.append([demo, metric.replace("|", r"\|"), title, f"{duration:,.2f} {unit}", ratio(base), ratio(main), name, ratio(shim)])
+            phase_rows.append([demo, metric.replace("|", r"\|"), title, f"{duration:,.2f} {unit}", ratio(base),
+                               f"{paired_medians[demo, title, metric]:.2f}×", ratio(main), name, ratio(shim)])
 para(f"Across all reported phases and string lengths, {sum(v <= 10 for v in phase_shim)}/{len(phase_shim)} "
      f"comparable candidate medians were within 10× of the fastest compiled shim and "
      f"{sum(v <= 1 for v in phase_baseline)}/{len(phase_baseline)} matched or beat 1.13.0. "
@@ -334,9 +356,10 @@ for key, filename in [("runnerSha256", "import-loop.mjs"), ("fixtureSha256", "im
 loop_rounds = range(1, loop["rounds"] + 1)
 loop_passes = set(range(1, loop["repeats"] + 1))
 loop_times = defaultdict(dict)
+transfer_counts = {"pixels": loop["pixelCopies"], "asciiResult": loop["textCopies"], "unicodeResult": loop["textCopies"]}
 for sample in loop["samples"]:
     group = loop_times[sample["op"], sample.get("length"), sample["name"], sample["round"]]
-    expected_count = loop["pixelCopies"] if sample["op"] == "pixels" else loop["iterations"]
+    expected_count = transfer_counts.get(sample["op"], loop["iterations"])
     if sample["pass"] in group or sample["elapsedMs"] <= 0 or sample["count"] != expected_count:
         raise ValueError("Duplicate or invalid import loop sample")
     group[sample["pass"]] = sample["elapsedMs"] * 1e6 / sample["count"]
@@ -344,7 +367,9 @@ loop_rows = []
 for op, length, label in [("numbers", None, "u32"), ("strings", 2, "2-byte string"), ("strings", 9, "9-byte string"),
                           ("strings", 32, "32-byte string"), ("resources", None, "Acquire, borrow, drop"),
                           ("options", None, "Optional resource, half present"),
-                          ("pixels", None, "121 KiB host-to-guest byte list")]:
+                          ("pixels", None, "121 KiB host-to-guest byte list"),
+                          ("asciiResult", None, "16 KiB UTF-8 result, repeated ASCII"),
+                          ("unicodeResult", None, "16 KiB UTF-8 result, rotating Unicode")]:
     medians = []
     for version in ("direct", "baseline", "main", "candidate"):
         groups = [loop_times[op, length, version, n] for n in loop_rounds]
@@ -364,6 +389,9 @@ para(f"The byte-list loop copies a 176 × 176 RGBA region ({176 * 176 * 4:,} byt
      f"{loop['pixelCopies']:,} times per pass, using a reusable host view and a fixed guest allocation. "
      "It sums the changing first byte across transfers and verifies every byte of the final result after each pass. "
      "The canvas demo also measures browser readback, host allocation and guest allocation.")
+para(f"The string-return loops make {loop['textCopies']:,} calls per pass. Each result occupies 16 KiB in Wasm. "
+     "One host returns a repeated ASCII string. The other rotates four strings containing two-, three-, and four-byte "
+     "UTF-8 sequences. The guest checks each byte length, sums the first bytes, and hashes every distinct result outside the timer.")
 para(f"Times are nanoseconds per guest iteration, including the loop and host work. Each cell is the median "
      f"of {loop['rounds']} fresh-page medians, with {loop['warmups']} warm-ups and {loop['repeats']} timed passes "
      f"per page. The runner interleaves the four builds. [Raw timings and digests](web/bench/results/import-loop.json)")
@@ -413,7 +441,7 @@ para(f"The host accounted for {min(canvas_host_share):.1f}–{max(canvas_host_sh
      f"compared with {min(canvas_remainders['baseline']):.1f}–{max(canvas_remainders['baseline']):.1f} µs for 1.13.0.")
 
 para("<details><summary>All timed phases and string lengths</summary>")
-table(["Demo", "Phase", "Guest", "Candidate time", "Candidate / 1.13.0", "Candidate / main", "Fastest shim", "Candidate / shim"], phase_rows)
+table(["Demo", "Phase", "Guest", "Candidate time", "Fresh-page / 1.13.0", "Same-page / 1.13.0", "Candidate / main", "Fastest shim", "Candidate / shim"], phase_rows)
 para("</details>")
 paired = [c["variants"] for c in sizes["components"]]
 def payload(files, field, suffix):
@@ -429,6 +457,40 @@ table(["Build", "JS (KiB)", "Core Wasm (KiB)", "Total (KiB)", "Gzip (KiB)", "Bro
      f"{median(median(loads[d, f'{lang} {v}'].values()) for d in focus for lang in languages):.2f}"]
     for v, label in [("baseline", "1.13.0"), ("main", "Stock main"), ("candidate", "Candidate")]
 ])
+coverage = json.loads((results / "js-coverage.json").read_text())
+if (coverage["sizesSha256"] != run["sizesSha256"] or coverage["workloads"] != run["workloads"] or
+        coverage["runnerSha256"] != sha256((bench / "coverage.mjs").read_bytes()).hexdigest()):
+    raise ValueError("JavaScript coverage and measured builds differ")
+for path, digest in coverage["sources"].items():
+    if sha256((bench.parent / path).read_bytes()).hexdigest() != digest:
+        raise ValueError(f"Coverage source changed: {path}")
+entries = {asset["path"]: asset for component in sizes["components"]
+           for files in component["variants"].values() for asset in files}
+used = {}
+for sample in coverage["samples"]:
+    key = (sample["demo"], sample["lang"], sample["version"], sample["phase"])
+    asset = entries[sample["path"]]
+    if (key in used or sample["sha256"] != asset["sha256"] or sample["bytes"] != asset["bytes"] or
+            not 0 < sample["used"] <= sample["bytes"]):
+        raise ValueError(f"Invalid JS coverage for {key}")
+    used[key] = sample
+coverage_rows = []
+for version, name in [("baseline", "1.13.0"), ("main", "Stock main"), ("candidate", "Candidate")]:
+    groups = [[used[demo, lang, version, phase] for demo in focus for lang in languages] for phase in ("init", "firstRun")]
+    coverage_rows.append([name, *[f"{median(r['used'] for r in group) / 1024:.1f}" for group in groups],
+                          f"{median(100 * r['used'] / r['bytes'] for r in groups[1]):.1f}%",
+                          f"{median(r['bytes'] - r['used'] for r in groups[1]) / 1024:.1f}"])
+if len(used) != 2 * len(languages) * len(focus) * len(coverage_rows):
+    raise ValueError("Unexpected JavaScript coverage sample count")
+para("### Generated JavaScript reached by each demo")
+para(f"Chromium recorded block coverage on {len(used)} fresh pages in a separate run. One page imported each "
+     "module and finished initialization. A second also ran the demo once and checked its output. The table reports "
+     "medians over the 21 guest and workload combinations. Sizes count UTF-8 bytes in V8’s covered source ranges. "
+     "A demo can leave error handling, shutdown or other supported operations unexercised. "
+     "[Per-module coverage and hashes](web/bench/results/js-coverage.json)")
+table(["Build", "Reached at init (KiB)", "Reached through first run (KiB)", "Share through first run",
+       "Unreached through first run (KiB)"], coverage_rows)
+
 para("<details><summary>Candidate startup, variation and paired comparison to 1.13.0</summary>")
 para("The paired ratio divides the candidate time by the 1.13.0 time within each round, then takes the median. "
      "The final column counts rounds where the candidate was at least as fast.")
@@ -459,6 +521,8 @@ CHROME_BIN=/path/to/chrome BENCH_DOM_CONTROL=1 ROUNDS={control["rounds"] if cont
 CHROME_BIN=/path/to/chrome BENCH_PAIRED=1 ROUNDS={paired_run["rounds"]} node web/bench/browser.mjs
 CHROME_BIN=/path/to/chrome BENCH_CANVAS_CONTROL=1 ROUNDS={canvas["rounds"]} node web/bench/browser.mjs
 CHROME_BIN=/path/to/chrome ROUNDS={loop["rounds"]} node web/bench/import-loop.mjs ../jco-candidate
+CHROME_BIN=/path/to/chrome node web/bench/coverage.mjs
+python3 web/bench/report.py --from-candidate
 python3 web/bench/candidate-report.py
 ```""")
 readme = bench.parents[1] / "README.md"

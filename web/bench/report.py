@@ -1,4 +1,5 @@
 """Regenerate the README snapshot and figures from the two benchmark JSON files."""
+from argparse import ArgumentParser
 from collections import defaultdict
 from hashlib import sha256
 import json
@@ -13,16 +14,40 @@ from math import log2
 
 BENCH = Path(__file__).resolve().parent
 RESULTS = BENCH / "results"
-runtime = json.loads((RESULTS / "browser.json").read_text())
 size_bytes = (RESULTS / "sizes.json").read_bytes()
 sizes = json.loads(size_bytes)
-if sha256(size_bytes).hexdigest() != runtime["sizesSha256"]:
-    raise SystemExit("Browser samples and size inventory come from different runs")
 baseline = sizes["baseline"]
 commit = sizes["main"]
 pin = json.loads((BENCH / "pin.json").read_text())
 if commit != pin["commit"]:
     raise SystemExit("The snapshot uses a different main commit than pin.json")
+
+parser = ArgumentParser(description=__doc__)
+parser.add_argument("--from-candidate", action="store_true",
+                    help="extract the stock builds and shims from the same fresh-page candidate trial")
+args = parser.parse_args()
+if args.from_candidate:
+    full_bytes = (RESULTS / "candidate-browser.json").read_bytes()
+    full = json.loads(full_bytes)
+    assets = (RESULTS / "candidate-sizes.json").read_bytes()
+    inventory = json.loads(assets)
+    if (full["sizesSha256"] != sha256(assets).hexdigest() or
+            (full["baseline"], full["main"]) != (baseline, commit) or
+            inventory["alternatives"] != sizes["alternatives"]):
+        raise ValueError("The candidate run does not measure these stock builds")
+    stock = [{**row, "variants": {key: row["variants"][key] for key in ("baseline", "main")}}
+             for row in inventory["components"]]
+    if stock != sizes["components"]:
+        raise ValueError("Stock assets differ from those actually timed")
+    runtime = {k: v for k, v in full.items() if k not in ("candidate", "reference", "samples")}
+    runtime["sizesSha256"] = sha256(size_bytes).hexdigest()
+    runtime["source"] = {"dataset": "candidate-browser.json", "sha256": sha256(full_bytes).hexdigest()}
+    runtime["samples"] = [row for row in full["samples"]
+                          if row["implementation"].split()[-1] not in ("candidate", "reference")]
+else:
+    runtime = json.loads((RESULTS / "browser.json").read_text())
+if sha256(size_bytes).hexdigest() != runtime["sizesSha256"]:
+    raise SystemExit("Browser samples and size inventory come from different runs")
 
 # One readily interpreted operation per workload for the overview.
 focus = {
@@ -96,6 +121,9 @@ paragraph(f"**jco {baseline} vs. main at `{commit[:8]}`** · {runtime['date'][:1
           f"{runtime['browser']} · {runtime['cpu']} · {runtime['os']} · Node {runtime['node']}. "
           f"[Upstream commit](https://github.com/bytecodealliance/jco/commit/{commit}) · "
           f"[Transpiler build](https://github.com/bytecodealliance/jco/actions/runs/{pin['run']})")
+if "source" in runtime:
+    paragraph("These stock and shim timings come from the same interleaved fresh-page trial as the performance branch. "
+              "[Full trial](web/bench/results/candidate-browser.json) · [Stock and shim samples](web/bench/results/browser.json)")
 changes = [(ratio(demo, lang), demo, lang) for demo in focus for lang in languages]
 largest, demo, lang = max(changes)
 paragraph(f"Across the seven operations below and three guest languages, main took longer in "
@@ -291,6 +319,9 @@ rows = [[name, len(files), *[kib(total(files, f)) for f in ("bytes", "gzip", "br
 table(["Artifact directory", "Files", "Raw total", "Gzip", "Brotli"], rows)
 paragraph("</details>")
 paragraph("[Per-file byte counts and SHA-256 digests](web/bench/results/sizes.json)")
+
+if args.from_candidate:
+    (RESULTS / "browser.json").write_text(json.dumps(runtime, indent=2, ensure_ascii=False) + "\n")
 
 readme = BENCH.parents[1] / "README.md"
 before, rest = readme.read_text().split("<!-- benchmark:start -->")
