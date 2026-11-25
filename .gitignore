@@ -21,3 +21,4 @@ web/bench/main/current
 web/*/*/jco-baseline/
 web/*/*/jco-main/
 web/*/*/jco-candidate/
+web/*/*/jco-reference/

@@ -122,7 +122,7 @@ try {
     date: new Date().toISOString(), browser: await browser.version(), node: process.version,
     os: [platform(), release(), arch()].join(" "), cpu: cpus()[0].model, rounds, workloads,
     baseline: inventory.baseline, main: inventory.main,
-    candidate: inventory.candidate, sizesSha256: createHash("sha256").update(sizeData).digest("hex"), samples: [],
+    candidate: inventory.candidate, reference: inventory.reference, sizesSha256: createHash("sha256").update(sizeData).digest("hex"), samples: [],
   };
   for (const [demo, params] of Object.entries(workloads)) {
     console.log(demo);

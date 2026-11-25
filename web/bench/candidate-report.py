@@ -16,7 +16,10 @@ sizes = json.loads(inventory)
 run = json.loads((results / "candidate-browser.json").read_text())
 if run["sizesSha256"] != sha256(inventory).hexdigest() or run["candidate"] != sizes["candidate"]:
     raise ValueError("Timing samples and assets come from different builds")
-if run["candidate"]["dirty"]:
+reference = sizes.get("reference")
+if reference != run.get("reference"):
+    raise ValueError("Reference timings and generated assets differ")
+if run["candidate"]["dirty"] or (reference and reference["dirty"]):
     raise ValueError("Publish measurements from a committed generator")
 
 focus = {
@@ -98,7 +101,7 @@ para(f"The candidate uses js-component-bindgen’s internal Oxc bundler and the 
      "For eligible single-instance, synchronous components, a host import reuses the caller’s task. "
      "Components with async operations, cross-component resource transfers or call tracking keep the general adapter. "
      f"[Jco commit `{commit[:9]}`](https://github.com/vados-cosmonic/jco/commit/{commit})")
-para(f"All three Jco builds used the same guest binaries. Each value is the median of "
+para(f"All Jco builds used the same guest binaries. Each value is the median of "
      f"{run['rounds']} fresh-page samples with one warm-up per page. The run collected {len(run['samples'])} "
      f"samples on {run['date'][:10]} with {run['browser']} on {run['cpu']}.")
 para(f"The candidate finished within **10× of the fastest available compiled shim in "
@@ -110,6 +113,24 @@ para(f"The candidate finished within **10× of the fastest available compiled sh
 para("![Candidate runtime relative to the two targets by operation and language](web/bench/results/candidate-runtime.png)")
 table(["Operation", "Guest", "Unit", "1.13.0", "Stock main", "Candidate", "Candidate / 1.13.0",
        "Fastest shim", "Shim time", "Candidate / shim"], rows)
+if reference:
+    ref = reference["commit"]
+    para("### Change from the previous branch revision")
+    para("Both revisions ran on the same guest binaries in the same browser session. Each cell divides "
+         "the candidate median by the previous revision’s median. Parentheses count the rounds in which the candidate finished faster. "
+         f"[Previous Jco revision `{ref[:9]}`](https://github.com/vados-cosmonic/jco/commit/{ref})")
+    comparisons = [(demo, metric, label) for demo, (metric, label, _) in focus.items()]
+    comparisons += [("string-marshalling", metric, metric) for metric in ("set 8 B", "get 8 B")]
+    def paired_change(demo, lang, metric):
+        current = times[demo, f"{lang} candidate", metric]
+        previous = times[demo, f"{lang} reference", metric]
+        faster = sum(current[n] < previous[n] for n in rounds)
+        return f"{median(current.values()) / median(previous.values()):.2f}× ({faster}/{len(rounds)})"
+
+    table(["Operation", *languages.values()], [
+        [label, *[paired_change(demo, lang, metric) for lang in languages]]
+        for demo, metric, label in comparisons
+    ])
 phase_rows, phase_baseline, phase_shim, misses = [], [], [], []
 for demo in focus:
     for metric in dict.fromkeys(m for d, i, m in times if d == demo and i == "c candidate"):
@@ -167,11 +188,15 @@ para("[Raw browser timings](web/bench/results/candidate-browser.json) · "
 para("### Reproduce the candidate run")
 para("Run the dependency installation, main setup and size commands in [Reproduce the comparison](#reproduce-the-comparison), "
      "then run the following from the repository root. Cargo uses the Jco checkout’s pinned toolchain and lockfile.")
+reference_setup = (
+    f"git -C ../jco-candidate worktree add --detach ../jco-reference {reference['commit']}\n"
+    "node web/bench/candidate.mjs --reference ../jco-reference\n" if reference else ""
+)
 para(f"""```sh
 git clone https://github.com/vados-cosmonic/jco ../jco-candidate
 git -C ../jco-candidate checkout {commit}
 node web/bench/candidate.mjs ../jco-candidate
-CHROME_BIN=/path/to/chrome BENCH_CANDIDATE=1 ROUNDS={run['rounds']} node web/bench/browser.mjs
+{reference_setup}CHROME_BIN=/path/to/chrome BENCH_CANDIDATE=1 ROUNDS={run['rounds']} node web/bench/browser.mjs
 python3 web/bench/candidate-report.py
 ```""")
 readme = bench.parents[1] / "README.md"
