@@ -13,10 +13,12 @@ if (reference) args.shift();
 if (args.length !== 1) throw new Error("Usage: node bench/candidate.mjs [--reference] <jco-checkout>");
 const version = reference ? "reference" : "candidate";
 const checkout = resolve(args[0]);
-const cargoArgs = ["build", "--locked", "-p", "js-component-bindgen", "--features", "embedded-cm-runtime", "--example", "transpile"];
+// Different worktrees can produce the same Cargo example filename. Keep their
+// executables separate even when CARGO_TARGET_DIR points at a shared cache.
+const target = join(checkout, "target");
+const cargoArgs = ["build", "--locked", "--target-dir", target, "-p", "js-component-bindgen", "--features", "embedded-cm-runtime", "--example", "transpile"];
 execFileSync("cargo", cargoArgs, { cwd: checkout, stdio: "inherit" });
-const metadata = JSON.parse(execFileSync("cargo", ["metadata", "--no-deps", "--format-version", "1"], { cwd: checkout }));
-const bin = join(metadata.target_directory, "debug/examples/transpile");
+const bin = join(target, "debug/examples/transpile");
 const map = readFileSync(join(web, "host/imports.txt"), "utf8").trim().split("\n").map(line => {
   const [name, symbol] = line.split(/\s+/);
   return `--map=${name}=../../../host/web-host.js#${symbol}`;
