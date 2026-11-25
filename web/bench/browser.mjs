@@ -7,7 +7,8 @@ import puppeteer from "puppeteer-core";
 
 const web = resolve(import.meta.dirname, "..");
 const domControl = process.env.BENCH_DOM_CONTROL === "1";
-const paired = process.env.BENCH_PAIRED === "1";
+const canvasControl = process.env.BENCH_CANVAS_CONTROL === "1";
+const paired = canvasControl || process.env.BENCH_PAIRED === "1";
 if (paired && domControl) throw Error("Run the paired and DOM controls separately");
 const candidate = paired || domControl || process.env.BENCH_CANDIDATE === "1";
 const prefix = candidate ? "candidate-" : "";
@@ -39,7 +40,7 @@ const allWorkloads = {
 const workloads = domControl ? {
   "dom-query": allWorkloads["dom-query"],
   "dom-traversal": allWorkloads["dom-traversal"],
-} : allWorkloads;
+} : canvasControl ? { "canvas-pixels": allWorkloads["canvas-pixels"] } : allWorkloads;
 
 const server = http.createServer(async (req, res) => {
   try {
@@ -109,8 +110,9 @@ function implementations(demo) {
 // Interleave baseline and candidate on the same page. Clearing the DOM and
 // timing entries keeps each guest's work and result table independent.
 async function samplePair(page, demo, pair, args, round, passes) {
-  return page.evaluate(async ({ demo, pair, args, round, passes }) => {
+  return page.evaluate(async ({ demo, pair, args, round, passes, canvasControl }) => {
     const { getMeasurements } = await import(`/examples/${demo}/main.js`);
+    const readback = canvasControl ? (await import("/bench/canvas-readback.mjs")).observeReadback(args[0]) : null;
     const builds = [];
     for (const { label, path } of pair) builds.push({ label, run: (await import(path)).run });
     const rows = [];
@@ -127,11 +129,12 @@ async function samplePair(page, demo, pair, args, round, passes) {
             !Object.values(reports[0]).every(v => Number.isFinite(v) && v >= 0)) {
           throw Error("Invalid paired report for " + label);
         }
-        if (pass) rows.push({ demo, implementation: label, round: round + 1, pass, seconds: reports[0] });
+        const canvas = readback?.finish(reports[0]["getImageData(): µs/call"]);
+        if (pass) rows.push({ demo, implementation: label, round: round + 1, pass, seconds: reports[0], canvas });
       }
     }
     return rows;
-  }, { demo, pair, args, round, passes });
+  }, { demo, pair, args, round, passes, canvasControl });
 }
 
 async function sample(page, demo, impl, args) {
@@ -209,8 +212,11 @@ try {
   if (paired) result.passes = 4;
   if (domControl || paired) {
     result.sources = {};
-    for (const path of [...(domControl ? ["bench/dom-core-shim.mjs"] : []), "bench/browser.mjs", "host/web-host.js", "host/common.js",
-                        ...Object.keys(workloads).map(d => `examples/${d}/main.js`)]) {
+    const sources = ["bench/browser.mjs", "host/web-host.js", "host/common.js",
+      ...Object.keys(workloads).map(d => `examples/${d}/main.js`)];
+    if (domControl) sources.push("bench/dom-core-shim.mjs");
+    if (canvasControl) sources.push("bench/canvas-readback.mjs");
+    for (const path of sources) {
       result.sources[path] = createHash("sha256").update(await readFile(resolve(web, path))).digest("hex");
     }
   }
@@ -247,7 +253,8 @@ try {
       }
     }
   }
-  await writeFile(resolve(import.meta.dirname, `results/${paired ? "paired-" : domControl ? "dom-control-" : prefix}browser.json`), JSON.stringify(result, null, 2) + "\n");
+  const resultPrefix = canvasControl ? "canvas-control-" : paired ? "paired-" : domControl ? "dom-control-" : prefix;
+  await writeFile(resolve(import.meta.dirname, `results/${resultPrefix}browser.json`), JSON.stringify(result, null, 2) + "\n");
 } finally {
   server.close();
   await browser.close();

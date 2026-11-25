@@ -60,33 +60,33 @@ Both revisions ran on the same guest binaries in the same browser session. Each 
 
 ### Warm 1.13.0 comparison on the same page
 
-For each guest and workload, both builds run once to warm up, then 4 times each on the same page. Each pair alternates which build runs first. The runner clears the DOM and performance entries before every call. It repeats this on 9 fresh pages. Each page contributes the median of its candidate / 1.13.0 ratios. The median across pages was at or below 1× for **16/21** headline cases. [Raw paired timings](web/bench/results/paired-browser.json)
+For each guest and workload, both builds run once to warm up, then 4 times each on the same page. Each pair alternates which build runs first. The runner clears the DOM and performance entries before every call. It repeats this on 9 fresh pages. Each page contributes the median of its candidate / 1.13.0 ratios. The median across pages was at or below 1× for **19/21** headline cases. [Raw paired timings](web/bench/results/paired-browser.json)
 
 ![Median paired time ratios by workload and guest, with bars spanning the middle half of page ratios](web/bench/results/paired-runtime.png)
 
 | Operation | Guest | Candidate / 1.13.0 | Middle 50% of page ratios | Pages at or below 1× |
 | --- | --- | --- | --- | --- |
-| Attribute write | C | 0.48× | 0.46–0.50× | 9/9 |
-| Attribute write | C++ | 0.49× | 0.48–0.51× | 9/9 |
-| Attribute write | Rust | 0.55× | 0.54–0.58× | 9/9 |
-| Canvas fillRect | C | 0.90× | 0.90–0.95× | 8/9 |
-| Canvas fillRect | C++ | 0.95× | 0.91–0.98× | 7/9 |
-| Canvas fillRect | Rust | 0.93× | 0.86–0.96× | 8/9 |
-| Canvas pixel read | C | 0.96× | 0.85–1.22× | 6/9 |
-| Canvas pixel read | C++ | 1.02× | 0.90–1.13× | 4/9 |
-| Canvas pixel read | Rust | 1.08× | 0.98–1.22× | 3/9 |
-| DOM ID lookup | C | 0.62× | 0.56–0.71× | 9/9 |
-| DOM ID lookup | C++ | 0.70× | 0.57–0.74× | 9/9 |
-| DOM ID lookup | Rust | 0.68× | 0.60–0.72× | 9/9 |
-| Tree traversal | C | 0.81× | 0.69–0.93× | 8/9 |
-| Tree traversal | C++ | 0.75× | 0.72–0.91× | 7/9 |
-| Tree traversal | Rust | 0.81× | 0.70–0.91× | 7/9 |
-| Read 1 KiB string | C | 0.80× | 0.65–0.95× | 9/9 |
-| Read 1 KiB string | C++ | 0.86× | 0.72–1.06× | 6/9 |
-| Read 1 KiB string | Rust | 0.84× | 0.75–0.88× | 9/9 |
-| Table creation | C | 1.03× | 0.94–1.12× | 4/9 |
-| Table creation | C++ | 1.02× | 0.98–1.06× | 4/9 |
-| Table creation | Rust | 1.05× | 0.99–1.08× | 3/9 |
+| Attribute write | C | 0.50× | 0.46–0.52× | 9/9 |
+| Attribute write | C++ | 0.51× | 0.46–0.53× | 9/9 |
+| Attribute write | Rust | 0.49× | 0.48–0.51× | 9/9 |
+| Canvas fillRect | C | 0.92× | 0.84–0.94× | 9/9 |
+| Canvas fillRect | C++ | 0.99× | 0.91–1.02× | 5/9 |
+| Canvas fillRect | Rust | 0.95× | 0.92–0.98× | 7/9 |
+| Canvas pixel read | C | 0.93× | 0.91–1.09× | 5/9 |
+| Canvas pixel read | C++ | 1.01× | 0.99–1.14× | 4/9 |
+| Canvas pixel read | Rust | 0.99× | 0.96–1.02× | 5/9 |
+| DOM ID lookup | C | 0.63× | 0.53–0.71× | 9/9 |
+| DOM ID lookup | C++ | 0.64× | 0.61–0.72× | 9/9 |
+| DOM ID lookup | Rust | 0.66× | 0.57–0.81× | 9/9 |
+| Tree traversal | C | 0.82× | 0.73–0.89× | 9/9 |
+| Tree traversal | C++ | 0.76× | 0.70–0.81× | 8/9 |
+| Tree traversal | Rust | 0.92× | 0.69–1.03× | 6/9 |
+| Read 1 KiB string | C | 0.86× | 0.79–0.96× | 7/9 |
+| Read 1 KiB string | C++ | 0.87× | 0.79–0.91× | 7/9 |
+| Read 1 KiB string | Rust | 0.94× | 0.81–1.00× | 7/9 |
+| Table creation | C | 0.98× | 0.94–1.04× | 6/9 |
+| Table creation | C++ | 0.96× | 0.88–1.11× | 6/9 |
+| Table creation | Rust | 1.02× | 0.97–1.12× | 3/9 |
 
 Across all reported phases and string lengths, 81/84 comparable candidate medians were within 10× of the fastest compiled shim and 65/84 matched or beat 1.13.0. Totals and their subphases overlap. Each ratio compares the same phase on both sides.
 
@@ -104,39 +104,57 @@ These 216 fresh-page samples compare each language’s exact core Wasm binary wi
 
 The bulk query copies 2,000 handles per call, 10 times. Each traversal visits 19,531 nodes. The runner checks the rendered fixture or node count for each guest and verifies list counts and handle release for the direct shim after warm-up and measurement.
 
-With list materialization on both sides, the candidate took **1.72–2.51×** the direct shim’s bulk-query time across the three guests. Times below are per measured workload, after warm-up.
+With list materialization on both sides, the candidate took **1.09–1.90×** the direct shim’s bulk-query time across the three guests. Times below are per measured workload, after warm-up.
 
 ![DOM phase times for Jco 1.13.0 and the candidate relative to the same-guest direct shim](web/bench/results/dom-control-runtime.png)
 
 | Phase | Guest | Direct (ms) | 1.13.0 (ms) | Candidate (ms) | Candidate / direct | Candidate / 1.13.0 | Rounds at or below 1.13.0 | Candidate / previous | Rounds at or below previous |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| DOM ID lookup | C | 20.62 | 45.41 | 33.76 | 1.64× | 0.74× | 8/9 | 1.01× | 6/9 |
-| DOM ID lookup | C++ | 25.05 | 40.47 | 40.09 | 1.60× | 0.99× | 4/9 | 1.04× | 5/9 |
-| DOM ID lookup | Rust | 20.40 | 41.91 | 36.10 | 1.77× | 0.86× | 5/9 | 1.02× | 5/9 |
-| Bulk DOM query | C | 10.64 | 17.61 | 20.29 | 1.91× | 1.15× | 5/9 | 1.11× | 4/9 |
-| Bulk DOM query | C++ | 10.62 | 17.77 | 18.24 | 1.72× | 1.03× | 3/9 | 0.75× | 6/9 |
-| Bulk DOM query | Rust | 9.23 | 19.98 | 23.19 | 2.51× | 1.16× | 6/9 | 1.19× | 4/9 |
-| Tree construction | C | 49.68 | 91.80 | 86.68 | 1.74× | 0.94× | 7/9 | 0.82× | 6/9 |
-| Tree construction | C++ | 49.31 | 102.64 | 103.23 | 2.09× | 1.01× | 2/9 | 1.09× | 3/9 |
-| Tree construction | Rust | 40.85 | 73.93 | 90.79 | 2.22× | 1.23× | 5/9 | 1.05× | 6/9 |
-| Tree traversal | C | 12.42 | 23.13 | 22.98 | 1.85× | 0.99× | 3/9 | 0.76× | 7/9 |
-| Tree traversal | C++ | 12.50 | 25.86 | 27.38 | 2.19× | 1.06× | 1/9 | 1.08× | 5/9 |
-| Tree traversal | Rust | 13.02 | 26.07 | 29.95 | 2.30× | 1.15× | 3/9 | 0.91× | 7/9 |
+| DOM ID lookup | C | 28.62 | 46.56 | 37.69 | 1.32× | 0.81× | 9/9 | 0.93× | 7/9 |
+| DOM ID lookup | C++ | 35.12 | 48.89 | 44.30 | 1.26× | 0.91× | 5/9 | 0.95× | 4/9 |
+| DOM ID lookup | Rust | 29.74 | 36.88 | 30.25 | 1.02× | 0.82× | 8/9 | 0.75× | 7/9 |
+| Bulk DOM query | C | 11.62 | 18.57 | 22.02 | 1.90× | 1.19× | 6/9 | 1.36× | 3/9 |
+| Bulk DOM query | C++ | 16.05 | 20.25 | 24.39 | 1.52× | 1.20× | 4/9 | 1.09× | 4/9 |
+| Bulk DOM query | Rust | 14.42 | 17.66 | 15.66 | 1.09× | 0.89× | 5/9 | 0.64× | 6/9 |
+| Tree construction | C | 51.58 | 78.04 | 96.06 | 1.86× | 1.23× | 3/9 | 1.03× | 4/9 |
+| Tree construction | C++ | 51.85 | 90.48 | 102.57 | 1.98× | 1.13× | 4/9 | 0.98× | 4/9 |
+| Tree construction | Rust | 51.16 | 94.13 | 96.64 | 1.89× | 1.03× | 3/9 | 0.94× | 3/9 |
+| Tree traversal | C | 13.52 | 25.66 | 24.37 | 1.80× | 0.95× | 5/9 | 0.81× | 6/9 |
+| Tree traversal | C++ | 12.45 | 20.39 | 22.97 | 1.84× | 1.13× | 4/9 | 0.77× | 7/9 |
+| Tree traversal | Rust | 15.22 | 31.67 | 33.13 | 2.18× | 1.05× | 3/9 | 1.00× | 5/9 |
 
 ### Cost of a synchronous host import
 
-A small guest runs 131,072 iterations per pass. The string loop changes the first byte before each call. The resource loop acquires a host object, borrows it to read its value, and drops it. The optional-resource loop checks the discriminant in guest memory every time and reads and drops each present handle. Each pass checks its checksum. All four adapters use byte-identical core modules. The direct shim keeps the fixture’s single live handle in one slot.
+The scalar, string and resource loops run 131,072 iterations per pass. The string loop changes the first byte before each call. The resource loop acquires a host object, borrows it to read its value, and drops it. The optional-resource loop checks the discriminant in guest memory every time and reads and drops each present handle. Each pass checks its checksum. All four adapters use byte-identical core modules. The direct shim keeps the fixture’s single live handle in one slot.
+
+The byte-list loop copies a 176 × 176 RGBA region (123,904 bytes) 2,048 times per pass, using a reusable host view and a fixed guest allocation. It sums the changing first byte across transfers and verifies every byte of the final result after each pass. The canvas demo also measures browser readback, host allocation and guest allocation.
 
 Times are nanoseconds per guest iteration, including the loop and host work. Each cell is the median of 7 fresh-page medians, with 2 warm-ups and 5 timed passes per page. The runner interleaves the four builds. [Raw timings and digests](web/bench/results/import-loop.json)
 
 | Operation | Direct | 1.13.0 | Stock main | Candidate | Candidate / 1.13.0 | Candidate / direct |
 | --- | --- | --- | --- | --- | --- | --- |
-| u32 | 23.7 | 18.3 | 2,942.7 | 22.9 | 1.25× | 0.97× |
-| 2-byte string | 693.5 | 712.6 | 4,618.1 | 190.0 | 0.27× | 0.27× |
-| 9-byte string | 661.5 | 708.8 | 4,547.9 | 287.6 | 0.41× | 0.43× |
-| 32-byte string | 692.7 | 713.3 | 4,824.1 | 632.5 | 0.89× | 0.91× |
-| Acquire, borrow, drop | 59.5 | 392.2 | 7,513.4 | 192.3 | 0.49× | 3.23× |
-| Optional resource, half present | 57.2 | 260.2 | 5,461.9 | 202.9 | 0.78× | 3.55× |
+| u32 | 21.4 | 25.9 | 3,045.7 | 22.9 | 0.88× | 1.07× |
+| 2-byte string | 680.5 | 737.0 | 4,541.0 | 200.7 | 0.27× | 0.29× |
+| 9-byte string | 731.7 | 676.0 | 4,497.5 | 254.1 | 0.38× | 0.35× |
+| 32-byte string | 685.1 | 695.0 | 4,354.1 | 650.8 | 0.94× | 0.95× |
+| Acquire, borrow, drop | 65.6 | 415.8 | 7,870.5 | 197.6 | 0.48× | 3.01× |
+| Optional resource, half present | 69.4 | 305.2 | 5,360.4 | 230.4 | 0.75× | 3.32× |
+| 121 KiB host-to-guest byte list | 7,568.4 | 7,861.3 | 14,306.6 | 8,544.9 | 1.09× | 1.13× |
+
+### Where the canvas read spends its time
+
+The same-page comparison was repeated with a clock around the demo’s host method. That method reads 176 × 176 pixels from Chromium and creates a JavaScript byte array. The remainder includes guest allocation and freeing, the copy into Wasm, binding checks, the loop and observer overhead. Each cell is a median across 9 page medians. Columns are summarized independently. [Raw instrumented samples](web/bench/results/canvas-control-browser.json)
+
+| Guest | Bindings | Full read (µs) | Inside host (µs) | Remainder (µs) | Inside host (%) |
+| --- | --- | --- | --- | --- | --- |
+| C | 1.13.0 | 719.2 | 686.7 | 31.6 | 95.7% |
+| C | Candidate | 643.4 | 604.7 | 34.1 | 94.8% |
+| C++ | 1.13.0 | 594.0 | 564.6 | 28.8 | 95.3% |
+| C++ | Candidate | 591.3 | 556.0 | 33.0 | 94.7% |
+| Rust | 1.13.0 | 600.3 | 570.9 | 29.1 | 95.2% |
+| Rust | Candidate | 577.6 | 541.1 | 34.1 | 94.4% |
+
+The host accounted for 94.4–95.7% of the full read across these builds. The candidate spent 33.0–34.1 µs per read outside the host, compared with 28.8–31.6 µs for 1.13.0.
 
 <details><summary>All timed phases and string lengths</summary>
 
@@ -284,6 +302,7 @@ node web/bench/candidate.mjs --reference ../jco-reference
 CHROME_BIN=/path/to/chrome BENCH_CANDIDATE=1 ROUNDS=7 node web/bench/browser.mjs
 CHROME_BIN=/path/to/chrome BENCH_DOM_CONTROL=1 ROUNDS=9 node web/bench/browser.mjs
 CHROME_BIN=/path/to/chrome BENCH_PAIRED=1 ROUNDS=9 node web/bench/browser.mjs
+CHROME_BIN=/path/to/chrome BENCH_CANVAS_CONTROL=1 ROUNDS=9 node web/bench/browser.mjs
 CHROME_BIN=/path/to/chrome ROUNDS=7 node web/bench/import-loop.mjs ../jco-candidate
 python3 web/bench/candidate-report.py
 ```

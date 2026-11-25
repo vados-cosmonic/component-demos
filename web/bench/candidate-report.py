@@ -311,13 +311,15 @@ loop_passes = set(range(1, loop["repeats"] + 1))
 loop_times = defaultdict(dict)
 for sample in loop["samples"]:
     group = loop_times[sample["op"], sample.get("length"), sample["name"], sample["round"]]
-    if sample["pass"] in group or sample["elapsedMs"] <= 0:
+    expected_count = loop["pixelCopies"] if sample["op"] == "pixels" else loop["iterations"]
+    if sample["pass"] in group or sample["elapsedMs"] <= 0 or sample["count"] != expected_count:
         raise ValueError("Duplicate or invalid import loop sample")
-    group[sample["pass"]] = sample["elapsedMs"] * 1e6 / loop["iterations"]
+    group[sample["pass"]] = sample["elapsedMs"] * 1e6 / sample["count"]
 loop_rows = []
 for op, length, label in [("numbers", None, "u32"), ("strings", 2, "2-byte string"), ("strings", 9, "9-byte string"),
                           ("strings", 32, "32-byte string"), ("resources", None, "Acquire, borrow, drop"),
-                          ("options", None, "Optional resource, half present")]:
+                          ("options", None, "Optional resource, half present"),
+                          ("pixels", None, "121 KiB host-to-guest byte list")]:
     medians = []
     for version in ("direct", "baseline", "main", "candidate"):
         groups = [loop_times[op, length, version, n] for n in loop_rounds]
@@ -328,15 +330,62 @@ for op, length, label in [("numbers", None, "u32"), ("strings", 2, "2-byte strin
     loop_rows.append([label, *[f"{v:,.1f}" for v in medians],
                       f"{candidate / baseline:.2f}×", f"{candidate / direct:.2f}×"])
 para("### Cost of a synchronous host import")
-para(f"A small guest runs {loop['iterations']:,} iterations per pass. The string loop changes the first byte "
+para(f"The scalar, string and resource loops run {loop['iterations']:,} iterations per pass. The string loop changes the first byte "
      "before each call. The resource loop acquires a host object, borrows it to read its value, and drops it. "
      "The optional-resource loop checks the discriminant in guest memory every time and reads and drops each present handle. "
      "Each pass checks its checksum. All four adapters use byte-identical core modules. The direct shim "
      "keeps the fixture’s single live handle in one slot.")
+para(f"The byte-list loop copies a 176 × 176 RGBA region ({176 * 176 * 4:,} bytes) "
+     f"{loop['pixelCopies']:,} times per pass, using a reusable host view and a fixed guest allocation. "
+     "It sums the changing first byte across transfers and verifies every byte of the final result after each pass. "
+     "The canvas demo also measures browser readback, host allocation and guest allocation.")
 para(f"Times are nanoseconds per guest iteration, including the loop and host work. Each cell is the median "
      f"of {loop['rounds']} fresh-page medians, with {loop['warmups']} warm-ups and {loop['repeats']} timed passes "
      f"per page. The runner interleaves the four builds. [Raw timings and digests](web/bench/results/import-loop.json)")
 table(["Operation", "Direct", "1.13.0", "Stock main", "Candidate", "Candidate / 1.13.0", "Candidate / direct"], loop_rows)
+
+canvas = json.loads((results / "canvas-control-browser.json").read_text())
+if canvas["sizesSha256"] != run["sizesSha256"] or canvas["candidate"] != run["candidate"]:
+    raise ValueError("The canvas observer used different generated bindings")
+for path, digest in canvas["sources"].items():
+    if sha256((bench.parent / path).read_bytes()).hexdigest() != digest:
+        raise ValueError(f"Canvas observer source has changed: {path}")
+readbacks = {}
+for sample in canvas["samples"]:
+    key = sample["implementation"], sample["round"], sample["pass"]
+    data = sample["canvas"]
+    if (key in readbacks or sample["demo"] != "canvas-pixels" or data["bytes"] != 176**2 * 4 or
+            not (0 <= data["hostUs"] <= data["totalUs"]) or
+            abs(data["totalUs"] - data["hostUs"] - data["remainderUs"]) > 1e-6 or
+            data["reps"] < 1 or data["reps"] & (data["reps"] - 1)):
+        raise ValueError(f"Invalid canvas observation for {key}")
+    readbacks[key] = data
+pages = range(1, canvas["rounds"] + 1)
+passes = range(1, canvas["passes"] + 1)
+canvas_rows = []
+canvas_host_share = []
+canvas_remainders = defaultdict(list)
+for lang, guest in languages.items():
+    for version, name in [("baseline", "1.13.0"), ("candidate", "Candidate")]:
+        page_samples = [[readbacks[f"{lang} {version}", n, p] for p in passes] for n in pages]
+        cells = [median(median(row[field] for row in page) for page in page_samples)
+                 for field in ("totalUs", "hostUs", "remainderUs")]
+        percent = median(median(100 * row["hostUs"] / row["totalUs"] for row in page) for page in page_samples)
+        canvas_host_share.append(percent)
+        canvas_remainders[version].append(cells[2])
+        canvas_rows.append([guest, name, *[f"{value:,.1f}" for value in cells], f"{percent:.1f}%"])
+if len(readbacks) != len(canvas_rows) * len(pages) * len(passes):
+    raise ValueError("Unexpected number of canvas observations")
+para("### Where the canvas read spends its time")
+para("The same-page comparison was repeated with a clock around the demo’s host method. "
+     "That method reads 176 × 176 pixels from Chromium and creates a JavaScript byte array. "
+     "The remainder includes guest allocation and freeing, the copy into Wasm, binding checks, the loop and observer overhead. "
+     f"Each cell is a median across {len(pages)} page medians. Columns are summarized independently. "
+     "[Raw instrumented samples](web/bench/results/canvas-control-browser.json)")
+table(["Guest", "Bindings", "Full read (µs)", "Inside host (µs)", "Remainder (µs)", "Inside host (%)"], canvas_rows)
+para(f"The host accounted for {min(canvas_host_share):.1f}–{max(canvas_host_share):.1f}% of the full read across these builds. "
+     f"The candidate spent {min(canvas_remainders['candidate']):.1f}–{max(canvas_remainders['candidate']):.1f} µs per read outside the host, "
+     f"compared with {min(canvas_remainders['baseline']):.1f}–{max(canvas_remainders['baseline']):.1f} µs for 1.13.0.")
 
 para("<details><summary>All timed phases and string lengths</summary>")
 table(["Demo", "Phase", "Guest", "Candidate time", "Candidate / 1.13.0", "Candidate / main", "Fastest shim", "Candidate / shim"], phase_rows)
@@ -383,6 +432,7 @@ node web/bench/candidate.mjs ../jco-candidate
 {reference_setup}CHROME_BIN=/path/to/chrome BENCH_CANDIDATE=1 ROUNDS={run['rounds']} node web/bench/browser.mjs
 CHROME_BIN=/path/to/chrome BENCH_DOM_CONTROL=1 ROUNDS={control["rounds"] if control_path.exists() else 9} node web/bench/browser.mjs
 CHROME_BIN=/path/to/chrome BENCH_PAIRED=1 ROUNDS={paired_run["rounds"]} node web/bench/browser.mjs
+CHROME_BIN=/path/to/chrome BENCH_CANVAS_CONTROL=1 ROUNDS={canvas["rounds"]} node web/bench/browser.mjs
 CHROME_BIN=/path/to/chrome ROUNDS={loop["rounds"]} node web/bench/import-loop.mjs ../jco-candidate
 python3 web/bench/candidate-report.py
 ```""")

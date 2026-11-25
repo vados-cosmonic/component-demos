@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-25T21:31:03.899Z",
+  "date": "2026-11-25T22:00:06.047Z",
   "browser": "HeadlessChrome/156.0.8078.47",
   "node": "v26.13.0",
   "os": "linux 6.12.111 x64",
@@ -33,11 +33,11 @@
       "demo": "dom-query",
       "implementation": "c baseline",
       "round": 1,
-      "loadMs": 20.884999990463257,
+      "loadMs": 20.464999973773956,
       "seconds": {
-        "individual: total ms": 0.058665,
-        "bulk: total ms": 0.0245,
-        "individual: µs/element": 0.0000029329999999999997
+        "individual: total ms": 0.053615,
+        "bulk: total ms": 0.02284,
+        "individual: µs/element": 0.0000026810000000000003
       },
       "checks": {
         "elements": 2000
@@ -47,11 +47,11 @@
       "demo": "dom-query",
       "implementation": "c candidate",
       "round": 1,
-      "loadMs": 48.7399999499321,
+      "loadMs": 44.99500000476837,
       "seconds": {
-        "individual: total ms": 0.03929,
-        "bulk: total ms": 0.015460000000000002,
-        "individual: µs/element": 0.0000019650000000000002
+        "individual: total ms": 0.02931,
+        "bulk: total ms": 0.019235,
+        "individual: µs/element": 0.000001466
       },
       "checks": {
         "elements": 2000
@@ -61,11 +61,11 @@
       "demo": "dom-query",
       "implementation": "c reference",
       "round": 1,
-      "loadMs": 39.7399999499321,
+      "loadMs": 44.87999999523163,
       "seconds": {
-        "individual: total ms": 0.041299999999999996,
-        "bulk: total ms": 0.020595,
-        "individual: µs/element": 0.000002065
+        "individual: total ms": 0.041460000000000004,
+        "bulk: total ms": 0.01783,
+        "individual: µs/element": 0.000002073
       },
       "checks": {
         "elements": 2000
@@ -75,11 +75,11 @@
       "demo": "dom-query",
       "implementation": "cpp baseline",
       "round": 1,
-      "loadMs": 22.794999957084656,
+      "loadMs": 20.790000021457672,
       "seconds": {
-        "individual: total ms": 0.06735,
-        "bulk: total ms": 0.026005,
-        "individual: µs/element": 0.0000033679999999999998
+        "individual: total ms": 0.06326,
+        "bulk: total ms": 0.026324999999999998,
+        "individual: µs/element": 0.0000031629999999999996
       },
       "checks": {
         "elements": 2000
@@ -89,11 +89,11 @@
       "demo": "dom-query",
       "implementation": "cpp candidate",
       "round": 1,
-      "loadMs": 44.90499997138977,
+      "loadMs": 43.30500000715256,
       "seconds": {
-        "individual: total ms": 0.044109999999999996,
-        "bulk: total ms": 0.0255,
-        "individual: µs/element": 0.000002206
+        "individual: total ms": 0.03593,
+        "bulk: total ms": 0.02454,
+        "individual: µs/element": 0.000001797
       },
       "checks": {
         "elements": 2000
@@ -103,11 +103,11 @@
       "demo": "dom-query",
       "implementation": "cpp reference",
       "round": 1,
-      "loadMs": 38.464999973773956,
+      "loadMs": 47.6599999666214,
       "seconds": {
-        "individual: total ms": 0.038625,
-        "bulk: total ms": 0.01799,
-        "individual: µs/element": 0.0000019310000000000002
+        "individual: total ms": 0.046509999999999996,
+        "bulk: total ms": 0.02521,
+        "individual: µs/element": 0.000002325
       },
       "checks": {
         "elements": 2000
@@ -117,11 +117,11 @@
       "demo": "dom-query",
       "implementation": "rust baseline",
       "round": 1,
-      "loadMs": 18.680000007152557,
+      "loadMs": 21.939999997615814,
       "seconds": {
-        "individual: total ms": 0.05148,
-        "bulk: total ms": 0.019975,
-        "individual: µs/element": 0.000002574
+        "individual: total ms": 0.032604999999999995,
+        "bulk: total ms": 0.01399,
+        "individual: µs/element": 0.0000016299999999999999
       },
       "checks": {
         "elements": 2000
@@ -131,11 +131,11 @@
       "demo": "dom-query",
       "implementation": "rust candidate",
       "round": 1,
-      "loadMs": 29.785000026226044,
+      "loadMs": 42.03999996185303,
       "seconds": {
-        "individual: total ms": 0.021855,
-        "bulk: total ms": 0.013805,
-        "individual: µs/element": 0.000001093
+        "individual: total ms": 0.027579999999999997,
+        "bulk: total ms": 0.01304,
+        "individual: µs/element": 0.000001379
       },
       "checks": {
         "elements": 2000
@@ -145,11 +145,11 @@
       "demo": "dom-query",
       "implementation": "rust reference",
       "round": 1,
-      "loadMs": 40.77500003576279,
+      "loadMs": 44.314999997615814,
       "seconds": {
-        "individual: total ms": 0.04272,
-        "bulk: total ms": 0.027614999999999997,
-        "individual: µs/element": 0.000002136
+        "individual: total ms": 0.047259999999999996,
+        "bulk: total ms": 0.029605,
+        "individual: µs/element": 0.000002363
       },
       "checks": {
         "elements": 2000
@@ -159,11 +159,11 @@
       "demo": "dom-query",
       "implementation": "c direct",
       "round": 1,
-      "loadMs": 18.73499995470047,
+      "loadMs": 16.06500005722046,
       "seconds": {
-        "individual: total ms": 0.028725,
-        "bulk: total ms": 0.008164999999999999,
-        "individual: µs/element": 0.0000014359999999999999
+        "individual: total ms": 0.03814,
+        "bulk: total ms": 0.016215,
+        "individual: µs/element": 0.0000019070000000000001
       },
       "checks": {
         "elements": 2000,
@@ -176,11 +176,11 @@
       "demo": "dom-query",
       "implementation": "cpp direct",
       "round": 1,
-      "loadMs": 14.490000009536743,
+      "loadMs": 13.115000009536743,
       "seconds": {
-        "individual: total ms": 0.02133,
-        "bulk: total ms": 0.01062,
-        "individual: µs/element": 0.000001066
+        "individual: total ms": 0.02545,
+        "bulk: total ms": 0.01007,
+        "individual: µs/element": 0.000001273
       },
       "checks": {
         "elements": 2000,
@@ -193,11 +193,11 @@
       "demo": "dom-query",
       "implementation": "rust direct",
       "round": 1,
-      "loadMs": 12.7950000166893,
+      "loadMs": 13.1700000166893,
       "seconds": {
-        "individual: total ms": 0.02063,
-        "bulk: total ms": 0.01094,
-        "individual: µs/element": 0.000001031
+        "individual: total ms": 0.019305,
+        "bulk: total ms": 0.008915,
+        "individual: µs/element": 9.649999999999999e-7
       },
       "checks": {
         "elements": 2000,
@@ -210,11 +210,11 @@
       "demo": "dom-query",
       "implementation": "c candidate",
       "round": 2,
-      "loadMs": 38.02999997138977,
+      "loadMs": 45.9549999833107,
       "seconds": {
-        "individual: total ms": 0.02608,
-        "bulk: total ms": 0.01623,
-        "individual: µs/element": 0.0000013040000000000001
+        "individual: total ms": 0.051245,
+        "bulk: total ms": 0.023575,
+        "individual: µs/element": 0.0000025619999999999998
       },
       "checks": {
         "elements": 2000
@@ -224,11 +224,11 @@
       "demo": "dom-query",
       "implementation": "c baseline",
       "round": 2,
-      "loadMs": 15.930000007152557,
+      "loadMs": 19.834999978542328,
       "seconds": {
-        "individual: total ms": 0.03896,
-        "bulk: total ms": 0.016614999999999998,
-        "individual: µs/element": 0.000001948
+        "individual: total ms": 0.057890000000000004,
+        "bulk: total ms": 0.026455,
+        "individual: µs/element": 0.000002894
       },
       "checks": {
         "elements": 2000
@@ -238,11 +238,11 @@
       "demo": "dom-query",
       "implementation": "rust direct",
       "round": 2,
-      "loadMs": 11.15499997138977,
+      "loadMs": 14.84500002861023,
       "seconds": {
-        "individual: total ms": 0.01586,
-        "bulk: total ms": 0.007975,
-        "individual: µs/element": 7.930000000000001e-7
+        "individual: total ms": 0.0206,
+        "bulk: total ms": 0.00881,
+        "individual: µs/element": 0.00000103
       },
       "checks": {
         "elements": 2000,
@@ -255,11 +255,11 @@
       "demo": "dom-query",
       "implementation": "cpp direct",
       "round": 2,
-      "loadMs": 14.710000038146973,
+      "loadMs": 13.149999976158142,
       "seconds": {
-        "individual: total ms": 0.023530000000000002,
-        "bulk: total ms": 0.008815,
-        "individual: µs/element": 0.0000011770000000000001
+        "individual: total ms": 0.03318,
+        "bulk: total ms": 0.01644,
+        "individual: µs/element": 0.0000016590000000000001
       },
       "checks": {
         "elements": 2000,
@@ -272,11 +272,11 @@
       "demo": "dom-query",
       "implementation": "c direct",
       "round": 2,
-      "loadMs": 13.194999992847443,
+      "loadMs": 11.830000042915344,
       "seconds": {
-        "individual: total ms": 0.02062,
-        "bulk: total ms": 0.01014,
-        "individual: µs/element": 0.000001031
+        "individual: total ms": 0.024565,
+        "bulk: total ms": 0.01011,
+        "individual: µs/element": 0.000001228
       },
       "checks": {
         "elements": 2000,
@@ -289,11 +289,11 @@
       "demo": "dom-query",
       "implementation": "rust reference",
       "round": 2,
-      "loadMs": 45.94999998807907,
+      "loadMs": 33.28999996185303,
       "seconds": {
-        "individual: total ms": 0.035295,
-        "bulk: total ms": 0.017215,
-        "individual: µs/element": 0.0000017649999999999998
+        "individual: total ms": 0.03187,
+        "bulk: total ms": 0.018935,
+        "individual: µs/element": 0.0000015940000000000001
       },
       "checks": {
         "elements": 2000
@@ -303,11 +303,11 @@
       "demo": "dom-query",
       "implementation": "rust candidate",
       "round": 2,
-      "loadMs": 33.69999998807907,
+      "loadMs": 37.44499999284744,
       "seconds": {
-        "individual: total ms": 0.037340000000000005,
-        "bulk: total ms": 0.01721,
-        "individual: µs/element": 0.000001867
+        "individual: total ms": 0.029225,
+        "bulk: total ms": 0.013375,
+        "individual: µs/element": 0.000001461
       },
       "checks": {
         "elements": 2000
@@ -317,11 +317,11 @@
       "demo": "dom-query",
       "implementation": "rust baseline",
       "round": 2,
-      "loadMs": 19.0450000166893,
+      "loadMs": 15.835000038146973,
       "seconds": {
-        "individual: total ms": 0.041905,
-        "bulk: total ms": 0.019954999999999997,
-        "individual: µs/element": 0.0000020950000000000003
+        "individual: total ms": 0.05803,
+        "bulk: total ms": 0.02566,
+        "individual: µs/element": 0.000002901
       },
       "checks": {
         "elements": 2000
@@ -331,11 +331,11 @@
       "demo": "dom-query",
       "implementation": "cpp reference",
       "round": 2,
-      "loadMs": 32.79000002145767,
+      "loadMs": 41.6700000166893,
       "seconds": {
-        "individual: total ms": 0.03132,
-        "bulk: total ms": 0.016765000000000002,
-        "individual: µs/element": 0.0000015660000000000001
+        "individual: total ms": 0.044265,
+        "bulk: total ms": 0.022035,
+        "individual: µs/element": 0.0000022130000000000002
       },
       "checks": {
         "elements": 2000
@@ -345,11 +345,11 @@
       "demo": "dom-query",
       "implementation": "cpp candidate",
       "round": 2,
-      "loadMs": 42.814999997615814,
+      "loadMs": 43.22499996423721,
       "seconds": {
-        "individual: total ms": 0.04009,
-        "bulk: total ms": 0.01824,
-        "individual: µs/element": 0.000002004
+        "individual: total ms": 0.04869,
+        "bulk: total ms": 0.02533,
+        "individual: µs/element": 0.0000024340000000000003
       },
       "checks": {
         "elements": 2000
@@ -359,11 +359,11 @@
       "demo": "dom-query",
       "implementation": "cpp baseline",
       "round": 2,
-      "loadMs": 22.019999980926514,
+      "loadMs": 22.209999978542328,
       "seconds": {
-        "individual: total ms": 0.04131,
-        "bulk: total ms": 0.015115,
-        "individual: µs/element": 0.0000020659999999999998
+        "individual: total ms": 0.043955,
+        "bulk: total ms": 0.02025,
+        "individual: µs/element": 0.000002198
       },
       "checks": {
         "elements": 2000
@@ -373,11 +373,11 @@
       "demo": "dom-query",
       "implementation": "c reference",
       "round": 2,
-      "loadMs": 35.110000014305115,
+      "loadMs": 44.910000026226044,
       "seconds": {
-        "individual: total ms": 0.032885,
-        "bulk: total ms": 0.019135000000000003,
-        "individual: µs/element": 0.0000016439999999999998
+        "individual: total ms": 0.0341,
+        "bulk: total ms": 0.014960000000000001,
+        "individual: µs/element": 0.000001705
       },
       "checks": {
         "elements": 2000
@@ -387,11 +387,11 @@
       "demo": "dom-query",
       "implementation": "c reference",
       "round": 3,
-      "loadMs": 37.97999995946884,
+      "loadMs": 43.72499996423721,
       "seconds": {
-        "individual: total ms": 0.035585,
-        "bulk: total ms": 0.015054999999999999,
-        "individual: µs/element": 0.0000017789999999999998
+        "individual: total ms": 0.040365000000000005,
+        "bulk: total ms": 0.015609999999999999,
+        "individual: µs/element": 0.000002018
       },
       "checks": {
         "elements": 2000
@@ -401,11 +401,11 @@
       "demo": "dom-query",
       "implementation": "cpp baseline",
       "round": 3,
-      "loadMs": 16.62000000476837,
+      "loadMs": 17.705000042915344,
       "seconds": {
-        "individual: total ms": 0.03469,
-        "bulk: total ms": 0.019065000000000002,
-        "individual: µs/element": 0.000001734
+        "individual: total ms": 0.04086,
+        "bulk: total ms": 0.01526,
+        "individual: µs/element": 0.000002043
       },
       "checks": {
         "elements": 2000
@@ -415,10 +415,308 @@
       "demo": "dom-query",
       "implementation": "cpp candidate",
       "round": 3,
-      "loadMs": 37.75999999046326,
+      "loadMs": 44.064999997615814,
       "seconds": {
-        "individual: total ms": 0.03498,
-        "bulk: total ms": 0.01492,
+        "individual: total ms": 0.050205,
+        "bulk: total ms": 0.0179,
+        "individual: µs/element": 0.0000025099999999999997
+      },
+      "checks": {
+        "elements": 2000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "cpp reference",
+      "round": 3,
+      "loadMs": 46.580000042915344,
+      "seconds": {
+        "individual: total ms": 0.046795,
+        "bulk: total ms": 0.02991,
+        "individual: µs/element": 0.00000234
+      },
+      "checks": {
+        "elements": 2000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "rust baseline",
+      "round": 3,
+      "loadMs": 20.830000042915344,
+      "seconds": {
+        "individual: total ms": 0.049784999999999996,
+        "bulk: total ms": 0.025685,
+        "individual: µs/element": 0.000002489
+      },
+      "checks": {
+        "elements": 2000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "rust candidate",
+      "round": 3,
+      "loadMs": 46.44999998807907,
+      "seconds": {
+        "individual: total ms": 0.037450000000000004,
+        "bulk: total ms": 0.021925,
+        "individual: µs/element": 0.000001872
+      },
+      "checks": {
+        "elements": 2000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "rust reference",
+      "round": 3,
+      "loadMs": 46.11500000953674,
+      "seconds": {
+        "individual: total ms": 0.04467,
+        "bulk: total ms": 0.02723,
+        "individual: µs/element": 0.000002233
+      },
+      "checks": {
+        "elements": 2000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "c direct",
+      "round": 3,
+      "loadMs": 15,
+      "seconds": {
+        "individual: total ms": 0.0256,
+        "bulk: total ms": 0.007985,
+        "individual: µs/element": 0.00000128
+      },
+      "checks": {
+        "elements": 2000,
+        "liveHandles": 0,
+        "listCount": 20,
+        "listElements": 40000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "cpp direct",
+      "round": 3,
+      "loadMs": 17.564999997615814,
+      "seconds": {
+        "individual: total ms": 0.03662,
+        "bulk: total ms": 0.01523,
+        "individual: µs/element": 0.000001831
+      },
+      "checks": {
+        "elements": 2000,
+        "liveHandles": 0,
+        "listCount": 20,
+        "listElements": 40000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "rust direct",
+      "round": 3,
+      "loadMs": 14.004999995231628,
+      "seconds": {
+        "individual: total ms": 0.018625,
+        "bulk: total ms": 0.007985,
+        "individual: µs/element": 9.310000000000001e-7
+      },
+      "checks": {
+        "elements": 2000,
+        "liveHandles": 0,
+        "listCount": 20,
+        "listElements": 40000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "c baseline",
+      "round": 3,
+      "loadMs": 18.40499997138977,
+      "seconds": {
+        "individual: total ms": 0.046564999999999995,
+        "bulk: total ms": 0.01857,
+        "individual: µs/element": 0.000002328
+      },
+      "checks": {
+        "elements": 2000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "c candidate",
+      "round": 3,
+      "loadMs": 39.1700000166893,
+      "seconds": {
+        "individual: total ms": 0.03182,
+        "bulk: total ms": 0.015365,
+        "individual: µs/element": 0.0000015909999999999999
+      },
+      "checks": {
+        "elements": 2000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "cpp baseline",
+      "round": 4,
+      "loadMs": 20.524999976158142,
+      "seconds": {
+        "individual: total ms": 0.06216,
+        "bulk: total ms": 0.023075,
+        "individual: µs/element": 0.000003108
+      },
+      "checks": {
+        "elements": 2000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "c reference",
+      "round": 4,
+      "loadMs": 51.90499997138977,
+      "seconds": {
+        "individual: total ms": 0.03395,
+        "bulk: total ms": 0.016524999999999998,
+        "individual: µs/element": 0.000001697
+      },
+      "checks": {
+        "elements": 2000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "c candidate",
+      "round": 4,
+      "loadMs": 43.99500000476837,
+      "seconds": {
+        "individual: total ms": 0.026495,
+        "bulk: total ms": 0.02357,
+        "individual: µs/element": 0.000001325
+      },
+      "checks": {
+        "elements": 2000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "c baseline",
+      "round": 4,
+      "loadMs": 20.89000004529953,
+      "seconds": {
+        "individual: total ms": 0.04304,
+        "bulk: total ms": 0.0169,
+        "individual: µs/element": 0.0000021520000000000003
+      },
+      "checks": {
+        "elements": 2000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "rust direct",
+      "round": 4,
+      "loadMs": 15.975000023841858,
+      "seconds": {
+        "individual: total ms": 0.02512,
+        "bulk: total ms": 0.009439999999999999,
+        "individual: µs/element": 0.000001256
+      },
+      "checks": {
+        "elements": 2000,
+        "liveHandles": 0,
+        "listCount": 20,
+        "listElements": 40000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "cpp direct",
+      "round": 4,
+      "loadMs": 16.62999999523163,
+      "seconds": {
+        "individual: total ms": 0.0355,
+        "bulk: total ms": 0.013224999999999999,
+        "individual: µs/element": 0.000001775
+      },
+      "checks": {
+        "elements": 2000,
+        "liveHandles": 0,
+        "listCount": 20,
+        "listElements": 40000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "c direct",
+      "round": 4,
+      "loadMs": 17.62000000476837,
+      "seconds": {
+        "individual: total ms": 0.03095,
+        "bulk: total ms": 0.01002,
+        "individual: µs/element": 0.000001547
+      },
+      "checks": {
+        "elements": 2000,
+        "liveHandles": 0,
+        "listCount": 20,
+        "listElements": 40000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "rust reference",
+      "round": 4,
+      "loadMs": 41.089999973773956,
+      "seconds": {
+        "individual: total ms": 0.03149,
+        "bulk: total ms": 0.01641,
+        "individual: µs/element": 0.000001575
+      },
+      "checks": {
+        "elements": 2000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "rust candidate",
+      "round": 4,
+      "loadMs": 37.33499997854233,
+      "seconds": {
+        "individual: total ms": 0.036025,
+        "bulk: total ms": 0.01874,
+        "individual: µs/element": 0.000001801
+      },
+      "checks": {
+        "elements": 2000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "rust baseline",
+      "round": 4,
+      "loadMs": 19.584999978542328,
+      "seconds": {
+        "individual: total ms": 0.03682,
+        "bulk: total ms": 0.016890000000000002,
+        "individual: µs/element": 0.000001841
+      },
+      "checks": {
+        "elements": 2000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "cpp reference",
+      "round": 4,
+      "loadMs": 40.3299999833107,
+      "seconds": {
+        "individual: total ms": 0.034985,
+        "bulk: total ms": 0.02248,
         "individual: µs/element": 0.0000017490000000000001
       },
       "checks": {
@@ -427,13 +725,41 @@
     },
     {
       "demo": "dom-query",
-      "implementation": "cpp reference",
-      "round": 3,
-      "loadMs": 45.2049999833107,
+      "implementation": "cpp candidate",
+      "round": 4,
+      "loadMs": 40.714999973773956,
       "seconds": {
-        "individual: total ms": 0.036175,
-        "bulk: total ms": 0.021495,
-        "individual: µs/element": 0.000001809
+        "individual: total ms": 0.047965,
+        "bulk: total ms": 0.024395,
+        "individual: µs/element": 0.000002398
+      },
+      "checks": {
+        "elements": 2000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "cpp candidate",
+      "round": 5,
+      "loadMs": 44.160000026226044,
+      "seconds": {
+        "individual: total ms": 0.03701,
+        "bulk: total ms": 0.016295,
+        "individual: µs/element": 0.000001851
+      },
+      "checks": {
+        "elements": 2000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "cpp reference",
+      "round": 5,
+      "loadMs": 43.485000014305115,
+      "seconds": {
+        "individual: total ms": 0.0375,
+        "bulk: total ms": 0.01574,
+        "individual: µs/element": 0.000001875
       },
       "checks": {
         "elements": 2000
@@ -442,12 +768,12 @@
     {
       "demo": "dom-query",
       "implementation": "rust baseline",
-      "round": 3,
-      "loadMs": 19.01500004529953,
+      "round": 5,
+      "loadMs": 22.069999992847443,
       "seconds": {
-        "individual: total ms": 0.051345,
-        "bulk: total ms": 0.024835,
-        "individual: µs/element": 0.000002567
+        "individual: total ms": 0.036875,
+        "bulk: total ms": 0.017665,
+        "individual: µs/element": 0.000001844
       },
       "checks": {
         "elements": 2000
@@ -456,12 +782,12 @@
     {
       "demo": "dom-query",
       "implementation": "rust candidate",
-      "round": 3,
-      "loadMs": 38.75999999046326,
+      "round": 5,
+      "loadMs": 39.25499999523163,
       "seconds": {
-        "individual: total ms": 0.036105,
-        "bulk: total ms": 0.0233,
-        "individual: µs/element": 0.0000018049999999999999
+        "individual: total ms": 0.041815,
+        "bulk: total ms": 0.02558,
+        "individual: µs/element": 0.0000020910000000000004
       },
       "checks": {
         "elements": 2000
@@ -470,12 +796,12 @@
     {
       "demo": "dom-query",
       "implementation": "rust reference",
-      "round": 3,
-      "loadMs": 36.77999997138977,
+      "round": 5,
+      "loadMs": 35.67500001192093,
       "seconds": {
-        "individual: total ms": 0.035265,
-        "bulk: total ms": 0.019485,
-        "individual: µs/element": 0.0000017629999999999999
+        "individual: total ms": 0.02798,
+        "bulk: total ms": 0.013715,
+        "individual: µs/element": 0.000001399
       },
       "checks": {
         "elements": 2000
@@ -484,12 +810,12 @@
     {
       "demo": "dom-query",
       "implementation": "c direct",
-      "round": 3,
-      "loadMs": 12.175000011920929,
+      "round": 5,
+      "loadMs": 12.909999966621399,
       "seconds": {
-        "individual: total ms": 0.019190000000000002,
-        "bulk: total ms": 0.008085,
-        "individual: µs/element": 9.59e-7
+        "individual: total ms": 0.023605,
+        "bulk: total ms": 0.011615,
+        "individual: µs/element": 0.00000118
       },
       "checks": {
         "elements": 2000,
@@ -501,12 +827,12 @@
     {
       "demo": "dom-query",
       "implementation": "cpp direct",
-      "round": 3,
-      "loadMs": 10.689999997615814,
+      "round": 5,
+      "loadMs": 16.435000002384186,
       "seconds": {
-        "individual: total ms": 0.032424999999999995,
-        "bulk: total ms": 0.013325,
-        "individual: µs/element": 0.000001621
+        "individual: total ms": 0.0368,
+        "bulk: total ms": 0.018005,
+        "individual: µs/element": 0.0000018400000000000002
       },
       "checks": {
         "elements": 2000,
@@ -518,12 +844,12 @@
     {
       "demo": "dom-query",
       "implementation": "rust direct",
-      "round": 3,
-      "loadMs": 16.77000004053116,
+      "round": 5,
+      "loadMs": 15.930000007152557,
       "seconds": {
-        "individual: total ms": 0.019184999999999997,
-        "bulk: total ms": 0.008154999999999999,
-        "individual: µs/element": 9.59e-7
+        "individual: total ms": 0.032744999999999996,
+        "bulk: total ms": 0.01575,
+        "individual: µs/element": 0.000001637
       },
       "checks": {
         "elements": 2000,
@@ -535,12 +861,12 @@
     {
       "demo": "dom-query",
       "implementation": "c baseline",
-      "round": 3,
-      "loadMs": 14.285000026226044,
+      "round": 5,
+      "loadMs": 19.759999990463257,
       "seconds": {
-        "individual: total ms": 0.045415,
-        "bulk: total ms": 0.016215,
-        "individual: µs/element": 0.000002271
+        "individual: total ms": 0.058115,
+        "bulk: total ms": 0.027515,
+        "individual: µs/element": 0.0000029060000000000002
       },
       "checks": {
         "elements": 2000
@@ -549,26 +875,12 @@
     {
       "demo": "dom-query",
       "implementation": "c candidate",
-      "round": 3,
-      "loadMs": 25.94999998807907,
+      "round": 5,
+      "loadMs": 44.2950000166893,
       "seconds": {
-        "individual: total ms": 0.026629999999999997,
-        "bulk: total ms": 0.0241,
-        "individual: µs/element": 0.000001331
-      },
-      "checks": {
-        "elements": 2000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "cpp baseline",
-      "round": 4,
-      "loadMs": 19.040000021457672,
-      "seconds": {
-        "individual: total ms": 0.03252,
-        "bulk: total ms": 0.01495,
-        "individual: µs/element": 0.000001626
+        "individual: total ms": 0.04314,
+        "bulk: total ms": 0.024825,
+        "individual: µs/element": 0.000002157
       },
       "checks": {
         "elements": 2000
@@ -577,12 +889,12 @@
     {
       "demo": "dom-query",
       "implementation": "c reference",
-      "round": 4,
-      "loadMs": 35.889999985694885,
+      "round": 5,
+      "loadMs": 45.939999997615814,
       "seconds": {
-        "individual: total ms": 0.02905,
-        "bulk: total ms": 0.014645,
-        "individual: µs/element": 0.0000014530000000000001
+        "individual: total ms": 0.046665,
+        "bulk: total ms": 0.02671,
+        "individual: µs/element": 0.0000023330000000000004
       },
       "checks": {
         "elements": 2000
@@ -590,12 +902,54 @@
     },
     {
       "demo": "dom-query",
-      "implementation": "c candidate",
-      "round": 4,
-      "loadMs": 34.49000000953674,
+      "implementation": "cpp baseline",
+      "round": 5,
+      "loadMs": 18.850000023841858,
       "seconds": {
-        "individual: total ms": 0.04424,
-        "bulk: total ms": 0.02775,
+        "individual: total ms": 0.059185,
+        "bulk: total ms": 0.02557,
+        "individual: µs/element": 0.000002959
+      },
+      "checks": {
+        "elements": 2000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "cpp reference",
+      "round": 6,
+      "loadMs": 36.25499999523163,
+      "seconds": {
+        "individual: total ms": 0.039665,
+        "bulk: total ms": 0.01706,
+        "individual: µs/element": 0.000001983
+      },
+      "checks": {
+        "elements": 2000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "cpp candidate",
+      "round": 6,
+      "loadMs": 36.044999957084656,
+      "seconds": {
+        "individual: total ms": 0.044295,
+        "bulk: total ms": 0.026199999999999998,
+        "individual: µs/element": 0.000002215
+      },
+      "checks": {
+        "elements": 2000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "cpp baseline",
+      "round": 6,
+      "loadMs": 18.464999973773956,
+      "seconds": {
+        "individual: total ms": 0.044235,
+        "bulk: total ms": 0.014595,
         "individual: µs/element": 0.000002212
       },
       "checks": {
@@ -604,367 +958,13 @@
     },
     {
       "demo": "dom-query",
-      "implementation": "c baseline",
-      "round": 4,
-      "loadMs": 17.77999997138977,
-      "seconds": {
-        "individual: total ms": 0.033145,
-        "bulk: total ms": 0.016390000000000002,
-        "individual: µs/element": 0.000001657
-      },
-      "checks": {
-        "elements": 2000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "rust direct",
-      "round": 4,
-      "loadMs": 12.200000047683716,
-      "seconds": {
-        "individual: total ms": 0.01975,
-        "bulk: total ms": 0.009089999999999999,
-        "individual: µs/element": 9.88e-7
-      },
-      "checks": {
-        "elements": 2000,
-        "liveHandles": 0,
-        "listCount": 20,
-        "listElements": 40000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "cpp direct",
-      "round": 4,
-      "loadMs": 13.164999961853027,
-      "seconds": {
-        "individual: total ms": 0.02113,
-        "bulk: total ms": 0.009265,
-        "individual: µs/element": 0.0000010560000000000001
-      },
-      "checks": {
-        "elements": 2000,
-        "liveHandles": 0,
-        "listCount": 20,
-        "listElements": 40000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "c direct",
-      "round": 4,
-      "loadMs": 14.485000014305115,
-      "seconds": {
-        "individual: total ms": 0.019030000000000002,
-        "bulk: total ms": 0.010645,
-        "individual: µs/element": 9.52e-7
-      },
-      "checks": {
-        "elements": 2000,
-        "liveHandles": 0,
-        "listCount": 20,
-        "listElements": 40000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "rust reference",
-      "round": 4,
-      "loadMs": 32.564999997615814,
-      "seconds": {
-        "individual: total ms": 0.02708,
-        "bulk: total ms": 0.01272,
-        "individual: µs/element": 0.000001354
-      },
-      "checks": {
-        "elements": 2000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "rust candidate",
-      "round": 4,
-      "loadMs": 33.594999969005585,
-      "seconds": {
-        "individual: total ms": 0.04278,
-        "bulk: total ms": 0.023190000000000002,
-        "individual: µs/element": 0.0000021389999999999998
-      },
-      "checks": {
-        "elements": 2000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "rust baseline",
-      "round": 4,
-      "loadMs": 17.790000021457672,
-      "seconds": {
-        "individual: total ms": 0.036520000000000004,
-        "bulk: total ms": 0.02816,
-        "individual: µs/element": 0.000001826
-      },
-      "checks": {
-        "elements": 2000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "cpp reference",
-      "round": 4,
-      "loadMs": 38.75,
-      "seconds": {
-        "individual: total ms": 0.03556,
-        "bulk: total ms": 0.02431,
-        "individual: µs/element": 0.000001778
-      },
-      "checks": {
-        "elements": 2000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "cpp candidate",
-      "round": 4,
-      "loadMs": 35.314999997615814,
-      "seconds": {
-        "individual: total ms": 0.03257,
-        "bulk: total ms": 0.015529999999999999,
-        "individual: µs/element": 0.000001628
-      },
-      "checks": {
-        "elements": 2000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "cpp candidate",
-      "round": 5,
-      "loadMs": 54.09500002861023,
-      "seconds": {
-        "individual: total ms": 0.035045,
-        "bulk: total ms": 0.017805,
-        "individual: µs/element": 0.000001752
-      },
-      "checks": {
-        "elements": 2000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "cpp reference",
-      "round": 5,
-      "loadMs": 41.589999973773956,
-      "seconds": {
-        "individual: total ms": 0.03717,
-        "bulk: total ms": 0.015995,
-        "individual: µs/element": 0.000001859
-      },
-      "checks": {
-        "elements": 2000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "rust baseline",
-      "round": 5,
-      "loadMs": 17.2049999833107,
-      "seconds": {
-        "individual: total ms": 0.033685,
-        "bulk: total ms": 0.016475,
-        "individual: µs/element": 0.0000016839999999999999
-      },
-      "checks": {
-        "elements": 2000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "rust candidate",
-      "round": 5,
-      "loadMs": 36.9200000166893,
-      "seconds": {
-        "individual: total ms": 0.03601,
-        "bulk: total ms": 0.0249,
-        "individual: µs/element": 0.0000018000000000000001
-      },
-      "checks": {
-        "elements": 2000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "rust reference",
-      "round": 5,
-      "loadMs": 41.68000000715256,
-      "seconds": {
-        "individual: total ms": 0.029245,
-        "bulk: total ms": 0.012845,
-        "individual: µs/element": 0.000001462
-      },
-      "checks": {
-        "elements": 2000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "c direct",
-      "round": 5,
-      "loadMs": 14.284999966621399,
-      "seconds": {
-        "individual: total ms": 0.02595,
-        "bulk: total ms": 0.01305,
-        "individual: µs/element": 0.000001297
-      },
-      "checks": {
-        "elements": 2000,
-        "liveHandles": 0,
-        "listCount": 20,
-        "listElements": 40000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "cpp direct",
-      "round": 5,
-      "loadMs": 13.725000023841858,
-      "seconds": {
-        "individual: total ms": 0.02993,
-        "bulk: total ms": 0.012905,
-        "individual: µs/element": 0.000001497
-      },
-      "checks": {
-        "elements": 2000,
-        "liveHandles": 0,
-        "listCount": 20,
-        "listElements": 40000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "rust direct",
-      "round": 5,
-      "loadMs": 15.259999990463257,
-      "seconds": {
-        "individual: total ms": 0.022985,
-        "bulk: total ms": 0.010135,
-        "individual: µs/element": 0.000001149
-      },
-      "checks": {
-        "elements": 2000,
-        "liveHandles": 0,
-        "listCount": 20,
-        "listElements": 40000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "c baseline",
-      "round": 5,
-      "loadMs": 18.444999992847443,
-      "seconds": {
-        "individual: total ms": 0.035065,
-        "bulk: total ms": 0.01813,
-        "individual: µs/element": 0.000001753
-      },
-      "checks": {
-        "elements": 2000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "c candidate",
-      "round": 5,
-      "loadMs": 32.5799999833107,
-      "seconds": {
-        "individual: total ms": 0.030574999999999998,
-        "bulk: total ms": 0.01472,
-        "individual: µs/element": 0.0000015289999999999999
-      },
-      "checks": {
-        "elements": 2000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "c reference",
-      "round": 5,
-      "loadMs": 38.26500004529953,
-      "seconds": {
-        "individual: total ms": 0.033315,
-        "bulk: total ms": 0.015460000000000002,
-        "individual: µs/element": 0.000001666
-      },
-      "checks": {
-        "elements": 2000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "cpp baseline",
-      "round": 5,
-      "loadMs": 14.419999957084656,
-      "seconds": {
-        "individual: total ms": 0.03613,
-        "bulk: total ms": 0.01754,
-        "individual: µs/element": 0.000001807
-      },
-      "checks": {
-        "elements": 2000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "cpp reference",
-      "round": 6,
-      "loadMs": 37.02000004053116,
-      "seconds": {
-        "individual: total ms": 0.05011,
-        "bulk: total ms": 0.028079999999999997,
-        "individual: µs/element": 0.000002506
-      },
-      "checks": {
-        "elements": 2000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "cpp candidate",
-      "round": 6,
-      "loadMs": 47.80500000715256,
-      "seconds": {
-        "individual: total ms": 0.050409999999999996,
-        "bulk: total ms": 0.02588,
-        "individual: µs/element": 0.000002521
-      },
-      "checks": {
-        "elements": 2000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "cpp baseline",
-      "round": 6,
-      "loadMs": 18.700000047683716,
-      "seconds": {
-        "individual: total ms": 0.04553,
-        "bulk: total ms": 0.02016,
-        "individual: µs/element": 0.000002277
-      },
-      "checks": {
-        "elements": 2000
-      }
-    },
-    {
-      "demo": "dom-query",
       "implementation": "c reference",
       "round": 6,
-      "loadMs": 42.40000003576279,
+      "loadMs": 45.660000026226044,
       "seconds": {
-        "individual: total ms": 0.031135000000000003,
-        "bulk: total ms": 0.015725,
-        "individual: µs/element": 0.0000015569999999999999
+        "individual: total ms": 0.03245,
+        "bulk: total ms": 0.016195,
+        "individual: µs/element": 0.000001622
       },
       "checks": {
         "elements": 2000
@@ -974,11 +974,11 @@
       "demo": "dom-query",
       "implementation": "c candidate",
       "round": 6,
-      "loadMs": 36.625,
+      "loadMs": 43.72999995946884,
       "seconds": {
-        "individual: total ms": 0.033755,
-        "bulk: total ms": 0.021795000000000002,
-        "individual: µs/element": 0.000001688
+        "individual: total ms": 0.039994999999999996,
+        "bulk: total ms": 0.024135,
+        "individual: µs/element": 0.000002
       },
       "checks": {
         "elements": 2000
@@ -988,11 +988,11 @@
       "demo": "dom-query",
       "implementation": "c baseline",
       "round": 6,
-      "loadMs": 19.7950000166893,
+      "loadMs": 20.17500001192093,
       "seconds": {
-        "individual: total ms": 0.0541,
-        "bulk: total ms": 0.017615,
-        "individual: µs/element": 0.000002705
+        "individual: total ms": 0.045605,
+        "bulk: total ms": 0.018805,
+        "individual: µs/element": 0.0000022799999999999998
       },
       "checks": {
         "elements": 2000
@@ -1002,11 +1002,11 @@
       "demo": "dom-query",
       "implementation": "rust direct",
       "round": 6,
-      "loadMs": 13.860000014305115,
+      "loadMs": 15.930000007152557,
       "seconds": {
-        "individual: total ms": 0.033365,
-        "bulk: total ms": 0.014205,
-        "individual: µs/element": 0.000001668
+        "individual: total ms": 0.030975000000000003,
+        "bulk: total ms": 0.017475,
+        "individual: µs/element": 0.000001549
       },
       "checks": {
         "elements": 2000,
@@ -1019,11 +1019,11 @@
       "demo": "dom-query",
       "implementation": "cpp direct",
       "round": 6,
-      "loadMs": 14.485000014305115,
+      "loadMs": 14.495000004768372,
       "seconds": {
-        "individual: total ms": 0.032920000000000005,
-        "bulk: total ms": 0.01722,
-        "individual: µs/element": 0.000001646
+        "individual: total ms": 0.03465,
+        "bulk: total ms": 0.016045,
+        "individual: µs/element": 0.0000017319999999999999
       },
       "checks": {
         "elements": 2000,
@@ -1036,11 +1036,11 @@
       "demo": "dom-query",
       "implementation": "c direct",
       "round": 6,
-      "loadMs": 14.014999985694885,
+      "loadMs": 13.925000011920929,
       "seconds": {
-        "individual: total ms": 0.019600000000000003,
-        "bulk: total ms": 0.016954999999999998,
-        "individual: µs/element": 9.8e-7
+        "individual: total ms": 0.02862,
+        "bulk: total ms": 0.013675000000000001,
+        "individual: µs/element": 0.0000014310000000000001
       },
       "checks": {
         "elements": 2000,
@@ -1053,285 +1053,10 @@
       "demo": "dom-query",
       "implementation": "rust reference",
       "round": 6,
-      "loadMs": 46.05000001192093,
+      "loadMs": 42.560000002384186,
       "seconds": {
-        "individual: total ms": 0.046395000000000006,
-        "bulk: total ms": 0.016079999999999997,
-        "individual: µs/element": 0.00000232
-      },
-      "checks": {
-        "elements": 2000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "rust candidate",
-      "round": 6,
-      "loadMs": 40.5450000166893,
-      "seconds": {
-        "individual: total ms": 0.041034999999999995,
-        "bulk: total ms": 0.024785,
-        "individual: µs/element": 0.000002052
-      },
-      "checks": {
-        "elements": 2000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "rust baseline",
-      "round": 6,
-      "loadMs": 14.424999952316284,
-      "seconds": {
-        "individual: total ms": 0.035465,
-        "bulk: total ms": 0.016765000000000002,
-        "individual: µs/element": 0.000001773
-      },
-      "checks": {
-        "elements": 2000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "rust baseline",
-      "round": 7,
-      "loadMs": 23.360000014305115,
-      "seconds": {
-        "individual: total ms": 0.050915,
-        "bulk: total ms": 0.023829999999999997,
-        "individual: µs/element": 0.000002546
-      },
-      "checks": {
-        "elements": 2000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "rust candidate",
-      "round": 7,
-      "loadMs": 42.30000001192093,
-      "seconds": {
-        "individual: total ms": 0.02982,
-        "bulk: total ms": 0.012145,
-        "individual: µs/element": 0.0000014910000000000002
-      },
-      "checks": {
-        "elements": 2000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "rust reference",
-      "round": 7,
-      "loadMs": 30.644999980926514,
-      "seconds": {
-        "individual: total ms": 0.031325,
-        "bulk: total ms": 0.023175,
-        "individual: µs/element": 0.0000015660000000000001
-      },
-      "checks": {
-        "elements": 2000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "c direct",
-      "round": 7,
-      "loadMs": 14.099999964237213,
-      "seconds": {
-        "individual: total ms": 0.020145,
-        "bulk: total ms": 0.009295,
-        "individual: µs/element": 0.0000010069999999999998
-      },
-      "checks": {
-        "elements": 2000,
-        "liveHandles": 0,
-        "listCount": 20,
-        "listElements": 40000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "cpp direct",
-      "round": 7,
-      "loadMs": 13.444999992847443,
-      "seconds": {
-        "individual: total ms": 0.03839,
-        "bulk: total ms": 0.017245,
-        "individual: µs/element": 0.000001919
-      },
-      "checks": {
-        "elements": 2000,
-        "liveHandles": 0,
-        "listCount": 20,
-        "listElements": 40000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "rust direct",
-      "round": 7,
-      "loadMs": 14.634999990463257,
-      "seconds": {
-        "individual: total ms": 0.019225000000000003,
-        "bulk: total ms": 0.008045,
-        "individual: µs/element": 9.61e-7
-      },
-      "checks": {
-        "elements": 2000,
-        "liveHandles": 0,
-        "listCount": 20,
-        "listElements": 40000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "c baseline",
-      "round": 7,
-      "loadMs": 16.219999969005585,
-      "seconds": {
-        "individual: total ms": 0.04285,
-        "bulk: total ms": 0.01849,
-        "individual: µs/element": 0.0000021429999999999996
-      },
-      "checks": {
-        "elements": 2000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "c candidate",
-      "round": 7,
-      "loadMs": 35.7849999666214,
-      "seconds": {
-        "individual: total ms": 0.03417,
-        "bulk: total ms": 0.020285,
-        "individual: µs/element": 0.000001709
-      },
-      "checks": {
-        "elements": 2000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "c reference",
-      "round": 7,
-      "loadMs": 34.74500000476837,
-      "seconds": {
-        "individual: total ms": 0.0342,
-        "bulk: total ms": 0.018539999999999997,
-        "individual: µs/element": 0.00000171
-      },
-      "checks": {
-        "elements": 2000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "cpp baseline",
-      "round": 7,
-      "loadMs": 18.600000023841858,
-      "seconds": {
-        "individual: total ms": 0.052305,
-        "bulk: total ms": 0.021804999999999998,
-        "individual: µs/element": 0.0000026150000000000004
-      },
-      "checks": {
-        "elements": 2000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "cpp candidate",
-      "round": 7,
-      "loadMs": 43.75,
-      "seconds": {
-        "individual: total ms": 0.030199999999999998,
-        "bulk: total ms": 0.01526,
-        "individual: µs/element": 0.00000151
-      },
-      "checks": {
-        "elements": 2000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "cpp reference",
-      "round": 7,
-      "loadMs": 45.25,
-      "seconds": {
-        "individual: total ms": 0.058595,
-        "bulk: total ms": 0.03175,
-        "individual: µs/element": 0.0000029300000000000003
-      },
-      "checks": {
-        "elements": 2000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "rust candidate",
-      "round": 8,
-      "loadMs": 40.16500002145767,
-      "seconds": {
-        "individual: total ms": 0.02662,
-        "bulk: total ms": 0.0132,
-        "individual: µs/element": 0.000001331
-      },
-      "checks": {
-        "elements": 2000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "rust baseline",
-      "round": 8,
-      "loadMs": 24.509999990463257,
-      "seconds": {
-        "individual: total ms": 0.04473,
-        "bulk: total ms": 0.02625,
-        "individual: µs/element": 0.000002237
-      },
-      "checks": {
-        "elements": 2000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "cpp reference",
-      "round": 8,
-      "loadMs": 54.14500004053116,
-      "seconds": {
-        "individual: total ms": 0.04607,
-        "bulk: total ms": 0.029765,
-        "individual: µs/element": 0.000002304
-      },
-      "checks": {
-        "elements": 2000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "cpp candidate",
-      "round": 8,
-      "loadMs": 42.38499999046326,
-      "seconds": {
-        "individual: total ms": 0.04721,
-        "bulk: total ms": 0.028355,
-        "individual: µs/element": 0.00000236
-      },
-      "checks": {
-        "elements": 2000
-      }
-    },
-    {
-      "demo": "dom-query",
-      "implementation": "cpp baseline",
-      "round": 8,
-      "loadMs": 23.7049999833107,
-      "seconds": {
-        "individual: total ms": 0.040465,
-        "bulk: total ms": 0.017765,
+        "individual: total ms": 0.04046,
+        "bulk: total ms": 0.026940000000000002,
         "individual: µs/element": 0.000002023
       },
       "checks": {
@@ -1340,13 +1065,288 @@
     },
     {
       "demo": "dom-query",
+      "implementation": "rust candidate",
+      "round": 6,
+      "loadMs": 43.4549999833107,
+      "seconds": {
+        "individual: total ms": 0.029125,
+        "bulk: total ms": 0.01566,
+        "individual: µs/element": 0.000001456
+      },
+      "checks": {
+        "elements": 2000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "rust baseline",
+      "round": 6,
+      "loadMs": 20.014999985694885,
+      "seconds": {
+        "individual: total ms": 0.034695000000000004,
+        "bulk: total ms": 0.013224999999999999,
+        "individual: µs/element": 0.0000017350000000000001
+      },
+      "checks": {
+        "elements": 2000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "rust baseline",
+      "round": 7,
+      "loadMs": 17.524999976158142,
+      "seconds": {
+        "individual: total ms": 0.03515,
+        "bulk: total ms": 0.016355,
+        "individual: µs/element": 0.000001758
+      },
+      "checks": {
+        "elements": 2000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "rust candidate",
+      "round": 7,
+      "loadMs": 40.82499998807907,
+      "seconds": {
+        "individual: total ms": 0.033925,
+        "bulk: total ms": 0.021425,
+        "individual: µs/element": 0.000001696
+      },
+      "checks": {
+        "elements": 2000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "rust reference",
+      "round": 7,
+      "loadMs": 46.06999999284744,
+      "seconds": {
+        "individual: total ms": 0.03531,
+        "bulk: total ms": 0.01495,
+        "individual: µs/element": 0.0000017660000000000001
+      },
+      "checks": {
+        "elements": 2000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "c direct",
+      "round": 7,
+      "loadMs": 18.134999990463257,
+      "seconds": {
+        "individual: total ms": 0.01771,
+        "bulk: total ms": 0.010205,
+        "individual: µs/element": 8.85e-7
+      },
+      "checks": {
+        "elements": 2000,
+        "liveHandles": 0,
+        "listCount": 20,
+        "listElements": 40000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "cpp direct",
+      "round": 7,
+      "loadMs": 14.200000047683716,
+      "seconds": {
+        "individual: total ms": 0.022920000000000003,
+        "bulk: total ms": 0.009055,
+        "individual: µs/element": 0.000001146
+      },
+      "checks": {
+        "elements": 2000,
+        "liveHandles": 0,
+        "listCount": 20,
+        "listElements": 40000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "rust direct",
+      "round": 7,
+      "loadMs": 16.460000038146973,
+      "seconds": {
+        "individual: total ms": 0.03705,
+        "bulk: total ms": 0.016274999999999998,
+        "individual: µs/element": 0.0000018529999999999999
+      },
+      "checks": {
+        "elements": 2000,
+        "liveHandles": 0,
+        "listCount": 20,
+        "listElements": 40000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "c baseline",
+      "round": 7,
+      "loadMs": 19.6700000166893,
+      "seconds": {
+        "individual: total ms": 0.037535,
+        "bulk: total ms": 0.01653,
+        "individual: µs/element": 0.000001877
+      },
+      "checks": {
+        "elements": 2000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "c candidate",
+      "round": 7,
+      "loadMs": 39.580000042915344,
+      "seconds": {
+        "individual: total ms": 0.032705,
+        "bulk: total ms": 0.01542,
+        "individual: µs/element": 0.000001635
+      },
+      "checks": {
+        "elements": 2000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "c reference",
+      "round": 7,
+      "loadMs": 44.44999998807907,
+      "seconds": {
+        "individual: total ms": 0.035385,
+        "bulk: total ms": 0.02023,
+        "individual: µs/element": 0.000001769
+      },
+      "checks": {
+        "elements": 2000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "cpp baseline",
+      "round": 7,
+      "loadMs": 18.455000042915344,
+      "seconds": {
+        "individual: total ms": 0.04889,
+        "bulk: total ms": 0.01682,
+        "individual: µs/element": 0.000002444
+      },
+      "checks": {
+        "elements": 2000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "cpp candidate",
+      "round": 7,
+      "loadMs": 46.39999997615814,
+      "seconds": {
+        "individual: total ms": 0.05091,
+        "bulk: total ms": 0.02801,
+        "individual: µs/element": 0.000002546
+      },
+      "checks": {
+        "elements": 2000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "cpp reference",
+      "round": 7,
+      "loadMs": 45.49000000953674,
+      "seconds": {
+        "individual: total ms": 0.048085,
+        "bulk: total ms": 0.028325,
+        "individual: µs/element": 0.0000024039999999999998
+      },
+      "checks": {
+        "elements": 2000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "rust candidate",
+      "round": 8,
+      "loadMs": 39.91500002145767,
+      "seconds": {
+        "individual: total ms": 0.024489999999999998,
+        "bulk: total ms": 0.013935000000000001,
+        "individual: µs/element": 0.0000012250000000000001
+      },
+      "checks": {
+        "elements": 2000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "rust baseline",
+      "round": 8,
+      "loadMs": 20.69999998807907,
+      "seconds": {
+        "individual: total ms": 0.037375,
+        "bulk: total ms": 0.017755,
+        "individual: µs/element": 0.000001869
+      },
+      "checks": {
+        "elements": 2000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "cpp reference",
+      "round": 8,
+      "loadMs": 43.12000000476837,
+      "seconds": {
+        "individual: total ms": 0.054329999999999996,
+        "bulk: total ms": 0.027265,
+        "individual: µs/element": 0.0000027160000000000003
+      },
+      "checks": {
+        "elements": 2000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "cpp candidate",
+      "round": 8,
+      "loadMs": 39.93000000715256,
+      "seconds": {
+        "individual: total ms": 0.03048,
+        "bulk: total ms": 0.016114999999999997,
+        "individual: µs/element": 0.000001524
+      },
+      "checks": {
+        "elements": 2000
+      }
+    },
+    {
+      "demo": "dom-query",
+      "implementation": "cpp baseline",
+      "round": 8,
+      "loadMs": 24.649999976158142,
+      "seconds": {
+        "individual: total ms": 0.04211,
+        "bulk: total ms": 0.017355,
+        "individual: µs/element": 0.000002106
+      },
+      "checks": {
+        "elements": 2000
+      }
+    },
+    {
+      "demo": "dom-query",
       "implementation": "c reference",
       "round": 8,
-      "loadMs": 34.47000002861023,
+      "loadMs": 38.68000000715256,
       "seconds": {
-        "individual: total ms": 0.032805,
-        "bulk: total ms": 0.01829,
-        "individual: µs/element": 0.00000164
+        "individual: total ms": 0.041845,
+        "bulk: total ms": 0.014060000000000001,
+        "individual: µs/element": 0.000002092
       },
       "checks": {
         "elements": 2000
@@ -1356,11 +1356,11 @@
       "demo": "dom-query",
       "implementation": "c candidate",
       "round": 8,
-      "loadMs": 41.685000002384186,
+      "loadMs": 42.2049999833107,
       "seconds": {
-        "individual: total ms": 0.045204999999999995,
-        "bulk: total ms": 0.022690000000000002,
-        "individual: µs/element": 0.00000226
+        "individual: total ms": 0.040100000000000004,
+        "bulk: total ms": 0.022015,
+        "individual: µs/element": 0.000002005
       },
       "checks": {
         "elements": 2000
@@ -1370,11 +1370,11 @@
       "demo": "dom-query",
       "implementation": "c baseline",
       "round": 8,
-      "loadMs": 18.535000026226044,
+      "loadMs": 16.37999999523163,
       "seconds": {
-        "individual: total ms": 0.061825000000000005,
-        "bulk: total ms": 0.02658,
-        "individual: µs/element": 0.000003091
+        "individual: total ms": 0.048575,
+        "bulk: total ms": 0.01777,
+        "individual: µs/element": 0.000002429
       },
       "checks": {
         "elements": 2000
@@ -1384,11 +1384,11 @@
       "demo": "dom-query",
       "implementation": "rust direct",
       "round": 8,
-      "loadMs": 16.625,
+      "loadMs": 14.694999992847443,
       "seconds": {
-        "individual: total ms": 0.025425,
-        "bulk: total ms": 0.009235,
-        "individual: µs/element": 0.000001271
+        "individual: total ms": 0.02974,
+        "bulk: total ms": 0.01442,
+        "individual: µs/element": 0.0000014870000000000001
       },
       "checks": {
         "elements": 2000,
@@ -1401,11 +1401,11 @@
       "demo": "dom-query",
       "implementation": "cpp direct",
       "round": 8,
-      "loadMs": 16.910000026226044,
+      "loadMs": 13.490000009536743,
       "seconds": {
-        "individual: total ms": 0.02413,
-        "bulk: total ms": 0.00983,
-        "individual: µs/element": 0.000001206
+        "individual: total ms": 0.03512,
+        "bulk: total ms": 0.01636,
+        "individual: µs/element": 0.000001756
       },
       "checks": {
         "elements": 2000,
@@ -1418,11 +1418,11 @@
       "demo": "dom-query",
       "implementation": "c direct",
       "round": 8,
-      "loadMs": 16.334999978542328,
+      "loadMs": 13.840000033378601,
       "seconds": {
-        "individual: total ms": 0.03625,
-        "bulk: total ms": 0.018435,
-        "individual: µs/element": 0.000001813
+        "individual: total ms": 0.036505,
+        "bulk: total ms": 0.017685,
+        "individual: µs/element": 0.0000018249999999999999
       },
       "checks": {
         "elements": 2000,
@@ -1435,11 +1435,11 @@
       "demo": "dom-query",
       "implementation": "rust reference",
       "round": 8,
-      "loadMs": 39.10000002384186,
+      "loadMs": 44.87999999523163,
       "seconds": {
-        "individual: total ms": 0.035679999999999996,
-        "bulk: total ms": 0.024995,
-        "individual: µs/element": 0.000001784
+        "individual: total ms": 0.04768,
+        "bulk: total ms": 0.02795,
+        "individual: µs/element": 0.000002384
       },
       "checks": {
         "elements": 2000
@@ -1449,11 +1449,11 @@
       "demo": "dom-query",
       "implementation": "rust reference",
       "round": 9,
-      "loadMs": 45.469999969005585,
+      "loadMs": 47.52500003576279,
       "seconds": {
-        "individual: total ms": 0.0464,
-        "bulk: total ms": 0.021065,
-        "individual: µs/element": 0.00000232
+        "individual: total ms": 0.04413,
+        "bulk: total ms": 0.024335000000000002,
+        "individual: µs/element": 0.000002206
       },
       "checks": {
         "elements": 2000
@@ -1463,11 +1463,11 @@
       "demo": "dom-query",
       "implementation": "c direct",
       "round": 9,
-      "loadMs": 12.90499997138977,
+      "loadMs": 14.355000019073486,
       "seconds": {
-        "individual: total ms": 0.030805,
-        "bulk: total ms": 0.016774999999999998,
-        "individual: µs/element": 0.00000154
+        "individual: total ms": 0.03243,
+        "bulk: total ms": 0.013885,
+        "individual: µs/element": 0.000001622
       },
       "checks": {
         "elements": 2000,
@@ -1480,11 +1480,11 @@
       "demo": "dom-query",
       "implementation": "cpp direct",
       "round": 9,
-      "loadMs": 13.205000042915344,
+      "loadMs": 17.34500002861023,
       "seconds": {
-        "individual: total ms": 0.025055,
-        "bulk: total ms": 0.009994999999999999,
-        "individual: µs/element": 0.000001253
+        "individual: total ms": 0.03622,
+        "bulk: total ms": 0.01721,
+        "individual: µs/element": 0.000001811
       },
       "checks": {
         "elements": 2000,
@@ -1497,11 +1497,11 @@
       "demo": "dom-query",
       "implementation": "rust direct",
       "round": 9,
-      "loadMs": 14.459999978542328,
+      "loadMs": 15.370000004768372,
       "seconds": {
-        "individual: total ms": 0.020399999999999998,
-        "bulk: total ms": 0.01059,
-        "individual: µs/element": 0.00000102
+        "individual: total ms": 0.033005,
+        "bulk: total ms": 0.0176,
+        "individual: µs/element": 0.0000016499999999999999
       },
       "checks": {
         "elements": 2000,
@@ -1514,11 +1514,11 @@
       "demo": "dom-query",
       "implementation": "c baseline",
       "round": 9,
-      "loadMs": 18.39500004053116,
+      "loadMs": 19.5100000500679,
       "seconds": {
-        "individual: total ms": 0.048784999999999995,
-        "bulk: total ms": 0.017255,
-        "individual: µs/element": 0.000002439
+        "individual: total ms": 0.04623,
+        "bulk: total ms": 0.01662,
+        "individual: µs/element": 0.0000023119999999999996
       },
       "checks": {
         "elements": 2000
@@ -1528,11 +1528,11 @@
       "demo": "dom-query",
       "implementation": "c candidate",
       "round": 9,
-      "loadMs": 43.875,
+      "loadMs": 38.75999999046326,
       "seconds": {
-        "individual: total ms": 0.0304,
-        "bulk: total ms": 0.01324,
-        "individual: µs/element": 0.00000152
+        "individual: total ms": 0.037685,
+        "bulk: total ms": 0.015475,
+        "individual: µs/element": 0.0000018839999999999999
       },
       "checks": {
         "elements": 2000
@@ -1542,11 +1542,11 @@
       "demo": "dom-query",
       "implementation": "c reference",
       "round": 9,
-      "loadMs": 46.105000019073486,
+      "loadMs": 46.5349999666214,
       "seconds": {
-        "individual: total ms": 0.04394,
-        "bulk: total ms": 0.02606,
-        "individual: µs/element": 0.000002197
+        "individual: total ms": 0.04591,
+        "bulk: total ms": 0.015285,
+        "individual: µs/element": 0.000002295
       },
       "checks": {
         "elements": 2000
@@ -1556,11 +1556,11 @@
       "demo": "dom-query",
       "implementation": "cpp baseline",
       "round": 9,
-      "loadMs": 18.155000030994415,
+      "loadMs": 20.19999998807907,
       "seconds": {
-        "individual: total ms": 0.038950000000000005,
-        "bulk: total ms": 0.015665,
-        "individual: µs/element": 0.000001947
+        "individual: total ms": 0.06473000000000001,
+        "bulk: total ms": 0.028465,
+        "individual: µs/element": 0.000003237
       },
       "checks": {
         "elements": 2000
@@ -1570,11 +1570,11 @@
       "demo": "dom-query",
       "implementation": "cpp candidate",
       "round": 9,
-      "loadMs": 38.24500000476837,
+      "loadMs": 50.40499997138977,
       "seconds": {
-        "individual: total ms": 0.044315,
-        "bulk: total ms": 0.01838,
-        "individual: µs/element": 0.000002216
+        "individual: total ms": 0.041235,
+        "bulk: total ms": 0.024355,
+        "individual: µs/element": 0.000002062
       },
       "checks": {
         "elements": 2000
@@ -1584,11 +1584,11 @@
       "demo": "dom-query",
       "implementation": "cpp reference",
       "round": 9,
-      "loadMs": 48.269999980926514,
+      "loadMs": 46.19499999284744,
       "seconds": {
-        "individual: total ms": 0.048895,
-        "bulk: total ms": 0.030375,
-        "individual: µs/element": 0.000002445
+        "individual: total ms": 0.05371,
+        "bulk: total ms": 0.01859,
+        "individual: µs/element": 0.0000026859999999999998
       },
       "checks": {
         "elements": 2000
@@ -1598,11 +1598,11 @@
       "demo": "dom-query",
       "implementation": "rust baseline",
       "round": 9,
-      "loadMs": 20.75,
+      "loadMs": 21.009999990463257,
       "seconds": {
-        "individual: total ms": 0.035835,
-        "bulk: total ms": 0.01731,
-        "individual: µs/element": 0.000001792
+        "individual: total ms": 0.05485,
+        "bulk: total ms": 0.026109999999999998,
+        "individual: µs/element": 0.000002742
       },
       "checks": {
         "elements": 2000
@@ -1612,11 +1612,11 @@
       "demo": "dom-query",
       "implementation": "rust candidate",
       "round": 9,
-      "loadMs": 40.7849999666214,
+      "loadMs": 44.314999997615814,
       "seconds": {
-        "individual: total ms": 0.041405000000000004,
-        "bulk: total ms": 0.026815000000000002,
-        "individual: µs/element": 0.0000020699999999999997
+        "individual: total ms": 0.030245,
+        "bulk: total ms": 0.014975,
+        "individual: µs/element": 0.000001512
       },
       "checks": {
         "elements": 2000
@@ -1626,11 +1626,11 @@
       "demo": "dom-traversal",
       "implementation": "c baseline",
       "round": 1,
-      "loadMs": 24.34500002861023,
+      "loadMs": 18.625,
       "seconds": {
-        "build": 0.0837,
-        "traverse (total)": 0.023129999999999998,
-        "traverse (per node)": 0.000001184
+        "build": 0.1021,
+        "traverse (total)": 0.04407,
+        "traverse (per node)": 0.0000022559999999999997
       },
       "checks": {
         "nodes": 19531
@@ -1640,11 +1640,11 @@
       "demo": "dom-traversal",
       "implementation": "c candidate",
       "round": 1,
-      "loadMs": 38.830000042915344,
+      "loadMs": 41.7049999833107,
       "seconds": {
-        "build": 0.11168,
-        "traverse (total)": 0.02587,
-        "traverse (per node)": 0.0000013240000000000002
+        "build": 0.07940000000000001,
+        "traverse (total)": 0.03388,
+        "traverse (per node)": 0.0000017350000000000001
       },
       "checks": {
         "nodes": 19531
@@ -1654,337 +1654,11 @@
       "demo": "dom-traversal",
       "implementation": "c reference",
       "round": 1,
-      "loadMs": 44.235000014305115,
-      "seconds": {
-        "build": 0.10621,
-        "traverse (total)": 0.030789999999999998,
-        "traverse (per node)": 0.000001576
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "cpp baseline",
-      "round": 1,
-      "loadMs": 20.259999990463257,
-      "seconds": {
-        "build": 0.10798,
-        "traverse (total)": 0.02889,
-        "traverse (per node)": 0.0000014790000000000002
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "cpp candidate",
-      "round": 1,
-      "loadMs": 46.47500002384186,
-      "seconds": {
-        "build": 0.10898000000000001,
-        "traverse (total)": 0.030539999999999998,
-        "traverse (per node)": 0.000001563
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "cpp reference",
-      "round": 1,
-      "loadMs": 36.08499997854233,
-      "seconds": {
-        "build": 0.0965,
-        "traverse (total)": 0.02256,
-        "traverse (per node)": 0.000001155
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "rust baseline",
-      "round": 1,
-      "loadMs": 15.544999957084656,
-      "seconds": {
-        "build": 0.0721,
-        "traverse (total)": 0.02562,
-        "traverse (per node)": 0.000001312
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "rust candidate",
-      "round": 1,
-      "loadMs": 40.29000002145767,
-      "seconds": {
-        "build": 0.0655,
-        "traverse (total)": 0.02606,
-        "traverse (per node)": 0.000001334
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "rust reference",
-      "round": 1,
-      "loadMs": 43.12999999523163,
-      "seconds": {
-        "build": 0.08425,
-        "traverse (total)": 0.02913,
-        "traverse (per node)": 0.000001492
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "c direct",
-      "round": 1,
-      "loadMs": 14.830000042915344,
-      "seconds": {
-        "build": 0.04968,
-        "traverse (total)": 0.01458,
-        "traverse (per node)": 7.46e-7
-      },
-      "checks": {
-        "nodes": 19531,
-        "liveHandles": 0,
-        "listCount": 0,
-        "listElements": 0
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "cpp direct",
-      "round": 1,
-      "loadMs": 13.939999997615814,
-      "seconds": {
-        "build": 0.05849,
-        "traverse (total)": 0.0145,
-        "traverse (per node)": 7.42e-7
-      },
-      "checks": {
-        "nodes": 19531,
-        "liveHandles": 0,
-        "listCount": 0,
-        "listElements": 0
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "rust direct",
-      "round": 1,
-      "loadMs": 15.365000009536743,
-      "seconds": {
-        "build": 0.04512,
-        "traverse (total)": 0.01351,
-        "traverse (per node)": 6.919999999999999e-7
-      },
-      "checks": {
-        "nodes": 19531,
-        "liveHandles": 0,
-        "listCount": 0,
-        "listElements": 0
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "c candidate",
-      "round": 2,
-      "loadMs": 45.52000004053116,
-      "seconds": {
-        "build": 0.12038,
-        "traverse (total)": 0.027190000000000002,
-        "traverse (per node)": 0.000001392
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "c baseline",
-      "round": 2,
-      "loadMs": 21.774999976158142,
-      "seconds": {
-        "build": 0.08927,
-        "traverse (total)": 0.01964,
-        "traverse (per node)": 0.000001006
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "rust direct",
-      "round": 2,
-      "loadMs": 17.040000021457672,
-      "seconds": {
-        "build": 0.03349,
-        "traverse (total)": 0.01149,
-        "traverse (per node)": 5.879999999999999e-7
-      },
-      "checks": {
-        "nodes": 19531,
-        "liveHandles": 0,
-        "listCount": 0,
-        "listElements": 0
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "cpp direct",
-      "round": 2,
-      "loadMs": 13.9200000166893,
-      "seconds": {
-        "build": 0.048920000000000005,
-        "traverse (total)": 0.015009999999999999,
-        "traverse (per node)": 7.69e-7
-      },
-      "checks": {
-        "nodes": 19531,
-        "liveHandles": 0,
-        "listCount": 0,
-        "listElements": 0
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "c direct",
-      "round": 2,
-      "loadMs": 13.675000011920929,
-      "seconds": {
-        "build": 0.05165,
-        "traverse (total)": 0.01242,
-        "traverse (per node)": 6.36e-7
-      },
-      "checks": {
-        "nodes": 19531,
-        "liveHandles": 0,
-        "listCount": 0,
-        "listElements": 0
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "rust reference",
-      "round": 2,
-      "loadMs": 52.24000000953674,
-      "seconds": {
-        "build": 0.11119,
-        "traverse (total)": 0.036539999999999996,
-        "traverse (per node)": 0.000001871
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "rust candidate",
-      "round": 2,
-      "loadMs": 37.81999999284744,
-      "seconds": {
-        "build": 0.10346999999999999,
-        "traverse (total)": 0.03394,
-        "traverse (per node)": 0.000001737
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "rust baseline",
-      "round": 2,
-      "loadMs": 22.264999985694885,
-      "seconds": {
-        "build": 0.08938,
-        "traverse (total)": 0.03272,
-        "traverse (per node)": 0.000001675
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "cpp reference",
-      "round": 2,
-      "loadMs": 44.705000042915344,
-      "seconds": {
-        "build": 0.08212,
-        "traverse (total)": 0.02284,
-        "traverse (per node)": 0.00000117
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "cpp candidate",
-      "round": 2,
-      "loadMs": 48.785000026226044,
-      "seconds": {
-        "build": 0.10457999999999999,
-        "traverse (total)": 0.03009,
-        "traverse (per node)": 0.000001541
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "cpp baseline",
-      "round": 2,
-      "loadMs": 20.649999976158142,
-      "seconds": {
-        "build": 0.10884999999999999,
-        "traverse (total)": 0.02604,
-        "traverse (per node)": 0.000001333
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "c reference",
-      "round": 2,
-      "loadMs": 42.8299999833107,
+      "loadMs": 47.389999985694885,
       "seconds": {
         "build": 0.09648000000000001,
-        "traverse (total)": 0.03158,
-        "traverse (per node)": 0.000001617
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "c reference",
-      "round": 3,
-      "loadMs": 35.25499999523163,
-      "seconds": {
-        "build": 0.08667,
-        "traverse (total)": 0.02282,
-        "traverse (per node)": 0.0000011679999999999999
+        "traverse (total)": 0.0225,
+        "traverse (per node)": 0.000001152
       },
       "checks": {
         "nodes": 19531
@@ -1993,12 +1667,147 @@
     {
       "demo": "dom-traversal",
       "implementation": "cpp baseline",
-      "round": 3,
+      "round": 1,
+      "loadMs": 18.280000030994415,
+      "seconds": {
+        "build": 0.10496,
+        "traverse (total)": 0.018609999999999998,
+        "traverse (per node)": 9.529999999999999e-7
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "cpp candidate",
+      "round": 1,
+      "loadMs": 50.435000002384186,
+      "seconds": {
+        "build": 0.09725,
+        "traverse (total)": 0.02419,
+        "traverse (per node)": 0.0000012390000000000001
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "cpp reference",
+      "round": 1,
+      "loadMs": 47.97500002384186,
+      "seconds": {
+        "build": 0.11475,
+        "traverse (total)": 0.03126,
+        "traverse (per node)": 0.000001601
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust baseline",
+      "round": 1,
+      "loadMs": 20.959999978542328,
+      "seconds": {
+        "build": 0.11363,
+        "traverse (total)": 0.03337,
+        "traverse (per node)": 0.000001709
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust candidate",
+      "round": 1,
+      "loadMs": 46.830000042915344,
+      "seconds": {
+        "build": 0.11812,
+        "traverse (total)": 0.03699,
+        "traverse (per node)": 0.000001894
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust reference",
+      "round": 1,
+      "loadMs": 52.71000003814697,
+      "seconds": {
+        "build": 0.11370000000000001,
+        "traverse (total)": 0.04071,
+        "traverse (per node)": 0.000002084
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "c direct",
+      "round": 1,
+      "loadMs": 14.705000042915344,
+      "seconds": {
+        "build": 0.05613,
+        "traverse (total)": 0.01416,
+        "traverse (per node)": 7.249999999999999e-7
+      },
+      "checks": {
+        "nodes": 19531,
+        "liveHandles": 0,
+        "listCount": 0,
+        "listElements": 0
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "cpp direct",
+      "round": 1,
+      "loadMs": 24.59500002861023,
+      "seconds": {
+        "build": 0.05701,
+        "traverse (total)": 0.01414,
+        "traverse (per node)": 7.24e-7
+      },
+      "checks": {
+        "nodes": 19531,
+        "liveHandles": 0,
+        "listCount": 0,
+        "listElements": 0
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust direct",
+      "round": 1,
       "loadMs": 21.3400000333786,
       "seconds": {
-        "build": 0.10539,
-        "traverse (total)": 0.02827,
-        "traverse (per node)": 0.000001447
+        "build": 0.052399999999999995,
+        "traverse (total)": 0.0125,
+        "traverse (per node)": 6.4e-7
+      },
+      "checks": {
+        "nodes": 19531,
+        "liveHandles": 0,
+        "listCount": 0,
+        "listElements": 0
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "c candidate",
+      "round": 2,
+      "loadMs": 46.30000001192093,
+      "seconds": {
+        "build": 0.09824,
+        "traverse (total)": 0.032049999999999995,
+        "traverse (per node)": 0.000001641
       },
       "checks": {
         "nodes": 19531
@@ -2006,13 +1815,13 @@
     },
     {
       "demo": "dom-traversal",
-      "implementation": "cpp candidate",
-      "round": 3,
-      "loadMs": 42.99000000953674,
+      "implementation": "c baseline",
+      "round": 2,
+      "loadMs": 18.37000000476837,
       "seconds": {
-        "build": 0.09473000000000001,
-        "traverse (total)": 0.0296,
-        "traverse (per node)": 0.000001516
+        "build": 0.10976999999999999,
+        "traverse (total)": 0.02951,
+        "traverse (per node)": 0.0000015109999999999998
       },
       "checks": {
         "nodes": 19531
@@ -2020,69 +1829,13 @@
     },
     {
       "demo": "dom-traversal",
-      "implementation": "cpp reference",
-      "round": 3,
-      "loadMs": 35.189999997615814,
+      "implementation": "rust direct",
+      "round": 2,
+      "loadMs": 17.564999997615814,
       "seconds": {
-        "build": 0.09487999999999999,
-        "traverse (total)": 0.0322,
-        "traverse (per node)": 0.000001649
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "rust baseline",
-      "round": 3,
-      "loadMs": 22.875,
-      "seconds": {
-        "build": 0.10975,
-        "traverse (total)": 0.03324,
-        "traverse (per node)": 0.000001702
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "rust candidate",
-      "round": 3,
-      "loadMs": 39.144999980926514,
-      "seconds": {
-        "build": 0.10272,
-        "traverse (total)": 0.030699999999999998,
-        "traverse (per node)": 0.0000015720000000000002
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "rust reference",
-      "round": 3,
-      "loadMs": 38.639999985694885,
-      "seconds": {
-        "build": 0.08306999999999999,
-        "traverse (total)": 0.03058,
-        "traverse (per node)": 0.0000015660000000000001
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "c direct",
-      "round": 3,
-      "loadMs": 28.62999999523163,
-      "seconds": {
-        "build": 0.051770000000000004,
-        "traverse (total)": 0.014039999999999999,
-        "traverse (per node)": 7.19e-7
+        "build": 0.045450000000000004,
+        "traverse (total)": 0.01045,
+        "traverse (per node)": 5.350000000000001e-7
       },
       "checks": {
         "nodes": 19531,
@@ -2094,147 +1847,12 @@
     {
       "demo": "dom-traversal",
       "implementation": "cpp direct",
-      "round": 3,
-      "loadMs": 13.685000002384186,
+      "round": 2,
+      "loadMs": 19.439999997615814,
       "seconds": {
-        "build": 0.046990000000000004,
-        "traverse (total)": 0.01173,
-        "traverse (per node)": 6e-7
-      },
-      "checks": {
-        "nodes": 19531,
-        "liveHandles": 0,
-        "listCount": 0,
-        "listElements": 0
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "rust direct",
-      "round": 3,
-      "loadMs": 15.439999997615814,
-      "seconds": {
-        "build": 0.04542,
-        "traverse (total)": 0.01427,
-        "traverse (per node)": 7.31e-7
-      },
-      "checks": {
-        "nodes": 19531,
-        "liveHandles": 0,
-        "listCount": 0,
-        "listElements": 0
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "c baseline",
-      "round": 3,
-      "loadMs": 19.064999997615814,
-      "seconds": {
-        "build": 0.10138,
-        "traverse (total)": 0.02828,
-        "traverse (per node)": 0.000001448
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "c candidate",
-      "round": 3,
-      "loadMs": 39.00999999046326,
-      "seconds": {
-        "build": 0.08668000000000001,
-        "traverse (total)": 0.02834,
-        "traverse (per node)": 0.0000014510000000000002
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "cpp baseline",
-      "round": 4,
-      "loadMs": 17.10999995470047,
-      "seconds": {
-        "build": 0.0731,
-        "traverse (total)": 0.019469999999999998,
-        "traverse (per node)": 9.97e-7
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "c reference",
-      "round": 4,
-      "loadMs": 36.66500002145767,
-      "seconds": {
-        "build": 0.11073999999999999,
-        "traverse (total)": 0.032170000000000004,
-        "traverse (per node)": 0.000001647
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "c candidate",
-      "round": 4,
-      "loadMs": 33.060000002384186,
-      "seconds": {
-        "build": 0.07529999999999999,
-        "traverse (total)": 0.020309999999999998,
-        "traverse (per node)": 0.00000104
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "c baseline",
-      "round": 4,
-      "loadMs": 21.459999978542328,
-      "seconds": {
-        "build": 0.0871,
-        "traverse (total)": 0.01837,
-        "traverse (per node)": 9.41e-7
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "rust direct",
-      "round": 4,
-      "loadMs": 12.745000004768372,
-      "seconds": {
-        "build": 0.036590000000000004,
-        "traverse (total)": 0.01302,
-        "traverse (per node)": 6.67e-7
-      },
-      "checks": {
-        "nodes": 19531,
-        "liveHandles": 0,
-        "listCount": 0,
-        "listElements": 0
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "cpp direct",
-      "round": 4,
-      "loadMs": 12.014999985694885,
-      "seconds": {
-        "build": 0.04553,
-        "traverse (total)": 0.01115,
-        "traverse (per node)": 5.709999999999999e-7
+        "build": 0.039259999999999996,
+        "traverse (total)": 0.013869999999999999,
+        "traverse (per node)": 7.1e-7
       },
       "checks": {
         "nodes": 19531,
@@ -2246,12 +1864,12 @@
     {
       "demo": "dom-traversal",
       "implementation": "c direct",
-      "round": 4,
-      "loadMs": 13.925000011920929,
+      "round": 2,
+      "loadMs": 14.360000014305115,
       "seconds": {
-        "build": 0.039939999999999996,
-        "traverse (total)": 0.009630000000000001,
-        "traverse (per node)": 4.93e-7
+        "build": 0.05809,
+        "traverse (total)": 0.014539999999999999,
+        "traverse (per node)": 7.44e-7
       },
       "checks": {
         "nodes": 19531,
@@ -2263,12 +1881,12 @@
     {
       "demo": "dom-traversal",
       "implementation": "rust reference",
-      "round": 4,
-      "loadMs": 42.2849999666214,
+      "round": 2,
+      "loadMs": 45.12999999523163,
       "seconds": {
-        "build": 0.09759000000000001,
-        "traverse (total)": 0.036969999999999996,
-        "traverse (per node)": 0.000001893
+        "build": 0.08426,
+        "traverse (total)": 0.03326,
+        "traverse (per node)": 0.000001703
       },
       "checks": {
         "nodes": 19531
@@ -2277,12 +1895,12 @@
     {
       "demo": "dom-traversal",
       "implementation": "rust candidate",
-      "round": 4,
-      "loadMs": 48.12000000476837,
+      "round": 2,
+      "loadMs": 37.47000002861023,
       "seconds": {
-        "build": 0.09079000000000001,
-        "traverse (total)": 0.02918,
-        "traverse (per node)": 0.000001494
+        "build": 0.08725,
+        "traverse (total)": 0.026879999999999998,
+        "traverse (per node)": 0.0000013759999999999998
       },
       "checks": {
         "nodes": 19531
@@ -2291,12 +1909,12 @@
     {
       "demo": "dom-traversal",
       "implementation": "rust baseline",
-      "round": 4,
-      "loadMs": 19.564999997615814,
+      "round": 2,
+      "loadMs": 28.205000042915344,
       "seconds": {
-        "build": 0.061689999999999995,
-        "traverse (total)": 0.027,
-        "traverse (per node)": 0.0000013819999999999999
+        "build": 0.11095999999999999,
+        "traverse (total)": 0.034570000000000004,
+        "traverse (per node)": 0.00000177
       },
       "checks": {
         "nodes": 19531
@@ -2305,12 +1923,12 @@
     {
       "demo": "dom-traversal",
       "implementation": "cpp reference",
-      "round": 4,
-      "loadMs": 37.394999980926514,
+      "round": 2,
+      "loadMs": 47.85499995946884,
       "seconds": {
-        "build": 0.0892,
-        "traverse (total)": 0.03024,
-        "traverse (per node)": 0.000001548
+        "build": 0.13341,
+        "traverse (total)": 0.04379,
+        "traverse (per node)": 0.000002242
       },
       "checks": {
         "nodes": 19531
@@ -2319,175 +1937,12 @@
     {
       "demo": "dom-traversal",
       "implementation": "cpp candidate",
-      "round": 4,
-      "loadMs": 38.810000002384186,
+      "round": 2,
+      "loadMs": 44.6599999666214,
       "seconds": {
-        "build": 0.10445,
-        "traverse (total)": 0.02766,
-        "traverse (per node)": 0.0000014159999999999999
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "cpp candidate",
-      "round": 5,
-      "loadMs": 34.97499996423721,
-      "seconds": {
-        "build": 0.08759,
-        "traverse (total)": 0.019059999999999997,
-        "traverse (per node)": 9.76e-7
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "cpp reference",
-      "round": 5,
-      "loadMs": 44.4650000333786,
-      "seconds": {
-        "build": 0.10748999999999999,
-        "traverse (total)": 0.02875,
-        "traverse (per node)": 0.000001472
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "rust baseline",
-      "round": 5,
-      "loadMs": 18.939999997615814,
-      "seconds": {
-        "build": 0.10684,
-        "traverse (total)": 0.032780000000000004,
-        "traverse (per node)": 0.0000016790000000000001
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "rust candidate",
-      "round": 5,
-      "loadMs": 34.42999994754791,
-      "seconds": {
-        "build": 0.10272,
-        "traverse (total)": 0.02995,
-        "traverse (per node)": 0.000001533
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "rust reference",
-      "round": 5,
-      "loadMs": 45.24500000476837,
-      "seconds": {
-        "build": 0.0709,
-        "traverse (total)": 0.02935,
-        "traverse (per node)": 0.0000015029999999999998
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "c direct",
-      "round": 5,
-      "loadMs": 17.064999997615814,
-      "seconds": {
-        "build": 0.053439999999999994,
-        "traverse (total)": 0.01325,
-        "traverse (per node)": 6.78e-7
-      },
-      "checks": {
-        "nodes": 19531,
-        "liveHandles": 0,
-        "listCount": 0,
-        "listElements": 0
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "cpp direct",
-      "round": 5,
-      "loadMs": 14.564999997615814,
-      "seconds": {
-        "build": 0.04982,
-        "traverse (total)": 0.01436,
-        "traverse (per node)": 7.35e-7
-      },
-      "checks": {
-        "nodes": 19531,
-        "liveHandles": 0,
-        "listCount": 0,
-        "listElements": 0
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "rust direct",
-      "round": 5,
-      "loadMs": 13.410000026226044,
-      "seconds": {
-        "build": 0.036,
-        "traverse (total)": 0.01196,
-        "traverse (per node)": 6.13e-7
-      },
-      "checks": {
-        "nodes": 19531,
-        "liveHandles": 0,
-        "listCount": 0,
-        "listElements": 0
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "c baseline",
-      "round": 5,
-      "loadMs": 19.139999985694885,
-      "seconds": {
-        "build": 0.094,
-        "traverse (total)": 0.02549,
-        "traverse (per node)": 0.000001305
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "c candidate",
-      "round": 5,
-      "loadMs": 40.78999996185303,
-      "seconds": {
-        "build": 0.08059000000000001,
-        "traverse (total)": 0.02518,
-        "traverse (per node)": 0.0000012889999999999999
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "c reference",
-      "round": 5,
-      "loadMs": 43.15499997138977,
-      "seconds": {
-        "build": 0.10995,
-        "traverse (total)": 0.02998,
-        "traverse (per node)": 0.000001535
+        "build": 0.11395999999999999,
+        "traverse (total)": 0.018699999999999998,
+        "traverse (per node)": 9.58e-7
       },
       "checks": {
         "nodes": 19531
@@ -2496,94 +1951,10 @@
     {
       "demo": "dom-traversal",
       "implementation": "cpp baseline",
-      "round": 5,
-      "loadMs": 17.355000019073486,
+      "round": 2,
+      "loadMs": 20.790000021457672,
       "seconds": {
-        "build": 0.06519,
-        "traverse (total)": 0.01864,
-        "traverse (per node)": 9.539999999999999e-7
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "cpp reference",
-      "round": 6,
-      "loadMs": 37.160000026226044,
-      "seconds": {
-        "build": 0.10915000000000001,
-        "traverse (total)": 0.030940000000000002,
-        "traverse (per node)": 0.000001584
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "cpp candidate",
-      "round": 6,
-      "loadMs": 39.75999999046326,
-      "seconds": {
-        "build": 0.09272,
-        "traverse (total)": 0.02186,
-        "traverse (per node)": 0.000001119
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "cpp baseline",
-      "round": 6,
-      "loadMs": 16.269999980926514,
-      "seconds": {
-        "build": 0.07540999999999999,
-        "traverse (total)": 0.01635,
-        "traverse (per node)": 8.37e-7
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "c reference",
-      "round": 6,
-      "loadMs": 48.81999999284744,
-      "seconds": {
-        "build": 0.08063,
-        "traverse (total)": 0.0218,
-        "traverse (per node)": 0.0000011160000000000002
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "c candidate",
-      "round": 6,
-      "loadMs": 39.86500000953674,
-      "seconds": {
-        "build": 0.07131,
-        "traverse (total)": 0.02298,
-        "traverse (per node)": 0.0000011759999999999998
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "c baseline",
-      "round": 6,
-      "loadMs": 18.214999973773956,
-      "seconds": {
-        "build": 0.08411,
+        "build": 0.08227,
         "traverse (total)": 0.020390000000000002,
         "traverse (per node)": 0.000001044
       },
@@ -2593,11 +1964,449 @@
     },
     {
       "demo": "dom-traversal",
-      "implementation": "rust direct",
-      "round": 6,
-      "loadMs": 12.7950000166893,
+      "implementation": "c reference",
+      "round": 2,
+      "loadMs": 45.80500000715256,
       "seconds": {
-        "build": 0.03786,
+        "build": 0.116,
+        "traverse (total)": 0.03342,
+        "traverse (per node)": 0.000001711
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "c reference",
+      "round": 3,
+      "loadMs": 42.5,
+      "seconds": {
+        "build": 0.09304000000000001,
+        "traverse (total)": 0.031670000000000004,
+        "traverse (per node)": 0.000001622
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "cpp baseline",
+      "round": 3,
+      "loadMs": 25.12000000476837,
+      "seconds": {
+        "build": 0.07427,
+        "traverse (total)": 0.019989999999999997,
+        "traverse (per node)": 0.000001024
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "cpp candidate",
+      "round": 3,
+      "loadMs": 46.29000002145767,
+      "seconds": {
+        "build": 0.11827,
+        "traverse (total)": 0.022969999999999997,
+        "traverse (per node)": 0.0000011759999999999998
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "cpp reference",
+      "round": 3,
+      "loadMs": 36.9099999666214,
+      "seconds": {
+        "build": 0.0907,
+        "traverse (total)": 0.03041,
+        "traverse (per node)": 0.0000015569999999999999
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust baseline",
+      "round": 3,
+      "loadMs": 22.32499998807907,
+      "seconds": {
+        "build": 0.10975,
+        "traverse (total)": 0.03436,
+        "traverse (per node)": 0.0000017589999999999998
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust candidate",
+      "round": 3,
+      "loadMs": 48.7950000166893,
+      "seconds": {
+        "build": 0.09664,
+        "traverse (total)": 0.0322,
+        "traverse (per node)": 0.000001649
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust reference",
+      "round": 3,
+      "loadMs": 51.3299999833107,
+      "seconds": {
+        "build": 0.0906,
+        "traverse (total)": 0.03309,
+        "traverse (per node)": 0.000001694
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "c direct",
+      "round": 3,
+      "loadMs": 15.524999976158142,
+      "seconds": {
+        "build": 0.06026,
+        "traverse (total)": 0.01716,
+        "traverse (per node)": 8.79e-7
+      },
+      "checks": {
+        "nodes": 19531,
+        "liveHandles": 0,
+        "listCount": 0,
+        "listElements": 0
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "cpp direct",
+      "round": 3,
+      "loadMs": 16.735000014305115,
+      "seconds": {
+        "build": 0.05459000000000001,
+        "traverse (total)": 0.00856,
+        "traverse (per node)": 4.39e-7
+      },
+      "checks": {
+        "nodes": 19531,
+        "liveHandles": 0,
+        "listCount": 0,
+        "listElements": 0
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust direct",
+      "round": 3,
+      "loadMs": 14.014999985694885,
+      "seconds": {
+        "build": 0.06698,
+        "traverse (total)": 0.0225,
+        "traverse (per node)": 0.000001152
+      },
+      "checks": {
+        "nodes": 19531,
+        "liveHandles": 0,
+        "listCount": 0,
+        "listElements": 0
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "c baseline",
+      "round": 3,
+      "loadMs": 21.280000030994415,
+      "seconds": {
+        "build": 0.10965000000000001,
+        "traverse (total)": 0.033460000000000004,
+        "traverse (per node)": 0.0000017130000000000002
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "c candidate",
+      "round": 3,
+      "loadMs": 46.580000042915344,
+      "seconds": {
+        "build": 0.09526000000000001,
+        "traverse (total)": 0.037590000000000005,
+        "traverse (per node)": 0.000001925
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "cpp baseline",
+      "round": 4,
+      "loadMs": 21.764999985694885,
+      "seconds": {
+        "build": 0.11275,
+        "traverse (total)": 0.027579999999999997,
+        "traverse (per node)": 0.000001412
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "c reference",
+      "round": 4,
+      "loadMs": 37.25999999046326,
+      "seconds": {
+        "build": 0.11023000000000001,
+        "traverse (total)": 0.03308,
+        "traverse (per node)": 0.000001694
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "c candidate",
+      "round": 4,
+      "loadMs": 36.280000030994415,
+      "seconds": {
+        "build": 0.10943000000000001,
+        "traverse (total)": 0.02437,
+        "traverse (per node)": 0.000001248
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "c baseline",
+      "round": 4,
+      "loadMs": 18.585000038146973,
+      "seconds": {
+        "build": 0.07092,
+        "traverse (total)": 0.02566,
+        "traverse (per node)": 0.000001314
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust direct",
+      "round": 4,
+      "loadMs": 15.230000019073486,
+      "seconds": {
+        "build": 0.05067,
+        "traverse (total)": 0.015220000000000001,
+        "traverse (per node)": 7.8e-7
+      },
+      "checks": {
+        "nodes": 19531,
+        "liveHandles": 0,
+        "listCount": 0,
+        "listElements": 0
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "cpp direct",
+      "round": 4,
+      "loadMs": 12.535000026226044,
+      "seconds": {
+        "build": 0.05203,
+        "traverse (total)": 0.01245,
+        "traverse (per node)": 6.37e-7
+      },
+      "checks": {
+        "nodes": 19531,
+        "liveHandles": 0,
+        "listCount": 0,
+        "listElements": 0
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "c direct",
+      "round": 4,
+      "loadMs": 12.284999966621399,
+      "seconds": {
+        "build": 0.05146,
+        "traverse (total)": 0.01216,
+        "traverse (per node)": 6.23e-7
+      },
+      "checks": {
+        "nodes": 19531,
+        "liveHandles": 0,
+        "listCount": 0,
+        "listElements": 0
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust reference",
+      "round": 4,
+      "loadMs": 45.39000004529953,
+      "seconds": {
+        "build": 0.10448,
+        "traverse (total)": 0.03785,
+        "traverse (per node)": 0.000001938
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust candidate",
+      "round": 4,
+      "loadMs": 44.59500002861023,
+      "seconds": {
+        "build": 0.10499,
+        "traverse (total)": 0.03105,
+        "traverse (per node)": 0.00000159
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust baseline",
+      "round": 4,
+      "loadMs": 18.82499998807907,
+      "seconds": {
+        "build": 0.10319,
+        "traverse (total)": 0.03264,
+        "traverse (per node)": 0.000001671
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "cpp reference",
+      "round": 4,
+      "loadMs": 39.814999997615814,
+      "seconds": {
+        "build": 0.10518999999999999,
+        "traverse (total)": 0.02985,
+        "traverse (per node)": 0.000001528
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "cpp candidate",
+      "round": 4,
+      "loadMs": 32.985000014305115,
+      "seconds": {
+        "build": 0.09002,
+        "traverse (total)": 0.02013,
+        "traverse (per node)": 0.000001031
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "cpp candidate",
+      "round": 5,
+      "loadMs": 41.50999999046326,
+      "seconds": {
+        "build": 0.10257,
+        "traverse (total)": 0.02846,
+        "traverse (per node)": 0.000001457
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "cpp reference",
+      "round": 5,
+      "loadMs": 42.0900000333786,
+      "seconds": {
+        "build": 0.07376,
+        "traverse (total)": 0.02709,
+        "traverse (per node)": 0.000001387
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust baseline",
+      "round": 5,
+      "loadMs": 17.490000009536743,
+      "seconds": {
+        "build": 0.07248,
+        "traverse (total)": 0.02264,
+        "traverse (per node)": 0.000001159
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust candidate",
+      "round": 5,
+      "loadMs": 38.825000047683716,
+      "seconds": {
+        "build": 0.09185,
+        "traverse (total)": 0.03313,
+        "traverse (per node)": 0.000001697
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust reference",
+      "round": 5,
+      "loadMs": 43.37999999523163,
+      "seconds": {
+        "build": 0.10302,
+        "traverse (total)": 0.03179,
+        "traverse (per node)": 0.000001628
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "c direct",
+      "round": 5,
+      "loadMs": 13.980000019073486,
+      "seconds": {
+        "build": 0.05158,
         "traverse (total)": 0.01345,
         "traverse (per node)": 6.89e-7
       },
@@ -2611,147 +2420,12 @@
     {
       "demo": "dom-traversal",
       "implementation": "cpp direct",
-      "round": 6,
-      "loadMs": 15.134999990463257,
+      "round": 5,
+      "loadMs": 13.469999969005585,
       "seconds": {
-        "build": 0.03135,
-        "traverse (total)": 0.0105,
-        "traverse (per node)": 5.380000000000001e-7
-      },
-      "checks": {
-        "nodes": 19531,
-        "liveHandles": 0,
-        "listCount": 0,
-        "listElements": 0
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "c direct",
-      "round": 6,
-      "loadMs": 17.24500000476837,
-      "seconds": {
-        "build": 0.049,
-        "traverse (total)": 0.00888,
-        "traverse (per node)": 4.5500000000000004e-7
-      },
-      "checks": {
-        "nodes": 19531,
-        "liveHandles": 0,
-        "listCount": 0,
-        "listElements": 0
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "rust reference",
-      "round": 6,
-      "loadMs": 41.810000002384186,
-      "seconds": {
-        "build": 0.10606,
-        "traverse (total)": 0.046759999999999996,
-        "traverse (per node)": 0.0000023940000000000003
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "rust candidate",
-      "round": 6,
-      "loadMs": 42.87000000476837,
-      "seconds": {
-        "build": 0.08929000000000001,
-        "traverse (total)": 0.02938,
-        "traverse (per node)": 0.000001504
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "rust baseline",
-      "round": 6,
-      "loadMs": 24.350000023841858,
-      "seconds": {
-        "build": 0.07088,
-        "traverse (total)": 0.02575,
-        "traverse (per node)": 0.000001319
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "rust baseline",
-      "round": 7,
-      "loadMs": 18.26500004529953,
-      "seconds": {
-        "build": 0.08219,
-        "traverse (total)": 0.02607,
-        "traverse (per node)": 0.000001335
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "rust candidate",
-      "round": 7,
-      "loadMs": 36.18000000715256,
-      "seconds": {
-        "build": 0.07327,
-        "traverse (total)": 0.0254,
-        "traverse (per node)": 0.000001301
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "rust reference",
-      "round": 7,
-      "loadMs": 41.13499999046326,
-      "seconds": {
-        "build": 0.11441,
-        "traverse (total)": 0.039049999999999994,
-        "traverse (per node)": 0.0000019990000000000003
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "c direct",
-      "round": 7,
-      "loadMs": 14.525000035762787,
-      "seconds": {
-        "build": 0.05447,
-        "traverse (total)": 0.014,
-        "traverse (per node)": 7.17e-7
-      },
-      "checks": {
-        "nodes": 19531,
-        "liveHandles": 0,
-        "listCount": 0,
-        "listElements": 0
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "cpp direct",
-      "round": 7,
-      "loadMs": 13.600000023841858,
-      "seconds": {
-        "build": 0.05156,
-        "traverse (total)": 0.01219,
-        "traverse (per node)": 6.24e-7
+        "build": 0.05366,
+        "traverse (total)": 0.01351,
+        "traverse (per node)": 6.919999999999999e-7
       },
       "checks": {
         "nodes": 19531,
@@ -2763,12 +2437,12 @@
     {
       "demo": "dom-traversal",
       "implementation": "rust direct",
-      "round": 7,
-      "loadMs": 13.019999980926514,
+      "round": 5,
+      "loadMs": 17.375,
       "seconds": {
-        "build": 0.047479999999999994,
-        "traverse (total)": 0.01131,
-        "traverse (per node)": 5.79e-7
+        "build": 0.05411,
+        "traverse (total)": 0.01623,
+        "traverse (per node)": 8.31e-7
       },
       "checks": {
         "nodes": 19531,
@@ -2780,12 +2454,12 @@
     {
       "demo": "dom-traversal",
       "implementation": "c baseline",
-      "round": 7,
-      "loadMs": 24.12999999523163,
+      "round": 5,
+      "loadMs": 21.00499999523163,
       "seconds": {
-        "build": 0.10463,
-        "traverse (total)": 0.02036,
-        "traverse (per node)": 0.000001042
+        "build": 0.07515000000000001,
+        "traverse (total)": 0.022019999999999998,
+        "traverse (per node)": 0.0000011279999999999998
       },
       "checks": {
         "nodes": 19531
@@ -2794,12 +2468,12 @@
     {
       "demo": "dom-traversal",
       "implementation": "c candidate",
-      "round": 7,
-      "loadMs": 36.769999980926514,
+      "round": 5,
+      "loadMs": 39.2950000166893,
       "seconds": {
-        "build": 0.09604,
-        "traverse (total)": 0.02213,
-        "traverse (per node)": 0.000001133
+        "build": 0.08515,
+        "traverse (total)": 0.02512,
+        "traverse (per node)": 0.000001286
       },
       "checks": {
         "nodes": 19531
@@ -2808,12 +2482,12 @@
     {
       "demo": "dom-traversal",
       "implementation": "c reference",
-      "round": 7,
-      "loadMs": 46.08500003814697,
+      "round": 5,
+      "loadMs": 44.2049999833107,
       "seconds": {
-        "build": 0.11116,
-        "traverse (total)": 0.031129999999999998,
-        "traverse (per node)": 0.0000015940000000000001
+        "build": 0.07529999999999999,
+        "traverse (total)": 0.02004,
+        "traverse (per node)": 0.000001026
       },
       "checks": {
         "nodes": 19531
@@ -2822,26 +2496,12 @@
     {
       "demo": "dom-traversal",
       "implementation": "cpp baseline",
-      "round": 7,
-      "loadMs": 25.44999998807907,
+      "round": 5,
+      "loadMs": 20.44999998807907,
       "seconds": {
-        "build": 0.10264,
-        "traverse (total)": 0.02586,
-        "traverse (per node)": 0.0000013240000000000002
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "cpp candidate",
-      "round": 7,
-      "loadMs": 40.435000002384186,
-      "seconds": {
-        "build": 0.10323,
-        "traverse (total)": 0.026359999999999998,
-        "traverse (per node)": 0.000001349
+        "build": 0.07951000000000001,
+        "traverse (total)": 0.025160000000000002,
+        "traverse (per node)": 0.000001288
       },
       "checks": {
         "nodes": 19531
@@ -2850,54 +2510,12 @@
     {
       "demo": "dom-traversal",
       "implementation": "cpp reference",
-      "round": 7,
-      "loadMs": 46.99500000476837,
+      "round": 6,
+      "loadMs": 38.61500000953674,
       "seconds": {
-        "build": 0.07489,
-        "traverse (total)": 0.024829999999999998,
-        "traverse (per node)": 0.000001271
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "rust candidate",
-      "round": 8,
-      "loadMs": 41.77999997138977,
-      "seconds": {
-        "build": 0.10609,
-        "traverse (total)": 0.030850000000000002,
-        "traverse (per node)": 0.0000015800000000000001
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "rust baseline",
-      "round": 8,
-      "loadMs": 18.555000007152557,
-      "seconds": {
-        "build": 0.0727,
-        "traverse (total)": 0.0253,
-        "traverse (per node)": 0.0000012949999999999999
-      },
-      "checks": {
-        "nodes": 19531
-      }
-    },
-    {
-      "demo": "dom-traversal",
-      "implementation": "cpp reference",
-      "round": 8,
-      "loadMs": 38.59999996423721,
-      "seconds": {
-        "build": 0.08673,
-        "traverse (total)": 0.02134,
-        "traverse (per node)": 0.000001093
+        "build": 0.0819,
+        "traverse (total)": 0.02275,
+        "traverse (per node)": 0.000001165
       },
       "checks": {
         "nodes": 19531
@@ -2906,12 +2524,12 @@
     {
       "demo": "dom-traversal",
       "implementation": "cpp candidate",
-      "round": 8,
-      "loadMs": 35.75,
+      "round": 6,
+      "loadMs": 42.72500002384186,
       "seconds": {
-        "build": 0.08819,
-        "traverse (total)": 0.019399999999999997,
-        "traverse (per node)": 9.93e-7
+        "build": 0.10538,
+        "traverse (total)": 0.02164,
+        "traverse (per node)": 0.000001108
       },
       "checks": {
         "nodes": 19531
@@ -2920,12 +2538,12 @@
     {
       "demo": "dom-traversal",
       "implementation": "cpp baseline",
-      "round": 8,
-      "loadMs": 17.285000026226044,
+      "round": 6,
+      "loadMs": 22.219999969005585,
       "seconds": {
-        "build": 0.07603,
-        "traverse (total)": 0.01907,
-        "traverse (per node)": 9.76e-7
+        "build": 0.09048,
+        "traverse (total)": 0.02311,
+        "traverse (per node)": 0.0000011830000000000002
       },
       "checks": {
         "nodes": 19531
@@ -2934,12 +2552,12 @@
     {
       "demo": "dom-traversal",
       "implementation": "c reference",
-      "round": 8,
-      "loadMs": 45.39500004053116,
+      "round": 6,
+      "loadMs": 44.75999999046326,
       "seconds": {
-        "build": 0.0863,
-        "traverse (total)": 0.022670000000000003,
-        "traverse (per node)": 0.000001161
+        "build": 0.08843000000000001,
+        "traverse (total)": 0.02407,
+        "traverse (per node)": 0.000001232
       },
       "checks": {
         "nodes": 19531
@@ -2948,12 +2566,12 @@
     {
       "demo": "dom-traversal",
       "implementation": "c candidate",
-      "round": 8,
-      "loadMs": 35.285000026226044,
+      "round": 6,
+      "loadMs": 35.14999997615814,
       "seconds": {
-        "build": 0.08586,
-        "traverse (total)": 0.0192,
-        "traverse (per node)": 9.83e-7
+        "build": 0.10216,
+        "traverse (total)": 0.01849,
+        "traverse (per node)": 9.459999999999999e-7
       },
       "checks": {
         "nodes": 19531
@@ -2962,12 +2580,12 @@
     {
       "demo": "dom-traversal",
       "implementation": "c baseline",
-      "round": 8,
-      "loadMs": 20.24500000476837,
+      "round": 6,
+      "loadMs": 18.259999990463257,
       "seconds": {
-        "build": 0.09179999999999999,
-        "traverse (total)": 0.02773,
-        "traverse (per node)": 0.00000142
+        "build": 0.07772,
+        "traverse (total)": 0.018449999999999998,
+        "traverse (per node)": 9.45e-7
       },
       "checks": {
         "nodes": 19531
@@ -2976,12 +2594,12 @@
     {
       "demo": "dom-traversal",
       "implementation": "rust direct",
-      "round": 8,
-      "loadMs": 14.634999990463257,
+      "round": 6,
+      "loadMs": 15.129999995231628,
       "seconds": {
-        "build": 0.040850000000000004,
-        "traverse (total)": 0.01131,
-        "traverse (per node)": 5.79e-7
+        "build": 0.0518,
+        "traverse (total)": 0.01523,
+        "traverse (per node)": 7.8e-7
       },
       "checks": {
         "nodes": 19531,
@@ -2993,12 +2611,12 @@
     {
       "demo": "dom-traversal",
       "implementation": "cpp direct",
-      "round": 8,
-      "loadMs": 15.02999997138977,
+      "round": 6,
+      "loadMs": 17.62000000476837,
       "seconds": {
-        "build": 0.05356,
-        "traverse (total)": 0.013359999999999999,
-        "traverse (per node)": 6.84e-7
+        "build": 0.05116,
+        "traverse (total)": 0.01234,
+        "traverse (per node)": 6.32e-7
       },
       "checks": {
         "nodes": 19531,
@@ -3010,12 +2628,12 @@
     {
       "demo": "dom-traversal",
       "implementation": "c direct",
-      "round": 8,
-      "loadMs": 12.519999980926514,
+      "round": 6,
+      "loadMs": 27.865000009536743,
       "seconds": {
-        "build": 0.03615,
-        "traverse (total)": 0.010490000000000001,
-        "traverse (per node)": 5.37e-7
+        "build": 0.04469,
+        "traverse (total)": 0.013519999999999999,
+        "traverse (per node)": 6.919999999999999e-7
       },
       "checks": {
         "nodes": 19531,
@@ -3027,11 +2645,39 @@
     {
       "demo": "dom-traversal",
       "implementation": "rust reference",
-      "round": 8,
-      "loadMs": 41.9549999833107,
+      "round": 6,
+      "loadMs": 40.439999997615814,
       "seconds": {
-        "build": 0.08675,
-        "traverse (total)": 0.03169,
+        "build": 0.1046,
+        "traverse (total)": 0.02638,
+        "traverse (per node)": 0.00000135
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust candidate",
+      "round": 6,
+      "loadMs": 37.969999969005585,
+      "seconds": {
+        "build": 0.06766,
+        "traverse (total)": 0.037520000000000005,
+        "traverse (per node)": 0.000001921
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust baseline",
+      "round": 6,
+      "loadMs": 19.87000000476837,
+      "seconds": {
+        "build": 0.09412999999999999,
+        "traverse (total)": 0.031670000000000004,
         "traverse (per node)": 0.000001622
       },
       "checks": {
@@ -3040,13 +2686,367 @@
     },
     {
       "demo": "dom-traversal",
+      "implementation": "rust baseline",
+      "round": 7,
+      "loadMs": 18.97000002861023,
+      "seconds": {
+        "build": 0.08063,
+        "traverse (total)": 0.02146,
+        "traverse (per node)": 0.000001099
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust candidate",
+      "round": 7,
+      "loadMs": 34.560000002384186,
+      "seconds": {
+        "build": 0.09784999999999999,
+        "traverse (total)": 0.035840000000000004,
+        "traverse (per node)": 0.000001835
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust reference",
+      "round": 7,
+      "loadMs": 46.4549999833107,
+      "seconds": {
+        "build": 0.08529,
+        "traverse (total)": 0.02971,
+        "traverse (per node)": 0.000001521
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "c direct",
+      "round": 7,
+      "loadMs": 13.594999969005585,
+      "seconds": {
+        "build": 0.05465,
+        "traverse (total)": 0.01481,
+        "traverse (per node)": 7.58e-7
+      },
+      "checks": {
+        "nodes": 19531,
+        "liveHandles": 0,
+        "listCount": 0,
+        "listElements": 0
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "cpp direct",
+      "round": 7,
+      "loadMs": 16.644999980926514,
+      "seconds": {
+        "build": 0.05185,
+        "traverse (total)": 0.01274,
+        "traverse (per node)": 6.520000000000001e-7
+      },
+      "checks": {
+        "nodes": 19531,
+        "liveHandles": 0,
+        "listCount": 0,
+        "listElements": 0
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust direct",
+      "round": 7,
+      "loadMs": 16.384999990463257,
+      "seconds": {
+        "build": 0.05116,
+        "traverse (total)": 0.01455,
+        "traverse (per node)": 7.45e-7
+      },
+      "checks": {
+        "nodes": 19531,
+        "liveHandles": 0,
+        "listCount": 0,
+        "listElements": 0
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "c baseline",
+      "round": 7,
+      "loadMs": 18.09500002861023,
+      "seconds": {
+        "build": 0.0835,
+        "traverse (total)": 0.02101,
+        "traverse (per node)": 0.0000010760000000000002
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "c candidate",
+      "round": 7,
+      "loadMs": 39.77500003576279,
+      "seconds": {
+        "build": 0.09677,
+        "traverse (total)": 0.02025,
+        "traverse (per node)": 0.000001037
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "c reference",
+      "round": 7,
+      "loadMs": 39.55000001192093,
+      "seconds": {
+        "build": 0.10879000000000001,
+        "traverse (total)": 0.031030000000000002,
+        "traverse (per node)": 0.000001589
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "cpp baseline",
+      "round": 7,
+      "loadMs": 20.740000009536743,
+      "seconds": {
+        "build": 0.09845999999999999,
+        "traverse (total)": 0.02025,
+        "traverse (per node)": 0.000001037
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "cpp candidate",
+      "round": 7,
+      "loadMs": 41.030000030994415,
+      "seconds": {
+        "build": 0.07822,
+        "traverse (total)": 0.02462,
+        "traverse (per node)": 0.0000012609999999999999
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "cpp reference",
+      "round": 7,
+      "loadMs": 42.81999999284744,
+      "seconds": {
+        "build": 0.11136,
+        "traverse (total)": 0.02095,
+        "traverse (per node)": 0.000001072
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust candidate",
+      "round": 8,
+      "loadMs": 36.139999985694885,
+      "seconds": {
+        "build": 0.10126,
+        "traverse (total)": 0.03368,
+        "traverse (per node)": 0.000001724
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust baseline",
+      "round": 8,
+      "loadMs": 18.355000019073486,
+      "seconds": {
+        "build": 0.07753,
+        "traverse (total)": 0.024640000000000002,
+        "traverse (per node)": 0.000001262
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "cpp reference",
+      "round": 8,
+      "loadMs": 41.75,
+      "seconds": {
+        "build": 0.11148000000000001,
+        "traverse (total)": 0.0343,
+        "traverse (per node)": 0.000001756
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "cpp candidate",
+      "round": 8,
+      "loadMs": 40.12000000476837,
+      "seconds": {
+        "build": 0.11526,
+        "traverse (total)": 0.030969999999999998,
+        "traverse (per node)": 0.0000015849999999999999
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "cpp baseline",
+      "round": 8,
+      "loadMs": 17.165000021457672,
+      "seconds": {
+        "build": 0.0747,
+        "traverse (total)": 0.01802,
+        "traverse (per node)": 9.22e-7
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "c reference",
+      "round": 8,
+      "loadMs": 37.83500003814697,
+      "seconds": {
+        "build": 0.0767,
+        "traverse (total)": 0.02502,
+        "traverse (per node)": 0.0000012809999999999999
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "c candidate",
+      "round": 8,
+      "loadMs": 39.810000002384186,
+      "seconds": {
+        "build": 0.07837999999999999,
+        "traverse (total)": 0.02103,
+        "traverse (per node)": 0.000001077
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "c baseline",
+      "round": 8,
+      "loadMs": 20.939999997615814,
+      "seconds": {
+        "build": 0.07145,
+        "traverse (total)": 0.02197,
+        "traverse (per node)": 0.000001125
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust direct",
+      "round": 8,
+      "loadMs": 16.180000007152557,
+      "seconds": {
+        "build": 0.04869,
+        "traverse (total)": 0.01385,
+        "traverse (per node)": 7.09e-7
+      },
+      "checks": {
+        "nodes": 19531,
+        "liveHandles": 0,
+        "listCount": 0,
+        "listElements": 0
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "cpp direct",
+      "round": 8,
+      "loadMs": 12.194999992847443,
+      "seconds": {
+        "build": 0.03179,
+        "traverse (total)": 0.007690000000000001,
+        "traverse (per node)": 3.9300000000000004e-7
+      },
+      "checks": {
+        "nodes": 19531,
+        "liveHandles": 0,
+        "listCount": 0,
+        "listElements": 0
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "c direct",
+      "round": 8,
+      "loadMs": 14.409999966621399,
+      "seconds": {
+        "build": 0.04728,
+        "traverse (total)": 0.01168,
+        "traverse (per node)": 5.979999999999999e-7
+      },
+      "checks": {
+        "nodes": 19531,
+        "liveHandles": 0,
+        "listCount": 0,
+        "listElements": 0
+      }
+    },
+    {
+      "demo": "dom-traversal",
+      "implementation": "rust reference",
+      "round": 8,
+      "loadMs": 43.660000026226044,
+      "seconds": {
+        "build": 0.07615999999999999,
+        "traverse (total)": 0.03135,
+        "traverse (per node)": 0.0000016049999999999999
+      },
+      "checks": {
+        "nodes": 19531
+      }
+    },
+    {
+      "demo": "dom-traversal",
       "implementation": "rust reference",
       "round": 9,
-      "loadMs": 41.110000014305115,
+      "loadMs": 47.230000019073486,
       "seconds": {
-        "build": 0.08225,
-        "traverse (total)": 0.03295,
-        "traverse (per node)": 0.0000016870000000000001
+        "build": 0.11243,
+        "traverse (total)": 0.03606,
+        "traverse (per node)": 0.000001846
       },
       "checks": {
         "nodes": 19531
@@ -3056,11 +3056,11 @@
       "demo": "dom-traversal",
       "implementation": "c direct",
       "round": 9,
-      "loadMs": 13.5450000166893,
+      "loadMs": 15.325000047683716,
       "seconds": {
-        "build": 0.045829999999999996,
-        "traverse (total)": 0.00856,
-        "traverse (per node)": 4.38e-7
+        "build": 0.04077,
+        "traverse (total)": 0.00864,
+        "traverse (per node)": 4.42e-7
       },
       "checks": {
         "nodes": 19531,
@@ -3073,11 +3073,11 @@
       "demo": "dom-traversal",
       "implementation": "cpp direct",
       "round": 9,
-      "loadMs": 14.429999947547913,
+      "loadMs": 13.330000042915344,
       "seconds": {
-        "build": 0.04931,
-        "traverse (total)": 0.0125,
-        "traverse (per node)": 6.4e-7
+        "build": 0.0466,
+        "traverse (total)": 0.01194,
+        "traverse (per node)": 6.11e-7
       },
       "checks": {
         "nodes": 19531,
@@ -3090,11 +3090,11 @@
       "demo": "dom-traversal",
       "implementation": "rust direct",
       "round": 9,
-      "loadMs": 22.32499998807907,
+      "loadMs": 13.40499997138977,
       "seconds": {
-        "build": 0.05521,
-        "traverse (total)": 0.01641,
-        "traverse (per node)": 8.4e-7
+        "build": 0.039549999999999995,
+        "traverse (total)": 0.01831,
+        "traverse (per node)": 9.370000000000001e-7
       },
       "checks": {
         "nodes": 19531,
@@ -3107,11 +3107,11 @@
       "demo": "dom-traversal",
       "implementation": "c baseline",
       "round": 9,
-      "loadMs": 19.964999973773956,
+      "loadMs": 16.900000035762787,
       "seconds": {
-        "build": 0.11062999999999999,
-        "traverse (total)": 0.03171,
-        "traverse (per node)": 0.000001624
+        "build": 0.07804000000000001,
+        "traverse (total)": 0.027489999999999997,
+        "traverse (per node)": 0.000001408
       },
       "checks": {
         "nodes": 19531
@@ -3121,11 +3121,11 @@
       "demo": "dom-traversal",
       "implementation": "c candidate",
       "round": 9,
-      "loadMs": 55.969999969005585,
+      "loadMs": 45.48499995470047,
       "seconds": {
-        "build": 0.0885,
-        "traverse (total)": 0.02066,
-        "traverse (per node)": 0.000001058
+        "build": 0.09606,
+        "traverse (total)": 0.022609999999999998,
+        "traverse (per node)": 0.000001157
       },
       "checks": {
         "nodes": 19531
@@ -3135,11 +3135,11 @@
       "demo": "dom-traversal",
       "implementation": "c reference",
       "round": 9,
-      "loadMs": 44.689999997615814,
+      "loadMs": 35.985000014305115,
       "seconds": {
-        "build": 0.12941999999999998,
-        "traverse (total)": 0.03034,
-        "traverse (per node)": 0.000001553
+        "build": 0.09151999999999999,
+        "traverse (total)": 0.02998,
+        "traverse (per node)": 0.000001535
       },
       "checks": {
         "nodes": 19531
@@ -3149,11 +3149,11 @@
       "demo": "dom-traversal",
       "implementation": "cpp baseline",
       "round": 9,
-      "loadMs": 17.869999945163727,
+      "loadMs": 17.539999961853027,
       "seconds": {
-        "build": 0.10739,
-        "traverse (total)": 0.02931,
-        "traverse (per node)": 0.0000015
+        "build": 0.1033,
+        "traverse (total)": 0.030780000000000002,
+        "traverse (per node)": 0.000001576
       },
       "checks": {
         "nodes": 19531
@@ -3163,11 +3163,11 @@
       "demo": "dom-traversal",
       "implementation": "cpp candidate",
       "round": 9,
-      "loadMs": 42.889999985694885,
+      "loadMs": 34.4099999666214,
       "seconds": {
-        "build": 0.12025,
-        "traverse (total)": 0.027379999999999998,
-        "traverse (per node)": 0.0000014019999999999999
+        "build": 0.08645,
+        "traverse (total)": 0.02061,
+        "traverse (per node)": 0.0000010549999999999999
       },
       "checks": {
         "nodes": 19531
@@ -3177,11 +3177,11 @@
       "demo": "dom-traversal",
       "implementation": "cpp reference",
       "round": 9,
-      "loadMs": 32.55000001192093,
+      "loadMs": 45.160000026226044,
       "seconds": {
-        "build": 0.1011,
-        "traverse (total)": 0.02524,
-        "traverse (per node)": 0.000001292
+        "build": 0.08529,
+        "traverse (total)": 0.02173,
+        "traverse (per node)": 0.000001113
       },
       "checks": {
         "nodes": 19531
@@ -3191,11 +3191,11 @@
       "demo": "dom-traversal",
       "implementation": "rust baseline",
       "round": 9,
-      "loadMs": 16.74500000476837,
+      "loadMs": 19.525000035762787,
       "seconds": {
-        "build": 0.07393000000000001,
-        "traverse (total)": 0.02496,
-        "traverse (per node)": 0.000001278
+        "build": 0.076,
+        "traverse (total)": 0.023329999999999997,
+        "traverse (per node)": 0.000001195
       },
       "checks": {
         "nodes": 19531
@@ -3205,11 +3205,11 @@
       "demo": "dom-traversal",
       "implementation": "rust candidate",
       "round": 9,
-      "loadMs": 36.5799999833107,
+      "loadMs": 41.94499999284744,
       "seconds": {
-        "build": 0.0686,
-        "traverse (total)": 0.03157,
-        "traverse (per node)": 0.000001617
+        "build": 0.08519,
+        "traverse (total)": 0.03082,
+        "traverse (per node)": 0.000001578
       },
       "checks": {
         "nodes": 19531
@@ -3217,11 +3217,11 @@
     }
   ],
   "sources": {
-    "bench/dom-core-shim.mjs": "69245b64872e7494d2f8390db19610e31275dff47994d69a7d63dd372177108e",
-    "bench/browser.mjs": "d50d5fb304da98bd4f555af29aa3a12ab8cf3e88a5b7d1a6de9707718f091793",
+    "bench/browser.mjs": "2269af09cd0a14c647ee4bec49f2d64334fe45e680329200c26b2a2c1ff67714",
     "host/web-host.js": "205bef0524eceb2fa4ccfa5e3988ccb9096eb52430e98099dcc4a73f97170492",
     "host/common.js": "4e3f3437d37d8e150708efb3e33551dffa6c83164e165ed1750936f6a10c3c83",
     "examples/dom-query/main.js": "ab02d5f83b9e6c2aa5186c912b1e8666cf131be39ab802ec34f39da6bb54418c",
-    "examples/dom-traversal/main.js": "d85334011fe41a7a70c5039aa9e0879c9a14edb7691861c23a92a55516f0a956"
+    "examples/dom-traversal/main.js": "d85334011fe41a7a70c5039aa9e0879c9a14edb7691861c23a92a55516f0a956",
+    "bench/dom-core-shim.mjs": "69245b64872e7494d2f8390db19610e31275dff47994d69a7d63dd372177108e"
   }
 }

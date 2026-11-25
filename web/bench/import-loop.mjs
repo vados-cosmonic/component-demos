@@ -62,6 +62,7 @@ assert.deepEqual(cores(assets.main), cores(assets.baseline));
 const iterations = 131072;
 const repeats = 5;
 const warmups = 2;
+const pixelCopies = 2048;
 const browser = await puppeteer.launch({
   executablePath: process.env.CHROME_BIN, channel: process.env.CHROME_BIN ? undefined : "chrome", pipe: true,
   args: process.env.CHROME_NO_SANDBOX === "1" ? ["--no-sandbox"] : [],
@@ -71,12 +72,15 @@ try {
   for (let round = 0; round < rounds; round++) {
     const page = await browser.newPage();
     try {
-      samples.push(...await page.evaluate(async ({ variants, round, iterations, repeats, warmups }) => {
+      samples.push(...await page.evaluate(async ({ variants, round, iterations, repeats, warmups, pixelCopies }) => {
         const guests = {};
         const sample = "tdxx-sample-id-with-ascii-bytes!";
         class Item { constructor(value) { this.value = value; } }
         const pool = Array.from({ length: 256 }, (_, i) => new Item(i));
+        const source = new Uint8Array(176 * 176 * 4 + 2).subarray(1, -1);
+        for (let i = 0; i < source.length; i++) source[i] = i & 255;
         const host = {
+          pixels: { default(n) { source[0] = n & 255; return source; } },
           api: { Item }, number: { default: n => n & 255 },
           text: { default: s => s.charCodeAt(0) + s.charCodeAt(s.length - 1) },
           maybe: { default: n => n % 2 === 0 ? pool[n & 255] : undefined },
@@ -94,9 +98,16 @@ try {
         const decoder = new TextDecoder("utf-8", { fatal: true, ignoreBOM: true });
         const memoryView = new DataView(mem.buffer);
         let live;
-        guests.direct = (await WebAssembly.instantiate(await loadCore("loop.core2.wasm"), { "": {
+        const direct = (await WebAssembly.instantiate(await loadCore("loop.core2.wasm"), { "": {
           mem, number: host.number.default,
           "read-string": (ptr, len) => host.text.default(decoder.decode(new Uint8Array(mem.buffer, ptr, len))),
+          pixels(n, out) {
+            const bytes = host.pixels.default(n);
+            const ptr = storage.exports.realloc(0, 0, 1, bytes.length);
+            new Uint8Array(mem.buffer, ptr, bytes.length).set(bytes);
+            memoryView.setUint32(out + 4, bytes.length, true);
+            memoryView.setUint32(out, ptr, true);
+          },
           acquire(n) {
             if (live !== undefined) throw Error("Live resource at acquire");
             live = host.acquire.default(n);
@@ -117,26 +128,29 @@ try {
             live = undefined;
           },
         } })).exports;
+        guests.direct = { ...direct, checkPixels: direct["check-pixels"] };
         const names = Object.keys(guests);
         const rows = [];
-        for (const [op, length] of [["numbers"], ["strings", 2], ["strings", 9], ["strings", 32], ["resources"], ["options"]]) {
+        for (const [op, length] of [["numbers"], ["strings", 2], ["strings", 9], ["strings", 32], ["resources"], ["options"], ["pixels"]]) {
           const mean = op === "options" ? 63.5 : 127.5;
-          const expected = iterations * (length ? 72.5 + sample.charCodeAt(length - 1) : mean);
+          const count = op === "pixels" ? pixelCopies : iterations;
+          const expected = count * (length ? 72.5 + sample.charCodeAt(length - 1) : mean);
           for (let pass = -warmups; pass < repeats; pass++) {
             for (let i = 0; i < names.length; i++) {
               const shift = round + pass + warmups;
               const name = names[(shift + (shift % 2 ? -i : i) + names.length) % names.length];
               const run = guests[name][op];
               const start = performance.now();
-              const result = length ? run(iterations, length) : run(iterations);
+              const result = length ? run(count, length) : run(count);
               const elapsedMs = performance.now() - start;
               if (result !== expected || live !== undefined) throw Error("Wrong result for " + name + "/" + op);
-              if (pass >= 0) rows.push({ round: round + 1, pass: pass + 1, name, op, length, elapsedMs });
+              if (op === "pixels" && guests[name].checkPixels() !== 1) throw Error("Invalid pixel bytes for " + name);
+              if (pass >= 0) rows.push({ round: round + 1, pass: pass + 1, name, op, length, count, elapsedMs });
             }
           }
         }
         return rows;
-      }, { variants, round, iterations, repeats, warmups }));
+      }, { variants, round, iterations, repeats, warmups, pixelCopies }));
     } finally {
       await page.close();
     }
@@ -144,7 +158,7 @@ try {
   }
   const result = {
     date: new Date().toISOString(), chrome: await browser.version(), cpu: cpus()[0].model,
-    system: [platform(), release(), arch()], node: process.version, rounds, iterations, repeats, warmups,
+    system: [platform(), release(), arch()], node: process.version, rounds, iterations, repeats, warmups, pixelCopies,
     baseline: inventory.baseline, main: inventory.main, candidate: inventory.candidate, assets,
     fixtureSha256: hash(fixture), inputSha256: hash(input), runnerSha256: hash(await readFile(import.meta.filename)), samples,
   };
