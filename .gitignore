@@ -22,3 +22,5 @@ web/*/*/jco-baseline/
 web/*/*/jco-main/
 web/*/*/jco-candidate/
 web/*/*/jco-reference/
+
+!web/bench/import-loop.wat
