@@ -139,6 +139,41 @@ python3 web/bench/drop-history-report.py /tmp/drop-history.json.gz "$matrix" --p
 
 </details>
 
+### Does caching the handle allocator speed up C table creation?
+
+C table creation was the only warm headline workload whose individual 95% interval fell entirely above Jco 1.13.0 in the 18-round matrix. The external runtime took 1.129× the release time (1.011–1.249×). Both binding modes resolve a component's handle allocator on each allocation and removal. The experiment kept the allocator on each resource table after its first lookup. During creation of 2,000 rows this eliminated all **12,002 lookups**. Across two complete guest calls it reduced **32,272 lookups to seven** in both modes.
+
+| Paired time ratio, cache / ordinary bindings | Internal Oxc, trial 1 | Internal Oxc, repeat | External checked, trial 1 | External checked, repeat |
+| --- | ---: | ---: | ---: | ---: |
+| Row creation on the second call | 1.024 (0.932–1.232) | 0.909 (0.822–1.018) | 0.922 (0.718–1.036) | 1.019 (0.885–1.172) |
+| Row creation summed over calls 5–8 | 1.069 (0.955–1.209) | 1.018 (0.912–1.112) | 0.908 (0.778–0.968) | 1.085 (0.945–1.131) |
+| Complete guest time summed over calls 1–8 | 1.073 (0.879–1.147) | 0.938 (0.902–1.050) | 0.943 (0.827–1.014) | 1.026 (0.920–1.125) |
+
+The external late-call speedup in the first trial disappeared in the repeat. All four intervals for complete guest time include parity. The cache remains a benchmark experiment. Each trial used a fresh Chromium process, 100 timed documents with isolated browser contexts and five separate documents to count lookups and check the live table. Each round included Jco 1.13.0 and both binding modes with and without the cache. Each treatment occupied each position and followed each other treatment equally. Parentheses give individual 95% sign intervals across the 20 paired rounds. [First trial](web/bench/results/table-handle-space-1919c56ed.json.gz) · [Independent repeat](web/bench/results/table-handle-space-repeat-1919c56ed.json.gz)
+
+For the same C demo, module import and initialization account for most of the **cold** gap. These are within-round differences from Jco 1.13.0 in the original 18-round matrix. Row creation is part of the first guest call. Each row is summarized independently. [Full matrix samples](web/bench/results/review-matrix-init-ae16355e9.json.gz)
+
+| Extra time over Jco 1.13.0, median ms (95% interval) | Internal Oxc | External checked |
+| --- | ---: | ---: |
+| Module import and initialization | 5.32 (4.93 to 5.69) | 16.27 (13.18 to 19.54) |
+| First guest call | 2.38 (−3.44 to 5.82) | 3.02 (1.02 to 5.69) |
+| Row creation inside the first call | −0.34 (−3.80 to 0.51) | −0.02 (−3.00 to 0.75) |
+| Time to first result | 6.53 (1.44 to 11.19) | 19.87 (13.86 to 22.57) |
+
+<details><summary>Reproduce the allocator trials and cold-start breakdown</summary>
+
+Build Jco at `1919c56ed` and prepare the release assets as in the full matrix setup. Set `CHROME_BIN` to Chromium. The runner verifies every original served asset against the matrix, then patches the allocator lookup in the generated internal entry or checked external runtime chunk. Only the audit pages count lookups.
+
+```sh
+matrix=web/bench/results/review-matrix-init-ae16355e9.json.gz
+for trial in first repeat; do
+  node web/bench/table-handle-space.mjs "$checkout" "$matrix" "/tmp/handle-space-$trial.json.gz"
+  python3 web/bench/table-handle-space-report.py "/tmp/handle-space-$trial.json.gz" "$matrix"
+done
+```
+
+</details>
+
 ## External runtime startup at 427b9c0d7
 
 The checked runtime package groups the short UTF-8 decoder, synchronous waiter and JS helpers into one shared chunk. Across all 21 generated C, C++ and Rust demos this removes three runtime requests, from 18 to 15. Each standalone numeric conversion still loads 2,779 bytes. The largest cost is for a standalone import of the component-state module, which grows by 5,613 bytes (1,502 gzipped). All 18 public entries expose the same names. The internal Oxc bundle gets its runtime from the embedded source. [Package build change](https://github.com/vados-cosmonic/jco/commit/427b9c0d7)
