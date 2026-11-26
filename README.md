@@ -6,7 +6,7 @@ This fork benchmarks the browser examples from [eqrion/component-demos at d0b9dd
 
 ## Optimized browser bindings
 
-The branch uses js-component-bindgen’s internal Oxc bundler and the checked jco-cm-runtime. [Measured Jco commit `460032a40`](https://github.com/vados-cosmonic/jco/commit/460032a40aaa3c56d5846614c04c4903e8bc0dea) · [Canvas host comparison](#canvas-pixel-transfers-with-the-same-guest-binary) · [Payload and startup](#payload-and-startup) · [Reproduction commands](#reproduce-the-candidate-run)
+The branch uses js-component-bindgen’s internal Oxc bundler and the checked jco-cm-runtime. [Measured Jco commit `460032a40`](https://github.com/vados-cosmonic/jco/commit/460032a40aaa3c56d5846614c04c4903e8bc0dea) · [Canvas host comparison](#canvas-pixel-transfers-with-the-same-guest-binary) · [Payload and startup](#payload-and-startup) · [First guest result](#time-to-the-first-guest-result) · [Eager compilation](#eager-javascript-compilation) · [Reproduction commands](#reproduce-the-candidate-run)
 
 All Jco builds used the same guest binaries. Each value is the median of 7 fresh-page samples with one warm-up per page. The run collected 728 samples on 2026-11-26 with HeadlessChrome/156.0.8078.47 on Intel(R) Xeon(R) Processor @ 2.60GHz.
 
@@ -386,15 +386,15 @@ In 1,470 fresh documents, the page timed its own dynamic import, ran the guest a
 
 | Distribution | Attached startup (ms) | Detached startup (ms) | Attached JS end to Wasm request (ms) | Detached JS end to Wasm request (ms) |
 | --- | --- | --- | --- | --- |
-| 1.13.0 default | 8.25 | 6.08 | 2.89 | 1.74 |
-| 1.13.0 minified | 8.02 | 5.94 | 2.60 | 1.69 |
-| Stock main default | 21.94 | 13.93 | 14.42 | 8.43 |
-| Stock main minified | 19.81 | 13.18 | 13.05 | 7.69 |
-| Candidate default | 17.58 | 11.95 | 10.83 | 6.31 |
-| Candidate minified | 16.64 | 11.45 | 9.75 | 5.96 |
-| Previous branch default | 18.16 | 12.56 | 11.36 | 6.76 |
+| 1.13.0 default | 8.69 | 6.17 | 2.97 | 1.71 |
+| 1.13.0 minified | 8.12 | 6.10 | 2.59 | 1.67 |
+| Stock main default | 22.34 | 14.25 | 15.11 | 8.56 |
+| Stock main minified | 20.50 | 13.75 | 13.31 | 7.86 |
+| Candidate default | 17.51 | 12.25 | 10.90 | 6.19 |
+| Candidate minified | 16.19 | 11.36 | 9.51 | 5.75 |
+| Previous branch default | 18.54 | 12.45 | 11.42 | 6.88 |
 
-With DevTools disconnected, default-output startup took **0.95×** the previous revision’s time. The candidate was faster in 17/21 workloads. Each workload contributes its median within-round time ratio.
+With DevTools disconnected, default-output startup took **0.97×** the previous revision’s time. The candidate was faster in 16/21 workloads. Each workload contributes its median within-round time ratio.
 
 ### Time to the first guest result
 
@@ -402,29 +402,79 @@ Each fresh page called the guest immediately after import, using the same worklo
 
 | Distribution | Import (ms) | First guest call (ms) | Time to first result (ms) |
 | --- | --- | --- | --- |
-| 1.13.0 default | 6.08 | 59.52 | 67.00 |
-| 1.13.0 minified | 5.94 | 56.04 | 62.33 |
-| Stock main default | 13.93 | 206.28 | 220.02 |
-| Stock main minified | 13.18 | 196.86 | 211.72 |
-| Candidate default | 11.95 | 55.87 | 68.25 |
-| Candidate minified | 11.45 | 55.73 | 71.43 |
-| Previous branch default | 12.56 | 57.59 | 69.14 |
+| 1.13.0 default | 6.17 | 59.32 | 65.77 |
+| 1.13.0 minified | 6.10 | 57.62 | 63.27 |
+| Stock main default | 14.25 | 204.73 | 218.98 |
+| Stock main minified | 13.75 | 208.88 | 220.69 |
+| Candidate default | 12.25 | 60.40 | 72.73 |
+| Candidate minified | 11.36 | 57.21 | 69.64 |
+| Previous branch default | 12.45 | 58.53 | 70.21 |
 
 The following ratios compare default builds within each round. Each row summarizes the three language medians. A ratio below 1 means the candidate returned the guest result sooner.
 
 | Workload | Candidate / 1.13.0 | Candidate / stock main |
 | --- | --- | --- |
-| Attribute write | 0.67× | 0.21× |
-| Canvas fillRect | 1.07× | 0.30× |
-| Canvas pixel read | 1.12× | 0.85× |
-| DOM ID lookup | 0.95× | 0.28× |
-| Tree traversal | 1.12× | 0.21× |
-| Read 1 KiB string | 0.96× | 0.78× |
-| Table creation | 1.32× | 0.30× |
+| Attribute write | 0.61× | 0.22× |
+| Canvas fillRect | 0.99× | 0.29× |
+| Canvas pixel read | 1.15× | 0.88× |
+| DOM ID lookup | 1.01× | 0.30× |
+| Tree traversal | 1.05× | 0.20× |
+| Read 1 KiB string | 0.92× | 0.78× |
+| Table creation | 1.25× | 0.34× |
 
 The candidate reached the first result at or before 1.13.0 in **11/21** language/workload pairs and at or before stock main in **21/21**.
 
 ![Time to the first guest result for each workload and language relative to 1.13.0 and stock main. Points left of 1 favor the candidate.](web/bench/results/first-result.png)
+
+### Eager JavaScript compilation
+
+The branch exposes `jco transpile --eager-compile` and the JS API option `eagerCompile: true`. The option reproduced all 21 hinted candidate modules served in these trials. Verification also checked 68 ordinary and minified JS outputs after removing the hint, and all 64 accompanying Wasm outputs against their original hashes. [Jco transpile options at the verified revision](https://github.com/vados-cosmonic/jco/blob/be9385cff68b740dee77167ec62df0f258e54f37/docs/src/transpiling.md) · [Verification](web/bench/verify-compile-hint.mjs)
+
+The server prepended `//# allFunctionsCalledOnLoad` and a newline to each ordinary entry module. Chromium can use these 29 bytes to compile functions while the module loads. Each guest used identical Wasm and the same browser host. DevTools was disconnected. The full run used the headline workloads. A second run measured a first call that writes attributes on eight elements twice, draws 16 rectangles, queries eight elements twice, traverses a seven-node tree, or creates and updates eight table rows. [V8 compile hints](https://v8.dev/blog/explicit-compile-hints) · [Full workload timings](web/bench/results/compile-hint.json) · [Small workload timings](web/bench/results/compile-hint-small.json)
+
+Each cell summarizes the median hinted / ordinary ratio within rounds, then takes the median across language/workload pairs. A ratio below 1 favors eager compilation. The last column counts pairs for which the guest returned its first result sooner.
+
+| Workload | Build | Rounds | Import | First guest call | Time to first result | Pairs with earlier first result |
+| --- | --- | --- | --- | --- | --- | --- |
+| Full | 1.13.0 | 9 | 1.05× | 0.94× | 0.96× | 17/21 |
+| Full | Stock main | 9 | 1.29× | 0.96× | 0.99× | 12/21 |
+| Full | Candidate | 9 | 1.27× | 0.95× | 0.98× | 14/21 |
+| Small | 1.13.0 | 15 | 1.06× | 0.35× | 0.79× | 15/15 |
+| Small | Stock main | 15 | 1.27× | 0.50× | 0.91× | 15/15 |
+| Small | Candidate | 15 | 1.28× | 0.35× | 0.99× | 9/15 |
+
+For applications that import the component ahead of an interaction, the first-call column measures the remaining wait. Applications that import on demand also pay the import time. The absolute times below are candidate medians across workload medians, with each column summarized independently.
+
+| Workload | Candidate output | Import (ms) | First guest call (ms) | Time to first result (ms) |
+| --- | --- | --- | --- | --- |
+| Full | Ordinary | 12.01 | 59.25 | 70.59 |
+| Full | Eager | 15.10 | 53.44 | 69.85 |
+| Small | Ordinary | 13.06 | 5.89 | 19.25 |
+| Small | Eager | 16.88 | 2.03 | 19.35 |
+
+| Eager candidate first result at or before release | Ordinary 1.13.0 | Eager 1.13.0 |
+| --- | --- | --- |
+| Full | 9/21 | 7/21 |
+| Small | 0/15 | 0/15 |
+
+Each pair also has a two-sided 95% sign-test interval for its median first-result ratio across fresh-browser rounds. The counts below show how often the interval establishes a direction on this machine. Coverage applies to each comparison individually.
+
+| Candidate workload | Interval favors eager | Interval includes 1 | Interval favors ordinary |
+| --- | --- | --- | --- |
+| Full | 0 | 21 | 0 |
+| Small | 0 | 15 | 0 |
+
+| Candidate first result | Small workload | Full workload |
+| --- | --- | --- |
+| Attribute write | 1.04× | 1.02× |
+| Canvas fillRect | 0.97× | 0.98× |
+| Canvas pixel read | — | 0.94× |
+| DOM ID lookup | 1.02× | 1.00× |
+| Tree traversal | 0.99× | 0.97× |
+| Read 1 KiB string | — | 0.98× |
+| Table creation | 1.00× | 0.94× |
+
+![Time to the first result with eager compilation relative to ordinary candidate bindings. Each marker shows the median of three languages and the line spans their range.](web/bench/results/compile-hint.png)
 
 ### Generated JavaScript reached by each demo
 
@@ -500,6 +550,12 @@ node web/bench/candidate.mjs --verify-wasm ../jco-candidate
 node web/bench/minified.mjs ../jco-candidate
 CHROME_BIN=/path/to/chrome BENCH_MINIFIED=1 ROUNDS=5 node web/bench/browser.mjs
 CHROME_BIN=/path/to/chrome ROUNDS=5 node web/bench/startup-observer.mjs
+CHROME_BIN=/path/to/chrome ROUNDS=9 node web/bench/startup-observer.mjs --compile-hint
+CHROME_BIN=/path/to/chrome ROUNDS=15 node web/bench/startup-observer.mjs --compile-hint --small
+git -C ../jco-candidate switch --detach be9385cff68b740dee77167ec62df0f258e54f37
+pnpm -C ../jco-candidate install --frozen-lockfile
+pnpm -C ../jco-candidate --filter @bytecodealliance/jco-transpile run build:ts
+node web/bench/verify-compile-hint.mjs ../jco-candidate
 python3 web/bench/report.py --from-candidate
 python3 web/bench/candidate-report.py
 ```

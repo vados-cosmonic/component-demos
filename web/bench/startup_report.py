@@ -2,8 +2,62 @@
 from collections import defaultdict
 from hashlib import sha256
 import json
+from math import isfinite
 from pathlib import Path
 from statistics import median
+
+
+def compile_hints(bench, run, observer, inventory, languages, versions):
+    hint = b"//# allFunctionsCalledOnLoad\n"
+    if (any(run[k] != observer[k] for k in ("runnerSha256", "originalSha256", "browser", "cpu"))
+            or run["hint"].encode() != hint):
+        raise ValueError("Compile hint trial used different source or hardware")
+    cases = [(lang, demo) for lang in languages for demo in run["workloads"]]
+    paths = set()
+    for component in inventory["components"]:
+        path = Path(component["input"]["path"])
+        lang, demo = path.parts[:2]
+        if (lang, demo) in cases and path.stem == demo.replace("-", "_"):
+            for version in versions:
+                paths.update("/" + f["path"] for f in component["variants"][version] if f["path"].endswith(".js"))
+    if set(run["hintedSources"]) != paths:
+        raise ValueError("Incomplete set of hinted JS modules")
+    for path, digest in run["hintedSources"].items():
+        local = bench.parent / path.lstrip("/")
+        if len(bytes.fromhex(digest)) != 32 or (local.exists() and sha256(hint + local.read_bytes()).hexdigest() != digest):
+            raise ValueError(f"Compile hint payload mismatch for {path}")
+    groups = defaultdict(dict)
+    fields = ("loadMs", "firstCallMs", "firstResultMs")
+    for row in run["samples"]:
+        key = row["version"], row["lang"], row["demo"]
+        if (row["attached"] or row["round"] in groups[key]
+                or not all(isfinite(row[m]) and row[m] > 0 for m in fields)
+                or abs(row["loadMs"] + row["firstCallMs"] - row["firstResultMs"]) > .001):
+            raise ValueError(f"Invalid compile hint record for {key}")
+        groups[key][row["round"]] = row
+    if (set(groups) != {(v + suffix, *case) for v in versions for suffix in ("", "-eager") for case in cases}
+            or any(set(rows) != set(range(1, run["rounds"] + 1)) for rows in groups.values())):
+        raise ValueError("Missing compile hint samples")
+    summary = {}
+    for version in versions:
+        summary[version] = {}
+        for case in cases:
+            ordinary, eager = [groups[version + suffix, *case] for suffix in ("", "-eager")]
+            summary[version][case] = [median(eager[n][field] / ordinary[n][field] for n in ordinary) for field in fields]
+    absolute = {v: [median(median(row[m] for row in groups[v, *case].values()) for case in cases)
+                    for m in fields] for v in ("candidate", "candidate-eager")}
+    release_counts = {}
+    for release in ("baseline", "baseline-eager"):
+        comparisons = []
+        for case in cases:
+            candidate, baseline = groups["candidate-eager", *case], groups[release, *case]
+            comparisons.append(median(candidate[n]["firstResultMs"] / baseline[n]["firstResultMs"] for n in candidate))
+        release_counts[release] = sum(r <= 1 for r in comparisons)
+    first_result_pairs = {}
+    for case in cases:
+        ordinary, eager = [groups[v, *case] for v in ("candidate", "candidate-eager")]
+        first_result_pairs[case] = [eager[n]["firstResultMs"] / ordinary[n]["firstResultMs"] for n in ordinary]
+    return summary, absolute, release_counts, first_result_pairs
 
 
 def startup_intervals(sample, assets, expected_dir):

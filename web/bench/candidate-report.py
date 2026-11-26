@@ -6,7 +6,7 @@ from math import comb, isfinite
 from pathlib import Path
 from statistics import median
 
-from startup_report import distributions, startup_intervals
+from startup_report import compile_hints, distributions, startup_intervals
 
 import matplotlib
 matplotlib.use("Agg")
@@ -175,7 +175,8 @@ para("## Optimized browser bindings")
 para(f"The branch uses js-component-bindgen’s internal Oxc bundler and the checked jco-cm-runtime. "
      f"[Measured Jco commit `{commit[:9]}`](https://github.com/vados-cosmonic/jco/commit/{commit}) · "
      "[Canvas host comparison](#canvas-pixel-transfers-with-the-same-guest-binary) · "
-     "[Payload and startup](#payload-and-startup) · [Reproduction commands](#reproduce-the-candidate-run)")
+     "[Payload and startup](#payload-and-startup) · [First guest result](#time-to-the-first-guest-result) · "
+     "[Eager compilation](#eager-javascript-compilation) · [Reproduction commands](#reproduce-the-candidate-run)")
 para(f"All Jco builds used the same guest binaries. Each value is the median of "
      f"{run['rounds']} fresh-page samples with one warm-up per page. The run collected {len(run['samples'])} "
      f"samples on {run['date'][:10]} with {run['browser']} on {run['cpu']}.")
@@ -833,6 +834,102 @@ plt.close(fig)
 para("![Time to the first guest result for each workload and language relative to 1.13.0 and stock main. "
      "Points left of 1 favor the candidate.](web/bench/results/first-result.png)")
 
+para("### Eager JavaScript compilation")
+hint_verification = json.loads((results / "compile-hint-verification.json").read_bytes())
+if (hint_verification["runnerSha256"] != sha256((bench / "verify-compile-hint.mjs").read_bytes()).hexdigest()
+        or hint_verification["trialSha256"] != sha256((results / "compile-hint.json").read_bytes()).hexdigest()
+        or hint_verification["modules"] != 2 * len(sizes["components"])
+        or hint_verification["wasm"] != 2 * sum(f["path"].endswith(".wasm") for c in sizes["components"]
+                                                for f in c["variants"]["candidate"])
+        or hint_verification["browserModules"] != len(cases)):
+    raise ValueError("Eager compilation verification did not cover the measured files")
+eager_commit = hint_verification["commit"]
+para(f"The branch exposes `jco transpile --eager-compile` and the JS API option `eagerCompile: true`. "
+     f"The option reproduced all {hint_verification['browserModules']} hinted candidate modules served in these trials. "
+     f"Verification also checked {hint_verification['modules']} ordinary and minified JS outputs after removing the hint, "
+     f"and all {hint_verification['wasm']} accompanying Wasm outputs against their original hashes. "
+     f"[Jco transpile options at the verified revision](https://github.com/vados-cosmonic/jco/blob/{eager_commit}/docs/src/transpiling.md) · "
+     "[Verification](web/bench/verify-compile-hint.mjs)")
+para("The server prepended `//# allFunctionsCalledOnLoad` and a newline to each ordinary entry module. "
+     "Chromium can use these 29 bytes to compile functions while the module loads. Each guest used identical Wasm "
+     "and the same browser host. DevTools was disconnected. The full run used the headline workloads. A second run "
+     "measured a first call that writes attributes on eight elements twice, draws 16 rectangles, queries eight elements twice, "
+     "traverses a seven-node tree, or creates and updates eight table rows. "
+     "[V8 compile hints](https://v8.dev/blog/explicit-compile-hints) · [Full workload timings](web/bench/results/compile-hint.json) · "
+     "[Small workload timings](web/bench/results/compile-hint-small.json)")
+para("Each cell summarizes the median hinted / ordinary ratio within rounds, then takes the median across "
+     "language/workload pairs. A ratio below 1 favors eager compilation. The last column counts pairs for "
+     "which the guest returned its first result sooner.")
+hint_rows = []
+hint_absolute = []
+hint_release = []
+hint_confidence = []
+hint_rounds = {}
+hint_summaries = {}
+for size, filename in [("Full", "compile-hint.json"), ("Small", "compile-hint-small.json")]:
+    experiment = json.loads((results / filename).read_bytes())
+    expected_workloads = minified_run["workloads"] if size == "Full" else {
+        "attribute-churn": {"elements": 8, "iters": 2}, "canvas-draw": {"rects": 16},
+        "dom-query": {"numElements": 8, "iters": 2}, "dom-traversal": {"depth": 2, "numChildren": 2},
+        "table-update": {"rows": 8},
+    }
+    if experiment["workloads"] != expected_workloads:
+        raise ValueError(f"Unexpected {size.lower()} workload arguments")
+    hint_rounds[size] = experiment["rounds"]
+    summaries, absolute, counts, first_pairs = compile_hints(bench, experiment, observer, sizes, languages, distribution_names)
+    hint_summaries[size] = summaries
+    for v, stage_times in absolute.items():
+        hint_absolute.append([size, "Eager" if v.endswith("-eager") else "Ordinary",
+                              *[f"{v:.2f}" for v in stage_times]])
+    n = len(summaries["candidate"])
+    hint_release.append([size, f"{counts['baseline']}/{n}", f"{counts['baseline-eager']}/{n}"])
+    bounds = [median_interval(r) for r in first_pairs.values()]
+    hint_confidence.append([size, str(sum(hi < 1 for lo, hi in bounds)),
+                            str(sum(lo <= 1 <= hi for lo, hi in bounds)), str(sum(lo > 1 for lo, hi in bounds))])
+    for version, label in distribution_names.items():
+        ratios = summaries[version]
+        hint_rows.append([size, label, str(experiment["rounds"]),
+                          *[f"{median(values):.2f}×" for values in zip(*ratios.values())],
+                          f"{sum(values[2] < 1 for values in ratios.values())}/{len(ratios)}"])
+table(["Workload", "Build", "Rounds", "Import", "First guest call", "Time to first result",
+       "Pairs with earlier first result"], hint_rows)
+para("For applications that import the component ahead of an interaction, the first-call column measures "
+     "the remaining wait. Applications that import on demand also pay the import time. The absolute times below "
+     "are candidate medians across workload medians, with each column summarized independently.")
+table(["Workload", "Candidate output", "Import (ms)", "First guest call (ms)", "Time to first result (ms)"], hint_absolute)
+table(["Eager candidate first result at or before release", "Ordinary 1.13.0", "Eager 1.13.0"], hint_release)
+para("Each pair also has a two-sided 95% sign-test interval for its median first-result ratio across "
+     "fresh-browser rounds. The counts below show how often the interval establishes a direction on this machine. "
+     "Coverage applies to each comparison individually.")
+table(["Candidate workload", "Interval favors eager", "Interval includes 1", "Interval favors ordinary"], hint_confidence)
+hint_detail = []
+for demo, (_, label, _) in focus.items():
+    comparison = []
+    for size in ("Small", "Full"):
+        group = [v[2] for (lang, name), v in hint_summaries[size]["candidate"].items() if name == demo]
+        comparison.append(f"{median(group):.2f}×" if group else "—")
+    hint_detail.append([label, *comparison])
+table(["Candidate first result", "Small workload", "Full workload"], hint_detail)
+fig, ax = plt.subplots(figsize=(8, 3.8), layout="constrained")
+ax.axvline(1, linestyle="--", color="#555", linewidth=1)
+for size, offset, color, marker in [("Small", -.16, "#067c77", "o"), ("Full", .16, "#a54f12", "s")]:
+    for i, demo in enumerate(focus):
+        values = [v[2] for (lang, name), v in hint_summaries[size]["candidate"].items() if name == demo]
+        if values:
+            ax.hlines(i + offset, min(values), max(values), color=color, linewidth=2)
+            ax.scatter(median(values), i + offset, color=color, marker=marker, s=32,
+                       label=size if i == 0 else None)
+ax.set_yticks(range(len(focus)), [name for _, name, _ in focus.values()])
+ax.invert_yaxis()
+ax.set_xlabel("Time to first result with hint / ordinary bindings")
+ax.grid(axis="x", alpha=.22)
+ax.set_axisbelow(True)
+ax.legend(loc="upper left", bbox_to_anchor=(1, 1), frameon=False)
+fig.savefig(results / "compile-hint.png", dpi=155)
+plt.close(fig)
+para("![Time to the first result with eager compilation relative to ordinary candidate bindings. "
+     "Each marker shows the median of three languages and the line spans their range.](web/bench/results/compile-hint.png)")
+
 coverage = json.loads((results / "js-coverage.json").read_text())
 if (coverage["sizesSha256"] != run["sizesSha256"] or coverage["workloads"] != run["workloads"] or
         coverage["runnerSha256"] != sha256((bench / "coverage.mjs").read_bytes()).hexdigest()):
@@ -933,6 +1030,12 @@ node web/bench/candidate.mjs --verify-wasm ../jco-candidate
 node web/bench/minified.mjs ../jco-candidate
 CHROME_BIN=/path/to/chrome BENCH_MINIFIED=1 ROUNDS={minified_run['rounds']} node web/bench/browser.mjs
 CHROME_BIN=/path/to/chrome ROUNDS={observer['rounds']} node web/bench/startup-observer.mjs
+CHROME_BIN=/path/to/chrome ROUNDS={hint_rounds['Full']} node web/bench/startup-observer.mjs --compile-hint
+CHROME_BIN=/path/to/chrome ROUNDS={hint_rounds['Small']} node web/bench/startup-observer.mjs --compile-hint --small
+git -C ../jco-candidate switch --detach {eager_commit}
+pnpm -C ../jco-candidate install --frozen-lockfile
+pnpm -C ../jco-candidate --filter @bytecodealliance/jco-transpile run build:ts
+node web/bench/verify-compile-hint.mjs ../jco-candidate
 python3 web/bench/report.py --from-candidate
 python3 web/bench/candidate-report.py
 ```""")

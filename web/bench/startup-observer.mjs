@@ -19,6 +19,19 @@ const full = await readFile(join(results, "candidate-sizes.json"));
 const min = await readFile(join(results, "minified-sizes.json"));
 assert.equal(hash(full), trial.sizesSha256);
 assert.equal(hash(min), trial.minifiedSizesSha256);
+const mode = process.argv.slice(2).join(" ");
+assert(["", "--compile-hint", "--compile-hint --small"].includes(mode), "Expected --compile-hint [--small] or no options");
+const compareHint = mode !== "";
+const small = mode.endsWith("--small");
+// These five guests accept fixed operation counts. The other two adapt their loop count to elapsed time.
+const workloads = small ? {
+  "attribute-churn": { elements: 8, iters: 2 },
+  "canvas-draw": { rects: 16 },
+  "dom-query": { numElements: 8, iters: 2 },
+  "dom-traversal": { depth: 2, numChildren: 2 },
+  "table-update": { rows: 8 },
+} : trial.workloads;
+const hint = Buffer.from("//# allFunctionsCalledOnLoad\n");
 const rounds = Number(process.env.ROUNDS ?? 5);
 assert(Number.isInteger(rounds) && rounds > 0);
 
@@ -30,10 +43,12 @@ for (const [path, digest] of Object.entries(trial.sources)) {
 const minified = JSON.parse(min).components;
 const inventory = JSON.parse(full);
 const builds = [];
+const hintedSources = {};
 for (const { input, variants } of inventory.components) {
   const [lang, demo] = input.path.split("/");
-  if (!Object.hasOwn(trial.workloads, demo) || basename(input.path) !== demo.replaceAll("-", "_") + ".wasm") continue;
+  if (!Object.hasOwn(workloads, demo) || basename(input.path) !== demo.replaceAll("-", "_") + ".wasm") continue;
   for (const [version, files] of Object.entries({ ...variants, ...minified[input.path] })) {
+    if (compareHint && !["baseline", "main", "candidate"].includes(version)) continue;
     const paths = {};
     for (const file of files) {
       const path = "/" + file.path;
@@ -44,9 +59,16 @@ for (const { input, variants } of inventory.components) {
     const scripts = Object.keys(paths).filter(path => path.endsWith(".js"));
     assert.equal(scripts.length, 1);
     builds.push({ lang, demo, version, path: scripts[0], paths });
+    if (compareHint) {
+      const path = scripts[0];
+      const source = await readFile(join(web, path));
+      hintedSources[path] = hash(Buffer.concat([hint, source]));
+      builds.push({ lang, demo, version: version + "-eager", path,
+        paths: { ...paths, [path]: paths[path] + hint.length } });
+    }
   }
 }
-assert.equal(builds.length, Object.keys(trial.workloads).length * 3 * (inventory.reference ? 7 : 6));
+assert.equal(builds.length, Object.keys(workloads).length * 3 * (!compareHint && inventory.reference ? 7 : 6));
 
 // Stringified into a module script in the trial document.
 async function measure({ demo, path, args }) {
@@ -94,12 +116,18 @@ async function runBlock(order, round, attached) {
       }
       if (assets.has(url.pathname)) {
         res.setHeader("Content-Type", assets.get(url.pathname));
-        return res.end(await readFile(join(web, url.pathname)));
+        const bytes = await readFile(join(web, url.pathname));
+        if (url.search === "?eager") {
+          assert(compareHint && Object.hasOwn(hintedSources, url.pathname));
+          return res.end(Buffer.concat([hint, bytes]));
+        }
+        return res.end(bytes);
       }
       if (url.pathname === "/favicon.ico") return res.writeHead(204).end();
       const build = order[position];
       if (req.method === "GET" && url.pathname === "/trial/" + position) {
-        const params = JSON.stringify({ demo: build.demo, path: build.path, args: Object.values(trial.workloads[build.demo]) });
+        const path = build.path + (build.version.endsWith("-eager") ? "?eager" : "");
+        const params = JSON.stringify({ demo: build.demo, path, args: Object.values(workloads[build.demo]) });
         res.setHeader("Content-Type", "text/html");
         return res.end(`<!doctype html><body><script type="module">
           let result;
@@ -180,12 +208,15 @@ async function runBlock(order, round, attached) {
 
 for (let n = 0; n < rounds; n++) {
   const order = builds.map((_, i) => builds[(n + (n % 2 ? -i : i) + builds.length) % builds.length]);
-  for (const attached of n % 2 ? [true, false] : [false, true]) {
+  const modes = compareHint ? [false] : n % 2 ? [true, false] : [false, true];
+  for (const attached of modes) {
     await runBlock(order, n + 1, attached);
     console.log(`Round ${n + 1}/${rounds} · ${attached ? "attached" : "detached"} · ${order.length} documents`);
   }
 }
-await writeFile(join(results, "startup-observer.json"), JSON.stringify({
+const filename = small ? "compile-hint-small.json" : compareHint ? "compile-hint.json" : "startup-observer.json";
+await writeFile(join(results, filename), JSON.stringify({
   date: new Date().toISOString(), browser: browserVersion, cpu: cpus()[0].model, node: process.version, rounds,
-  originalSha256: hash(original), runnerSha256: hash(await readFile(import.meta.filename)), samples,
+  originalSha256: hash(original), runnerSha256: hash(await readFile(import.meta.filename)),
+  ...(compareHint ? { hint: hint.toString(), hintedSources, workloads } : {}), samples,
 }, null, 2) + "\n");
