@@ -13,12 +13,15 @@ const web = join(bench, "..");
 const hash = bytes => createHash("sha256").update(bytes).digest("hex");
 const inventoryBytes = await readFile(join(bench, "results/candidate-sizes.json"));
 const inventory = JSON.parse(inventoryBytes);
-const [checkout, generator, previousRef, previousGenerator, output] = process.argv.slice(2);
-assert(process.argv.length === 2 || process.argv.length === 7,
-  "Use no arguments for the inventory run, or <jco-checkout> <generator> <previous-ref> <previous-generator> <output.json> for paired C canvas timings");
-const versions = checkout ? ["direct", "baseline", "main", "before", "after"] : ["direct", "baseline", "main", "candidate"];
+const args = process.argv.slice(2);
+const isolated = args[0] === "--isolated";
+if (isolated) args.shift();
+const [checkout, generator, previousRef, previousGenerator, output] = args;
+assert((!isolated && args.length === 0) || args.length === 5,
+  "Use no arguments for the inventory run, or [--isolated] <jco-checkout> <generator> <previous-ref> <previous-generator> <output.json> for paired C canvas timings");
+const versions = isolated ? ["before", "after", "control"] : checkout ? ["direct", "baseline", "main", "before", "after"] : ["direct", "baseline", "main", "candidate"];
 const langs = checkout ? ["c"] : ["c", "cpp", "rust"];
-const rounds = Number(process.env.ROUNDS ?? 9);
+const rounds = Number(process.env.ROUNDS ?? (isolated ? 24 : 9));
 assert(Number.isInteger(rounds) && rounds > 0);
 const size = 256;
 const minMs = 10;
@@ -84,18 +87,19 @@ for (const lang of langs) {
       }
     } finally { await rm(staging, { recursive: true, force: true }); }
   }
+  if (isolated) paths[lang].control = paths[lang].before;
   assert.deepEqual(Object.keys(paths[lang]).sort(), [...versions].sort());
 }
 
-async function sample(page, lang, host, round) {
+async function sample(page, lang, host, round, selected = versions) {
   return page.evaluate(async ({ builds, host, round, size, minMs, versions }) => {
     const { getMeasurements } = await import("/examples/canvas-pixels/main.js");
     const { installPixelViews, checkCanvasPixels } = await import("/bench/canvas-host.mjs");
     if (host === "view") installPixelViews();
     const { instantiateDomGuest } = await import("/bench/dom-core-shim.mjs");
-    const direct = await instantiateDomGuest(builds.direct);
+    const direct = versions.includes("direct") ? await instantiateDomGuest(builds.direct) : undefined;
     const guests = { direct };
-    for (const version of versions.slice(1)) guests[version] = await import(builds[version]);
+    for (const version of versions.filter(v => v !== "direct")) guests[version] = await import(builds[version] + (versions.length === 1 ? "?round=" + round + "&slot=" + version : ""));
     const rows = [];
     for (let pass = 0; pass <= 4; pass++) {
       for (let i = 0; i < versions.length; i++) {
@@ -109,12 +113,12 @@ async function sample(page, lang, host, round) {
         const writeUs = times["putImageData(): µs/call"] * 1e6;
         if (![readUs, writeUs].every(v => Number.isFinite(v) && v > 0)) throw Error("Missing guest timing");
         const pixelsChecked = checkCanvasPixels(size);
-        if (direct.counts().liveHandles !== 0) throw Error("Direct guest leaked a resource");
+        if (direct && direct.counts().liveHandles !== 0) throw Error("Direct guest leaked a resource");
         if (pass) rows.push({ pass, version, readUs, writeUs, pixelsChecked });
       }
     }
     return rows;
-  }, { builds: paths[lang], host, round, size, minMs, versions });
+  }, { builds: paths[lang], host, round, size, minMs, versions: selected });
 }
 
 const server = createServer((req, res) => {
@@ -136,12 +140,18 @@ try {
   for (let round = 1; round <= rounds; round++) {
     for (let i = 0; i < langs.length; i++) {
       const lang = langs[(i + round - 1) % langs.length];
-      for (const host of (i + round) % 2 ? ["original", "view"] : ["view", "original"]) {
+      // Across six isolated rounds each build occupies every position twice.
+      // The control loads the before bytes at its own module URL.
+      const order = isolated
+        ? versions.map((_, j) => versions[((round - 1) + (round % 2 ? j : -j) + versions.length) % versions.length])
+        : [undefined];
+      const hosts = isolated ? ["original"] : (i + round) % 2 ? ["original", "view"] : ["view", "original"];
+      for (const host of hosts) for (const version of order) {
         const page = await browser.newPage();
         try {
           await page.setCacheEnabled(false);
           await page.goto("http://127.0.0.1:" + server.address().port);
-          const rows = await sample(page, lang, host, round);
+          const rows = await sample(page, lang, host, round, version ? [version] : versions);
           samples.push(...rows.map(row => ({ round, lang, host, ...row })));
         } finally { await page.close(); }
       }
@@ -151,7 +161,7 @@ try {
   await writeFile(output ?? join(bench, "results/canvas-host.json"), JSON.stringify({
     date: new Date().toISOString(), browser: await browser.version(), cpu: cpus()[0].model,
     runnerSha256: hash(await readFile(import.meta.filename)), sizesSha256: hash(inventoryBytes),
-    sources, candidate: comparison ?? inventory.candidate, rounds, passes: 4, size, minMs, samples,
+    sources, isolated, candidate: comparison ?? inventory.candidate, rounds, passes: 4, size, minMs, samples,
   }, null, 2) + "\n");
 } finally {
   server.close();
