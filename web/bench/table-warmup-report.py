@@ -1,4 +1,4 @@
-"""Compare Rust table creation at the same guest invocation in each browser round."""
+"""Compare table creation at the same guest invocation in each browser round."""
 
 import argparse
 from collections import Counter
@@ -34,12 +34,18 @@ rounds, calls, rows = run["rounds"], run["calls"], run["rows"]
 assert (rounds, calls) == (18, 24)
 assert run["versions"] == versions and run["warmups"] == warmups
 assert run["matrixSha256"] == digest(args.matrix)
-assert run["runnerSha256"] == digest(Path(__file__).with_name("table-warmup.mjs"))
+language = run.get("language", "rust")
+if "language" in run:
+    assert language in {"c", "cpp", "rust"}
+    assert run["runnerSha256"] == digest(Path(__file__).with_name("table-warmup.mjs"))
+else:
+    # The earlier runner always used the Rust component.
+    assert run["runnerSha256"] == "f4dc5d2604cb0bff528b48e4b8af0fa61ad7e1414a9c7f03be421db38179fce7"
 assert run["revision"] == matrix["candidate"] and rows == matrix["workloads"]["table-update"]["rows"]
 paths = {
     s["version"]: sorted(q["path"] for q in s["requests"])
     for s in matrix["samples"]
-    if s["round"] == 0 and s["lang"] == "rust" and s["demo"] == "table-update" and s["version"] in versions
+    if s["round"] == 0 and s["lang"] == language and s["demo"] == "table-update" and s["version"] in versions
 }
 assert sorted(a["version"] for a in run["audits"]) == sorted(versions)
 for audit in run["audits"]:
@@ -84,6 +90,20 @@ for w in warmups:
         values = [times(v, w, i) for v in versions]
         ratios = [ratio(x, values[0]) for x in values[1:]]
         print(w, i + offset + 1, *(f"{median(x):.2f}" for x in values),
+              *(f"{mid:.3f}× ({lo:.3f}–{hi:.3f})" for mid, lo, hi in ratios))
+
+# A slow individual invocation matters in proportion to how much time it
+# adds over a sequence of calls. Sum the timed creation phase within each
+# document before comparing builds in the same browser round.
+print("Prior work, measured calls, summed creation ms and paired ratios")
+for w in warmups:
+    for start in (0, 4):
+        totals = []
+        for v in versions:
+            per_call = [times(v, w, i) for i in range(start, calls)]
+            totals.append([sum(page) for page in zip(*per_call, strict=True)])
+        ratios = [ratio(candidate, totals[0]) for candidate in totals[1:]]
+        print(w, f"{start + 1}–{calls}", *(f"{median(t):.2f}" for t in totals),
               *(f"{mid:.3f}× ({lo:.3f}–{hi:.3f})" for mid, lo, hi in ratios))
 
 if run["timeWeakAdds"]:

@@ -1,4 +1,4 @@
-// Isolate prior work on the DOM from prior calls through the same Rust component.
+// Isolate prior work on the DOM from prior calls through the same guest component.
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
@@ -13,6 +13,8 @@ assert(
   output && !extra.length,
   "Usage: table-warmup.mjs <built Jco checkout> <matrix.json.gz> <output.json.gz> [trace-directory | --time-weak-adds]",
 );
+const language = process.env.GUEST_LANGUAGE ?? "rust";
+assert(["c", "cpp", "rust"].includes(language), "GUEST_LANGUAGE must be c, cpp or rust");
 const timeWeakAdds = mode === "--time-weak-adds";
 const traceDir = timeWeakAdds ? undefined : mode;
 if (traceDir) await mkdir(traceDir, { recursive: true });
@@ -26,7 +28,7 @@ const versions = ["release", "bundled", "external"],
 const treatments = versions.flatMap((version) => warmups.map((warmup) => ({ version, warmup })));
 const cases = matrix.samples.filter(
   (r) =>
-    r.round === 0 && r.lang === "rust" && r.demo === "table-update" && versions.includes(r.version),
+    r.round === 0 && r.lang === language && r.demo === "table-update" && versions.includes(r.version),
 );
 assert.equal(cases.length, versions.length);
 const rows = matrix.workloads["table-update"].rows;
@@ -52,7 +54,7 @@ const map = Object.fromEntries(
 const { transpileBytes } = await import(
   pathToFileURL(resolve(checkout, "packages/jco-transpile/dist/transpile.js"))
 );
-const guest = await readFile(join(web, "rust/table-update/native/table_update.wasm"));
+const guest = await readFile(join(web, language, "table-update/native/table_update.wasm"));
 for (const { version, entry, requests } of cases) {
   entries[version] = entry;
   expected[version] = requests.map((r) => r.path).sort();
@@ -77,7 +79,7 @@ for (const { version, entry, requests } of cases) {
         path,
         files
           ? files[basename(path)]
-          : await readFile(join(web, "rust/table-update/jco-baseline-minified", basename(path))),
+          : await readFile(join(web, language, "table-update/jco-baseline-minified", basename(path))),
       );
     }
   }
@@ -300,6 +302,7 @@ await writeFile(
     JSON.stringify({
       rounds,
       rows,
+      language,
       versions,
       warmups,
       chromium,

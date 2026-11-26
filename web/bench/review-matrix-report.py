@@ -16,6 +16,8 @@ parser.add_argument("--compare-entries", type=Path,
                     help="compare generated JS sizes to a matrix with the same controls, Wasm and runtime assets")
 parser.add_argument("--release-intervals", action="store_true",
                     help="show individual paired median intervals against Jco 1.13.0")
+parser.add_argument("--repeat-of", type=Path,
+                    help="compare release intervals with an earlier run of the exact same builds and workloads")
 args = parser.parse_args()
 with gzip.open(args.input) as source:
     result = json.load(source)
@@ -72,25 +74,31 @@ languages = {"c": "C", "cpp": "C++", "rust": "Rust"}
 versions = ["release", "main", "bundled", "external"]
 has_previous = "previous" in result["compilers"]
 timed_versions = versions + (["previous"] if has_previous else [])
-samples = defaultdict(dict)
-positions = defaultdict(list)
-for row in result["samples"]:
-    key = row["demo"], row["lang"], row["version"]
-    r = row["round"]
-    assert r not in samples[key] and row["firstResultMs"] > row["loadMs"] > 0
-    assert row["cold"].keys() == row["warm"].keys() and focus[row["demo"]][0] in row["warm"]
-    samples[key][r] = row
-    if row["kind"] == "jco":
-        positions[key[:2], r].append((row["position"], row["version"]))
-assert all(set(rows) == set(range(rounds)) for rows in samples.values())
-for demo in focus:
-    for lang in languages:
-        counts = Counter()
-        for r in range(rounds):
-            block = sorted(positions[(demo, lang), r])
-            assert len(block) == len(timed_versions) and block[-1][0] == block[0][0] + len(block) - 1
-            counts.update((index, version) for index, (_, version) in enumerate(block))
-        assert len(counts) == len(timed_versions)**2 and set(counts.values()) == {rounds // len(timed_versions)}
+def index_samples(run):
+    rounds = run["rounds"]
+    samples = defaultdict(dict)
+    positions = defaultdict(list)
+    for row in run["samples"]:
+        key = row["demo"], row["lang"], row["version"]
+        r = row["round"]
+        assert r not in samples[key] and row["firstResultMs"] > row["loadMs"] > 0
+        assert row["cold"].keys() == row["warm"].keys() and focus[row["demo"]][0] in row["warm"]
+        samples[key][r] = row
+        if row["kind"] == "jco":
+            positions[key[:2], r].append((row["position"], row["version"]))
+    assert all(set(rows) == set(range(rounds)) for rows in samples.values())
+    for demo in focus:
+        for lang in languages:
+            counts = Counter()
+            for r in range(rounds):
+                block = sorted(positions[(demo, lang), r])
+                assert len(block) == len(timed_versions) and block[-1][0] == block[0][0] + len(block) - 1
+                counts.update((index, version) for index, (_, version) in enumerate(block))
+            assert len(counts) == len(timed_versions)**2 and set(counts.values()) == {rounds // len(timed_versions)}
+
+    return samples, positions
+
+samples, positions = index_samples(result)
 
 def paired(rows, base, value):
     return median(value(row) / value(base[r]) for r, row in rows.items())
@@ -152,16 +160,15 @@ for v in versions:
             x = stats[v, k]
             threshold = 10 if "shim" in k.lower() else 1
             print(k, sum(y <= threshold for y in x), "/", len(x), "maximum", round(max(x), 3))
-if args.release_intervals or has_previous:
-    # Order-statistic bounds for a two-sided sign test, with at least 95%
-    # individual coverage. Pairs share one timing round within each case.
-    if rounds < 6:
+def median_interval(ratios):
+    # Each browser round contributes one paired observation per build and workload.
+    ordered = sorted(ratios)
+    n = len(ordered)
+    if n < 6:
         parser.error("median intervals require at least six paired rounds")
-    rank = max(i for i in range(rounds) if 2 * sum(comb(rounds,j) for j in range(i+1)) / 2**rounds <= .05)
+    rank = max(i for i in range(n) if 2 * sum(comb(n, j) for j in range(i+1)) / 2**n <= .05)
+    return median(ordered), ordered[rank], ordered[-rank-1]
 
-    def median_interval(ratios):
-        ordered = sorted(ratios)
-        return median(ordered), ordered[rank], ordered[-rank-1]
 
 if args.release_intervals:
     print("\n| Guest and operation | Internal warm / release | External warm / release | Internal first / release | External first / release |")
@@ -183,6 +190,58 @@ if args.release_intervals:
     print("| --- | ---: | ---: | ---: |")
     for (phase,version), counter in counts.items():
         print(f"| {phase} {version} | {counter['faster']} | {counter['includes parity']} | {counter['slower']} |")
+
+if args.repeat_of:
+    with gzip.open(args.repeat_of) as source:
+        initial = json.load(source)
+    # Attribute differences to a new measurement only when the guest, host,
+    # generated assets, workload parameters, runner and environment all match.
+    metadata = set(result) - {"rounds", "samples"}
+    assert set(initial) == set(result)
+    for key in metadata:
+        assert initial[key] == result[key], key
+    prior, _ = index_samples(initial)
+    assert prior.keys() == samples.keys()
+    print("\n| Workload | Build | Phase | Initial / release | Repeat / release |")
+    print("| --- | --- | --- | ---: | ---: |")
+    counts = defaultdict(Counter)
+    first_result_deltas = defaultdict(list)
+    for demo, (metric, title) in focus.items():
+        for lang, label in languages.items():
+            for version in ("bundled", "external"):
+                for phase, value in (("warm", lambda row: row["warm"][metric]),
+                                     ("first result", lambda row: row["firstResultMs"]),
+                                     ("import", lambda row: row["loadMs"]),
+                                     ("first call", lambda row: row["firstResultMs"] - row["loadMs"])):
+                    estimates = []
+                    for run in (prior, samples):
+                        rows = run[demo, lang, version]
+                        control = run[demo, lang, "release"]
+                        estimates.append(median_interval(value(row) / value(control[r]) for r, row in rows.items()))
+                    first, second = estimates
+                    counts[phase, version]["initial"] += first[1] > 1
+                    counts[phase, version]["repeat"] += second[1] > 1
+                    counts[phase, version]["both"] += first[1] > 1 and second[1] > 1
+                    if phase == "first result" and first[1] > 1 and second[1] > 1:
+                        rows = samples[demo, lang, version]
+                        control = samples[demo, lang, "release"]
+                        total = [row["firstResultMs"] - control[r]["firstResultMs"] for r, row in rows.items()]
+                        load = [row["loadMs"] - control[r]["loadMs"] for r, row in rows.items()]
+                        guest = [t - l for t, l in zip(total, load, strict=True)]
+                        first_result_deltas[version].append((median(total), median(load), median(guest)))
+                    cells = [f"{mid:.3f}× ({lo:.3f}–{hi:.3f})" for mid, lo, hi in estimates]
+                    print("|", " | ".join([label + " " + title, version, phase, *cells]), "|")
+    print("\n| Phase and build | Slower in initial run | Slower in repeat | Slower in both |")
+    print("| --- | ---: | ---: | ---: |")
+    for (phase, version), counts_by_run in counts.items():
+        print(f"| {phase} {version} | {counts_by_run['initial']} | {counts_by_run['repeat']} | {counts_by_run['both']} |")
+
+    print("Repeat, median paired difference in ms for workloads slower to first result in both runs")
+    print("| Build | Workloads | First result | Import and initialization | First guest call |")
+    print("| --- | ---: | ---: | ---: | ---: |")
+    for version, workload_medians in first_result_deltas.items():
+        columns = [median(times) for times in zip(*workload_medians, strict=True)]
+        print("|", version, "|", len(workload_medians), "|", " | ".join(f"{ms:+.2f}" for ms in columns), "|")
 
 if has_previous:
     assert result["checkedPackage"] == "@bytecodealliance/jco-cm-runtime"
