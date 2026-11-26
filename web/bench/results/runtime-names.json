@@ -1,0 +1,355 @@
+{
+  "previousBenchmark": "bd6eb358c6c106711f5e75022a1498d1051f8989",
+  "reference": "165324dda277eef1407d43b80c19401c2d7de37c",
+  "candidate": "5c6ddda44bce1730a61a69f2d48db94e3065ca31",
+  "previousHashes": {
+    "default": "022ea6d1fb3e2bf0095cc0b0801d99f9c3db640e77ab9e39835246df1302466c",
+    "minified": "5e41d3282ff014035a2a1ccbeac4e7dae092df0ec69a40947625f4c4fbb6f2d3"
+  },
+  "currentHashes": {
+    "default": "365af8ce945d519747466ba78bc8785cf739c4e3f44e9c8e430285168ee14f68",
+    "minified": "79315d6d3e97861a120ccf872d70c5b51c3b228a69a0bdcfd206dd310b7b227a"
+  },
+  "inputs": [
+    {
+      "input": "c/attribute-churn/native/attribute_churn.wasm",
+      "occurrences": 298,
+      "coreFiles": 1,
+      "minifiedSavings": {
+        "bytes": 3689,
+        "gzip": 166,
+        "brotli": 91
+      }
+    },
+    {
+      "input": "c/calculator/native/calculator.wasm",
+      "occurrences": 239,
+      "coreFiles": 0,
+      "minifiedSavings": {
+        "bytes": 2822,
+        "gzip": 101,
+        "brotli": 92
+      }
+    },
+    {
+      "input": "c/canvas-draw/native/canvas_draw.wasm",
+      "occurrences": 298,
+      "coreFiles": 1,
+      "minifiedSavings": {
+        "bytes": 3689,
+        "gzip": 152,
+        "brotli": 106
+      }
+    },
+    {
+      "input": "c/canvas-pixels/native/canvas_pixels.wasm",
+      "occurrences": 320,
+      "coreFiles": 1,
+      "minifiedSavings": {
+        "bytes": 4063,
+        "gzip": 180,
+        "brotli": 114
+      }
+    },
+    {
+      "input": "c/dom-query/native/dom_query.wasm",
+      "occurrences": 300,
+      "coreFiles": 1,
+      "minifiedSavings": {
+        "bytes": 3723,
+        "gzip": 156,
+        "brotli": 118
+      }
+    },
+    {
+      "input": "c/dom-traversal/native/dom_traversal.wasm",
+      "occurrences": 298,
+      "coreFiles": 1,
+      "minifiedSavings": {
+        "bytes": 3689,
+        "gzip": 154,
+        "brotli": 134
+      }
+    },
+    {
+      "input": "c/greet-bindgen/native/greet.wasm",
+      "occurrences": 269,
+      "coreFiles": 1,
+      "minifiedSavings": {
+        "bytes": 3298,
+        "gzip": 115,
+        "brotli": 70
+      }
+    },
+    {
+      "input": "c/greet-freestanding/native/greet.wasm",
+      "occurrences": 251,
+      "coreFiles": 0,
+      "minifiedSavings": {
+        "bytes": 2992,
+        "gzip": 105,
+        "brotli": 103
+      }
+    },
+    {
+      "input": "c/greet-libc/native/greet.wasm",
+      "occurrences": 269,
+      "coreFiles": 1,
+      "minifiedSavings": {
+        "bytes": 3298,
+        "gzip": 115,
+        "brotli": 70
+      }
+    },
+    {
+      "input": "c/hello-world/native/hello_world.wasm",
+      "occurrences": 292,
+      "coreFiles": 1,
+      "minifiedSavings": {
+        "bytes": 3587,
+        "gzip": 147,
+        "brotli": 124
+      }
+    },
+    {
+      "input": "c/string-marshalling/native/string_marshalling.wasm",
+      "occurrences": 319,
+      "coreFiles": 1,
+      "minifiedSavings": {
+        "bytes": 3944,
+        "gzip": 182,
+        "brotli": 129
+      }
+    },
+    {
+      "input": "c/table-update/native/table_update.wasm",
+      "occurrences": 319,
+      "coreFiles": 1,
+      "minifiedSavings": {
+        "bytes": 3944,
+        "gzip": 189,
+        "brotli": 102
+      }
+    },
+    {
+      "input": "cpp/attribute-churn/native/attribute_churn.wasm",
+      "occurrences": 298,
+      "coreFiles": 1,
+      "minifiedSavings": {
+        "bytes": 3689,
+        "gzip": 161,
+        "brotli": 100
+      }
+    },
+    {
+      "input": "cpp/canvas-draw/native/canvas_draw.wasm",
+      "occurrences": 298,
+      "coreFiles": 1,
+      "minifiedSavings": {
+        "bytes": 3689,
+        "gzip": 149,
+        "brotli": 103
+      }
+    },
+    {
+      "input": "cpp/canvas-pixels/native/canvas_pixels.wasm",
+      "occurrences": 320,
+      "coreFiles": 1,
+      "minifiedSavings": {
+        "bytes": 4063,
+        "gzip": 182,
+        "brotli": 92
+      }
+    },
+    {
+      "input": "cpp/dom-query/native/dom_query.wasm",
+      "occurrences": 300,
+      "coreFiles": 1,
+      "minifiedSavings": {
+        "bytes": 3723,
+        "gzip": 149,
+        "brotli": 110
+      }
+    },
+    {
+      "input": "cpp/dom-traversal/native/dom_traversal.wasm",
+      "occurrences": 298,
+      "coreFiles": 1,
+      "minifiedSavings": {
+        "bytes": 3689,
+        "gzip": 149,
+        "brotli": 131
+      }
+    },
+    {
+      "input": "cpp/hello-world/native/hello_world.wasm",
+      "occurrences": 292,
+      "coreFiles": 1,
+      "minifiedSavings": {
+        "bytes": 3587,
+        "gzip": 144,
+        "brotli": 108
+      }
+    },
+    {
+      "input": "cpp/string-marshalling/native/string_marshalling.wasm",
+      "occurrences": 319,
+      "coreFiles": 1,
+      "minifiedSavings": {
+        "bytes": 3944,
+        "gzip": 184,
+        "brotli": 98
+      }
+    },
+    {
+      "input": "cpp/table-update/native/table_update.wasm",
+      "occurrences": 319,
+      "coreFiles": 1,
+      "minifiedSavings": {
+        "bytes": 3944,
+        "gzip": 188,
+        "brotli": 108
+      }
+    },
+    {
+      "input": "rust/attribute-churn/native/attribute_churn.wasm",
+      "occurrences": 296,
+      "coreFiles": 1,
+      "minifiedSavings": {
+        "bytes": 3655,
+        "gzip": 162,
+        "brotli": 100
+      }
+    },
+    {
+      "input": "rust/calculator-raw/native/calculator.wasm",
+      "occurrences": 241,
+      "coreFiles": 1,
+      "minifiedSavings": {
+        "bytes": 2856,
+        "gzip": 99,
+        "brotli": 103
+      }
+    },
+    {
+      "input": "rust/calculator/native/calculator.wasm",
+      "occurrences": 241,
+      "coreFiles": 1,
+      "minifiedSavings": {
+        "bytes": 2856,
+        "gzip": 99,
+        "brotli": 103
+      }
+    },
+    {
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "occurrences": 296,
+      "coreFiles": 1,
+      "minifiedSavings": {
+        "bytes": 3655,
+        "gzip": 155,
+        "brotli": 152
+      }
+    },
+    {
+      "input": "rust/canvas-pixels/native/canvas_pixels.wasm",
+      "occurrences": 318,
+      "coreFiles": 1,
+      "minifiedSavings": {
+        "bytes": 4029,
+        "gzip": 174,
+        "brotli": 125
+      }
+    },
+    {
+      "input": "rust/dom-query/native/dom_query.wasm",
+      "occurrences": 298,
+      "coreFiles": 1,
+      "minifiedSavings": {
+        "bytes": 3689,
+        "gzip": 155,
+        "brotli": 107
+      }
+    },
+    {
+      "input": "rust/dom-traversal/native/dom_traversal.my.component.wasm",
+      "occurrences": 298,
+      "coreFiles": 1,
+      "minifiedSavings": {
+        "bytes": 3689,
+        "gzip": 154,
+        "brotli": 103
+      }
+    },
+    {
+      "input": "rust/dom-traversal/native/dom_traversal.wasm",
+      "occurrences": 298,
+      "coreFiles": 1,
+      "minifiedSavings": {
+        "bytes": 3689,
+        "gzip": 155,
+        "brotli": 66
+      }
+    },
+    {
+      "input": "rust/hello-world/native/hello_world.wasm",
+      "occurrences": 290,
+      "coreFiles": 1,
+      "minifiedSavings": {
+        "bytes": 3553,
+        "gzip": 146,
+        "brotli": 78
+      }
+    },
+    {
+      "input": "rust/string-marshalling/native/string_marshalling.wasm",
+      "occurrences": 317,
+      "coreFiles": 1,
+      "minifiedSavings": {
+        "bytes": 3910,
+        "gzip": 186,
+        "brotli": 112
+      }
+    },
+    {
+      "input": "rust/table-rows/native/table_rows.wasm",
+      "occurrences": 296,
+      "coreFiles": 1,
+      "minifiedSavings": {
+        "bytes": 3655,
+        "gzip": 155,
+        "brotli": 176
+      }
+    },
+    {
+      "input": "rust/table-update/native/table_update.wasm",
+      "occurrences": 319,
+      "coreFiles": 1,
+      "minifiedSavings": {
+        "bytes": 3944,
+        "gzip": 188,
+        "brotli": 144
+      }
+    },
+    {
+      "input": "rust/todomvc/native/todomvc.wasm",
+      "occurrences": 290,
+      "coreFiles": 1,
+      "minifiedSavings": {
+        "bytes": 3553,
+        "gzip": 142,
+        "brotli": 119
+      }
+    },
+    {
+      "input": "rust/vdom-diff/native/vdom_diff.wasm",
+      "occurrences": 296,
+      "coreFiles": 1,
+      "minifiedSavings": {
+        "bytes": 3655,
+        "gzip": 149,
+        "brotli": 132
+      }
+    }
+  ]
+}

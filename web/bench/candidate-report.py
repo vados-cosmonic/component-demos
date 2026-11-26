@@ -176,7 +176,7 @@ para(f"The branch uses js-component-bindgen’s internal Oxc bundler and the che
      f"[Measured Jco commit `{commit[:9]}`](https://github.com/vados-cosmonic/jco/commit/{commit}) · "
      "[Canvas host comparison](#canvas-pixel-transfers-with-the-same-guest-binary) · "
      "[Payload and startup](#payload-and-startup) · [First guest result](#time-to-the-first-guest-result) · "
-     "[Wasm startup timing](#where-startup-time-goes) · [Module initialization](#direct-module-initialization) · "
+     "[Wasm startup timing](#where-startup-time-goes) · [Startup by revision](#startup-against-the-previous-branch) · "
      "[Eager compilation](#eager-javascript-compilation) · [Reproduction commands](#reproduce-the-candidate-run)")
 para(f"All Jco builds used the same guest binaries. Each value is the median of "
      f"{run['rounds']} fresh-page samples with one warm-up per page. The run collected {len(run['samples'])} "
@@ -232,9 +232,10 @@ para("Resource drops check the instance flag and record traps. When lifting a bo
      "the adapter validates the handle and reads its 32-bit representation directly. Imported host resources with automatically "
      "assigned representations use their guest handle as an array index. Explicit host representations and shared tables use a "
      "representation map. Components with async operations, cross-component resource transfers or call tracking use the general adapter.")
-para("Earlier runs measured the removal of asynchronous runtime code from synchronous components. "
+para("Earlier runs measured how the linker handles runtime dependencies and initializes module state. "
      "[Subtask constructors](https://github.com/vados-cosmonic/component-demos/blob/255eca61b14b5ab63567da558b5f561149cc5163/README.md#change-from-the-previous-branch-revision) · "
-     "[Future and waitable constructors](https://github.com/vados-cosmonic/component-demos/blob/c25f90d93af43e9261dff31b186d5b01115e8a0f/README.md#change-from-the-previous-branch-revision)")
+     "[Future and waitable constructors](https://github.com/vados-cosmonic/component-demos/blob/c25f90d93af43e9261dff31b186d5b01115e8a0f/README.md#change-from-the-previous-branch-revision) · "
+     "[Direct module initialization](https://github.com/vados-cosmonic/component-demos/blob/bd6eb358c6c106711f5e75022a1498d1051f8989/README.md#direct-module-initialization)")
 para("</details>")
 if reference:
     ref = reference["commit"]
@@ -816,6 +817,7 @@ para(f"Compared with 1.13.0, the candidate’s median paired difference was **{w
 para("Each instant on a page counts once, including when several compile calls overlap. Pending calls measure "
      "elapsed wall time and can include fetching a module, scheduling and JavaScript running on the same page. "
      "The time from the entry script’s response to the first Wasm call also includes loading its dependencies. "
+     "Instrumented pages copy the interval records after import readiness and before calling the guest. "
      "Columns are medians across workload medians and can sum to a different value from the median import. "
      "[Call intervals and ordinary control samples](web/bench/results/wasm-startup.json)")
 
@@ -985,8 +987,35 @@ plt.close(fig)
 para("![Time to the first result with eager compilation relative to ordinary candidate bindings. "
      "Each marker shows the median of three languages and the line spans their range.](web/bench/results/compile-hint.png)")
 
+name_path = results / "runtime-names.json"
+name_check = json.loads(name_path.read_bytes()) if name_path.is_file() else None
+if name_check and (not reference or (name_check["candidate"], name_check["reference"]) != (commit, ref)):
+    name_check = None
+if name_check:
+    para("### Shorter private runtime names")
+    para("The Oxc linker prefixes private module-scope runtime names to avoid collisions with component bindings. "
+         "The candidate uses `$cm$` and adds another dollar sign if a component already uses the prefix. "
+         "Intrinsic names remain visible in stack traces. Public exports retain their original names.")
+    if (name_check["currentHashes"] != {"default": run["sizesSha256"], "minified": minified_run["minifiedSizesSha256"]}
+            or {r["input"] for r in name_check["inputs"]} != {c["input"]["path"] for c in sizes["components"]}):
+        raise ValueError("Private-name verification did not use the measured inventories")
+    name_inputs = name_check["inputs"]
+    para(f"Across {len(name_inputs)} inputs the verifier found "
+         f"{sum(r['occurrences'] for r in name_inputs):,} occurrences of the old prefix. Replacing just those bytes "
+         "reproduced every default JavaScript file. All external core modules matched. The packaged minifier "
+         "preserves function names, so the shorter prefix can also reduce minified payloads. The table compares "
+         "the recorded minified files for the same guest binaries. "
+         f"[Previous minified inventory](https://github.com/vados-cosmonic/component-demos/blob/{name_check['previousBenchmark']}/web/bench/results/minified-sizes.json) · "
+         "[Per-input verification](web/bench/results/runtime-names.json)")
+    minified_savings = []
+    for field, label in (("bytes", "Uncompressed"), ("gzip", "Gzip"), ("brotli", "Brotli")):
+        differences = [r["minifiedSavings"][field] for r in name_inputs]
+        minified_savings.append([label, f"{min(differences):,.0f}", f"{median(differences):,.1f}".removesuffix(".0"),
+                                 f"{max(differences):,.0f}", f"{sum(d > 0 for d in differences)}/{len(differences)}"])
+    table(["Minified payload", "Smallest saving (bytes)", "Median saving (bytes)", "Largest saving (bytes)", "Smaller outputs"],
+          minified_savings)
 if reference:
-    para("### Direct module initialization")
+    para("### Startup against the previous branch")
     para(f"The same detached runs included ordinary output from the previous generator `{reference['commit'][:9]}`. "
          "The table compares the two default builds, using the same component binaries and workload arguments in each round. "
          "For each language/workload pair, it divides candidate time by previous time and takes the median across rounds. "
@@ -1084,6 +1113,7 @@ reference_setup = (
     f"git -C ../jco-candidate worktree add --detach ../jco-reference {reference['commit']}\n"
     "node web/bench/candidate.mjs --reference ../jco-reference\n" if reference else ""
 )
+verify_names = f"python3 web/bench/verify-runtime-names.py {name_check['previousBenchmark']}\n" if name_check else ""
 para(f"""```sh
 git clone https://github.com/vados-cosmonic/jco ../jco-candidate
 git -C ../jco-candidate checkout {commit}
@@ -1099,7 +1129,7 @@ pnpm -C ../jco-candidate install --frozen-lockfile
 pnpm -C ../jco-candidate --filter @bytecodealliance/jco-transpile run build
 node web/bench/candidate.mjs --verify-wasm ../jco-candidate
 node web/bench/minified.mjs ../jco-candidate
-CHROME_BIN=/path/to/chrome BENCH_MINIFIED=1 ROUNDS={minified_run['rounds']} node web/bench/browser.mjs
+{verify_names}CHROME_BIN=/path/to/chrome BENCH_MINIFIED=1 ROUNDS={minified_run['rounds']} node web/bench/browser.mjs
 CHROME_BIN=/path/to/chrome ROUNDS={observer['rounds']} node web/bench/startup-observer.mjs
 CHROME_BIN=/path/to/chrome ROUNDS={wasm_trial['rounds']} node web/bench/startup-observer.mjs --wasm-timing
 CHROME_BIN=/path/to/chrome ROUNDS={hint_rounds['Full']} node web/bench/startup-observer.mjs --compile-hint

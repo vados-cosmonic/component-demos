@@ -58,7 +58,7 @@ function usedBytes(entry, from = 0, to = entry.text.length) {
 function runtimeFactories(entry) {
   const factories = [];
   for (const fn of entry.rawScriptCoverage.functions) {
-    const name = /^__jcoEmbeddedRuntime\$define([A-Z]\w*)$/.exec(fn.functionName)?.[1];
+    const name = /^(?:__jcoEmbeddedRuntime|\$cm)\$+define([A-Z]\w*)$/.exec(fn.functionName)?.[1];
     if (!name) continue;
     const { startOffset, endOffset } = fn.ranges[0];
     assert(0 <= startOffset && startOffset < endOffset && endOffset <= entry.text.length);
