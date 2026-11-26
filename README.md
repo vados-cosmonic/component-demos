@@ -2,7 +2,64 @@
 
 This fork benchmarks the browser examples from [eqrion/component-demos at d0b9dd1](https://github.com/eqrion/component-demos/tree/d0b9dd1390a300978193adc623838fef4e4b632b). It runs the same compiled C, C++, and Rust WebAssembly components through jco 1.13.0, pinned upstream main, and a branch that optimizes synchronous host imports and numeric guest exports. The comparison also includes the demos’ JavaScript, Emscripten (Embind and EM_JS), and Rust wasm-bindgen implementations where available.
 
-## Minified bindings at the PR head
+## Browser bindings at e12260509
+
+The PR uses the same checked synchronous host adapter in the internal Oxc bundle and the external `jco-cm-runtime` package. The table compares minified output with Jco 1.13.0 and the upstream main compiler at `326f52ab4`. Each of 12 Chromium rounds ran the seven demos in C, C++ and Rust, together with their available compiled shims. Lower times and ratios are better. [Fork PR](https://github.com/vados-cosmonic/jco/pull/62) · [Pinned upstream CI build](https://github.com/bytecodealliance/jco/actions/runs/45795485943) · [Raw measurements, asset sizes and compiler hashes](web/bench/results/review-matrix-minified-e12260509.json.gz)
+
+| Median across 21 demo and language pairs | Entry JS (KiB) | Total JS (KiB) | Total JS, gzip¹ (KiB) | JS requests | Import (ms) | First result including import (ms) |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Jco 1.13.0 | 9.58 | 9.58 | 3.01 | 1 | 5.05 | 58.94 |
+| Upstream main | 111.34 | 111.34 | 25.42 | 1 | 12.29 | 205.04 |
+| PR internal Oxc | 71.40 | 71.40 | 18.91 | 1 | 9.66 | 63.51 |
+| PR external checked | 25.06 | 123.98 | 40.55 | 19 | 22.53 | 76.78 |
+
+¹ Sum of the gzipped JS asset sizes. The timing run served uncompressed assets over loopback.
+
+| Warm guest operation | Internal Oxc | External checked |
+| --- | ---: | ---: |
+| Within 10× of the fastest compiled shim | 21/21 | 21/21 |
+| At least as fast as upstream main | 19/21 | 21/21 |
+| At least as fast as Jco 1.13.0 | 16/21 | 16/21 |
+| Comparable subphases within 10× of the fastest compiled shim | 81/84 | 81/84 |
+| Largest warm headline ratio to the fastest shim | 5.03× | 5.21× |
+
+The second guest invocation supplies the warm measurement. The individual 95% intervals were entirely slower than 1.13.0 in two external cases, C table creation (1.20×) and C++ table creation (1.10×). The internal renderer had zero such cases. For time to first result, 5 internal and 15 external intervals were entirely slower than release. [Equal-work DOM query comparison](#materializing-bulk-dom-query-results) · [Later warm invocations](#warm-table-creation-and-tree-traversal)
+
+![Warm guest operations relative to the fastest compiled shim and Jco 1.13.0, and first full result relative to Jco 1.13.0.](web/bench/results/review-matrix-minified-e12260509.png)
+
+### Cost of one synchronous export that calls back into the host
+
+The latest change removes a mutable Wasm global used by suspending adapters. Bindgen already knows when a single-instance component has only synchronous calls. In that case there is no reader for the register, so bindgen can omit the allocation and the write on every export call. The ordinary task still handles entry, traps and exit. A custom runtime can observe task operations and keeps the full path. [Code, eligibility check and tests](https://github.com/vados-cosmonic/jco/commit/e12260509a95f602a8a62399c973954c3993360a)
+
+Compared with the earlier minified matrix at `db4a3aca0`, all 21 internal entries shrank by 309–314 bytes and all 21 external entries by 121–124 bytes. Every separately served Wasm core matched the earlier hash.
+
+A small guest export takes an integer, calls a JS host function once and returns its result. Each of 18 fresh Chromium pages ran all six configurations on identical core Wasm. A separate instantiation on each page counted allocations. Each timing comes from an instance created with the native global constructor. Individual timing intervals use one paired median ratio per page. [Raw samples](web/bench/results/export-task-register-e12260509.json.gz) · [Measured runner](https://github.com/vados-cosmonic/component-demos/blob/76a0fd0/web/bench/export-task-register.mjs)
+
+| Renderer | Wasm globals allocated before → after | Minified entry bytes saved (gzip) | Time after / before (95% interval) | Time after / 1.13.0 | Time after / direct Wasm |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Internal Oxc | 1 → 0 | 286 (90) | 1.053× (0.834–1.194) | 37.31× | 44.61× |
+| External checked | 1 → 0 | 98 (43) | 0.974× (0.917–1.162) | 37.10× | 43.64× |
+
+Both timing intervals include parity. The measured gain from removing the register is in allocations and bytes. This round trip still cost about 2.33 µs in both renderers, versus 62.9 ns on 1.13.0 and 50.0 ns calling direct Wasm. A demo that makes many host calls inside one guest invocation amortizes the export task over the loop. A small export called repeatedly from JS pays for a task on every invocation.
+
+<details><summary>Reproduce the PR-head measurements</summary>
+
+Follow the [matrix setup](#full-demo-matrix-on-the-merged-pr) to prepare the component binaries and install the benchmark dependencies. Build the PR at `e12260509` and its parent at `ee0d0ff26`, including the bindgen compiler used by the transpiler. Stage the upstream artifacts using CI run `45795485943` and verify its head SHA is `326f52ab4403466b21b989c995f9bb97b2b9e038`. The runner records the common Git base, compiler artifact hashes and the SHA-256 of each served asset.
+
+```sh
+export CHROME_BIN=/path/to/chrome
+ROUNDS=12 node web/bench/review-matrix.mjs "$jco" "$stage" /tmp/matrix.json.gz --minify-checked
+python3 web/bench/review-matrix-report.py /tmp/matrix.json.gz --release-intervals --plot /tmp/matrix.png
+node web/bench/export-task-register.mjs "$parent/packages/jco-transpile" \
+  "$jco/packages/jco-transpile" "$jco/packages/jco-cm-runtime/dist" /tmp/register.json.gz
+python3 web/bench/export-task-register-report.py /tmp/register.json.gz
+```
+
+</details>
+
+<a id="minified-bindings-at-the-pr-head"></a>
+
+## Minified external diagnostics at db4a3aca0
 
 At `db4a3aca0`, the external JavaScript entry shrank **15.0–17.9% on every workload** when generated with `--minify --cm-runtime-es-module @bytecodealliance/jco-cm-runtime`. The standard checked package exports an empty logger. Removing its labeled calls before minification also removes their message strings and argument construction. The internal Oxc bundle already removes these calls. Custom and debug provider paths keep them. [Jco implementation, runtime notes and tests](https://github.com/vados-cosmonic/jco/commit/db4a3aca05eb0745561cced24e2407713831074e) · [Fork PR](https://github.com/vados-cosmonic/jco/pull/62)
 
