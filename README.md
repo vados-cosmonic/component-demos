@@ -51,6 +51,37 @@ python3 web/bench/review-matrix-report.py /tmp/matrix.json.gz --release-interval
 
 </details>
 
+### External runtime startup on HTTP/1.1 and HTTP/2
+
+Across six small DOM workloads, building the external entries together reduced first-result time by **44% on HTTP/1.1** and **44% on HTTP/2** relative to loading the checked package directly. The application bundle uses the same generated inputs and guest Wasm. The improvement held in 6/6 and 6/6 individual 95% paired intervals, respectively. [Request traces, timings and asset hashes](web/bench/results/runtime-chunks-6a00c9e7d.json.gz)
+
+| Build | JS requests | Total JS (KiB) | Gzipped JS (KiB) | HTTP/1.1 first result (ms) | HTTP/2 first result (ms) |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Jco 1.13.0 | 1 | 9.71 | 3.07 | 14.73 | 15.01 |
+| Internal Oxc | 1 | 71.87 | 19.13 | 26.59 | 26.85 |
+| External, shipped package | 19 | 124.33 | 40.72 | 50.61 | 50.39 |
+| External, grouped package | 12 | 122.87 | 36.40 | 42.48 | 43.46 |
+| External, six-entry application bundle | 2 | 71.02 | 20.37 | 28.02 | 28.12 |
+
+Each time is the median of six workload medians. The percentages above pair treatments within workload and round first. Gzip is the sum of individually compressed JS assets. Both protocols served uncompressed responses over TLS on loopback. For the demos, the timer starts after document navigation and host setup, immediately before importing the component. It ends after the first guest call.
+
+The grouped-package experiment put code used by four or more package entries into one common chunk. It preserved all public export names and reduced demo runtime requests from 18 to 11. The same policy increased the download for a standalone numeric conversion from **2.71 KiB to 91.04 KiB**. Its median first result rose from 7.02 to 12.16 ms on HTTP/2. Application bundling lets a deployment optimize the components it loads together while retaining the smaller standalone import for other consumers. The runtime guide includes a two-entry configuration verified by loading both components independently in Chromium. [Browser build recipe](https://github.com/vados-cosmonic/jco/blob/a23e39602cb09c7cf55aefd23defcb43d3229f02/packages/jco-cm-runtime/docs/runtime.md#L197)
+
+![Ratios to the shipped external runtime for six DOM workloads and an isolated conversion import. Error bars show individual 95% intervals.](web/bench/results/runtime-chunks-6a00c9e7d.png)
+
+<details><summary>Reproduce the transport and package comparison</summary>
+
+Use the built checkout at `6a00c9e7d`, Chromium, and OpenSSL. The runner creates an ephemeral loopback TLS certificate and pins its key in the test browser. It checks the negotiated protocol and exact transferred asset list on each document. Each of 20 fresh Chromium processes runs all treatments in balanced order, with a fresh document and HTTP caching disabled for every observation. The six workloads are the C, C++ and Rust DOM-query and table demos with eight elements or rows.
+
+```sh
+export CHROME_BIN=/path/to/chrome
+matrix=web/bench/results/review-matrix-minified-6a00c9e7d.json.gz
+node web/bench/runtime-chunks.mjs "$after" "$matrix" /tmp/chunks.json.gz
+python3 web/bench/runtime-chunks-report.py /tmp/chunks.json.gz "$matrix" --plot /tmp/chunks.png
+```
+
+</details>
+
 ## Browser bindings at 89d7306a9
 
 A task normally records its scope ID in a map so that dropping a borrowed handle can find the owning task. For a synchronous component that cannot create a borrowed handle, the checked compiler can prove that this lookup has no reader. The internal Oxc bundle and external runtime both skip the map insertion and deletion. They still assign a distinct scope ID to each task. Borrowed export arguments, cross-instance transfers and custom providers retain registration. [Runtime implementation and tests](https://github.com/vados-cosmonic/jco/commit/4b02f2fc1) · [Custom-provider compatibility](https://github.com/vados-cosmonic/jco/commit/8e64ebfdf)
