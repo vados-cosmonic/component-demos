@@ -2,6 +2,8 @@
 
 This fork benchmarks the browser examples from [eqrion/component-demos at d0b9dd1](https://github.com/eqrion/component-demos/tree/d0b9dd1390a300978193adc623838fef4e4b632b). It runs the same compiled C, C++, and Rust WebAssembly components through jco 1.13.0, pinned upstream main, and a branch that optimizes synchronous host imports and numeric guest exports. The comparison also includes the demos’ JavaScript, Emscripten (Embind and EM_JS), and Rust wasm-bindgen implementations where available.
 
+The current PR head is `95e8ae0d8`. Its minified browser entries and Wasm match the full minified comparison. The slowest of the 21 warm headlines took 5.51× the fastest compiled shim’s time internally and 5.39× externally. Each build matched or beat Jco 1.13.0 on 14 of 21. [Minified results](#minified-browser-bindings) · [Changes since the timing run](#unused-task-and-resource-imports) · [Canvas readback at the PR head](#canvas-readback-at-the-pr-head)
+
 ## Browser bindings at the PR head
 
 In the full timing run at `b731ebc91`, both the internal Oxc bundle and the external checked runtime stayed within 10× of the fastest compiled shim in **all 21 warm headline cases**. Tree traversal had the largest gap. The internal bundle took **5.50×** the shim’s time for the C guest, and the external runtime took **5.78×** for Rust. Cold startup and Jco 1.13.0 parity remain open. [Jco fork PR](https://github.com/vados-cosmonic/jco/pull/62) · [Minified builds](#minified-browser-bindings) · [Equal-work bulk queries](#materializing-bulk-dom-query-results) · [External runtime packaging](#packaging-the-external-runtime-for-browsers) · [Warmed tables and traversal](#warm-table-creation-and-tree-traversal)
@@ -60,6 +62,43 @@ Use Jco revision `b731ebc91` for the PR checkout in the [full-matrix setup](#ful
 ```sh
 python3 web/bench/review-matrix-report.py web/bench/results/review-matrix-b731ebc91.json.gz \
   --plot /tmp/review-matrix-b731ebc91.png
+```
+
+</details>
+
+## Canvas readback at the PR head
+
+For C, C++ and Rust, **95.9–96.1%** of the measured read time in both PR builds was spent inside the demo host method. It calls Chromium’s `getImageData` and copies the pixels into a fresh JavaScript byte array. With the ordinary host, the paired medians were 0.95–1.09× the time of Jco 1.13.0. All six individual intervals included parity. The widest was 0.97–2.43× for external C++. [Demo host](web/host/web-host.js) · [Timing observer](web/bench/canvas-readback.mjs)
+
+The replay control returns each build’s own warm-up pixels. It still sends 123,904 bytes through the same binding and guest allocator on every read. Median replay times were 5.1–6.1 µs for the PR builds. External C++ took 1.06× the release time (individual 95% interval 1.02–1.12×). The five other PR intervals included parity. [Browser runner](web/bench/canvas-bindings.mjs) · [Raw samples and asset hashes](web/bench/results/canvas-bindings.json.gz)
+
+![Canvas read time relative to Jco 1.13.0 for three guest languages, using either the original browser host or a replayed pixel snapshot. The panels have separate time-ratio scales.](web/bench/results/canvas-bindings.png)
+
+<details><summary>Read times, paired median intervals and reproduction</summary>
+
+| Guest | Build | Original read (µs) | Original / 1.13.0 | Inside host (%) | Outside host (µs) | Replay read (µs) | Replay / 1.13.0 |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| C | Direct shim | 338.4 | 1.00× (0.85–1.07) | 96.7 | 13.0 | 4.8 | 0.94× (0.90–0.99) |
+| C | Jco 1.13.0 | 325.6 | 1.00× (1.00–1.00) | 96.2 | 13.1 | 5.1 | 1.00× (1.00–1.00) |
+| C | Internal Oxc | 329.5 | 0.96× (0.85–1.15) | 96.1 | 13.4 | 5.1 | 1.05× (0.97–1.13) |
+| C | External runtime | 321.7 | 0.95× (0.82–1.10) | 96.0 | 13.6 | 5.5 | 1.08× (0.98–1.14) |
+| C++ | Direct shim | 314.8 | 0.99× (0.84–1.15) | 96.5 | 11.1 | 5.0 | 0.89× (0.86–0.96) |
+| C++ | Jco 1.13.0 | 315.5 | 1.00× (1.00–1.00) | 96.0 | 12.8 | 5.3 | 1.00× (1.00–1.00) |
+| C++ | Internal Oxc | 323.3 | 0.99× (0.86–1.25) | 95.9 | 12.9 | 5.5 | 1.01× (0.96–1.08) |
+| C++ | External runtime | 339.2 | 1.09× (0.97–2.43) | 95.9 | 14.1 | 5.8 | 1.06× (1.02–1.12) |
+| Rust | Direct shim | 328.4 | 0.98× (0.87–1.16) | 96.8 | 11.7 | 5.5 | 0.95× (0.90–1.04) |
+| Rust | Jco 1.13.0 | 325.5 | 1.00× (1.00–1.00) | 96.1 | 13.4 | 5.8 | 1.00× (1.00–1.00) |
+| Rust | Internal Oxc | 326.8 | 1.03× (0.87–1.34) | 96.0 | 14.0 | 6.1 | 1.03× (0.98–1.10) |
+| Rust | External runtime | 340.7 | 0.99× (0.93–1.25) | 95.9 | 13.6 | 6.0 | 1.06× (0.93–1.13) |
+
+In 12 rounds, each of 108 fresh Chromium documents used one language and one host treatment. The four builds used identical core Wasm and ran in balanced orders. Each had one warm-up and four timed invocations per document. Every invocation checked every RGBA channel on the source and destination canvases. The direct shim serves these trusted guests. The observer clocks the original host method in a separate set of documents. Its remainder includes allocation, copying into Wasm, guest execution and observer overhead.
+
+Microseconds and percentages are medians of page medians. Ratios first pair each build with 1.13.0 within a pass, then summarize the page medians. Intervals are individual two-sided, distribution-free median intervals across the 12 pages for each guest and treatment. The warmed-read comparison uses the published minified JS and Wasm hashes. Build Jco at `95e8ae0d8` and prepare the [minified release assets](#minified-browser-bindings), then run the following from this fork.
+
+```sh
+CHROME_BIN=/path/to/chrome ROUNDS=12 node web/bench/canvas-bindings.mjs \
+  /path/to/built/jco /tmp/canvas-bindings.json.gz
+python3 web/bench/canvas-bindings-report.py /tmp/canvas-bindings.json.gz --plot /tmp/canvas-bindings.png
 ```
 
 </details>
