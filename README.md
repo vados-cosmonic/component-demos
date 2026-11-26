@@ -2,6 +2,66 @@
 
 This fork benchmarks the browser examples from [eqrion/component-demos at d0b9dd1](https://github.com/eqrion/component-demos/tree/d0b9dd1390a300978193adc623838fef4e4b632b). It runs the same compiled C, C++, and Rust WebAssembly components through jco 1.13.0, pinned upstream main, and a branch that optimizes synchronous host imports and numeric guest exports. The comparison also includes the demos’ JavaScript, Emscripten (Embind and EM_JS), and Rust wasm-bindgen implementations where available.
 
+## Loading synchronous task operations in the browser
+
+Synchronous imports on these 21 demos use seven task operations. The external runtime previously loaded the asynchronous task driver to get them. The new package entry re-exports those same seven functions. The compiler uses it when the standard synchronous adapter covers every requested task operation. Tracked calls, specialization opt-outs and custom providers keep their existing imports. Internal Oxc already removes the unused code. All 21 minified internal entries and all guest Wasm files matched their previous builds byte for byte. [Compiler and runtime rationale](https://github.com/vados-cosmonic/jco/commit/b51743055ea7205d972b6aa1fd0e83db1c218198) · [Entry hashes and provider controls](web/bench/results/sync-task-entries-3e25d8d82.json.gz)
+
+| External runtime fetched by each demo | Previous package | New package | Saved |
+| --- | ---: | ---: | ---: |
+| JavaScript modules | 15 | 14 | 1 |
+| Raw bytes | 101,211 | 85,666 | 15,545 (15.4%) |
+| Brotli bytes | 31,057 | 26,845 | 4,212 (13.6%) |
+
+These sizes cover the runtime modules and exclude the generated entry and guest cores. Putting the seven functions in the existing sync entry saved another 424 Brotli bytes per demo, but increased a standalone import of that public entry by 10,216 Brotli bytes. The dedicated entry preserves the standalone sync cost. Importing the full async-task entry on its own costs 785 more Brotli bytes with this package layout. [Four layouts and standalone public-entry sizes](web/bench/results/sync-task-layouts-3e25d8d82.json.gz)
+
+Across 1,668 fresh Chromium documents in 12 balanced rounds, both modes beat pinned upstream main on every warm headline operation. The worst ratios to the fastest compiled shim were 4.93× internal and 4.98× external, both on C++ tree traversal. Warm medians matched or beat Jco 1.13.0 on 16/21 workloads internally and 13/21 externally. The only individual warm interval wholly slower than release was external C++ tree traversal (1.103×, 95% interval 1.001–1.404). Four internal and fourteen external first-result intervals were wholly slower than release. [Timings, transfer sizes, module digests and browser version](web/bench/results/review-matrix-sync-task-3e25d8d82.json.gz)
+
+| Median across the 21 workloads | Jco 1.13.0 | Upstream main at `326f52ab4` | Internal Oxc | External runtime |
+| --- | ---: | ---: | ---: | ---: |
+| Import and initialization (ms) | 5.19 | 11.94 | 9.47 | 18.38 |
+| Time to first result (ms) | 63.33 | 207.45 | 62.06 | 76.78 |
+| Complete JavaScript, raw (KiB) | 9.58 | 111.34 | 69.75 | 106.75 |
+| Complete JavaScript, gzip (KiB) | 3.01 | 25.42 | 18.57 | 34.67 |
+| JavaScript requests | 1 | 1 | 1 | 15 |
+
+The external build saved 4,677 gzip bytes at the median across its generated entry and runtime. Its paired import time fell 6.7% versus the previous external build (new/previous 0.933×, 95% interval 0.867–0.975). The first-result ratio was 0.970× (0.957–1.005) and warm execution was 0.995× (0.940–1.041). The byte-identical internal control measured 1.022× (1.002–1.030) for import, 1.000× (0.985–1.044) for first result and 1.028× (0.913–1.071) for warm execution. These suite-wide intervals use the median of the 21 paired workload ratios in each browser round.
+
+A separate HTTP/2 trial served the actual packages with Brotli compression. It used the DOM-query and table-update workloads for each guest language, for a total of 768 fresh documents. On the 40 ms, 10 Mbit/s connection, the smaller package reduced paired first-result time by 1.2% (95% interval 0.9–2.0%). The loopback interval included parity. Each process ran all six workloads and four builds under both network profiles. The paired ratios below summarize the geometric mean across its six workloads. [Individual HTTP/2 requests and timing samples](web/bench/results/shipped-task-entry-3e25d8d82.json.gz)
+
+| HTTP/2 time to first result | Jco 1.13.0 | Internal Oxc | Previous external | New external | Paired new / previous (95% interval) |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Loopback | 57.12 ms | 62.93 ms | 82.71 ms | 82.62 ms | 1.013× (0.958–1.078) |
+| 40 ms, 10 Mbit/s | 159.34 ms | 172.83 ms | 275.98 ms | 272.37 ms | 0.988× (0.980–0.991) |
+
+The first four columns are medians across the six workload medians. On the limited connection, paired new-external first result took 1.723× release time (1.702–1.733) and 1.590× internal time (1.575–1.600).
+
+Both modes met the 10× shim target on 81/84 original warm phases. In the three bulk DOM queries the fastest shim discards a live collection, while the component returns the handles. When the direct shim also materialized and dropped all 2,000 handles per query, the two modes took 1.46–1.64× its time across C, C++ and Rust, and 0.69–0.74× the release time. [Equal-work checks and timings](web/bench/results/bulk-dom-sync-task-3e25d8d82.json.gz)
+
+![Warm execution relative to the fastest compiled shim and Jco 1.13.0, and first result relative to Jco 1.13.0, for all 21 workloads.](web/bench/results/review-matrix-sync-task-3e25d8d82.png)
+
+<details><summary>Reproduce the synchronous task entry measurements</summary>
+
+Build the previous Jco checkout at `9863264e8` in `$before`, the candidate at `3e25d8d82` in `$after`, and their matching runtime packages. Set `$stage` to the staged upstream compiler at `326f52ab4` and `CHROME_BIN` to the Chromium binary. Run from the root of this fork. The network trial uses an HTTP/2 server, individually Brotli-compressed modules and a fresh browser process for each round.
+
+```sh
+set -e
+test "$(cat "$stage/commit")" = 326f52ab4403466b21b989c995f9bb97b2b9e038
+old=web/bench/results/review-matrix-captures-6c8454da9.json.gz
+prev="$before/packages/jco-transpile"
+dist="$before/packages/jco-cm-runtime/dist"
+node web/bench/sync-task-layouts.mjs "$before" "$prev" "$old" /tmp/layouts.json.gz
+node web/bench/sync-task-entries.mjs "$prev" "$after/packages/jco-transpile" "$old" /tmp/entries.json.gz
+ROUNDS=12 node web/bench/review-matrix.mjs "$after" "$stage" /tmp/matrix.json.gz --compare-compilers "$prev" "$dist"
+python3 web/bench/review-matrix-report.py /tmp/matrix.json.gz --compare-entries "$old" --release-intervals --plot /tmp/matrix.png
+patch -o web/bench/shipped-task-trial.mjs web/bench/runtime-chunks.mjs web/bench/experiments/shipped-task-entry.patch
+ROUNDS=16 node web/bench/shipped-task-trial.mjs "$after" /tmp/matrix.json.gz /tmp/http2.json.gz --compare-packages "$prev" "$dist"
+python3 web/bench/shipped-task-report.py /tmp/http2.json.gz /tmp/matrix.json.gz web/bench/shipped-task-trial.mjs
+ROUNDS=12 node web/bench/bulk-dom.mjs "$after" /tmp/bulk.json.gz --checked-matrix /tmp/matrix.json.gz
+python3 web/bench/bulk-dom-report.py /tmp/bulk.json.gz --matrix /tmp/matrix.json.gz
+```
+
+</details>
+
 ## Reusing resource capture tables during startup
 
 A component must keep enough information to dispose its live, owned host resources when it stops. The checked bindings used to allocate a record and a getter for each imported handle table. The first table for each resource can register its existing capture object instead. Its getter still waits until shutdown to resolve captures by representation. Additional tables sharing that resource still register their own handles. Existing custom providers keep their original registration format. [Bindgen and shared runtime code](https://github.com/vados-cosmonic/jco/commit/c873ff950) · [Retained-resource test](https://github.com/vados-cosmonic/jco/commit/9863264e8)
