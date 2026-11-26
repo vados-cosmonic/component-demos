@@ -20,8 +20,9 @@ const min = await readFile(join(results, "minified-sizes.json"));
 assert.equal(hash(full), trial.sizesSha256);
 assert.equal(hash(min), trial.minifiedSizesSha256);
 const mode = process.argv.slice(2).join(" ");
-assert(["", "--compile-hint", "--compile-hint --small"].includes(mode), "Expected --compile-hint [--small] or no options");
-const compareHint = mode !== "";
+assert(["", "--compile-hint", "--compile-hint --small", "--wasm-timing"].includes(mode), "Unknown startup trial: " + mode);
+const compareHint = mode.startsWith("--compile-hint");
+const wasmTiming = mode === "--wasm-timing";
 const small = mode.endsWith("--small");
 // These five guests accept fixed operation counts. The other two adapt their loop count to elapsed time.
 const workloads = small ? {
@@ -48,6 +49,7 @@ for (const { input, variants } of inventory.components) {
   const [lang, demo] = input.path.split("/");
   if (!Object.hasOwn(workloads, demo) || basename(input.path) !== demo.replaceAll("-", "_") + ".wasm") continue;
   for (const [version, files] of Object.entries({ ...variants, ...minified[input.path] })) {
+    if (wasmTiming && !["baseline", "main", "candidate"].includes(version)) continue;
     if (compareHint && version.endsWith("-minified")) continue;
     const paths = {};
     for (const file of files) {
@@ -59,6 +61,7 @@ for (const { input, variants } of inventory.components) {
     const scripts = Object.keys(paths).filter(path => path.endsWith(".js"));
     assert.equal(scripts.length, 1);
     builds.push({ lang, demo, version, path: scripts[0], paths });
+    if (wasmTiming) builds.push({ lang, demo, version, path: scripts[0], paths, traceWasm: true });
     if (compareHint && version !== "reference") {
       const path = scripts[0];
       const source = await readFile(join(web, path));
@@ -68,14 +71,37 @@ for (const { input, variants } of inventory.components) {
     }
   }
 }
-assert.equal(builds.length, Object.keys(workloads).length * 3 * (inventory.reference ? 7 : 6));
+assert.equal(builds.length, Object.keys(workloads).length * 3 * (!wasmTiming && inventory.reference ? 7 : 6));
+
+// Installed only in the instrumented documents. Record wall time until promise settlement
+// without changing the promise returned to the module or serializing overlapping operations.
+function observeWasm() {
+  const calls = [];
+  for (const name of ["compile", "compileStreaming", "instantiate", "instantiateStreaming"]) {
+    const original = WebAssembly[name];
+    WebAssembly[name] = function (...args) {
+      const call = { name, start: performance.now(), end: null };
+      calls.push(call);
+      const pending = Reflect.apply(original, this, args);
+      const finish = () => { call.end = performance.now(); };
+      pending.then(finish, finish);
+      return pending;
+    };
+  }
+  return calls;
+}
 
 // Stringified into a module script in the trial document.
-async function measure({ demo, path, args }) {
+async function measure({ demo, path, args }, observe) {
   const { getMeasurements } = await import("/examples/" + demo + "/main.js");
+  const calls = observe?.();
   const start = performance.now();
   const { run } = await import(path);
   const ready = performance.now();
+  const wasmCalls = calls?.map(({ name, start: begin, end }) => {
+    if (end === null) throw Error("Unsettled Wasm call at module readiness: " + name);
+    return { name, startMs: begin - start, endMs: end - start };
+  });
   run(...args);
   const complete = performance.now();
   const directory = path.slice(0, path.lastIndexOf("/") + 1);
@@ -88,7 +114,7 @@ async function measure({ demo, path, args }) {
   const reports = Object.values(getMeasurements());
   if (reports.length !== 1 || !Object.keys(reports[0]).length ||
       !Object.values(reports[0]).every(v => Number.isFinite(v) && v >= 0)) throw Error("Invalid guest result");
-  return { loadMs: ready - start, firstCallMs: complete - ready, firstResultMs: complete - start, requests };
+  return { loadMs: ready - start, firstCallMs: complete - ready, firstResultMs: complete - start, requests, wasmCalls };
 }
 
 const samples = [];
@@ -131,7 +157,7 @@ async function runBlock(order, round, attached) {
         res.setHeader("Content-Type", "text/html");
         return res.end(`<!doctype html><body><script type="module">
           let result;
-          try { result = await (${measure})(${params}) }
+          try { result = await (${measure})(${params}, ${build.traceWasm ? observeWasm : "undefined"}) }
           catch (err) { result = {error: String(err?.stack ?? err)} }
           const next = await (await fetch("/result/${position}", {method:"POST", body:JSON.stringify(result)})).text();
           if (next) location.replace(next);
@@ -140,7 +166,7 @@ async function runBlock(order, round, attached) {
       if (req.method === "POST" && url.pathname === "/result/" + position) {
         let body = "";
         for await (const chunk of req) body += chunk;
-        const { error, loadMs, firstCallMs, firstResultMs, requests } = JSON.parse(body);
+        const { error, loadMs, firstCallMs, firstResultMs, requests, wasmCalls } = JSON.parse(body);
         assert(!error, error);
         assert(Number.isFinite(loadMs) && loadMs > 0);
         assert(Number.isFinite(firstCallMs) && firstCallMs > 0);
@@ -156,7 +182,11 @@ async function runBlock(order, round, attached) {
         const wasmStartMs = Math.min(...wasm.map(r => r.startMs));
         const wasmEndMs = Math.max(...wasm.map(r => r.endMs));
         assert(wasm.length > 0 && wasmStartMs >= script.endMs - .01);
-        samples.push({ round, attached, demo: build.demo, lang: build.lang, version: build.version,
+        if (build.traceWasm) {
+          for (const kind of ["compile", "instantiate"]) assert(wasmCalls.some(call => call.name.startsWith(kind)));
+          for (const call of wasmCalls) assert(0 <= call.startMs && call.startMs <= call.endMs && call.endMs <= loadMs);
+        } else assert.equal(wasmCalls, undefined);
+        samples.push({ ...(wasmTiming ? { traced: !!build.traceWasm, wasmCalls } : {}), round, attached, demo: build.demo, lang: build.lang, version: build.version,
           loadMs, firstCallMs, firstResultMs, jsEndMs: script.endMs, wasmStartMs, wasmEndMs });
         position++;
         watchdog.refresh();
@@ -208,13 +238,13 @@ async function runBlock(order, round, attached) {
 
 for (let n = 0; n < rounds; n++) {
   const order = builds.map((_, i) => builds[(n + (n % 2 ? -i : i) + builds.length) % builds.length]);
-  const modes = compareHint ? [false] : n % 2 ? [true, false] : [false, true];
+  const modes = compareHint || wasmTiming ? [false] : n % 2 ? [true, false] : [false, true];
   for (const attached of modes) {
     await runBlock(order, n + 1, attached);
     console.log(`Round ${n + 1}/${rounds} · ${attached ? "attached" : "detached"} · ${order.length} documents`);
   }
 }
-const filename = small ? "compile-hint-small.json" : compareHint ? "compile-hint.json" : "startup-observer.json";
+const filename = wasmTiming ? "wasm-startup.json" : small ? "compile-hint-small.json" : compareHint ? "compile-hint.json" : "startup-observer.json";
 await writeFile(join(results, filename), JSON.stringify({
   date: new Date().toISOString(), browser: browserVersion, cpu: cpus()[0].model, node: process.version, rounds,
   originalSha256: hash(original), runnerSha256: hash(await readFile(import.meta.filename)),

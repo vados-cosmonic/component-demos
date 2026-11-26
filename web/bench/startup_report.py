@@ -4,7 +4,7 @@ from hashlib import sha256
 import json
 from math import isfinite
 from pathlib import Path
-from statistics import median
+from statistics import mean, median
 
 
 def compile_hints(bench, run, observer, inventory, languages, versions):
@@ -144,3 +144,78 @@ def distributions(bench, inventory, original, focus, languages):
             "wins": sum(medians[demo, lang, version][1] <= medians[demo, lang, baseline][1] for demo, lang in cases),
         }
     return run, summary
+
+
+def wasm_api_timings(trial, observer, cases, versions):
+    """Partition observed import time and compare each traced page with its ordinary control."""
+    if any(trial[k] != observer[k] for k in ("runnerSha256", "originalSha256", "browser", "cpu")):
+        raise ValueError("Wasm startup trial used different bindings, probe or browser")
+    rounds = range(1, trial["rounds"] + 1)
+    groups = defaultdict(dict)
+    stages = ("js", "before", "compile", "instantiate", "both", "between", "after")
+    operations = {"compile", "compileStreaming", "instantiate", "instantiateStreaming"}
+    for row in trial["samples"]:
+        group = groups[row["version"], row["lang"], row["demo"], row["traced"]]
+        if row["attached"] or row["round"] in group or not isfinite(row["loadMs"]) or row["loadMs"] <= 0:
+            raise ValueError("Invalid Wasm startup measurement")
+        calls = row.get("wasmCalls")
+        if bool(calls) != row["traced"]:
+            raise ValueError("Missing Wasm calls or instrumented control")
+        record = {"ready": row["loadMs"]}
+        if calls:
+            events = []
+            for call in calls:
+                kind = call["name"]
+                start, end = call["startMs"], call["endMs"]
+                if kind not in operations or not 0 <= start <= end <= row["loadMs"]:
+                    raise ValueError("Wasm operation outside module import")
+                activity = "compile" if kind.startswith("compile") else "instantiate"
+                events.extend([(start, activity, 1), (end, activity, -1)])
+            events.sort()
+            first = events[0][0]
+            if first < row["jsEndMs"] - .01 or {k for _, k, _ in events} != {"compile", "instantiate"}:
+                raise ValueError("Unexpected Wasm operation sequence")
+            running = {"compile": 0, "instantiate": 0}
+            previous = first
+            record.update(js=row["jsEndMs"], before=first - row["jsEndMs"], compile=0, instantiate=0, both=0,
+                          between=0, after=row["loadMs"] - events[-1][0])
+            for at, kind, change in events:
+                if all(running.values()):
+                    bucket = "both"
+                elif running["compile"]:
+                    bucket = "compile"
+                elif running["instantiate"]:
+                    bucket = "instantiate"
+                else:
+                    bucket = "between"
+                record[bucket] += at - previous
+                running[kind] += change
+                previous = at
+            if any(running.values()) or abs(sum(record[k] for k in stages) - row["loadMs"]) > .001:
+                raise ValueError("Wasm intervals do not cover import")
+        group[row["round"]] = record
+    expected = {(v, lang, demo, traced) for v in versions for lang, demo in cases for traced in (True, False)}
+    if set(groups) != expected or any(set(g) != set(rounds) for g in groups.values()):
+        raise ValueError("Missing Wasm startup pages")
+
+    summaries = {}
+    for version in versions:
+        per_case = defaultdict(list)
+        for lang, demo in cases:
+            measured, control = [groups[version, lang, demo, t] for t in (True, False)]
+            for k in measured[1]:
+                per_case[k].append(median(measured[n][k] for n in rounds))
+            per_case["ratio"].append(median(measured[n]["ready"] / control[n]["ready"] for n in rounds))
+        summaries[version] = {k: median(values) for k, values in per_case.items()}
+    # Difference within each round before pooling workloads or languages.
+    excess = defaultdict(list)
+    for lang, demo in cases:
+        candidate, baseline = [groups[v, lang, demo, True] for v in ("candidate", "baseline")]
+        for k in candidate[1]:
+            excess[k].append(median(candidate[n][k] - baseline[n][k] for n in rounds))
+    # Fractions from one page sum to one; averaging them keeps the chart additive.
+    shares = {}
+    for v in versions:
+        pages = [r for lang, demo in cases for r in groups[v, lang, demo, True].values()]
+        shares[v] = {k: mean(100 * r[k] / r["ready"] for r in pages) for k in stages}
+    return summaries, {k: median(values) for k, values in excess.items()}, shares

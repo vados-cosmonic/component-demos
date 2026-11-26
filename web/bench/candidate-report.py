@@ -6,7 +6,7 @@ from math import comb, isfinite
 from pathlib import Path
 from statistics import median
 
-from startup_report import compile_hints, distributions, startup_intervals
+from startup_report import compile_hints, distributions, startup_intervals, wasm_api_timings
 
 import matplotlib
 matplotlib.use("Agg")
@@ -176,7 +176,7 @@ para(f"The branch uses js-component-bindgen’s internal Oxc bundler and the che
      f"[Measured Jco commit `{commit[:9]}`](https://github.com/vados-cosmonic/jco/commit/{commit}) · "
      "[Canvas host comparison](#canvas-pixel-transfers-with-the-same-guest-binary) · "
      "[Payload and startup](#payload-and-startup) · [First guest result](#time-to-the-first-guest-result) · "
-     "[Module initialization](#direct-module-initialization) · "
+     "[Wasm startup timing](#where-startup-time-goes) · [Module initialization](#direct-module-initialization) · "
      "[Eager compilation](#eager-javascript-compilation) · [Reproduction commands](#reproduce-the-candidate-run)")
 para(f"All Jco builds used the same guest binaries. Each value is the median of "
      f"{run['rounds']} fresh-page samples with one warm-up per page. The run collected {len(run['samples'])} "
@@ -796,6 +796,49 @@ if reference:
          f"revision’s time. The candidate was faster in {sum(r < 1 for r in ratios)}/{len(ratios)} workloads. "
          "Each workload contributes its median within-round time ratio.")
 
+wasm_trial = json.loads((results / "wasm-startup.json").read_bytes())
+wasm_times, wasm_excess, wasm_shares = wasm_api_timings(wasm_trial, observer, cases, distribution_names)
+para("### Where startup time goes")
+para(f"Across {wasm_trial['rounds']} rounds, {len(wasm_trial['samples']):,} fresh pages imported a default module and "
+     "checked its first guest result with DevTools disconnected. Half recorded when the browser’s asynchronous "
+     "WebAssembly compile and instantiate calls began and when their promises settled. Each instrumented page "
+     "had an ordinary control with the same build, workload and round. The last column gives the median paired import-time ratio.")
+table(["Build", "Import (ms)", "Through JS response (ms)", "JS end to first Wasm call (ms)",
+       "Compile only (ms)", "Instantiate only (ms)", "Both pending (ms)", "Between calls (ms)",
+       "Last settlement to ready (ms)", "Traced / ordinary"], [
+    [label, *[f"{wasm_times[v][k]:.2f}" for k in ("ready", "js", "before", "compile", "instantiate", "both", "between", "after")],
+     f"{wasm_times[v]['ratio']:.2f}×"] for v, label in distribution_names.items()
+])
+para(f"Compared with 1.13.0, the candidate’s median paired difference was **{wasm_excess['ready']:+.2f} ms** "
+     f"for import and **{wasm_excess['before']:+.2f} ms** between the JavaScript response and the first "
+     "Wasm call. These differences pair the two traced pages within each round before taking the median "
+     "per workload and across workloads.")
+para("Each instant on a page counts once, including when several compile calls overlap. Pending calls measure "
+     "elapsed wall time and can include fetching a module, scheduling and JavaScript running on the same page. "
+     "The time from the entry script’s response to the first Wasm call also includes loading its dependencies. "
+     "Columns are medians across workload medians and can sum to a different value from the median import. "
+     "[Call intervals and ordinary control samples](web/bench/results/wasm-startup.json)")
+
+fig, ax = plt.subplots(figsize=(9, 3.2), layout="constrained")
+offsets = [0.] * len(distribution_names)
+for keys, label, color in [
+    (("js",), "Through JS response", "#82929e"),
+    (("before",), "JS end to first Wasm call", "#147c80"),
+    (("compile", "instantiate", "both"), "Any Wasm call pending", "#cc8642"),
+    (("between", "after"), "Gaps and return to caller", "#a99db5"),
+]:
+    values = [sum(wasm_shares[v][k] for k in keys) for v in distribution_names]
+    ax.barh(list(distribution_names.values()), values, left=offsets, color=color, label=label)
+    offsets = [a + b for a, b in zip(offsets, values)]
+ax.invert_yaxis()
+ax.set_xlim(0, 100)
+ax.set_xlabel("Mean share of import time per instrumented page (%)")
+ax.legend(loc="upper center", bbox_to_anchor=(.5, -.28), ncol=2, frameon=False)
+fig.savefig(results / "wasm-startup.png", dpi=155)
+plt.close(fig)
+para("![Share of module import time before, during and between WebAssembly calls for each Jco build]"
+     "(web/bench/results/wasm-startup.png)")
+
 para("### Time to the first guest result")
 para("Each fresh page called the guest immediately after import, using the same workload arguments across builds. "
      "The first call includes the complete guest workload and its browser API calls. The final column times "
@@ -1058,6 +1101,7 @@ node web/bench/candidate.mjs --verify-wasm ../jco-candidate
 node web/bench/minified.mjs ../jco-candidate
 CHROME_BIN=/path/to/chrome BENCH_MINIFIED=1 ROUNDS={minified_run['rounds']} node web/bench/browser.mjs
 CHROME_BIN=/path/to/chrome ROUNDS={observer['rounds']} node web/bench/startup-observer.mjs
+CHROME_BIN=/path/to/chrome ROUNDS={wasm_trial['rounds']} node web/bench/startup-observer.mjs --wasm-timing
 CHROME_BIN=/path/to/chrome ROUNDS={hint_rounds['Full']} node web/bench/startup-observer.mjs --compile-hint
 CHROME_BIN=/path/to/chrome ROUNDS={hint_rounds['Small']} node web/bench/startup-observer.mjs --compile-hint --small
 node web/bench/verify-compile-hint.mjs ../jco-candidate
