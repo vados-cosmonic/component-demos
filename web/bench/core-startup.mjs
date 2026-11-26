@@ -13,13 +13,15 @@ import { parse } from "acorn";
 
 const [checkout, output, study, ...extra] = process.argv.slice(2);
 const preload = study === "--modulepreload";
-assert(!extra.length && (study === undefined || preload));
-assert(checkout && output, "Usage: core-startup.mjs <built Jco checkout> <output.json.gz> [--modulepreload]");
+const compression = study === "--gzip";
+const checkedPackage = preload || compression;
+assert(!extra.length && (study === undefined || checkedPackage));
+assert(checkout && output, "Usage: core-startup.mjs <built Jco checkout> <output.json.gz> [--modulepreload|--gzip]");
 const rounds = Number(process.env.ROUNDS ?? 18);
 assert(Number.isInteger(rounds) && rounds >= 6 && rounds % 6 === 0);
 const bench = import.meta.dirname, web = join(bench, "..");
 const hash = b => createHash("sha256").update(b).digest("hex");
-const matrixFile = preload ? "review-matrix-minified-db4a3aca0.json.gz" : "review-matrix-minified-eaca992c8.json.gz";
+const matrixFile = checkedPackage ? "review-matrix-minified-db4a3aca0.json.gz" : "review-matrix-minified-eaca992c8.json.gz";
 const matrixBytes = await readFile(join(bench, "results", matrixFile));
 const reference = JSON.parse(gunzipSync(matrixBytes)).manifest;
 const git = (...args) => execFileSync("git", args, {cwd:checkout, encoding:"utf8"}).trim();
@@ -32,13 +34,16 @@ const map = Object.fromEntries((await readFile(join(web, "host/imports.txt"), "u
   const [n, s] = line.split(/\s+/);
   return [n, "../../../host/web-host.js#" + s];
 }));
+const gzipAssets = new Map();
 const assets = new Map(), manifest = {}, cases = [];
 function add(path, bytes, compare) {
   const b = Buffer.from(bytes);
   const sha256 = hash(b);
   if (compare) assert.equal(sha256, reference[compare].sha256, compare);
   assets.set(path, b);
-  manifest[path] = {bytes:b.length, gzip:gzipSync(b, {level:9}).length, sha256};
+  const compressed = gzipSync(b, {level:9});
+  if (compression) gzipAssets.set(path, compressed);
+  manifest[path] = {bytes:b.length, gzip:compressed.length, sha256};
 }
 const inputs = {"dom-query":[8,2], "table-update":[8]};
 for (const f of ["host/web-host.js","host/common.js",...Object.keys(inputs).map(d => "examples/"+d+"/main.js")]) {
@@ -52,7 +57,7 @@ const modes = [];
 const provider = "@bytecodealliance/jco-cm-runtime";
 const imports = Object.fromEntries([...assets.keys()].filter(p => p.startsWith("/runtime/")).map(p =>
   [provider + p.slice("/runtime".length, -3), p]));
-for (const build of ["release","bundled","external"]) for (const inline of (preload ? [false] : [false,true])) {
+for (const build of ["release","bundled","external"]) for (const inline of (checkedPackage ? [false] : [false,true])) {
   const mode = build + (inline ? "-inline" : "");
   modes.push(mode);
   for (const demo of Object.keys(inputs)) for (const lang of ["c","cpp","rust"]) {
@@ -62,7 +67,7 @@ for (const build of ["release","bundled","external"]) for (const inline of (prel
     const ref = base+"/"+build+"/";
     const options = {name, minify:true, nodejsCompat:false, map:{...map}};
     if (build !== "release") Object.assign(options, {namespacedExports:true, emitTypescriptDeclarations:false});
-    if (build === "external") Object.assign(options, preload ? {cmRuntimeEsModule:provider} : {cmRuntimeEsModule:"/runtime",cmRuntimeSyncImports:true});
+    if (build === "external") Object.assign(options, checkedPackage ? {cmRuntimeEsModule:provider} : {cmRuntimeEsModule:"/runtime",cmRuntimeSyncImports:true});
     options.base64Cutoff = inline ? 256*1024 : 5000;
     const {files} = await (build === "release" ? transpile : transpileBytes)(guest, options);
     const emitted = Object.keys(files).filter(f => /\.(js|wasm)$/.test(f));
@@ -80,6 +85,8 @@ for (const build of ["release","bundled","external"]) for (const inline of (prel
     if (mode === "release") cases.push({base,demo,name});
   }
 }
+
+if (compression) modes.push(...modes.map(build => build + "-gzip"));
 
 // Derive hints from the static module graph so the list travels with the deployed
 // runtime. A new package build can change private chunk names and boundaries.
@@ -102,7 +109,7 @@ if (preload) {
   }
 }
 
-async function measure({demo,entry,args,hints}) {
+async function measure({demo,entry,args,hints,compression}) {
   const {getMeasurements} = await import("/examples/"+demo+"/main.js");
   await import("/host/web-host.js");
   performance.clearResourceTimings();
@@ -122,6 +129,7 @@ async function measure({demo,entry,args,hints}) {
       !Object.values(reports[0]).every(v => Number.isFinite(v) && v >= 0)) throw Error("Invalid guest report");
   return {loadMs:ready-start, firstMs:first-start, requests:performance.getEntriesByType("resource").map(e => ({
     path:new URL(e.name).pathname, bytes:e.encodedBodySize, transferred:e.transferSize,
+    ...(compression ? {decoded:e.decodedBodySize} : {}),
     ...(hints ? {startMs:e.startTime-start, endMs:e.responseEnd-start, initiator:e.initiatorType} : {}),
   }))};
 }
@@ -153,11 +161,12 @@ for (let round = 0; round < rounds; round++) {
       if (path === "/favicon.ico") return res.writeHead(204).end();
       const {base,mode,name,demo,delay} = queue[cursor];
       const hints = preload ? hintLists[base][mode] ?? [] : undefined;
-      const build = hints?.length ? "external" : mode;
+      const compressed = compression && mode.endsWith("-gzip");
+      const build = compressed ? mode.slice(0,-5) : hints?.length ? "external" : mode;
       const entry = base+"/"+build+"/"+name+".js";
       if (path === "/trial/"+cursor) {
-        const args = {demo,entry,args:inputs[demo],hints};
-        const importMap = preload ? '<script type="importmap">'+JSON.stringify({imports})+'</script>' : "";
+        const args = {demo,entry,args:inputs[demo],hints,compression};
+        const importMap = checkedPackage ? '<script type="importmap">'+JSON.stringify({imports})+'</script>' : "";
         return res.writeHead(200,{"Content-Type":"text/html"}).end(`<!doctype html><head>${importMap}</head><body><script type="module">
           let result; try { result=await (${measure})(${JSON.stringify(args)}); } catch(e) { result={error:String(e.stack||e)}; }
           const next=await(await fetch("/result/${cursor}",{method:"POST",body:JSON.stringify(result)})).text();
@@ -169,7 +178,8 @@ for (let round = 0; round < rounds; round++) {
         assert(row.firstMs > row.loadMs && row.loadMs > 0);
         const seen = new Set();
         for (const r of row.requests) {
-          assert.equal(manifest[r.path].bytes,r.bytes);
+          assert.equal(manifest[r.path][compressed ? "gzip" : "bytes"],r.bytes);
+          if (compression) assert.equal(manifest[r.path].bytes,r.decoded);
           assert(r.transferred > 0 && !seen.has(r.path));
           seen.add(r.path);
         }
@@ -195,7 +205,11 @@ for (let round = 0; round < rounds; round++) {
       if (delay && !path.startsWith("/host/") && !path.startsWith("/examples/")) {
         await new Promise(resolve => setTimeout(resolve,delay));
       }
-      res.writeHead(200,{"Content-Type":path.endsWith(".wasm")?"application/wasm":"text/javascript"}).end(assets.get(path));
+      if (compressed) {
+        assert.match(req.headers["accept-encoding"] ?? "", /\bgzip\b/);
+        res.setHeader("Content-Encoding","gzip");
+      }
+      res.writeHead(200,{"Content-Type":path.endsWith(".wasm")?"application/wasm":"text/javascript"}).end(compressed ? gzipAssets.get(path) : assets.get(path));
     } catch(e) { res.writeHead(500).end(); done.reject(e); }
   });
   let browser,endpoint;
@@ -215,4 +229,4 @@ for (let round = 0; round < rounds; round++) {
   console.log("Completed browser startup round",round+1,"of",rounds);
 }
 await writeFile(output,gzipSync(JSON.stringify({revision,release,browserVersion,rounds,inputs,modes,cases,manifest,samples,
-  runnerSha256:hash(await readFile(import.meta.filename)),matrixSha256:hash(matrixBytes), ...(preload ? {study,hintLists} : {})})));
+  runnerSha256:hash(await readFile(import.meta.filename)),matrixSha256:hash(matrixBytes), ...(study ? {study} : {}), ...(preload ? {hintLists} : {})})));

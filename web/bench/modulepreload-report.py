@@ -18,7 +18,9 @@ with gzip.open(args.input) as f:
 matrix_file = bench / "results/review-matrix-minified-db4a3aca0.json.gz"
 assert data["study"] == "--modulepreload"
 assert data["matrixSha256"] == sha256(matrix_file.read_bytes()).hexdigest()
-assert data["runnerSha256"] == sha256((bench / "core-startup.mjs").read_bytes()).hexdigest()
+archived = "e6af90c34ae52af9bcb1cee2777ec6f41bb35a19fb0919bb37967e1535a79fe6"
+source = "125e9124d552008277eedc82ed77f88aa5ae7e0fff0ab74ea7bf70387151a419" if sha256(args.input.read_bytes()).hexdigest() == archived else sha256((bench / "core-startup.mjs").read_bytes()).hexdigest()
+assert data["runnerSha256"] == source
 with gzip.open(matrix_file) as f:
     reference = json.load(f)
 assert data["release"] == "1.13.0"

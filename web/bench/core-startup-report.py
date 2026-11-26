@@ -1,4 +1,4 @@
-"""Verify the core-packaging comparison and summarize the paired browser times."""
+"""Verify browser asset packaging and HTTP compression trials and report paired times."""
 import argparse
 from collections import Counter
 import gzip
@@ -19,13 +19,21 @@ with gzip.open(args.input) as f:
 def digest(path):
     return sha256(path.read_bytes()).hexdigest()
 
-matrix = bench / "results/review-matrix-minified-eaca992c8.json.gz"
+compression = data.get("study") == "--gzip"
+assert compression or "study" not in data
+suffix = "-gzip" if compression else "-inline"
+filename = "review-matrix-minified-db4a3aca0.json.gz" if compression else "review-matrix-minified-eaca992c8.json.gz"
+matrix = bench / "results" / filename
 assert digest(matrix) == data["matrixSha256"]
-assert "study" not in data
 # The initial core-packaging study used the runner before it also supported preload hints.
-assert data["runnerSha256"] in (digest(bench / "core-startup.mjs"), "f6d3f8fd18b1909c41291ce2c72a2c70d5a05f17738c341d68f4e41f9e81e6ef")
+runner_hash = digest(bench / "core-startup.mjs")
+if compression:
+    assert data["runnerSha256"] == runner_hash
+else:
+    assert data["runnerSha256"] in (runner_hash, "f6d3f8fd18b1909c41291ce2c72a2c70d5a05f17738c341d68f4e41f9e81e6ef")
 with gzip.open(matrix) as f:
-    reference = json.load(f)["manifest"]
+    reference_run = json.load(f)
+reference = reference_run["manifest"]
 manifest = data["manifest"]
 for path, meta in manifest.items():
     if "-inline/" not in path:
@@ -36,6 +44,12 @@ modes = data["modes"]
 rounds = data["rounds"]
 assert len(cases) == len(set(cases)) == 6 and len(set(modes)) == len(modes) == 6
 assert rounds % 6 == 0 and rounds >= 6
+expected_paths = {}
+if compression:
+    for sample in reference_run["samples"]:
+        if sample["version"] in ("release", "bundled", "external") and sample["round"] == 0:
+            key = (f"/{sample['lang']}/{sample['demo']}", sample["version"])
+            expected_paths[key] = {q["path"] for q in sample["requests"]}
 rows = {}
 for row in data["samples"]:
     r, case, mode = key = tuple(row[k] for k in ("round","base","mode"))
@@ -43,7 +57,14 @@ for row in data["samples"]:
     assert row["firstMs"] > row["loadMs"] > 0
     paths = {req["path"] for req in row["requests"]}
     assert len(paths) == len(row["requests"])
-    assert all(req["bytes"] == manifest[req["path"]]["bytes"] and req["transferred"] > 0 for req in row["requests"])
+    if compression:
+        assert paths == expected_paths[case,mode.removesuffix(suffix)]
+    size_key = "gzip" if compression and mode.endswith(suffix) else "bytes"
+    for req in row["requests"]:
+        asset = manifest[req["path"]]
+        assert req["bytes"] == asset[size_key] and req["transferred"] > 0
+        if compression:
+            assert req["decoded"] == asset["bytes"]
     assert sum(path.endswith(".wasm") for path in paths) == int(not mode.endswith("-inline"))
     assert any(path.startswith("/runtime/") for path in paths) == mode.startswith("external")
     rows[key] = row
@@ -56,8 +77,12 @@ for case in data["cases"]:
         core_hashes.add(manifest[key]["sha256"])
         for r in range(rounds):
             base_paths = {req["path"] for req in rows[r,case["base"],build]["requests"]}
-            inline_paths = {req["path"].replace("-inline/", "/") for req in rows[r,case["base"],build+"-inline"]["requests"]}
-            assert base_paths - {key} == inline_paths and key in base_paths
+            trial_paths = {req["path"].replace("-inline/", "/") for req in rows[r,case["base"],build+suffix]["requests"]}
+            assert key in base_paths
+            if compression:
+                assert trial_paths == base_paths
+            else:
+                assert trial_paths == base_paths - {key}
     assert len(core_hashes) == 1
 for start in range(0, rounds, 6):
     for case in cases:
@@ -71,13 +96,15 @@ for start in range(0, rounds, 6):
 
 def values(case, mode, field):
     def value(row):
+        if field == "bodyBytes":
+            return sum(p["bytes"] for p in row["requests"])
         if field in ("bytes","gzip"):
             return sum(manifest[p["path"]][field] for p in row["requests"])
         return row[field]
     return [value(rows[r,case,mode]) for r in range(rounds)]
 
 def paired(case, mode, field):
-    return [b/a for a,b in zip(values(case,mode,field), values(case,mode+"-inline",field))]
+    return [b/a for a,b in zip(values(case,mode,field), values(case,mode+suffix,field))]
 
 def summarize(mode, field):
     return median(median(values(case,mode,field)) for case in cases)
@@ -85,13 +112,18 @@ def summarize(mode, field):
 def typical_ratio(mode, field):
     return median(median(paired(case, mode, field)) for case in cases)
 
-print("| Build | Import ms, fetched → embedded | First result ms, fetched → embedded | Paired first result | All JS + Wasm KiB, fetched → embedded | Gzip estimate KiB, fetched → embedded |")
-print("| --- | ---: | ---: | ---: | ---: | ---: |")
+if compression:
+    print("| Build | Import ms, plain → gzip | First result ms, plain → gzip | Paired first result | JS + Wasm body KiB, plain → gzip |")
+    print("| --- | ---: | ---: | ---: | ---: |")
+else:
+    print("| Build | Import ms, fetched → embedded | First result ms, fetched → embedded | Paired first result | All JS + Wasm KiB, fetched → embedded | Gzip estimate KiB, fetched → embedded |")
+    print("| --- | ---: | ---: | ---: | ---: | ---: |")
 labels = {"release":"Jco 1.13.0", "bundled":"Internal Oxc", "external":"External runtime"}
 for mode, name in labels.items():
     def both(key, scale=1):
-        return " → ".join(f"{summarize(m,key)/scale:.2f}" for m in (mode,mode+"-inline"))
-    print(f"| {name} | {both('loadMs')} | {both('firstMs')} | {typical_ratio(mode,'firstMs'):.3f}× | {both('bytes',1024)} | {both('gzip',1024)} |")
+        return " → ".join(f"{summarize(m,key)/scale:.2f}" for m in (mode,mode+suffix))
+    sizes = both("bodyBytes",1024) if compression else f"{both('bytes',1024)} | {both('gzip',1024)}"
+    print(f"| {name} | {both('loadMs')} | {both('firstMs')} | {typical_ratio(mode,'firstMs'):.3f}× | {sizes} |")
 
 rank = max(i for i in range(rounds) if 2*sum(comb(rounds,j) for j in range(i+1))/2**rounds <= .05)
 def interval(case, mode):
@@ -118,6 +150,6 @@ if args.plot:
     ax.set_yticks(range(len(cases)), [label(c) for c in cases])
     ax.invert_yaxis()
     ax.grid(axis="x",alpha=.2)
-    ax.set_xlabel("Time to first result, embedded / fetched")
+    ax.set_xlabel("Time to first result, gzip / uncompressed" if compression else "Time to first result, embedded / fetched")
     fig.legend(*ax.get_legend_handles_labels(),loc="outside lower center",ncol=3)
     fig.savefig(args.plot,dpi=150)

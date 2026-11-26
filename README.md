@@ -14,7 +14,7 @@ At `db4a3aca0`, the external JavaScript entry shrank **15.0–17.9% on every wor
 | Import (ms) | 5.27 | 11.94 | 10.00 | 22.77 |
 | First full result including import (ms) | 61.83 | 203.50 | 62.76 | 78.30 |
 
-Both PR renderers were within 10× of the fastest compiled shim in **21/21 warm headline cases**. The largest ratios were **4.92× internal and 4.50× external**. Each renderer matched or beat 1.13.0 on 18/21 warm headlines in this run. Each met the shim target in 81/84 comparable subphases. The three exceptions return a materialized list of DOM handles, while the original shim discards a live collection. [Equal-work DOM queries](#materializing-bulk-dom-query-results) · [Warmed tables and traversal](#warm-table-creation-and-tree-traversal) · [Canvas readback](#canvas-readback-at-the-pr-head) · [Wasm packaging](#fetching-or-embedding-the-primary-wasm-core) · [Preloading external runtime modules](#preloading-external-runtime-modules)
+Both PR renderers were within 10× of the fastest compiled shim in **21/21 warm headline cases**. The largest ratios were **4.92× internal and 4.50× external**. Each renderer matched or beat 1.13.0 on 18/21 warm headlines in this run. Each met the shim target in 81/84 comparable subphases. The three exceptions return a materialized list of DOM handles, while the original shim discards a live collection. [Equal-work DOM queries](#materializing-bulk-dom-query-results) · [Warmed tables and traversal](#warm-table-creation-and-tree-traversal) · [Canvas readback](#canvas-readback-at-the-pr-head) · [Wasm packaging](#fetching-or-embedding-the-primary-wasm-core) · [Preloading external runtime modules](#preloading-external-runtime-modules) · [HTTP gzip](#serving-the-browser-bindings-with-http-gzip)
 
 ![Warm operation time versus the fastest shim and 1.13.0, and first-result time versus 1.13.0, for both PR renderers.](web/bench/results/review-matrix-minified-db4a3aca0.png)
 
@@ -287,6 +287,42 @@ Build Jco at `db4a3aca0`, install the fork's pinned web dependencies and prepare
 CHROME_BIN=/path/to/chrome ROUNDS=18 node web/bench/core-startup.mjs \
   /path/to/built/jco /tmp/modulepreload.json.gz --modulepreload
 python3 web/bench/modulepreload-report.py /tmp/modulepreload.json.gz --plot /tmp/modulepreload.png
+```
+
+</details>
+
+## Serving the browser bindings with HTTP gzip
+
+Across six small DOM workloads, gzip reduced the median JS and Wasm response bodies from **141.52 to 46.70 KiB** for the internal Oxc bundle and **193.73 to 68.18 KiB** for the external runtime. On HTTP/1.1 loopback, time to first result with gzip was **8.25 ms** on Jco 1.13.0, **15.09 ms** internally and **29.36 ms** externally. Smaller transfers alone did not close the startup gap on this connection. [Samples, asset hashes and browser-reported transfer sizes](web/bench/results/http-gzip.json.gz)
+
+| Build | Import ms, plain → gzip | First result ms, plain → gzip | Paired first result | JS + Wasm body KiB, plain → gzip |
+| --- | ---: | ---: | ---: | ---: |
+| Jco 1.13.0 | 5.58 → 5.83 | 7.96 → 8.25 | 1.010× | 78.91 → 30.48 |
+| Internal Oxc | 10.36 → 10.56 | 14.22 → 15.09 | 1.056× | 141.52 → 46.70 |
+| External runtime | 24.70 → 25.39 | 28.46 → 29.36 | 1.027× | 193.73 → 68.18 |
+
+The browser fetched one JS entry and one Wasm file on release and internal builds. The external build also fetched 18 runtime modules. Each gzip response contained the same decoded bytes as its plain counterpart. Seventeen of the 18 individual 95% intervals for gzip relative to plain included parity. Rust table update on the external runtime took 1.20× as long with gzip (1.02–1.37×). The trial used a loopback connection with no bandwidth cap or injected latency.
+
+![Time to first result with gzip relative to uncompressed HTTP responses, by guest, workload and binding implementation.](web/bench/results/http-gzip.png)
+
+<details><summary>Per-workload paired first-result ratios and reproduction</summary>
+
+| Guest and workload | 1.13.0 | Internal Oxc | External runtime |
+| --- | ---: | ---: | ---: |
+| C DOM query | 0.99× (0.69–1.44) | 1.04× (0.74–1.61) | 1.01× (0.81–1.31) |
+| C++ DOM query | 1.12× (0.74–1.45) | 1.08× (0.61–1.64) | 1.04× (0.80–1.17) |
+| Rust DOM query | 1.03× (0.73–1.59) | 1.12× (0.62–1.78) | 0.95× (0.81–1.26) |
+| C table update | 0.99× (0.75–1.40) | 1.00× (0.68–1.72) | 1.04× (0.85–1.21) |
+| C++ table update | 0.98× (0.78–1.34) | 1.09× (0.63–1.78) | 0.93× (0.85–1.13) |
+| Rust table update | 1.14× (0.69–1.52) | 1.03× (0.62–1.54) | 1.20× (1.02–1.37) |
+
+The 18 balanced rounds covered 648 fresh Chromium documents, with caching disabled and DevTools disconnected. Each document imported the common host before timing, loaded one minified component, and ran a small DOM query or table update. Responses were precompressed at gzip level 9. The runner checked decoded and encoded body lengths on each timed request. The table summarizes medians across six workload medians. Paired ratios compare times within the same guest, workload and round. [Runner](web/bench/core-startup.mjs) · [Verifier and interval calculation](web/bench/core-startup-report.py)
+
+Use the [benchmark setup](#reproduce-the-comparison) with Jco at [the measured revision](https://github.com/vados-cosmonic/jco/commit/5e5b156066a4eb3a793404ee85a64b6a6e3fe9bd) and run from this checkout.
+
+```sh
+CHROME_BIN=/path/to/chrome ROUNDS=18 node web/bench/core-startup.mjs /path/to/built/jco /tmp/http-gzip.json.gz --gzip
+python3 web/bench/core-startup-report.py /tmp/http-gzip.json.gz --plot /tmp/http-gzip.png
 ```
 
 </details>
