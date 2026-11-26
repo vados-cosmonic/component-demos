@@ -1,0 +1,250 @@
+--- runtime-chunks.mjs
++++ facade-trial.mjs
+@@ -12,17 +12,13 @@ import { pathToFileURL } from "node:url";
+ import { brotliCompressSync, constants, gunzipSync, gzipSync } from "node:zlib";
+ import puppeteer from "puppeteer-core";
+ import { parse } from "acorn";
+-import { bundleApp } from "./app-bundle.mjs";
++
+
+ const [checkout, matrixFile, output, study, ...extra] = process.argv.slice(2);
+-const appPreload = study === "--shaped-preload";
+-const automaticControl = study === "--automatic-control";
+-const coreHints = study === "--core-hints";
+-const shaped = coreHints || study === "--shaped" || appPreload || automaticControl;
+-const alternative = automaticControl ? "automatic" : "grouped";
+-const compactHelpers = study === "--compact-helpers" || study === "--compact-component";
+-assert(!extra.length && (!study || shaped || compactHelpers));
+-assert(output, "Usage: runtime-chunks.mjs <built Jco checkout> <matrix.json.gz> <output.json.gz> [--shaped|--shaped-preload|--compact-helpers|--compact-component|--automatic-control|--core-hints]");
++assert(output && study === "--compare-facades" && !extra.length);
++const shaped = true;
++const coreHints = false;
++const compactHelpers = false;
+ const digest = (x) => createHash("sha256").update(x).digest("hex");
+ const matrixBytes = await readFile(matrixFile);
+ const matrix = JSON.parse(gunzipSync(matrixBytes));
+@@ -52,16 +48,8 @@ const assets = new Map(),
+   graph = {},
+   api = {},
+   footprints = {};
+-const builds = coreHints
+-  ? ["release", "release-core", "bundled", "bundled-core", "external", "external-core",
+-     "application", "application-core", "application-preload", "application-both"]
+-  : appPreload
+-  ? ["release", "bundled", "application", "application-preload"]
+-  : shaped
+-  ? ["release", "bundled", "external", automaticControl ? "automatic" : "application"]
+-  : ["release", "bundled", "external", "grouped", "application"];
+-const protocols = shaped ? ["h2"] : ["http/1.1", "h2"];
+-const profiles = appPreload ? ["limited"] : shaped ? ["loopback", "limited"] : [null];
++const builds = ["release", "external", "separate", "extended"];
++const protocols = ["h2"], profiles = ["loopback", "limited"];
+ const emulation = { latency: 40, download: 1250000, upload: 1250000 };
+ const encoded = new Map();
+ function add(path, bytes, reference) {
+@@ -97,39 +85,48 @@ for (const entry of Object.keys(input)) {
+   api[entry] = Object.keys(await import(pathToFileURL(join(pkg, "dist", name)))).sort();
+   registerEntry("external", entry, "/runtime/" + name);
+ }
+-if (!shaped || automaticControl) {
++const namespaces = ["sync-task", "component", "resource", "js-helper", "core"];
++const paths = namespaces.map(n => "intrinsics/" + n);
++for (const layout of ["separate", "extended"]) {
++  const facade = layout === "separate" ? "intrinsics/sync-instance" : "intrinsics/sync-task";
++  const facadePath = join(pkg, "dist/debug", facade + ".js");
+   const bundle = await rolldown({
+-    input, platform: "neutral", external: [/^node:/],
+-    preserveEntrySignatures: "strict", transform: { dropLabels: ["DEBUG"] },
++    input: {...input, [facade]:facadePath}, platform:"neutral", external:[/^node:/],
++    preserveEntrySignatures:"strict", transform:{dropLabels:["DEBUG"]},
++    plugins:[{
++      name:"facade-trial",
++      resolveId(id) { if (id === facadePath) return id; },
++      async load(id) {
++        if (id !== facadePath) return;
++        const current = layout === "extended" ? await readFile(id, "utf8") : "";
++        const forwarding = namespaces.filter(n => "intrinsics/" + n !== facade);
++        return current + "\n" + forwarding.map(n => 'export * from "./' + n + '.js";').join("\n");
++      },
++    }],
+   });
+   try {
+-    const group = compactHelpers
+-      ? { name: "shared", test: /\/intrinsics\/(?:decode-utf8|sync-waiter|js-helper)\.js$/ }
+-      : { name: "common", minShareCount: 4 };
+-    const { output } = await bundle.generate({
+-      format: "esm", minify: true, sourcemap: true, entryFileNames: "[name].js",
+-      chunkFileNames: "chunks/[name]-[hash].js",
+-      ...(automaticControl ? {} : { codeSplitting: { groups: [group] } }),
++    const {output} = await bundle.generate({
++      format:"esm", minify:true, sourcemap:true, entryFileNames:"[name].js",
++      chunkFileNames:"chunks/[name]-[hash].js", codeSplitting:{groups:[
++        {name:"shared", test:/[/\\]intrinsics[/\\](?:decode-utf8|sync-waiter|js-helper)\.js$/},
++      ]},
+     });
+     const chunks = output.filter(x => x.type === "chunk");
+     const local = new Set(chunks.map(c => c.fileName));
+     for (const c of chunks) {
+-      const path = "/grouped/" + c.fileName;
+-      add(path, c.code);
+-      graph[path] = c.imports.filter(i => local.has(i)).map(i => "/grouped/" + i);
++      const path = "/" + layout + "/" + c.fileName;
++      add(path,c.code);
++      graph[path] = c.imports.filter(i => local.has(i)).map(i => "/" + layout + "/" + i);
+     }
+-    imports[alternative] = {};
+-    footprints[alternative] = {};
++    imports[layout] = {}; footprints[layout] = {};
+     for (const entry of Object.keys(input)) {
+-      const file = entry + ".js";
+-      assert.deepEqual(chunks.find(c => c.fileName === file).exports.toSorted(), api[entry], entry);
+-      registerEntry(alternative, entry, "/grouped/" + file);
++      const chunk = chunks.find(c => c.fileName === entry + ".js");
++      for (const name of api[entry]) assert(chunk.exports.includes(name), entry + "#" + name);
++      registerEntry(layout, entry, "/" + layout + "/" + (paths.includes(entry) ? facade : entry) + ".js");
+     }
+   } finally { await bundle.close(); }
+ }
+-const inputs = automaticControl || coreHints
+-  ? Object.fromEntries(["dom-query", "table-update"].map(name => [name, Object.values(matrix.workloads[name])]))
+-  : { "dom-query": [8, 2], "table-update": [8] };
++const inputs = {"dom-query":[8,2],"table-update":[8]};
+ for (const file of [
+   "host/web-host.js",
+   "host/common.js",
+@@ -195,55 +192,18 @@ for (const demo of Object.keys(inputs))
+           closure(publicFiles),
+           requests.filter((p) => p.startsWith("/runtime/")).sort(),
+         );
+-        if (shaped && !automaticControl) continue;
+-        const grouped = closure(publicFiles.map((p) => p.replace("/runtime/", "/grouped/")));
+-        expected[key][alternative] = {
+-          entry: ref.entry,
+-          requests: [...requests.filter((p) => !p.startsWith("/runtime/")), ...grouped].sort(),
+-        };
++        for (const layout of ["separate","extended"]) {
++          const map = Object.fromEntries(Object.keys(imports.external).map(name =>
++            [imports.external[name],imports[layout][name]]));
++          const modules = closure(publicFiles.map(p => map[p]));
++          expected[key][layout] = {entry:ref.entry, requests:[
++            ...requests.filter(p => !p.startsWith("/runtime/")), ...modules,
++          ].sort()};
++        }
+       }
+     }
+   }
+-// Package these same generated external entries in one application build. Both
+-// layouts use the identical guest Wasm at the relative URL used by the adapter.
+-const appCases = cases.map((key) => ({
+-  base: "/" + key,
+-  name: basename(key).replaceAll("-", "_"),
+-}));
+-const app = await bundleApp(resolve(checkout), appCases, "external", assets);
+-assert.equal(app.version, VERSION);
+-Object.assign(graph, app.graph);
+-for (const [path, bytes] of app.files)
+-  add(path, bytes, path.endsWith(".wasm") ? path.replace("/external-app/", "/external/") : null);
+-for (const { base, name } of appCases) {
+-  const entry = base + "/external-app/" + name + ".js";
+-  const appEntry = {
+-    entry,
+-    requests: [...closure([entry]), entry.replace(/\.js$/, ".core.wasm")].sort(),
+-  };
+-  expected[base.slice(1)].application = appEntry;
+-  if (appPreload || coreHints) {
+-    assert.equal(graph[entry].length, 1, "expected one shared JS chunk");
+-    expected[base.slice(1)]["application-preload"] = { ...appEntry, hint: graph[entry][0] };
+-  }
+-  if (coreHints) {
+-    const layouts = expected[base.slice(1)];
+-    for (const mode of ["release", "bundled", "external", "application"]) {
+-      const cores = layouts[mode].requests.filter(path => path.endsWith(".wasm"));
+-      assert.equal(cores.length, 1);
+-      layouts[mode + "-core"] = { ...layouts[mode], coreHint: cores[0] };
+-    }
+-    layouts["application-both"] = { ...layouts["application-core"], hint: graph[entry][0] };
+-  }
+-}
+-const probe = study === "--compact-component" ? "component" : "conversion";
+-expected[probe] = {};
+-for (const layout of shaped ? ["external"] : ["external", "grouped"])
+-  expected[probe][layout] = {
+-    entry: imports[layout][matrix.checkedPackage + "/intrinsics/" + probe],
+-    requests: footprints[layout]["intrinsics/" + probe],
+-  };
+-
++const probe = null;
+ async function measure({ demo, entry, args, probe, hint, coreHint }) {
+   let getMeasurements;
+   if (!probe) {
+@@ -340,7 +300,7 @@ if (shaped) {
+     files[path].brotli = body.length;
+   }
+ }
+-const rounds = shaped && !coreHints ? 16 : 20,
++const rounds = 16,
+   samples = [],
+   servers = [];
+ let chromium;
+@@ -351,7 +311,7 @@ function handler(req, res) {
+   res.setHeader("cross-origin-opener-policy", "same-origin");
+   res.setHeader("cross-origin-embedder-policy", "require-corp");
+   if (path.startsWith("/page/")) {
+-    const layout = path === "/page/" + alternative ? alternative : "external";
++    const layout = imports[path.slice(6)] ? path.slice(6) : "external";
+     res.setHeader("content-type", "text/html");
+     return res.end(
+       '<!doctype html><script type="importmap">' +
+@@ -364,7 +324,7 @@ function handler(req, res) {
+     return res.end();
+   }
+   res.setHeader("content-type", path.endsWith(".wasm") ? "application/wasm" : "text/javascript");
+-  if (coreHints) served.push(path);
++  served.push(path);
+   if (shaped) {
+     if (!/\bbr\b/.test(req.headers["accept-encoding"] ?? "")) return res.writeHead(406).end();
+     res.setHeader("content-encoding", "br");
+@@ -390,7 +350,24 @@ try {
+     });
+     try {
+       chromium = await browser.version();
+-      const workloads = shaped ? cases : [...cases, probe];
++      if (round === 0) {
++        for (const layout of ["separate","extended"]) {
++          const page = await browser.newPage();
++          try {
++            await page.goto("https://127.0.0.1:" + servers[0].address().port + "/page/" + layout);
++            await page.evaluate(async ({paths, api, pkg, layout}) => {
++              for (const path of paths) {
++                const original = await import("/" + layout + "/" + path + ".js");
++                const combined = await import(pkg + "/" + path);
++                for (const name of api[path]) {
++                  if (!Object.is(original[name], combined[name])) throw Error(path + "#" + name);
++                }
++              }
++            }, {paths, api, pkg:matrix.checkedPackage, layout});
++          } finally {await page.close();}
++        }
++      }
++      const workloads = cases;
+       for (let j = 0; j < workloads.length; j++) {
+         const workload = workloads[(j + round) % workloads.length],
+           isProbe = workload === probe;
+@@ -434,7 +411,7 @@ try {
+             });
+             assert(data.importMs > 0 && data.firstMs >= data.importMs);
+             assert.deepEqual(data.requests.map((r) => r.path).sort(), requests);
+-            if (coreHints) {
++            {
+               assert.deepEqual(served.toSorted(), requests, "duplicate or missing request at the server");
+               data.served = served.slice();
+             }
+@@ -493,7 +470,7 @@ await writeFile(
+       rolldown: VERSION,
+       matrixSha256: digest(matrixBytes),
+       runnerSha256: digest(await readFile(import.meta.filename)),
+-      appBundlerSha256: digest(await readFile(join(import.meta.dirname, "app-bundle.mjs"))),
++      namespaces,
+     }),
+   ),
+ );

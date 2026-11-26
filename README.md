@@ -72,6 +72,32 @@ python3 web/bench/bulk-dom-report.py /tmp/bulk.json.gz --matrix /tmp/matrix.json
 
 </details>
 
+### Loading five runtime modules through one entry
+
+The external bindings import task operations, component state, resource tables, JavaScript helpers and core operations through five public modules. Two package experiments re-exported those functions together. One added a public entry, and the other extended `intrinsics/sync-task`. An import map let each trial run the exact same generated bindings and Wasm as the shipping control. Chromium verified that every forwarded export from the five modules had the same identity as the original within that package. The test ran C, C++ and Rust DOM queries with eight elements and table updates with eight rows in 768 fresh documents. [Request traces, hashes and timings](web/bench/results/sync-facades-fe136cf1a.json.gz)
+
+| Build | Runtime requests | Runtime Brotli bytes | First result on loopback | First result at 40 ms, 10 Mbit/s |
+| --- | ---: | ---: | ---: | ---: |
+| Jco 1.13.0 | 0 | 0 | 15.74 ms | 113.94 ms |
+| Shipping external runtime | 14 | 26,845 | 43.26 ms | 229.17 ms |
+| Separate combined entry | 11 | 26,863 | 40.58 ms | 230.13 ms |
+| Extended task entry | 10 | 26,656 | 39.53 ms | 228.59 ms |
+
+The byte and request columns count the external runtime package alone. Jco 1.13.0 ships its helpers in each generated binding. Each time is the median across six workload medians. Pairing runs within each browser process, the separate and extended entries took **0.921×** (individual 95% interval 0.878–0.987) and **0.901×** (0.865–0.942) the shipping first-result time on loopback. On the limited connection the ratios were **1.007×** (0.996–1.011) and **0.999×** (0.995–1.010). The separate entry left every existing public module byte-identical. Extending the task entry added 1,125 Brotli bytes to a standalone task import. Both layouts remain experiments in this benchmark fork.
+
+<details><summary>Reproduce the HTTP/2 package comparison</summary>
+
+Build Jco at `fe136cf1a` in `$after`, set `CHROME_BIN` to Chromium, and run from the benchmark repository root. Each of 16 browser processes exercises both connection profiles and all four builds. The report checks the exact requests against the server log, the control assets against the shipping matrix and the order of treatments across rounds.
+
+```sh
+matrix=web/bench/results/review-matrix-sync-task-3e25d8d82.json.gz
+patch -o web/bench/facade-trial.mjs web/bench/runtime-chunks.mjs web/bench/experiments/sync-facades.patch
+node web/bench/facade-trial.mjs "$after" "$matrix" /tmp/facades.json.gz --compare-facades
+python3 web/bench/facade-report.py /tmp/facades.json.gz "$matrix" web/bench/facade-trial.mjs
+```
+
+</details>
+
 ### When should the runtime define its shared classes?
 
 The runtime shares the implementation of `RepTable`, `ComponentAsyncState`, `AsyncTask` and `AsyncThread` across instances. Each store still has its own subclass, state and constructor identity. We tried defining the four implementation classes when their modules load. The standard package currently defines each one on first use. The trial rebuilt both the external runtime and the internal Oxc compiler from the same four source changes. The previous first-instance trace measured 0.15–0.37 ms in each external factory, including the work to construct the store-specific subclass. [Exact runtime patch](web/bench/experiments/eager-class-definitions.patch) · [First-instance trace](web/bench/results/init-task-trace-3e25d8d82.json.gz)
