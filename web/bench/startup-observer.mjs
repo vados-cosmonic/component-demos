@@ -20,10 +20,11 @@ const min = await readFile(join(results, "minified-sizes.json"));
 assert.equal(hash(full), trial.sizesSha256);
 assert.equal(hash(min), trial.minifiedSizesSha256);
 const mode = process.argv.slice(2).join(" ");
-assert(["", "--compile-hint", "--compile-hint --small", "--wasm-timing"].includes(mode), "Unknown startup trial: " + mode);
+assert(["", "--compile-hint", "--compile-hint --small", "--wasm-timing", "--module-body"].includes(mode), "Unknown startup trial: " + mode);
 const compareHint = mode.startsWith("--compile-hint");
 const wasmTiming = mode === "--wasm-timing";
-const small = mode.endsWith("--small");
+const moduleBody = mode === "--module-body";
+const small = moduleBody || mode.endsWith("--small");
 // These five guests accept fixed operation counts. The other two adapt their loop count to elapsed time.
 const workloads = small ? {
   "attribute-churn": { elements: 8, iters: 2 },
@@ -45,12 +46,21 @@ const minified = JSON.parse(min).components;
 const inventory = JSON.parse(full);
 const builds = [];
 const hintedSources = {};
+const markedScripts = new Map();
+const markBody = Buffer.from('\nglobalThis.performance.mark("binding-module-body");\n');
+const directive = Buffer.from('"use components";');
+function markModule(source) {
+  // Preserve Jco's directive prologue and add the same first executable statement to every build.
+  const offset = source.subarray(0, directive.length).equals(directive) ? directive.length : 0;
+  assert(!/^[\s]*["']/.test(source.subarray(offset).toString()), "Unrecognized module directive");
+  return Buffer.concat([source.subarray(0, offset), markBody, source.subarray(offset)]);
+}
 for (const { input, variants } of inventory.components) {
   const [lang, demo] = input.path.split("/");
   if (!Object.hasOwn(workloads, demo) || basename(input.path) !== demo.replaceAll("-", "_") + ".wasm") continue;
   for (const [version, files] of Object.entries({ ...variants, ...minified[input.path] })) {
     if (wasmTiming && !["baseline", "main", "candidate"].includes(version)) continue;
-    if (compareHint && version.endsWith("-minified")) continue;
+    if ((compareHint || moduleBody) && version.endsWith("-minified")) continue;
     const paths = {};
     for (const file of files) {
       const path = "/" + file.path;
@@ -61,6 +71,12 @@ for (const { input, variants } of inventory.components) {
     const scripts = Object.keys(paths).filter(path => path.endsWith(".js"));
     assert.equal(scripts.length, 1);
     builds.push({ lang, demo, version, path: scripts[0], paths });
+    if (moduleBody) {
+      const path = scripts[0];
+      const marked = markModule(await readFile(join(web, path)));
+      markedScripts.set(path, marked);
+      builds.push({ lang, demo, version, path, marked: true, paths: { ...paths, [path]: marked.length } });
+    }
     if (wasmTiming) builds.push({ lang, demo, version, path: scripts[0], paths, traceWasm: true });
     if (compareHint && version !== "reference") {
       const path = scripts[0];
@@ -71,7 +87,7 @@ for (const { input, variants } of inventory.components) {
     }
   }
 }
-assert.equal(builds.length, Object.keys(workloads).length * 3 * (!wasmTiming && inventory.reference ? 7 : 6));
+assert.equal(builds.length, Object.keys(workloads).length * 3 * (moduleBody ? (inventory.reference ? 8 : 6) : !wasmTiming && inventory.reference ? 7 : 6));
 
 // Installed only in the instrumented documents. Record wall time until promise settlement
 // without changing the promise returned to the module or serializing overlapping operations.
@@ -92,7 +108,7 @@ function observeWasm() {
 }
 
 // Stringified into a module script in the trial document.
-async function measure({ demo, path, args }, observe) {
+async function measure({ demo, path, args, marked }, observe) {
   const { getMeasurements } = await import("/examples/" + demo + "/main.js");
   const calls = observe?.();
   const start = performance.now();
@@ -114,7 +130,13 @@ async function measure({ demo, path, args }, observe) {
   const reports = Object.values(getMeasurements());
   if (reports.length !== 1 || !Object.keys(reports[0]).length ||
       !Object.values(reports[0]).every(v => Number.isFinite(v) && v >= 0)) throw Error("Invalid guest result");
-  return { loadMs: ready - start, firstCallMs: complete - ready, firstResultMs: complete - start, requests, wasmCalls };
+  let bodyStartMs;
+  if (marked) {
+    const marks = performance.getEntriesByName("binding-module-body", "mark");
+    if (marks.length !== 1) throw Error("Expected a single module body marker");
+    bodyStartMs = marks[0].startTime - start;
+  }
+  return { bodyStartMs, loadMs: ready - start, firstCallMs: complete - ready, firstResultMs: complete - start, requests, wasmCalls };
 }
 
 const samples = [];
@@ -142,6 +164,10 @@ async function runBlock(order, round, attached) {
       }
       if (assets.has(url.pathname)) {
         res.setHeader("Content-Type", assets.get(url.pathname));
+        if (url.search === "?body") {
+          assert(markedScripts.has(url.pathname));
+          return res.end(markedScripts.get(url.pathname));
+        }
         const bytes = await readFile(join(web, url.pathname));
         if (url.search === "?eager") {
           assert(compareHint && Object.hasOwn(hintedSources, url.pathname));
@@ -152,8 +178,8 @@ async function runBlock(order, round, attached) {
       if (url.pathname === "/favicon.ico") return res.writeHead(204).end();
       const build = order[position];
       if (req.method === "GET" && url.pathname === "/trial/" + position) {
-        const path = build.path + (build.version.endsWith("-eager") ? "?eager" : "");
-        const params = JSON.stringify({ demo: build.demo, path, args: Object.values(workloads[build.demo]) });
+        const path = build.path + (build.marked ? "?body" : build.version.endsWith("-eager") ? "?eager" : "");
+        const params = JSON.stringify({ demo: build.demo, path, marked: build.marked, args: Object.values(workloads[build.demo]) });
         res.setHeader("Content-Type", "text/html");
         return res.end(`<!doctype html><body><script type="module">
           let result;
@@ -166,7 +192,7 @@ async function runBlock(order, round, attached) {
       if (req.method === "POST" && url.pathname === "/result/" + position) {
         let body = "";
         for await (const chunk of req) body += chunk;
-        const { error, loadMs, firstCallMs, firstResultMs, requests, wasmCalls } = JSON.parse(body);
+        const { error, bodyStartMs, loadMs, firstCallMs, firstResultMs, requests, wasmCalls } = JSON.parse(body);
         assert(!error, error);
         assert(Number.isFinite(loadMs) && loadMs > 0);
         assert(Number.isFinite(firstCallMs) && firstCallMs > 0);
@@ -182,11 +208,14 @@ async function runBlock(order, round, attached) {
         const wasmStartMs = Math.min(...wasm.map(r => r.startMs));
         const wasmEndMs = Math.max(...wasm.map(r => r.endMs));
         assert(wasm.length > 0 && wasmStartMs >= script.endMs - .01);
+        if (build.marked) {
+          assert(bodyStartMs >= script.endMs - .01 && bodyStartMs <= wasmStartMs + .01);
+        } else assert.equal(bodyStartMs, undefined);
         if (build.traceWasm) {
           for (const kind of ["compile", "instantiate"]) assert(wasmCalls.some(call => call.name.startsWith(kind)));
           for (const call of wasmCalls) assert(0 <= call.startMs && call.startMs <= call.endMs && call.endMs <= loadMs);
         } else assert.equal(wasmCalls, undefined);
-        samples.push({ ...(wasmTiming ? { traced: !!build.traceWasm, wasmCalls } : {}), round, attached, demo: build.demo, lang: build.lang, version: build.version,
+        samples.push({ ...(moduleBody ? { marked: !!build.marked, bodyStartMs } : {}), ...(wasmTiming ? { traced: !!build.traceWasm, wasmCalls } : {}), round, attached, demo: build.demo, lang: build.lang, version: build.version,
           loadMs, firstCallMs, firstResultMs, jsEndMs: script.endMs, wasmStartMs, wasmEndMs });
         position++;
         watchdog.refresh();
@@ -238,15 +267,17 @@ async function runBlock(order, round, attached) {
 
 for (let n = 0; n < rounds; n++) {
   const order = builds.map((_, i) => builds[(n + (n % 2 ? -i : i) + builds.length) % builds.length]);
-  const modes = compareHint || wasmTiming ? [false] : n % 2 ? [true, false] : [false, true];
+  const modes = compareHint || wasmTiming || moduleBody ? [false] : n % 2 ? [true, false] : [false, true];
   for (const attached of modes) {
     await runBlock(order, n + 1, attached);
     console.log(`Round ${n + 1}/${rounds} · ${attached ? "attached" : "detached"} · ${order.length} documents`);
   }
 }
-const filename = wasmTiming ? "wasm-startup.json" : small ? "compile-hint-small.json" : compareHint ? "compile-hint.json" : "startup-observer.json";
+const filename = moduleBody ? "module-body.json" : wasmTiming ? "wasm-startup.json" : small ? "compile-hint-small.json" : compareHint ? "compile-hint.json" : "startup-observer.json";
 await writeFile(join(results, filename), JSON.stringify({
   date: new Date().toISOString(), browser: browserVersion, cpu: cpus()[0].model, node: process.version, rounds,
   originalSha256: hash(original), runnerSha256: hash(await readFile(import.meta.filename)),
+  ...(moduleBody ? { workloads, markedSources: Object.fromEntries(
+    [...markedScripts].map(([path, bytes]) => [path, hash(bytes)])) } : {}),
   ...(compareHint ? { hint: hint.toString(), hintedSources, workloads, reference: inventory.reference } : {}), samples,
 }, null, 2) + "\n");

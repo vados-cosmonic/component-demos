@@ -1,0 +1,214 @@
+{
+  "candidate": "900def079675eaa44479b686670ff6f3c5749093",
+  "reference": "5c6ddda44bce1730a61a69f2d48db94e3065ca31",
+  "previousBenchmark": "53a0057e71d25b91dcb0f9c475762140765078c8",
+  "inventorySha256": "7dcd9192e3af61d0980b4eb603429bbe45daaae7643088692d6065b6bec49bc4",
+  "acorn": "8.17.0",
+  "verifierSha256": "08a088f6ec4d0c2edb37471fe878614a1a49d36c8db11e79e68cbfab068c6c3b",
+  "inputs": [
+    {
+      "input": "c/attribute-churn/native/attribute_churn.wasm",
+      "changed": 641,
+      "cores": 1,
+      "minifiedAssets": 2
+    },
+    {
+      "input": "c/calculator/native/calculator.wasm",
+      "changed": 635,
+      "cores": 0,
+      "minifiedAssets": 1
+    },
+    {
+      "input": "c/canvas-draw/native/canvas_draw.wasm",
+      "changed": 641,
+      "cores": 1,
+      "minifiedAssets": 2
+    },
+    {
+      "input": "c/canvas-pixels/native/canvas_pixels.wasm",
+      "changed": 641,
+      "cores": 1,
+      "minifiedAssets": 2
+    },
+    {
+      "input": "c/dom-query/native/dom_query.wasm",
+      "changed": 641,
+      "cores": 1,
+      "minifiedAssets": 2
+    },
+    {
+      "input": "c/dom-traversal/native/dom_traversal.wasm",
+      "changed": 641,
+      "cores": 1,
+      "minifiedAssets": 2
+    },
+    {
+      "input": "c/greet-bindgen/native/greet.wasm",
+      "changed": 635,
+      "cores": 1,
+      "minifiedAssets": 2
+    },
+    {
+      "input": "c/greet-freestanding/native/greet.wasm",
+      "changed": 635,
+      "cores": 0,
+      "minifiedAssets": 1
+    },
+    {
+      "input": "c/greet-libc/native/greet.wasm",
+      "changed": 635,
+      "cores": 1,
+      "minifiedAssets": 2
+    },
+    {
+      "input": "c/hello-world/native/hello_world.wasm",
+      "changed": 641,
+      "cores": 1,
+      "minifiedAssets": 2
+    },
+    {
+      "input": "c/string-marshalling/native/string_marshalling.wasm",
+      "changed": 641,
+      "cores": 1,
+      "minifiedAssets": 2
+    },
+    {
+      "input": "c/table-update/native/table_update.wasm",
+      "changed": 641,
+      "cores": 1,
+      "minifiedAssets": 2
+    },
+    {
+      "input": "cpp/attribute-churn/native/attribute_churn.wasm",
+      "changed": 641,
+      "cores": 1,
+      "minifiedAssets": 2
+    },
+    {
+      "input": "cpp/canvas-draw/native/canvas_draw.wasm",
+      "changed": 641,
+      "cores": 1,
+      "minifiedAssets": 2
+    },
+    {
+      "input": "cpp/canvas-pixels/native/canvas_pixels.wasm",
+      "changed": 641,
+      "cores": 1,
+      "minifiedAssets": 2
+    },
+    {
+      "input": "cpp/dom-query/native/dom_query.wasm",
+      "changed": 641,
+      "cores": 1,
+      "minifiedAssets": 2
+    },
+    {
+      "input": "cpp/dom-traversal/native/dom_traversal.wasm",
+      "changed": 641,
+      "cores": 1,
+      "minifiedAssets": 2
+    },
+    {
+      "input": "cpp/hello-world/native/hello_world.wasm",
+      "changed": 641,
+      "cores": 1,
+      "minifiedAssets": 2
+    },
+    {
+      "input": "cpp/string-marshalling/native/string_marshalling.wasm",
+      "changed": 641,
+      "cores": 1,
+      "minifiedAssets": 2
+    },
+    {
+      "input": "cpp/table-update/native/table_update.wasm",
+      "changed": 641,
+      "cores": 1,
+      "minifiedAssets": 2
+    },
+    {
+      "input": "rust/attribute-churn/native/attribute_churn.wasm",
+      "changed": 641,
+      "cores": 1,
+      "minifiedAssets": 2
+    },
+    {
+      "input": "rust/calculator-raw/native/calculator.wasm",
+      "changed": 635,
+      "cores": 1,
+      "minifiedAssets": 2
+    },
+    {
+      "input": "rust/calculator/native/calculator.wasm",
+      "changed": 635,
+      "cores": 1,
+      "minifiedAssets": 2
+    },
+    {
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "changed": 641,
+      "cores": 1,
+      "minifiedAssets": 2
+    },
+    {
+      "input": "rust/canvas-pixels/native/canvas_pixels.wasm",
+      "changed": 641,
+      "cores": 1,
+      "minifiedAssets": 2
+    },
+    {
+      "input": "rust/dom-query/native/dom_query.wasm",
+      "changed": 641,
+      "cores": 1,
+      "minifiedAssets": 2
+    },
+    {
+      "input": "rust/dom-traversal/native/dom_traversal.my.component.wasm",
+      "changed": 641,
+      "cores": 1,
+      "minifiedAssets": 2
+    },
+    {
+      "input": "rust/dom-traversal/native/dom_traversal.wasm",
+      "changed": 641,
+      "cores": 1,
+      "minifiedAssets": 2
+    },
+    {
+      "input": "rust/hello-world/native/hello_world.wasm",
+      "changed": 641,
+      "cores": 1,
+      "minifiedAssets": 2
+    },
+    {
+      "input": "rust/string-marshalling/native/string_marshalling.wasm",
+      "changed": 641,
+      "cores": 1,
+      "minifiedAssets": 2
+    },
+    {
+      "input": "rust/table-rows/native/table_rows.wasm",
+      "changed": 641,
+      "cores": 1,
+      "minifiedAssets": 2
+    },
+    {
+      "input": "rust/table-update/native/table_update.wasm",
+      "changed": 641,
+      "cores": 1,
+      "minifiedAssets": 2
+    },
+    {
+      "input": "rust/todomvc/native/todomvc.wasm",
+      "changed": 641,
+      "cores": 1,
+      "minifiedAssets": 2
+    },
+    {
+      "input": "rust/vdom-diff/native/vdom_diff.wasm",
+      "changed": 641,
+      "cores": 1,
+      "minifiedAssets": 2
+    }
+  ]
+}

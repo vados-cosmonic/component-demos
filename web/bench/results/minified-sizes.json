@@ -1,5 +1,5 @@
 {
-  "sizesSha256": "365af8ce945d519747466ba78bc8785cf739c4e3f44e9c8e430285168ee14f68",
+  "sizesSha256": "7dcd9192e3af61d0980b4eb603429bbe45daaae7643088692d6065b6bec49bc4",
   "runnerSha256": "a1ce14eeeb3bc7062aad894f0cd2ba6f97f49f45b021e04d94fa5630b5289369",
   "components": {
     "c/attribute-churn/native/attribute_churn.wasm": {

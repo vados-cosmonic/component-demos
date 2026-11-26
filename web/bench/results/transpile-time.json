@@ -1,0 +1,911 @@
+{
+  "cpu": "Intel(R) Xeon(R) Processor @ 2.60GHz",
+  "buildProfile": "dev",
+  "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+  "rounds": 21,
+  "seed": 31801,
+  "machine": "x86_64",
+  "system": "Linux",
+  "release": "6.12.111",
+  "inputs": [
+    "c/dom-query/native/dom_query.wasm",
+    "rust/canvas-draw/native/canvas_draw.wasm",
+    "cpp/table-update/native/table_update.wasm"
+  ],
+  "inventorySha256": "7dcd9192e3af61d0980b4eb603429bbe45daaae7643088692d6065b6bec49bc4",
+  "runnerSha256": "c0b40dc9f60145b7627d831b3004ebb23435789da0aea354cc357120c3d11165",
+  "versions": {
+    "reference": {
+      "commit": "5c6ddda44bce1730a61a69f2d48db94e3065ca31",
+      "executableSha256": "60d007fee90f700ea3f450238e5570b6214cdd0159b7f33283f903ff17964e2f"
+    },
+    "candidate": {
+      "commit": "900def079675eaa44479b686670ff6f3c5749093",
+      "executableSha256": "4819fafdf8e3bac616bde19c47f827fbb713c6793ac3e4d679b93b8746cc805a"
+    }
+  },
+  "samples": [
+    {
+      "round": 1,
+      "version": "candidate",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 205.836075,
+      "cpuMs": 205.28700000000015
+    },
+    {
+      "round": 1,
+      "version": "reference",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 183.512597,
+      "cpuMs": 183.14400000000003
+    },
+    {
+      "round": 1,
+      "version": "candidate",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 187.107566,
+      "cpuMs": 186.5599999999999
+    },
+    {
+      "round": 1,
+      "version": "reference",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 257.030647,
+      "cpuMs": 256.6350000000003
+    },
+    {
+      "round": 1,
+      "version": "reference",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 239.939267,
+      "cpuMs": 239.38399999999976
+    },
+    {
+      "round": 1,
+      "version": "candidate",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 232.742222,
+      "cpuMs": 232.307
+    },
+    {
+      "round": 2,
+      "version": "reference",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 212.620105,
+      "cpuMs": 202.20600000000013
+    },
+    {
+      "round": 2,
+      "version": "candidate",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 176.316976,
+      "cpuMs": 175.90199999999984
+    },
+    {
+      "round": 2,
+      "version": "candidate",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 252.967399,
+      "cpuMs": 252.5970000000003
+    },
+    {
+      "round": 2,
+      "version": "reference",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 208.017297,
+      "cpuMs": 207.63799999999983
+    },
+    {
+      "round": 2,
+      "version": "reference",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 241.852656,
+      "cpuMs": 241.49300000000002
+    },
+    {
+      "round": 2,
+      "version": "candidate",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 204.010742,
+      "cpuMs": 203.5869999999999
+    },
+    {
+      "round": 3,
+      "version": "reference",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 268.850708,
+      "cpuMs": 268.48299999999995
+    },
+    {
+      "round": 3,
+      "version": "candidate",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 207.150429,
+      "cpuMs": 206.70699999999997
+    },
+    {
+      "round": 3,
+      "version": "candidate",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 181.588384,
+      "cpuMs": 181.1139999999999
+    },
+    {
+      "round": 3,
+      "version": "reference",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 249.110491,
+      "cpuMs": 248.61400000000046
+    },
+    {
+      "round": 3,
+      "version": "candidate",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 170.873007,
+      "cpuMs": 170.54299999999944
+    },
+    {
+      "round": 3,
+      "version": "reference",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 160.315041,
+      "cpuMs": 159.93300000000022
+    },
+    {
+      "round": 4,
+      "version": "candidate",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 298.86374,
+      "cpuMs": 293.9950000000001
+    },
+    {
+      "round": 4,
+      "version": "reference",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 248.272373,
+      "cpuMs": 247.6630000000004
+    },
+    {
+      "round": 4,
+      "version": "reference",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 202.165981,
+      "cpuMs": 201.6929999999999
+    },
+    {
+      "round": 4,
+      "version": "candidate",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 186.829068,
+      "cpuMs": 186.43600000000015
+    },
+    {
+      "round": 4,
+      "version": "reference",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 188.996601,
+      "cpuMs": 188.66799999999927
+    },
+    {
+      "round": 4,
+      "version": "candidate",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 199.106882,
+      "cpuMs": 198.69900000000007
+    },
+    {
+      "round": 5,
+      "version": "candidate",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 183.456282,
+      "cpuMs": 183.04300000000052
+    },
+    {
+      "round": 5,
+      "version": "reference",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 221.633717,
+      "cpuMs": 220.8139999999995
+    },
+    {
+      "round": 5,
+      "version": "candidate",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 183.897472,
+      "cpuMs": 183.29100000000042
+    },
+    {
+      "round": 5,
+      "version": "reference",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 218.187776,
+      "cpuMs": 217.74399999999994
+    },
+    {
+      "round": 5,
+      "version": "reference",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 222.987339,
+      "cpuMs": 222.20999999999947
+    },
+    {
+      "round": 5,
+      "version": "candidate",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 261.068997,
+      "cpuMs": 260.29300000000023
+    },
+    {
+      "round": 6,
+      "version": "reference",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 185.931716,
+      "cpuMs": 185.35000000000045
+    },
+    {
+      "round": 6,
+      "version": "candidate",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 192.764503,
+      "cpuMs": 192.34299999999982
+    },
+    {
+      "round": 6,
+      "version": "reference",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 237.272478,
+      "cpuMs": 236.44399999999987
+    },
+    {
+      "round": 6,
+      "version": "candidate",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 285.672169,
+      "cpuMs": 285.23699999999997
+    },
+    {
+      "round": 6,
+      "version": "reference",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 231.028534,
+      "cpuMs": 230.44099999999912
+    },
+    {
+      "round": 6,
+      "version": "candidate",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 180.984421,
+      "cpuMs": 180.48500000000146
+    },
+    {
+      "round": 7,
+      "version": "reference",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 277.016113,
+      "cpuMs": 276.179
+    },
+    {
+      "round": 7,
+      "version": "candidate",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 247.546421,
+      "cpuMs": 246.52599999999936
+    },
+    {
+      "round": 7,
+      "version": "reference",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 240.879251,
+      "cpuMs": 240.3270000000004
+    },
+    {
+      "round": 7,
+      "version": "candidate",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 202.880515,
+      "cpuMs": 202.4529999999999
+    },
+    {
+      "round": 7,
+      "version": "candidate",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 281.737303,
+      "cpuMs": 280.8899999999999
+    },
+    {
+      "round": 7,
+      "version": "reference",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 263.972666,
+      "cpuMs": 257.8819999999995
+    },
+    {
+      "round": 8,
+      "version": "candidate",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 275.455519,
+      "cpuMs": 274.72299999999973
+    },
+    {
+      "round": 8,
+      "version": "reference",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 252.384996,
+      "cpuMs": 252.00800000000078
+    },
+    {
+      "round": 8,
+      "version": "reference",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 247.540817,
+      "cpuMs": 247.1930000000002
+    },
+    {
+      "round": 8,
+      "version": "candidate",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 190.107376,
+      "cpuMs": 189.6030000000003
+    },
+    {
+      "round": 8,
+      "version": "reference",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 189.385779,
+      "cpuMs": 189.02399999999986
+    },
+    {
+      "round": 8,
+      "version": "candidate",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 255.552364,
+      "cpuMs": 255.03099999999955
+    },
+    {
+      "round": 9,
+      "version": "reference",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 253.412475,
+      "cpuMs": 252.92600000000022
+    },
+    {
+      "round": 9,
+      "version": "candidate",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 200.872832,
+      "cpuMs": 198.46699999999927
+    },
+    {
+      "round": 9,
+      "version": "candidate",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 221.122598,
+      "cpuMs": 215.58599999999961
+    },
+    {
+      "round": 9,
+      "version": "reference",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 226.985776,
+      "cpuMs": 220.52400000000128
+    },
+    {
+      "round": 9,
+      "version": "candidate",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 243.067165,
+      "cpuMs": 241.6879999999999
+    },
+    {
+      "round": 9,
+      "version": "reference",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 270.085318,
+      "cpuMs": 269.55700000000047
+    },
+    {
+      "round": 10,
+      "version": "reference",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 271.214375,
+      "cpuMs": 270.85599999999863
+    },
+    {
+      "round": 10,
+      "version": "candidate",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 293.300174,
+      "cpuMs": 290.55999999999995
+    },
+    {
+      "round": 10,
+      "version": "reference",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 249.598979,
+      "cpuMs": 249.1690000000011
+    },
+    {
+      "round": 10,
+      "version": "candidate",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 165.301086,
+      "cpuMs": 164.92199999999957
+    },
+    {
+      "round": 10,
+      "version": "candidate",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 236.046952,
+      "cpuMs": 235.68699999999976
+    },
+    {
+      "round": 10,
+      "version": "reference",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 168.169683,
+      "cpuMs": 167.7709999999999
+    },
+    {
+      "round": 11,
+      "version": "candidate",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 249.410798,
+      "cpuMs": 248.91900000000055
+    },
+    {
+      "round": 11,
+      "version": "reference",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 286.953575,
+      "cpuMs": 286.025
+    },
+    {
+      "round": 11,
+      "version": "reference",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 321.767496,
+      "cpuMs": 319.129
+    },
+    {
+      "round": 11,
+      "version": "candidate",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 301.677647,
+      "cpuMs": 301.0840000000001
+    },
+    {
+      "round": 11,
+      "version": "candidate",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 250.115604,
+      "cpuMs": 249.56700000000055
+    },
+    {
+      "round": 11,
+      "version": "reference",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 246.39767,
+      "cpuMs": 245.86799999999997
+    },
+    {
+      "round": 12,
+      "version": "reference",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 179.092231,
+      "cpuMs": 178.65599999999836
+    },
+    {
+      "round": 12,
+      "version": "candidate",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 199.361822,
+      "cpuMs": 198.90200000000036
+    },
+    {
+      "round": 12,
+      "version": "reference",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 206.022692,
+      "cpuMs": 205.56000000000108
+    },
+    {
+      "round": 12,
+      "version": "candidate",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 271.123097,
+      "cpuMs": 270.70099999999877
+    },
+    {
+      "round": 12,
+      "version": "reference",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 181.60617,
+      "cpuMs": 181.25100000000117
+    },
+    {
+      "round": 12,
+      "version": "candidate",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 223.437001,
+      "cpuMs": 222.89899999999994
+    },
+    {
+      "round": 13,
+      "version": "reference",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 234.600016,
+      "cpuMs": 221.24399999999955
+    },
+    {
+      "round": 13,
+      "version": "candidate",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 210.02211,
+      "cpuMs": 209.53399999999965
+    },
+    {
+      "round": 13,
+      "version": "candidate",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 178.563311,
+      "cpuMs": 178.08899999999971
+    },
+    {
+      "round": 13,
+      "version": "reference",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 252.831037,
+      "cpuMs": 251.99299999999926
+    },
+    {
+      "round": 13,
+      "version": "reference",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 258.198953,
+      "cpuMs": 250.3260000000005
+    },
+    {
+      "round": 13,
+      "version": "candidate",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 286.559872,
+      "cpuMs": 285.4410000000005
+    },
+    {
+      "round": 14,
+      "version": "reference",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 292.299553,
+      "cpuMs": 290.6130000000009
+    },
+    {
+      "round": 14,
+      "version": "candidate",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 282.879712,
+      "cpuMs": 282.2980000000004
+    },
+    {
+      "round": 14,
+      "version": "candidate",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 300.977452,
+      "cpuMs": 300.10599999999954
+    },
+    {
+      "round": 14,
+      "version": "reference",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 259.905386,
+      "cpuMs": 252.5569999999979
+    },
+    {
+      "round": 14,
+      "version": "reference",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 264.21862,
+      "cpuMs": 263.86699999999985
+    },
+    {
+      "round": 14,
+      "version": "candidate",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 262.472623,
+      "cpuMs": 261.06700000000194
+    },
+    {
+      "round": 15,
+      "version": "reference",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 182.627781,
+      "cpuMs": 182.10899999999987
+    },
+    {
+      "round": 15,
+      "version": "candidate",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 273.712597,
+      "cpuMs": 273.1929999999998
+    },
+    {
+      "round": 15,
+      "version": "reference",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 299.301215,
+      "cpuMs": 298.82500000000033
+    },
+    {
+      "round": 15,
+      "version": "candidate",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 264.176833,
+      "cpuMs": 263.7180000000006
+    },
+    {
+      "round": 15,
+      "version": "reference",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 166.958363,
+      "cpuMs": 166.50999999999794
+    },
+    {
+      "round": 15,
+      "version": "candidate",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 231.686141,
+      "cpuMs": 231.28700000000225
+    },
+    {
+      "round": 16,
+      "version": "candidate",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 211.165587,
+      "cpuMs": 210.76299999999847
+    },
+    {
+      "round": 16,
+      "version": "reference",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 253.647783,
+      "cpuMs": 252.9370000000011
+    },
+    {
+      "round": 16,
+      "version": "candidate",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 337.345764,
+      "cpuMs": 331.04499999999894
+    },
+    {
+      "round": 16,
+      "version": "reference",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 353.962117,
+      "cpuMs": 337.1770000000023
+    },
+    {
+      "round": 16,
+      "version": "reference",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 301.097227,
+      "cpuMs": 295.9869999999998
+    },
+    {
+      "round": 16,
+      "version": "candidate",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 222.365791,
+      "cpuMs": 221.25799999999796
+    },
+    {
+      "round": 17,
+      "version": "candidate",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 398.241811,
+      "cpuMs": 386.13799999999986
+    },
+    {
+      "round": 17,
+      "version": "reference",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 301.685942,
+      "cpuMs": 301.1709999999992
+    },
+    {
+      "round": 17,
+      "version": "reference",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 251.900198,
+      "cpuMs": 247.73900000000236
+    },
+    {
+      "round": 17,
+      "version": "candidate",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 382.792225,
+      "cpuMs": 374.540999999998
+    },
+    {
+      "round": 17,
+      "version": "candidate",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 273.741841,
+      "cpuMs": 268.039000000003
+    },
+    {
+      "round": 17,
+      "version": "reference",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 224.495171,
+      "cpuMs": 222.0219999999986
+    },
+    {
+      "round": 18,
+      "version": "candidate",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 341.098122,
+      "cpuMs": 340.6699999999998
+    },
+    {
+      "round": 18,
+      "version": "reference",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 277.352606,
+      "cpuMs": 276.8390000000003
+    },
+    {
+      "round": 18,
+      "version": "candidate",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 277.587658,
+      "cpuMs": 277.187000000001
+    },
+    {
+      "round": 18,
+      "version": "reference",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 265.204369,
+      "cpuMs": 264.7359999999992
+    },
+    {
+      "round": 18,
+      "version": "reference",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 279.839261,
+      "cpuMs": 279.26400000000086
+    },
+    {
+      "round": 18,
+      "version": "candidate",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 303.069301,
+      "cpuMs": 302.6209999999976
+    },
+    {
+      "round": 19,
+      "version": "reference",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 203.55412,
+      "cpuMs": 202.49100000000152
+    },
+    {
+      "round": 19,
+      "version": "candidate",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 285.741687,
+      "cpuMs": 284.20499999999913
+    },
+    {
+      "round": 19,
+      "version": "reference",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 205.638341,
+      "cpuMs": 204.19400000000022
+    },
+    {
+      "round": 19,
+      "version": "candidate",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 192.878486,
+      "cpuMs": 192.32200000000077
+    },
+    {
+      "round": 19,
+      "version": "candidate",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 263.441068,
+      "cpuMs": 262.5729999999984
+    },
+    {
+      "round": 19,
+      "version": "reference",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 287.187113,
+      "cpuMs": 285.77100000000223
+    },
+    {
+      "round": 20,
+      "version": "reference",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 306.860083,
+      "cpuMs": 304.5909999999981
+    },
+    {
+      "round": 20,
+      "version": "candidate",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 275.179988,
+      "cpuMs": 274.64099999999905
+    },
+    {
+      "round": 20,
+      "version": "candidate",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 204.084642,
+      "cpuMs": 203.63200000000026
+    },
+    {
+      "round": 20,
+      "version": "reference",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 248.326989,
+      "cpuMs": 247.90000000000268
+    },
+    {
+      "round": 20,
+      "version": "reference",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 199.33515,
+      "cpuMs": 198.60799999999702
+    },
+    {
+      "round": 20,
+      "version": "candidate",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 287.454635,
+      "cpuMs": 285.7130000000003
+    },
+    {
+      "round": 21,
+      "version": "candidate",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 296.124378,
+      "cpuMs": 294.2280000000008
+    },
+    {
+      "round": 21,
+      "version": "reference",
+      "input": "cpp/table-update/native/table_update.wasm",
+      "wallMs": 285.907834,
+      "cpuMs": 283.7049999999994
+    },
+    {
+      "round": 21,
+      "version": "candidate",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 218.385472,
+      "cpuMs": 217.7479999999994
+    },
+    {
+      "round": 21,
+      "version": "reference",
+      "input": "rust/canvas-draw/native/canvas_draw.wasm",
+      "wallMs": 233.096984,
+      "cpuMs": 231.73600000000195
+    },
+    {
+      "round": 21,
+      "version": "reference",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 197.060687,
+      "cpuMs": 196.63699999999906
+    },
+    {
+      "round": 21,
+      "version": "candidate",
+      "input": "c/dom-query/native/dom_query.wasm",
+      "wallMs": 205.42534,
+      "cpuMs": 203.99999999999886
+    }
+  ]
+}

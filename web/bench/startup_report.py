@@ -219,3 +219,66 @@ def wasm_api_timings(trial, observer, cases, versions):
         pages = [r for lang, demo in cases for r in groups[v, lang, demo, True].values()]
         shares[v] = {k: mean(100 * r[k] / r["ready"] for r in pages) for k in stages}
     return summaries, {k: median(values) for k, values in excess.items()}, shares
+
+
+def module_body_timings(bench, trial, observer, inventory, languages, small_workloads):
+    if (any(trial[k] != observer[k] for k in ("runnerSha256", "originalSha256", "browser", "cpu"))
+            or trial["workloads"] != small_workloads):
+        raise ValueError("Module body run used different workloads, source or hardware")
+    versions = ["baseline", "main", "candidate"] + (["reference"] if inventory.get("reference") else [])
+    cases = {(lang, demo) for lang in languages for demo in small_workloads}
+    paths = set()
+    directive = b'"use components";'
+    marker = b'\nglobalThis.performance.mark("binding-module-body");\n'
+    for component in inventory["components"]:
+        path = Path(component["input"]["path"])
+        lang, demo = path.parts[:2]
+        if (lang, demo) not in cases or path.stem != demo.replace("-", "_"):
+            continue
+        for v in versions:
+            asset, = [f for f in component["variants"][v] if f["path"].endswith(".js")]
+            script = "/" + asset["path"]
+            paths.add(script)
+            local = bench.parent / asset["path"]
+            if local.is_file():
+                src = local.read_bytes()
+                offset = len(directive) if src.startswith(directive) else 0
+                if (sha256(src).hexdigest() != asset["sha256"] or
+                        sha256(src[:offset] + marker + src[offset:]).hexdigest() != trial["markedSources"][script]):
+                    raise ValueError("Unexpected module body source for " + script)
+    if paths != set(trial["markedSources"]) or any(len(bytes.fromhex(h)) != 32 for h in trial["markedSources"].values()):
+        raise ValueError("Incomplete module body source digests")
+    rounds = set(range(1, trial["rounds"] + 1))
+    pages = defaultdict(dict)
+    for row in trial["samples"]:
+        group = pages[row["version"], row["lang"], row["demo"], row["marked"]]
+        first, ready = row["firstResultMs"], row["loadMs"]
+        if (row["attached"] or row["round"] in group or not 0 < ready < first
+                or abs(ready + row["firstCallMs"] - first) > .001):
+            raise ValueError("Invalid module body page")
+        record = {"ready": ready, "first": first}
+        if row["marked"]:
+            body, js, fetch = (row[k] for k in ("bodyStartMs", "jsEndMs", "wasmStartMs"))
+            if not 0 <= js <= body + .01 or not body <= fetch + .01 or not fetch <= ready:
+                raise ValueError("Invalid module body timestamp")
+            record.update(before=body - js, after=fetch - body)
+        elif "bodyStartMs" in row:
+            raise ValueError("Found a marker on a control page")
+        group[row["round"]] = record
+    if (set(pages) != {(v, *case, m) for v in versions for case in cases for m in (True, False)}
+            or any(set(group) != rounds for group in pages.values())):
+        raise ValueError("Incomplete module body run")
+    summaries = {}
+    for v in versions:
+        columns = defaultdict(list)
+        for case in cases:
+            marked, control = [pages[v, *case, m] for m in (True, False)]
+            for key in ("before", "after"):
+                columns[key].append(median(r[key] for r in marked.values()))
+            for key in ("ready", "first"):
+                columns[key].append(median(r[key] for r in control.values()))
+            columns["overhead"].append(median(marked[n]["ready"] / control[n]["ready"] for n in rounds))
+        summaries[v] = {k: median(values) for k, values in columns.items()}
+    paired = {v: {case: [pages["candidate", *case, False][n]["first"] / pages[v, *case, False][n]["first"]
+                         for n in sorted(rounds)] for case in cases} for v in versions if v != "candidate"}
+    return summaries, paired

@@ -6,7 +6,7 @@ from math import comb, isfinite
 from pathlib import Path
 from statistics import median
 
-from startup_report import compile_hints, distributions, startup_intervals, wasm_api_timings
+from startup_report import compile_hints, distributions, module_body_timings, startup_intervals, wasm_api_timings
 
 import matplotlib
 matplotlib.use("Agg")
@@ -193,6 +193,7 @@ para(f"The candidate finished within **10× of the fastest available compiled sh
      "across all phases. The shim comparison selects the lowest "
      "median among Embind, EM_JS and wasm-bindgen for each operation, including shims written in a different guest language. "
      "The phase tables in the original comparison describe workload differences and include raw JavaScript.")
+startup_summary_at = len(lines)
 para("![Candidate runtime relative to the two targets by operation and language](web/bench/results/candidate-runtime.png)")
 table(["Operation", "Guest", "Unit", "1.13.0", "Stock main", "Candidate", "Candidate / 1.13.0",
        "Fastest shim", "Shim time", "Candidate / shim"], rows)
@@ -235,7 +236,8 @@ para("Resource drops check the instance flag and record traps. When lifting a bo
 para("Earlier runs measured how the linker handles runtime dependencies and initializes module state. "
      "[Subtask constructors](https://github.com/vados-cosmonic/component-demos/blob/255eca61b14b5ab63567da558b5f561149cc5163/README.md#change-from-the-previous-branch-revision) · "
      "[Future and waitable constructors](https://github.com/vados-cosmonic/component-demos/blob/c25f90d93af43e9261dff31b186d5b01115e8a0f/README.md#change-from-the-previous-branch-revision) · "
-     "[Direct module initialization](https://github.com/vados-cosmonic/component-demos/blob/bd6eb358c6c106711f5e75022a1498d1051f8989/README.md#direct-module-initialization)")
+     "[Direct module initialization](https://github.com/vados-cosmonic/component-demos/blob/bd6eb358c6c106711f5e75022a1498d1051f8989/README.md#direct-module-initialization) · "
+     "[Runtime namespace](https://github.com/vados-cosmonic/component-demos/blob/53a0057e71d25b91dcb0f9c475762140765078c8/README.md#shorter-private-runtime-names)")
 para("</details>")
 if reference:
     ref = reference["commit"]
@@ -841,6 +843,51 @@ plt.close(fig)
 para("![Share of module import time before, during and between WebAssembly calls for each Jco build]"
      "(web/bench/results/wasm-startup.png)")
 
+body_trial = json.loads((results / "module-body.json").read_bytes())
+small_workloads = json.loads((results / "compile-hint-small.json").read_bytes())["workloads"]
+body_times, body_pairs = module_body_timings(bench, body_trial, observer, sizes, languages, small_workloads)
+para("#### When the binding module starts executing")
+para(f"In {len(body_trial['samples']):,} fresh documents, five small workloads ran in each of three guest languages. "
+     "Each build ran once with a performance mark as its first executable statement and once with its ordinary source "
+     "per round. The browser had already loaded the shared host. Time from the JavaScript response to the mark "
+     "includes module loading, linking, compilation and browser scheduling. Each cell summarizes the 15 workload medians.")
+table(["Build", "JS response to module body (ms)", "Module body to first Wasm request (ms)",
+       "Ordinary import (ms)", "Ordinary first result (ms)", "Marked / ordinary import"], [
+    [distribution_names.get(v, "Previous branch"), *[f"{values[k]:.2f}" for k in ("before", "after", "ready", "first")],
+     f"{values['overhead']:.2f}×"] for v, values in body_times.items()
+])
+body_previous = body_pairs.get("reference")
+if body_previous:
+    previous_ratios = [median(rounds) for rounds in body_previous.values()]
+    release_ratios = [median(rounds) for rounds in body_pairs["baseline"].values()]
+    para(f"On ordinary pages, the median within-round ratio for candidate / previous time to first result was "
+         f"**{median(previous_ratios):.3f}×**. The candidate finished sooner in "
+         f"{sum(r < 1 for r in previous_ratios)}/{len(body_previous)} workload and language pairs. "
+         f"Against 1.13.0 the median ratio was {median(release_ratios):.2f}×. "
+         "Each pair contributes one median across rounds. [Page timings and marked module hashes](web/bench/results/module-body.json)")
+
+    fig, axes = plt.subplots(1, 2, sharey=True, figsize=(8.5, 5.8), layout="constrained")
+    labels = [(lang, demo) for demo in small_workloads for lang in languages]
+    for ax, other, title, color in zip(axes, ("reference", "baseline"), ("Previous revision", "1.13.0"),
+                                       ("#126766", "#aa4a1e")):
+        for i, key in enumerate(labels):
+            ratios = body_pairs[other][key]
+            lo, hi = median_interval(ratios)
+            if isfinite(hi):
+                ax.hlines(i, lo, hi, color=color)
+            ax.scatter(median(ratios), i, color=color, s=22, zorder=3)
+        ax.axvline(1, linestyle="--", color="#555", linewidth=1)
+        ax.set_title(f"Candidate / {title}")
+        ax.grid(axis="x", alpha=.20)
+        ax.set_axisbelow(True)
+        ax.set_xlabel("First-result time ratio")
+    axes[0].set_yticks(range(len(labels)), [f"{focus[demo][1]} · {languages[lang]}" for lang, demo in labels])
+    axes[0].invert_yaxis()
+    fig.savefig(results / "small-first-result.png", dpi=155)
+    plt.close(fig)
+    para("![Median first-result ratios and per-case 95% sign-test intervals in small workloads. "
+         "Left of one favors the candidate.](web/bench/results/small-first-result.png)")
+
 para("### Time to the first guest result")
 para("Each fresh page called the guest immediately after import, using the same workload arguments across builds. "
      "The first call includes the complete guest workload and its browser API calls. The final column times "
@@ -867,6 +914,13 @@ for demo, (_, name, _) in focus.items():
     ratio_rows.append([name, *[f"{v:.2f}×" for v in ratios]])
 table(["Workload", "Candidate / 1.13.0", "Candidate / stock main"], ratio_rows)
 counts = [sum(first_ratios[compare, *case] <= 1 for case in cases) for compare in ("baseline", "main")]
+first_ms = {v: median(median(row[3] for row in observer_groups[v, False, *case].values()) for case in cases)
+            for v in ("candidate", "baseline", "main")}
+lines[startup_summary_at:startup_summary_at] = [
+    f"On a fresh page with DevTools disconnected, median time from import to the first full workload result was "
+    f"**{first_ms['candidate']:.2f} ms** on the branch, **{first_ms['baseline']:.2f} ms** on 1.13.0 and "
+    f"**{first_ms['main']:.2f} ms** on stock main. The branch reached the first result at or before 1.13.0 in "
+    f"{counts[0]}/{len(cases)} paired cases. [Startup measurements](#time-to-the-first-guest-result)", ""]
 para(f"The candidate reached the first result at or before 1.13.0 in **{counts[0]}/{len(cases)}** "
      f"language/workload pairs and at or before stock main in **{counts[1]}/{len(cases)}**.")
 fig, axes = plt.subplots(1, 2, figsize=(9, 4), sharey=True, sharex=True, layout="constrained")
@@ -986,6 +1040,71 @@ fig.savefig(results / "compile-hint.png", dpi=155)
 plt.close(fig)
 para("![Time to the first result with eager compilation relative to ordinary candidate bindings. "
      "Each marker shows the median of three languages and the line spans their range.](web/bench/results/compile-hint.png)")
+
+field_path = results / "runtime-fields.json"
+field_check = json.loads(field_path.read_bytes()) if field_path.exists() else None
+if field_check and (not reference or (field_check["candidate"], field_check["reference"]) != (commit, ref)):
+    field_check = None
+if field_check:
+    edits = field_check["inputs"]
+    if (field_check["inventorySha256"] != run["sizesSha256"]
+            or field_check["verifierSha256"] != sha256((bench / "verify-runtime-fields.mjs").read_bytes()).hexdigest()
+            or {r["input"] for r in edits} != {c["input"]["path"] for c in sizes["components"]}):
+        raise ValueError("Field verification and browser run used different inputs")
+    para("### Private data fields in the checked runtime")
+    para(f"The bundled checked runtime uses short names for private data fields. Acorn resolved "
+         f"{sum(r['changed'] for r in edits):,} renamed declarations and uses across {len(edits)} modules. "
+         f"The verifier checked lexical ownership, a one-to-one name mapping in every class, and every byte "
+         f"outside the private identifiers. All {sum(r['cores'] for r in edits)} external core Wasm files "
+         f"and all {sum(r['minifiedAssets'] for r in edits)} packaged minified outputs matched the previous build byte for byte.")
+    savings = {metric: [] for metric in ("bytes", "gzip", "brotli")}
+    for c in sizes["components"]:
+        previous, current = [next(a for a in c["variants"][v] if a["path"].endswith(".js")) for v in ("reference", "candidate")]
+        for metric in savings:
+            savings[metric].append(previous[metric] - current[metric])
+    table(["JS size reduction per component (bytes)", "Median", "Range"], [
+        [label, f"{median(savings[key]):g}", f"{min(savings[key])}–{max(savings[key])}"]
+        for key, label in (("bytes", "Uncompressed"), ("gzip", "gzip -9"), ("brotli", "Brotli 11"))
+    ])
+    para("Private methods, accessors and fields that supply a function or class name keep their spellings. "
+         "Debug runtime builds retain the source names. "
+         "[Per-component verification](web/bench/results/runtime-fields.json) · [Verifier](web/bench/verify-runtime-fields.mjs)")
+
+compiler_path = results / "transpile-time.json"
+compiler = json.loads(compiler_path.read_bytes()) if compiler_path.is_file() else None
+if compiler and compiler["inventorySha256"] != run["sizesSha256"]:
+    compiler = None
+if compiler:
+    if (compiler["runnerSha256"] != sha256((bench / "transpile-time.py").read_bytes()).hexdigest()
+            or {v: meta["commit"] for v, meta in compiler["versions"].items()} != {"reference": ref, "candidate": commit}):
+        raise ValueError("Native compiler timings do not match the measured generators")
+    groups = defaultdict(dict)
+    compiler_rounds = set(range(1, compiler["rounds"] + 1))
+    for row in compiler["samples"]:
+        group = groups[row["input"], row["version"]]
+        if (row["round"] in group or not all(isfinite(row[k]) and row[k] > 0 for k in ("wallMs", "cpuMs"))):
+            raise ValueError("Invalid native compiler timing")
+        group[row["round"]] = row
+    if (set(groups) != {(p, v) for p in compiler["inputs"] for v in ("reference", "candidate")}
+            or any(set(g) != compiler_rounds for g in groups.values())):
+        raise ValueError("Incomplete native compiler timing")
+    para("### Time to generate the bindings")
+    para(f"Each of {len(compiler['samples'])} timed native processes read one component, prepared the checked runtime "
+         "and wrote its bindings to a fresh directory. The runner randomized build and input order within each round, "
+         "warmed the filesystem cache before timing and verified each output after stopping the timer. "
+         f"Both transpilers used the Cargo {compiler['buildProfile']} profile and {compiler['rustc']}. "
+         "The CPU measurement counts user and system time in the child process.")
+    compiler_rows = []
+    for p in compiler["inputs"]:
+        old, new = [groups[p, v] for v in ("reference", "candidate")]
+        wall = [new[n]["wallMs"] / old[n]["wallMs"] for n in compiler_rounds]
+        cpu = [new[n]["cpuMs"] / old[n]["cpuMs"] for n in compiler_rounds]
+        compiler_rows.append([p.split("/")[0] + "/" + p.split("/")[1],
+                     *[f"{median(r['wallMs'] for r in g.values()):.1f}" for g in (old, new)],
+                     f"{median(wall):.3f}×", interval_text(median_interval(wall)), f"{median(cpu):.3f}×"])
+    table(["Input", "Previous (ms)", "Candidate (ms)", "Paired wall time", "95% median interval", "Paired CPU time"], compiler_rows)
+    para("The intervals are per-input sign-test intervals for the median paired ratio. "
+         "[Timings and executable hashes](web/bench/results/transpile-time.json)")
 
 name_path = results / "runtime-names.json"
 name_check = json.loads(name_path.read_bytes()) if name_path.is_file() else None
@@ -1113,6 +1232,10 @@ reference_setup = (
     f"git -C ../jco-candidate worktree add --detach ../jco-reference {reference['commit']}\n"
     "node web/bench/candidate.mjs --reference ../jco-reference\n" if reference else ""
 )
+verify_fields = f"node web/bench/verify-runtime-fields.mjs {field_check['previousBenchmark']}\n" if field_check else ""
+verify_compiler = (f"python3 web/bench/transpile-time.py ../jco-reference/target/debug/examples/transpile "
+                   f"../jco-candidate/target/debug/examples/transpile --rounds {compiler['rounds']} "
+                   f"--build-profile {compiler['buildProfile']}\n" if compiler else "")
 verify_names = f"python3 web/bench/verify-runtime-names.py {name_check['previousBenchmark']}\n" if name_check else ""
 para(f"""```sh
 git clone https://github.com/vados-cosmonic/jco ../jco-candidate
@@ -1129,9 +1252,10 @@ pnpm -C ../jco-candidate install --frozen-lockfile
 pnpm -C ../jco-candidate --filter @bytecodealliance/jco-transpile run build
 node web/bench/candidate.mjs --verify-wasm ../jco-candidate
 node web/bench/minified.mjs ../jco-candidate
-{verify_names}CHROME_BIN=/path/to/chrome BENCH_MINIFIED=1 ROUNDS={minified_run['rounds']} node web/bench/browser.mjs
+{verify_names}{verify_fields}{verify_compiler}CHROME_BIN=/path/to/chrome BENCH_MINIFIED=1 ROUNDS={minified_run['rounds']} node web/bench/browser.mjs
 CHROME_BIN=/path/to/chrome ROUNDS={observer['rounds']} node web/bench/startup-observer.mjs
 CHROME_BIN=/path/to/chrome ROUNDS={wasm_trial['rounds']} node web/bench/startup-observer.mjs --wasm-timing
+CHROME_BIN=/path/to/chrome ROUNDS={body_trial['rounds']} node web/bench/startup-observer.mjs --module-body
 CHROME_BIN=/path/to/chrome ROUNDS={hint_rounds['Full']} node web/bench/startup-observer.mjs --compile-hint
 CHROME_BIN=/path/to/chrome ROUNDS={hint_rounds['Small']} node web/bench/startup-observer.mjs --compile-hint --small
 node web/bench/verify-compile-hint.mjs ../jco-candidate
@@ -1153,7 +1277,7 @@ pnpm --filter @bytecodealliance/jco-cm-runtime test:checked
 gh run download {pin["run"]} --repo bytecodealliance/jco --name js-generated-tests --dir packages/jco-transpile/test/fixtures/generated
 cd packages/jco-transpile
 node node_modules/vitest/vitest.mjs run -c test/vitest.ts \\
-  test/sync-host-import.ts test/p3/canonical-abi-traps.ts test/p3/task-return-memory.ts \\
+  test/eager-compile.ts test/external-runtime/codegen.ts test/sync-host-import.ts test/p3/canonical-abi-traps.ts test/p3/task-return-memory.ts \\
   test/p3/sync-call-block-trap.ts test/p3/async-export-future-result.ts \\
   test/p3/future-lifts.ts test/p3/future-lowers.ts test/p3/future-drop.ts test/p3/future-transfer-g2g.ts \\
   test/p3/stream-lifts.ts test/p3/stream-lowers.ts test/p3/stream-pass-through.ts test/p3/sync-stream-copy.ts
