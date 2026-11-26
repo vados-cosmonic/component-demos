@@ -10,8 +10,10 @@ import { pathToFileURL } from "node:url";
 import { gzipSync } from "node:zlib";
 import puppeteer from "puppeteer-core";
 
-const [checkout, upstreamBuild, output] = process.argv.slice(2);
-assert(checkout && upstreamBuild && output, "Usage: review-matrix.mjs <built PR checkout> <upstream dist+vendor directory with commit file> <output.json.gz>");
+const [checkout, upstreamBuild, output, flag, ...extra] = process.argv.slice(2);
+assert(checkout && upstreamBuild && output && !extra.length && (flag === undefined || flag === "--minify"),
+  "Usage: review-matrix.mjs <built PR checkout> <upstream dist+vendor directory with commit file> <output.json.gz> [--minify]");
+const minify = flag === "--minify";
 const rounds = Number(process.env.ROUNDS ?? 8);
 assert(Number.isInteger(rounds) && rounds > 0 && rounds % 4 === 0);
 const web = join(import.meta.dirname, "..");
@@ -24,6 +26,10 @@ assert.match(upstream, /^[a-f0-9]{40}$/);
 git("merge-base", "--is-ancestor", upstream, candidate);
 const inventoryBytes = await readFile(join(web, "bench/results/candidate-sizes.json"));
 const inventory = JSON.parse(inventoryBytes);
+const minifiedSizes = minify ? await readFile(join(web, "bench/results/minified-sizes.json")) : undefined;
+const minifiedInventory = minify ? JSON.parse(minifiedSizes) : undefined;
+if (minify) assert.equal(minifiedInventory.sizesSha256, hash(inventoryBytes));
+const releaseCompiler = minify ? (await import("@bytecodealliance/jco")).transpile : undefined;
 const workloads = JSON.parse(await readFile(join(web, "bench/results/candidate-browser.json"))).workloads;
 const maps = (await readFile(join(web, "host/imports.txt"), "utf8")).trim().split("\n").map(line => {
   const [name, symbol] = line.split(/\s+/);
@@ -69,11 +75,19 @@ for (const { input, variants } of inventory.components) {
   let reference;
   for (const version of ["release", "main", "bundled", "external"]) {
     const dir = "/" + lang + "/" + demo + "/" + version;
-    const options = { name, nodejsCompat: false, base64Cutoff: 5000, namespacedExports: true,
+    const options = { name, nodejsCompat: false, minify, base64Cutoff: 5000, namespacedExports: true,
       emitTypescriptDeclarations: false, map: Object.fromEntries(maps) };
     if (version === "external") Object.assign(options, { cmRuntimeEsModule: "/runtime", cmRuntimeSyncImports: true });
     let files;
-    if (version === "release") {
+    if (version === "release" && minify) {
+      const release = await releaseCompiler(component, { name, nodejsCompat: false, map: Object.fromEntries(maps), minify });
+      files = {};
+      for (const asset of minifiedInventory.components[input.path]["baseline-minified"]) {
+        const filename = basename(asset.path);
+        assert.equal(hash(release.files[filename]), asset.sha256, asset.path);
+        files[filename] = release.files[filename];
+      }
+    } else if (version === "release") {
       files = Object.fromEntries(await Promise.all(variants.baseline.map(async file => [basename(file.path), await readAsset(file)])));
     } else {
       files = (await (tools[version] ?? tools.bundled)(component, options)).files;
@@ -230,5 +244,6 @@ for (let round = 0; round < rounds; round++) {
   console.log("Completed full matrix round", round + 1, "of", rounds);
 }
 await writeFile(output, gzipSync(JSON.stringify({ release: inventory.baseline, upstream, candidate, compilers, rounds, chromium,
+  minify, minifiedInventorySha256: minify ? hash(minifiedSizes) : undefined,
   node: process.version, cpu: cpus()[0].model, inventorySha256: hash(inventoryBytes), runnerSha256: hash(await readFile(import.meta.filename)),
   workloads, manifest, samples }), { level: 9 }));

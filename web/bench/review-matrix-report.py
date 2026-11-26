@@ -15,7 +15,23 @@ args = parser.parse_args()
 with gzip.open(args.input) as source:
     result = json.load(source)
 assert result["inventorySha256"] == hashlib.sha256((bench / "results/candidate-sizes.json").read_bytes()).hexdigest()
-assert result["runnerSha256"] == hashlib.sha256((bench / "review-matrix.mjs").read_bytes()).hexdigest()
+runner_hash = hashlib.sha256((bench / "review-matrix.mjs").read_bytes()).hexdigest()
+if "minify" not in result:
+    # Original eight-round archives predate the minification switch.
+    assert result["runnerSha256"] == "9b76e7f77a7653cf5ada4b8d114ce9572a0e34796f8ecd904820a0299474289f"
+else:
+    assert result["runnerSha256"] == runner_hash
+if result.get("minify"):
+    inventory = (bench / "results/minified-sizes.json").read_bytes()
+    assert result["minifiedInventorySha256"] == hashlib.sha256(inventory).hexdigest()
+    components = json.loads(inventory)["components"]
+    for row in result["samples"]:
+        if row["version"] == "release":
+            entry = Path(row["entry"])
+            guest = f"{row['lang']}/{row['demo']}/native/{entry.stem}.wasm"
+            for asset in components[guest]["baseline-minified"]:
+                key = str(entry.with_name(Path(asset["path"]).name))
+                assert result["manifest"][key]["sha256"] == asset["sha256"]
 focus = {
     "attribute-churn": ("per setAttribute()", "Attribute write"),
     "canvas-draw": ("per fill_rect()", "Canvas fillRect"),
@@ -81,6 +97,11 @@ for demo, (metric, title) in focus.items():
             stats[v, "entryKiB"].append(result["manifest"][next(iter(rows.values()))["entry"]]["bytes"] / 1024)
             stats[v, "jsKiB"].append(median(sum(q["bytes"] for q in row["requests"] if q["path"].endswith(".js")) / 1024 for row in rows.values()))
             stats[v, "jsRequests"].append(median(sum(q["path"].endswith(".js") for q in row["requests"]) for row in rows.values()))
+            if result.get("minify"):
+                stats[v, "gzipKiB"].append(median(
+                    sum(result["manifest"][q["path"]]["gzip"] for q in row["requests"] if q["path"].endswith(".js")) / 1024
+                    for row in rows.values()
+                ))
             if matched:
                 stats[v, "sameLanguageShim"].append(median(map(warm, rows.values())) / min(matched))
             if v in versions[2:]:
@@ -96,6 +117,8 @@ for demo, (metric, title) in focus.items():
 print("\n", len(result["samples"]), "documents;", rounds, "rounds")
 for v in versions:
     print(v, "median import, first result (ms), entry, total JS (KiB), JS requests:", *(round(median(stats[v, k]), 2) for k in ("importMs", "firstMs", "entryKiB", "jsKiB", "jsRequests")))
+    if result.get("minify"):
+        print("Median sum of gzip JS asset sizes (KiB):", round(median(stats[v, "gzipKiB"]), 2))
     if v in versions[2:]:
         print("Slower than release every round (warm, first result):", *(sum(stats[v, k + "EveryRoundSlower"]) for k in ("warm", "first")))
         for k in ("shim", "sameLanguageShim", "phaseShim", "warm", "first", "vsMain"):

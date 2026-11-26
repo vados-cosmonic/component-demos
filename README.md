@@ -4,7 +4,7 @@ This fork benchmarks the browser examples from [eqrion/component-demos at d0b9dd
 
 ## Browser bindings at the PR head
 
-In the full timing run at `b731ebc91`, both the internal Oxc bundle and the external checked runtime stayed within 10× of the fastest compiled shim in **all 21 warm headline cases**. Tree traversal had the largest gap. The internal bundle took **5.50×** the shim’s time for the C guest, and the external runtime took **5.78×** for Rust. Cold startup and Jco 1.13.0 parity remain open. [Jco fork PR](https://github.com/vados-cosmonic/jco/pull/62)
+In the full timing run at `b731ebc91`, both the internal Oxc bundle and the external checked runtime stayed within 10× of the fastest compiled shim in **all 21 warm headline cases**. Tree traversal had the largest gap. The internal bundle took **5.50×** the shim’s time for the C guest, and the external runtime took **5.78×** for Rust. Cold startup and Jco 1.13.0 parity remain open. [Jco fork PR](https://github.com/vados-cosmonic/jco/pull/62) · [Minified builds](#minified-browser-bindings)
 
 | Headline comparison | Internal Oxc | External runtime |
 | --- | ---: | ---: |
@@ -60,6 +60,70 @@ Use Jco revision `b731ebc91` for the PR checkout in the [full-matrix setup](#ful
 ```sh
 python3 web/bench/review-matrix-report.py web/bench/results/review-matrix-b731ebc91.json.gz \
   --plot /tmp/review-matrix-b731ebc91.png
+```
+
+</details>
+
+## Minified browser bindings
+
+With minification, all 21 warm headline operations stayed within **5.51×** of the fastest compiled shim in the internal bundle and **5.39×** in the external runtime. Both renderers matched or beat minified Jco 1.13.0 on **14/21** warm cases. The largest warm slowdown against 1.13.0 was **6.2% bundled** and **22.0% external**. First-result time still favored 1.13.0 in most cases.
+
+This run uses each Jco build’s own `--minify` option on the same 21 workloads. The internal Oxc bundle and external checked package both run the PR at `eaca992c8`. The comparison includes Jco 1.13.0 and the PR’s exact upstream base, `83e25bb19`. Chromium fetched the standalone external runtime as ES modules. [Jco fork PR](https://github.com/vados-cosmonic/jco/pull/62) · [Raw timings, sizes and request lists](web/bench/results/review-matrix-minified-eaca992c8.json.gz)
+
+| Median across 21 workload and language pairs | Jco 1.13.0 | Upstream main | Internal Oxc | External runtime |
+| --- | ---: | ---: | ---: | ---: |
+| Default JS entry (KiB) | 21.23 | 191.50 | 126.43 | 62.58 |
+| Minified JS entry (KiB) | 9.58 | 111.34 | 71.71 | 29.68 |
+| Total JS with minification (KiB) | 9.58 | 111.34 | 71.71 | 128.60 |
+| Total JS with minification, gzip estimate (KiB) | 3.01 | 25.42 | 19.01 | 41.07 |
+| Minified import (ms) | 5.14 | 12.34 | 9.62 | 22.40 |
+| First full result with minification (ms) | 59.83 | 196.54 | 65.46 | 77.74 |
+
+| Comparison with all four Jco builds minified | Internal Oxc | External runtime |
+| --- | ---: | ---: |
+| Warm headline cases within 10× of the fastest compiled shim | 21/21 | 21/21 |
+| Warm subphases within 10× of the fastest compiled shim | 81/84 | 81/84 |
+| Warm headline cases at or faster than upstream main | 20/21 | 21/21 |
+| Warm headline cases at or faster than Jco 1.13.0 | 14/21 | 14/21 |
+| First full results at or faster than Jco 1.13.0 | 7/21 | 6/21 |
+
+![Ratios for warmed operations and first guest results from minified Jco builds across seven workloads and three guest languages.](web/bench/results/review-matrix-minified-eaca992c8.png)
+
+Eight balanced browser rounds ran 776 fresh documents. Each Jco variant used identical guest cores. Release assets matched the archived 1.13.0 minified hashes. The default and minified byte counts compare exact files at each revision. Gzip estimates sum compressed file lengths. The browser served uncompressed responses. The wall times above compare minified builds within this run. The earlier default-build timings came from a separate run. [Release size inventory](web/bench/results/minified-sizes.json) · [Default entry measurements](web/bench/results/resource-drop-sizes.json)
+
+<details><summary>All 21 minified headline comparisons and reproduction</summary>
+
+| Operation | Guest | Bundled / shim | External / shim | Bundled / 1.13 warm | External / 1.13 warm | Bundled / 1.13 first result | External / 1.13 first result |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Attribute write | C | 0.58× | 0.56× | 0.55× | 0.52× | 0.62× | 0.72× |
+| Attribute write | C++ | 0.59× | 0.53× | 0.56× | 0.52× | 0.65× | 0.78× |
+| Attribute write | Rust | 0.64× | 0.62× | 0.61× | 0.59× | 0.69× | 0.94× |
+| Canvas fillRect | C | 0.45× | 0.44× | 0.89× | 0.85× | 1.12× | 1.34× |
+| Canvas fillRect | C++ | 0.50× | 0.45× | 0.92× | 0.82× | 1.08× | 1.35× |
+| Canvas fillRect | Rust | 0.53× | 0.49× | 1.01× | 0.96× | 1.13× | 1.21× |
+| Canvas pixel read | C | 1.79× | 1.71× | 1.01× | 0.99× | 1.07× | 1.11× |
+| Canvas pixel read | C++ | 1.75× | 1.80× | 1.02× | 1.06× | 1.34× | 1.34× |
+| Canvas pixel read | Rust | 1.79× | 1.69× | 1.04× | 1.05× | 1.04× | 1.23× |
+| DOM ID lookup | C | 0.84× | 0.77× | 0.75× | 0.68× | 1.00× | 1.27× |
+| DOM ID lookup | C++ | 0.93× | 0.87× | 0.74× | 0.71× | 0.96× | 1.30× |
+| DOM ID lookup | Rust | 0.75× | 0.84× | 0.71× | 0.80× | 1.13× | 1.43× |
+| Tree traversal | C | 4.88× | 5.04× | 0.83× | 1.01× | 1.01× | 1.27× |
+| Tree traversal | C++ | 5.51× | 5.13× | 1.06× | 1.06× | 1.06× | 1.38× |
+| Tree traversal | Rust | 4.73× | 5.39× | 1.04× | 1.16× | 1.12× | 1.28× |
+| Read 1 KiB string | C | 0.36× | 0.36× | 0.46× | 0.45× | 0.89× | 0.95× |
+| Read 1 KiB string | C++ | 0.36× | 0.36× | 0.51× | 0.52× | 0.90× | 0.91× |
+| Read 1 KiB string | Rust | 0.35× | 0.33× | 0.50× | 0.44× | 0.88× | 0.95× |
+| Table creation | C | 2.47× | 2.45× | 0.84× | 0.89× | 1.50× | 1.53× |
+| Table creation | C++ | 2.19× | 2.66× | 0.95× | 1.14× | 1.09× | 1.82× |
+| Table creation | Rust | 2.39× | 2.78× | 1.05× | 1.22× | 1.25× | 1.80× |
+
+Follow the [full-matrix setup](#full-demo-matrix-on-the-merged-pr) with Jco revision `eaca992c8` for the PR checkout. Pass the final `--minify` argument to the runner. The installed Jco 1.13.0 in this fork creates the release entries during the run.
+
+```sh
+CHROME_BIN=/path/to/chrome ROUNDS=8 node web/bench/review-matrix.mjs \
+  "$jco" "$stage" /tmp/review-matrix-minified.json.gz --minify
+python3 web/bench/review-matrix-report.py /tmp/review-matrix-minified.json.gz \
+  --plot /tmp/review-matrix-minified.png
 ```
 
 </details>
