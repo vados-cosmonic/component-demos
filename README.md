@@ -4,7 +4,7 @@ This fork benchmarks the browser examples from [eqrion/component-demos at d0b9dd
 
 ## Browser bindings at the PR head
 
-In the full timing run at `b731ebc91`, both the internal Oxc bundle and the external checked runtime stayed within 10× of the fastest compiled shim in **all 21 warm headline cases**. Tree traversal had the largest gap. The internal bundle took **5.50×** the shim’s time for the C guest, and the external runtime took **5.78×** for Rust. Cold startup and Jco 1.13.0 parity remain open. [Jco fork PR](https://github.com/vados-cosmonic/jco/pull/62) · [Minified builds](#minified-browser-bindings)
+In the full timing run at `b731ebc91`, both the internal Oxc bundle and the external checked runtime stayed within 10× of the fastest compiled shim in **all 21 warm headline cases**. Tree traversal had the largest gap. The internal bundle took **5.50×** the shim’s time for the C guest, and the external runtime took **5.78×** for Rust. Cold startup and Jco 1.13.0 parity remain open. [Jco fork PR](https://github.com/vados-cosmonic/jco/pull/62) · [Minified builds](#minified-browser-bindings) · [Equal-work bulk queries](#materializing-bulk-dom-query-results)
 
 | Headline comparison | Internal Oxc | External runtime |
 | --- | ---: | ---: |
@@ -25,7 +25,7 @@ In the full timing run at `b731ebc91`, both the internal Oxc bundle and the exte
 
 The full matrix ran in 776 fresh Chromium documents over eight balanced rounds. Each Jco build ran identical Wasm cores. The browser measured import and the first full guest call, then repeated the workload in the same document for the warm phase. Responses were uncompressed on loopback with caching disabled and DevTools disconnected. Release and upstream comparisons pair times within each round. Shim ratios divide each warm median by the lowest median from the compiled shims available for that operation. [Measured Jco revision](https://github.com/vados-cosmonic/jco/commit/b731ebc9160203466a5c2bf5bc2debb6a77d28e0) · [Measured upstream main](https://github.com/bytecodealliance/jco/commit/83e25bb19bc45c8a346e4ecdd19b4a1541700fe7) · [Raw samples, compiler hashes and request sizes](web/bench/results/review-matrix-b731ebc91.json.gz)
 
-The three subphases outside the 10× target were bulk DOM queries. The WIT interface materializes a list of handles and the Embind shim discards a live collection. An earlier trial that materialized the list on both sides measured 1.30–1.72× the direct shim’s time. The single bundled headline above upstream main was Rust canvas pixel readback at 1.03×, with individual rounds on either side of parity. The number of warm medians at or below 1.13.0 also varied between the two full runs. The separate decoder trial isolates the effect of the import change. [Equal-work DOM comparison](#dom-bindings-with-identical-guest-code) · [Pre-decoder full run](#full-demo-matrix-on-the-merged-pr) · [Decoder trial](#loading-the-utf-8-decoder-for-synchronous-imports)
+The three subphases outside the 10× target were bulk DOM queries. The WIT interface materializes a list of handles and the Embind shim discards a live collection. At 2,000 handles per query, materializing the list on both sides measured 1.50–1.57× the direct shim’s time for the internal bundle and 1.53–1.60× for the external runtime. The single bundled headline above upstream main was Rust canvas pixel readback at 1.03×, with individual rounds on either side of parity. The number of warm medians at or below 1.13.0 also varied between the two full runs. The separate decoder trial isolates the effect of the import change. [Equal-work bulk query results](#materializing-bulk-dom-query-results) · [Pre-decoder full run](#full-demo-matrix-on-the-merged-pr) · [Decoder trial](#loading-the-utf-8-decoder-for-synchronous-imports)
 
 The synchronous host adapter reuses an enclosing task. An isolated numeric guest export can skip task allocation entirely. The decoder change reduces dependencies when the external adapter takes a string. Each has a separate comparison that measures its effect. [Host calls, resource handles and short string results](#pr-head-against-upstream-main) · [Numeric exports](#calling-a-scalar-wasm-export-from-javascript) · [External decoder requests and bytes](#loading-the-utf-8-decoder-for-synchronous-imports)
 
@@ -63,6 +63,36 @@ python3 web/bench/review-matrix-report.py web/bench/results/review-matrix-b731eb
 ```
 
 </details>
+
+## Materializing bulk DOM query results
+
+The original bulk-query benchmark compares a WIT `list<element>` result with an Embind shim that discards a live collection. Here each renderer and the direct shim run the same guest core, return the host’s array to Wasm as a list of handles, and run the guest’s drop loop. At the original size of 2,000 handles per query, the internal Oxc bundle took **1.50–1.57×** the direct shim’s time across C, C++ and Rust. The external checked runtime took **1.53–1.60×**. Against Jco 1.13.0, the two PR renderers took **0.71–0.74×** as long. [Jco revision `eaca992c8`](https://github.com/vados-cosmonic/jco/commit/eaca992c895fbf08bdd7f0968e0e5e4e0fc8643e) · [Original shim comparison](#browser-bindings-at-the-pr-head)
+
+![Bulk DOM query time relative to the direct shim, grouped by language and number of handles returned per query, with paired intervals.](web/bench/results/bulk-dom.png)
+
+Each guest run returned 20,000 element handles in total. The experiment varied the batch size using 800 queries of 25 elements, 80 queries of 250, or 10 queries of 2,000. Every configuration used the same browser host method, which materializes the live collection with `Array.from`. Before timing, the runner checked the number of host calls and the length of every returned list for all four configurations. It restored the original method for warmup and timing. The direct shim’s counters also confirmed zero live handles after each pass. The direct shim implements the operations needed by these trusted fixtures. [Direct host implementation](web/bench/dom-core-shim.mjs) · [Per-page counts, timings and asset hashes](web/bench/results/bulk-dom.json.gz)
+
+The table reports the guest’s bulk-phase time. Each of 108 fresh Chromium pages ran one language and batch size, with four warmups and four measured passes per configuration. The runner balanced order within each block of four passes. Ratios use same-pass timings, reduced to one median per page and then one median over 12 pages. Parentheses give individual two-sided 95% sign-test intervals for the median. The direct column gives the median time to process all 20,000 handles.
+
+| Guest | Handles per query | Direct (ms) | 1.13.0 / direct | Bundled / direct | External / direct | Bundled / 1.13.0 | External / 1.13.0 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| C | 25 | 6.94 | 2.14× (2.03–2.18) | 1.42× (1.38–1.46) | 1.42× (1.39–1.52) | 0.68× (0.67–0.69) | 0.68× (0.66–0.71) |
+| C | 250 | 5.75 | 2.23× (2.16–2.27) | 1.57× (1.52–1.65) | 1.58× (1.52–1.64) | 0.72× (0.68–0.77) | 0.71× (0.67–0.73) |
+| C | 2000 | 5.76 | 2.23× (2.08–2.30) | 1.57× (1.51–1.59) | 1.60× (1.52–1.63) | 0.71× (0.67–0.75) | 0.74× (0.70–0.77) |
+| C++ | 25 | 6.68 | 2.01× (1.87–2.11) | 1.40× (1.31–1.42) | 1.40× (1.34–1.43) | 0.69× (0.68–0.71) | 0.69× (0.68–0.71) |
+| C++ | 250 | 5.81 | 2.18× (2.10–2.36) | 1.55× (1.51–1.67) | 1.63× (1.49–1.75) | 0.70× (0.69–0.75) | 0.71× (0.69–0.75) |
+| C++ | 2000 | 6.20 | 2.11× (1.87–2.22) | 1.52× (1.40–1.62) | 1.53× (1.42–1.55) | 0.73× (0.69–0.79) | 0.72× (0.69–0.76) |
+| Rust | 25 | 7.02 | 2.04× (1.99–2.11) | 1.44× (1.40–1.45) | 1.41× (1.37–1.46) | 0.69× (0.68–0.71) | 0.70× (0.66–0.73) |
+| Rust | 250 | 5.92 | 2.17× (2.06–2.25) | 1.50× (1.46–1.61) | 1.54× (1.43–1.56) | 0.70× (0.67–0.73) | 0.70× (0.69–0.71) |
+| Rust | 2000 | 6.03 | 2.11× (1.95–2.20) | 1.50× (1.44–1.52) | 1.53× (1.42–1.60) | 0.71× (0.68–0.77) | 0.73× (0.68–0.79) |
+
+Use a built Jco checkout at `eaca992c8` with both the transpiler and checked runtime packages. Prepare the release demo assets as described in [Reproduce the comparison](#reproduce-the-comparison), then run the following from this fork. The optional figure requires Matplotlib.
+
+```sh
+CHROME_BIN=/path/to/chrome ROUNDS=12 node web/bench/bulk-dom.mjs \
+  /path/to/built/jco /tmp/bulk-dom.json.gz
+python3 web/bench/bulk-dom-report.py /tmp/bulk-dom.json.gz --plot /tmp/bulk-dom.png
+```
 
 ## Minified browser bindings
 
