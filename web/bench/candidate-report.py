@@ -5,6 +5,8 @@ import json
 from pathlib import Path
 from statistics import median
 
+from startup_report import distributions
+
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -146,21 +148,9 @@ def table(headers, rows):
 
 commit = run["candidate"]["commit"]
 para("## Optimized browser bindings")
-para(f"The candidate uses js-component-bindgen’s internal Oxc bundler and the checked jco-cm-runtime. "
-     "For eligible single-instance, synchronous components, a host import reuses the caller’s task. "
-     "Resource drops use a one-argument trampoline that checks the instance flag and records traps. "
-     "The internal Oxc bundle drops the general asynchronous import fallback for these components. "
-     "The adapter holds direct references to its task stack and instance flags, checks the store for interruptions, "
-     "and lifts short ASCII strings in groups of four bytes. "
-     "During a synchronous guest allocation, the checked runtime clears the instance’s may-leave flag and restores it on return or throw. "
-     "Allocators in components with context-slot operations keep the general guard, which supplies fresh slots for each call. "
-     "Synchronous UTF-8 results of 256 to 262,144 code units can reuse a per-instance byte buffer, capped at 256 KiB. "
-     "The runtime encodes there before requesting the exact guest allocation. Nested calls and larger results use the ordinary encoder. "
-     "When lifting a borrowed host resource, the runtime validates the handle and reads its 32-bit representation directly. "
-     "Imported host resources with automatically assigned representations use their guest handle as an array index. "
-     "Explicit host representations and shared tables use a representation map. "
-     "Components with async operations, cross-component resource transfers or call tracking keep the general adapter. "
-     f"[Jco commit `{commit[:9]}`](https://github.com/vados-cosmonic/jco/commit/{commit})")
+para(f"The branch uses js-component-bindgen’s internal Oxc bundler and the checked jco-cm-runtime. "
+     f"[Measured Jco commit `{commit[:9]}`](https://github.com/vados-cosmonic/jco/commit/{commit}) · "
+     "[Payload and startup](#payload-and-startup) · [Reproduction commands](#reproduce-the-candidate-run)")
 para(f"All Jco builds used the same guest binaries. Each value is the median of "
      f"{run['rounds']} fresh-page samples with one warm-up per page. The run collected {len(run['samples'])} "
      f"samples on {run['date'][:10]} with {run['browser']} on {run['cpu']}.")
@@ -176,6 +166,21 @@ para(f"The candidate finished within **10× of the fastest available compiled sh
 para("![Candidate runtime relative to the two targets by operation and language](web/bench/results/candidate-runtime.png)")
 table(["Operation", "Guest", "Unit", "1.13.0", "Stock main", "Candidate", "Candidate / 1.13.0",
        "Fastest shim", "Shim time", "Candidate / shim"], rows)
+para("<details><summary>How the synchronous bindings work</summary>")
+para("Eligible single-instance, synchronous components reuse the caller’s task for host imports. "
+     "The adapter keeps direct references to its task stack and instance flags and checks for store interruptions. "
+     "Oxc removes the asynchronous import fallback. The generator skips asynchronous wrappers for synchronous allocators "
+     "and post-return hooks. Standalone modules also omit suspension markers on core imports.")
+para("During a guest allocation, the checked runtime clears the instance’s may-leave flag and restores it on return or throw. "
+     "Allocators in components with context-slot operations use the general guard to supply fresh slots for each call. "
+     "The adapter lifts short ASCII strings four bytes at a time. Synchronous UTF-8 results of 256 to 262,144 code units "
+     "can reuse a per-instance byte buffer capped at 256 KiB. The runtime encodes there before requesting the exact guest allocation. "
+     "Nested calls and larger results use the ordinary encoder.")
+para("Resource drops check the instance flag and record traps. When lifting a borrowed host resource, "
+     "the adapter validates the handle and reads its 32-bit representation directly. Imported host resources with automatically "
+     "assigned representations use their guest handle as an array index. Explicit host representations and shared tables use a "
+     "representation map. Components with async operations, cross-component resource transfers or call tracking use the general adapter.")
+para("</details>")
 if reference:
     ref = reference["commit"]
     para("### Change from the previous branch revision")
@@ -183,7 +188,13 @@ if reference:
          "the candidate median by the previous revision’s median. Parentheses count the rounds in which the candidate finished faster. "
          f"[Compare `{ref[:9]}` and `{commit[:9]}`](https://github.com/vados-cosmonic/jco/compare/{ref}...{commit})")
     unchanged = {}
+    js_deltas = []
+    gzip_deltas = []
     for component in sizes["components"]:
+        current, previous = [component["variants"][version] for version in ("candidate", "reference")]
+        js_deltas.append(sum(a["bytes"] for a in current if a["path"].endswith(".js"))
+                         - sum(a["bytes"] for a in previous if a["path"].endswith(".js")))
+        gzip_deltas.append(sum(a["gzip"] for a in current) - sum(a["gzip"] for a in previous))
         path = Path(component["input"]["path"])
         lang, demo = path.parts[:2]
         if demo not in focus or path.name != demo.replace("-", "_") + ".wasm":
@@ -193,6 +204,12 @@ if reference:
         unchanged[demo, lang] = outputs[0] == outputs[1]
     if len(unchanged) != len(focus) * len(languages):
         raise ValueError("No corresponding generated files for a headline workload")
+    cold_ratios = [median(loads[demo, f"{lang} candidate"].values()) / median(loads[demo, f"{lang} reference"].values())
+                   for demo, lang in unchanged]
+    para(f"Generated JavaScript was smaller for {sum(v < 0 for v in js_deltas)}/{len(js_deltas)} inputs. "
+         f"The median per-input change was {median(js_deltas):+,.0f} bytes of JavaScript and {median(gzip_deltas):+,.0f} bytes "
+         f"of total gzip payload. Across the {len(cold_ratios)} timed guest and workload combinations, the median ratio of "
+         f"candidate to previous startup time was {median(cold_ratios):.2f}×.")
     controls = [time(demo, lang + " candidate", focus[demo][0]) / time(demo, lang + " reference", focus[demo][0])
                 for (demo, lang), identical in unchanged.items() if identical]
     if controls:
@@ -488,6 +505,56 @@ table(["Build", "JS (KiB)", "Core Wasm (KiB)", "Total (KiB)", "Gzip (KiB)", "Bro
      f"{median(median(loads[d, f'{lang} {v}'].values()) for d in focus for lang in languages):.2f}"]
     for v, label in [("baseline", "1.13.0"), ("main", "Stock main"), ("candidate", "Candidate")]
 ])
+minified_run, distribution = distributions(bench, sizes, run, focus, languages)
+para("### What ships with `--minify`")
+para(f"Each Jco build generated its default and minified distribution from the same {len(paired)} components. "
+     "Jco 1.13.0 uses Terser for its minify option. Stock main and the branch use Oxc. All external Wasm files "
+     "matched byte for byte across formats. Payloads include JavaScript and external Wasm, compressed per file. "
+     f"Chromium interleaved the six distributions across {len(minified_run['samples']):,} fresh pages, "
+     f"with {minified_run['rounds']} rounds for each of the 21 guest and workload combinations. "
+     "The two ratio columns compare each format to that build’s default for the same guest and workload, then take "
+     "the median of the 21 ratios. The final column compares workload times to the same format of 1.13.0. "
+     "[Distribution sizes](web/bench/results/minified-sizes.json) · [Timings and resource requests](web/bench/results/minified-browser.json)")
+distribution_names = {"baseline": "1.13.0", "main": "Stock main", "candidate": "Candidate"}
+distribution_rows, stage_rows = [], []
+for version, values in distribution.items():
+    base, _, mode = version.partition("-")
+    label = distribution_names[base] + (" minified" if mode else " default")
+    distribution_rows.append([label, *[f"{v:.1f}" for v in values["payload"]], f"{values['startup']:.2f}",
+                              f"{values['load_ratio']:.2f}×", f"{values['runtime_ratio']:.2f}×", f"{values['wins']}/21"])
+    stage_rows.append([label, *[f"{v:.2f}" for v in values["stages"]]])
+table(["Distribution", "JS (KiB)", "Total gzip (KiB)", "Total Brotli (KiB)", "Startup (ms)",
+       "Startup / default", "Runtime / default", "At or below 1.13.0"], distribution_rows)
+para("Chromium’s Resource Timing entries give four consecutive intervals from the start of dynamic import until "
+     "the module is ready. The gap before the first Wasm request includes resolving dependencies and executing "
+     "JavaScript. The local server served uncompressed assets with caching disabled. Browser response-body sizes "
+     "were checked against the generated file sizes. Each column reports its own median over workload medians.")
+table(["Distribution", "Import to JS response end (ms)", "JS response end to first Wasm request (ms)",
+       "First Wasm request to last Wasm response (ms)", "Last Wasm response to ready (ms)"], stage_rows)
+branch_min = distribution["candidate-minified"]
+release_min = distribution["baseline-minified"]
+para(f"Minifying the branch reduced startup by {100 * (1 - branch_min['load_ratio']):.0f}% on the median "
+     f"same-workload comparison. Its median import-to-ready time was {branch_min['startup']:.2f} ms, "
+     f"compared with {release_min['startup']:.2f} ms for minified 1.13.0. "
+     f"Between the end of the entry JavaScript response and the first Wasm request, "
+     f"the corresponding medians were {branch_min['stages'][1]:.2f} and {release_min['stages'][1]:.2f} ms.")
+fig, (payload_ax, load_ax) = plt.subplots(1, 2, figsize=(9, 3.25), layout="constrained")
+for ax, metric, label in [(payload_ax, "gzip", "Total gzip (KiB)"), (load_ax, "startup", "Import to ready (ms)")]:
+    for offset, mode, color in [(-.18, "", "#687581"), (.18, "-minified", "#067c77")]:
+        groups = [distribution[base + mode] for base in distribution_names]
+        data = [v["payload"][1] if metric == "gzip" else v["startup"] for v in groups]
+        ax.barh([i + offset for i in range(len(data))], data, height=.31, color=color,
+                label="Minified" if mode else "Default")
+    ax.set_yticks(range(len(distribution_names)), distribution_names.values())
+    ax.invert_yaxis()
+    ax.set_xlabel(label)
+    ax.grid(axis="x", alpha=.2)
+    ax.set_axisbelow(True)
+payload_ax.legend(loc="upper center", bbox_to_anchor=(1, -.22), ncol=2, frameon=False)
+fig.savefig(results / "minified-startup.png", dpi=155)
+plt.close(fig)
+para("![Default and minified gzip payloads and fresh-page startup for three Jco builds](web/bench/results/minified-startup.png)")
+
 coverage = json.loads((results / "js-coverage.json").read_text())
 if (coverage["sizesSha256"] != run["sizesSha256"] or coverage["workloads"] != run["workloads"] or
         coverage["runnerSha256"] != sha256((bench / "coverage.mjs").read_bytes()).hexdigest()):
@@ -553,16 +620,16 @@ CHROME_BIN=/path/to/chrome BENCH_PAIRED=1 ROUNDS={paired_run["rounds"]} node web
 CHROME_BIN=/path/to/chrome BENCH_CANVAS_CONTROL=1 ROUNDS={canvas["rounds"]} node web/bench/browser.mjs
 CHROME_BIN=/path/to/chrome ROUNDS={loop["rounds"]} node web/bench/import-loop.mjs ../jco-candidate
 CHROME_BIN=/path/to/chrome node web/bench/coverage.mjs
-python3 web/bench/report.py --from-candidate
-python3 web/bench/candidate-report.py
-```""")
-para("To verify that the packaged WebAssembly transpiler emits the same files as the native generator used for timing, "
-     "build it at the candidate commit and compare every generated JavaScript and core Wasm file against the recorded inventory.")
-para("""```sh
 pnpm -C ../jco-candidate install --frozen-lockfile
 pnpm -C ../jco-candidate --filter @bytecodealliance/jco-transpile run build
 node web/bench/candidate.mjs --verify-wasm ../jco-candidate
+node web/bench/minified.mjs ../jco-candidate
+CHROME_BIN=/path/to/chrome BENCH_MINIFIED=1 ROUNDS={minified_run['rounds']} node web/bench/browser.mjs
+python3 web/bench/report.py --from-candidate
+python3 web/bench/candidate-report.py
 ```""")
+para("The minification comparison uses each version’s packaged transpiler. The verification command compares "
+     "the packaged candidate’s default JavaScript and core Wasm to the native generator’s measured output for every input.")
 readme = bench.parents[1] / "README.md"
 text = readme.read_text()
 a, b = "<!-- candidate:start -->", "<!-- candidate:end -->"

@@ -9,11 +9,26 @@ const web = resolve(import.meta.dirname, "..");
 const domControl = process.env.BENCH_DOM_CONTROL === "1";
 const canvasControl = process.env.BENCH_CANVAS_CONTROL === "1";
 const paired = canvasControl || process.env.BENCH_PAIRED === "1";
+const minified = process.env.BENCH_MINIFIED === "1";
+if (minified && (paired || domControl)) throw Error("Run the minification comparison separately");
 if (paired && domControl) throw Error("Run the paired and DOM controls separately");
-const candidate = paired || domControl || process.env.BENCH_CANDIDATE === "1";
+const candidate = minified || paired || domControl || process.env.BENCH_CANDIDATE === "1";
 const prefix = candidate ? "candidate-" : "";
 const sizeData = await readFile(resolve(import.meta.dirname, `results/${prefix}sizes.json`));
 const inventory = JSON.parse(sizeData);
+const sizesSha256 = createHash("sha256").update(sizeData).digest("hex");
+let minifiedSizesSha256;
+if (minified) {
+  const data = await readFile(resolve(import.meta.dirname, "results/minified-sizes.json"));
+  const extra = JSON.parse(data);
+  if (extra.sizesSha256 !== sizesSha256) throw Error("Minified files were built for a different inventory");
+  minifiedSizesSha256 = createHash("sha256").update(data).digest("hex");
+  for (const component of inventory.components) {
+    const builds = extra.components[component.input.path];
+    if (!builds) throw Error("Missing minified input: " + component.input.path);
+    Object.assign(component.variants, builds);
+  }
+}
 const rounds = Number(process.env.ROUNDS ?? 7);
 if (!Number.isInteger(rounds) || rounds < 1) throw new Error("ROUNDS must be a positive integer");
 
@@ -104,7 +119,7 @@ function implementations(demo) {
     }
     return controls;
   }
-  return runs;
+  return minified ? runs.filter(impl => impl.kind === "jco" && !impl.label.endsWith(" reference")) : runs;
 }
 
 // Interleave baseline and candidate on the same page. Clearing the DOM and
@@ -142,6 +157,7 @@ async function sample(page, demo, impl, args) {
     const { runRawJs, getMeasurements } = await import(`/examples/${demo}/main.js`);
     let run = runRawJs;
     let loadMs = null;
+    let importStart;
     let counts;
     if (impl.kind === "direct") {
       const start = performance.now();
@@ -152,6 +168,7 @@ async function sample(page, demo, impl, args) {
       loadMs = performance.now() - start;
     } else if (impl.path) {
       const start = performance.now();
+      importStart = start;
       const mod = await import(impl.path);
       if (impl.kind === "emscripten" || impl.kind === "em-js") {
         const instance = await mod.default();
@@ -172,6 +189,17 @@ async function sample(page, demo, impl, args) {
     if (reports.length !== 1 || !Object.keys(reports[0]).length ||
         !Object.values(reports[0]).every(v => Number.isFinite(v) && v >= 0)) {
       throw new Error("Missing or invalid workload report");
+    }
+    let requests;
+    if (impl.kind === "jco" && !domControl) {
+      const directory = impl.path.slice(0, impl.path.lastIndexOf("/") + 1);
+      requests = performance.getEntriesByType("resource").flatMap(entry => {
+        const path = new URL(entry.name).pathname;
+        if (!path.startsWith(directory) || entry.startTime < importStart) return [];
+        return [{ path: path.slice(1), bytes: entry.encodedBodySize,
+          startMs: entry.startTime - importStart, endMs: entry.responseEnd - importStart }];
+      });
+      if (!requests.some(request => "/" + request.path === impl.path)) throw Error("Missing entry-module resource timing");
     }
     let checks;
     if (domControl) {
@@ -196,7 +224,7 @@ async function sample(page, demo, impl, args) {
         }
       }
     }
-    return { loadMs, seconds: reports[0], checks };
+    return { loadMs, seconds: reports[0], checks, requests };
   }, demo, impl, args, domControl);
 }
 
@@ -207,18 +235,16 @@ try {
     date: new Date().toISOString(), browser: await browser.version(), node: process.version,
     os: [platform(), release(), arch()].join(" "), cpu: cpus()[0].model, rounds, workloads,
     baseline: inventory.baseline, main: inventory.main,
-    candidate: inventory.candidate, reference: inventory.reference, sizesSha256: createHash("sha256").update(sizeData).digest("hex"), samples: [],
+    candidate: inventory.candidate, reference: inventory.reference, sizesSha256, minifiedSizesSha256, samples: [],
   };
   if (paired) result.passes = 4;
-  if (domControl || paired) {
-    result.sources = {};
-    const sources = ["bench/browser.mjs", "host/web-host.js", "host/common.js",
-      ...Object.keys(workloads).map(d => `examples/${d}/main.js`)];
-    if (domControl) sources.push("bench/dom-core-shim.mjs");
-    if (canvasControl) sources.push("bench/canvas-readback.mjs");
-    for (const path of sources) {
-      result.sources[path] = createHash("sha256").update(await readFile(resolve(web, path))).digest("hex");
-    }
+  result.sources = {};
+  const sources = ["bench/browser.mjs", "host/web-host.js", "host/common.js",
+    ...Object.keys(workloads).map(d => `examples/${d}/main.js`)];
+  if (domControl) sources.push("bench/dom-core-shim.mjs");
+  if (canvasControl) sources.push("bench/canvas-readback.mjs");
+  for (const path of sources) {
+    result.sources[path] = createHash("sha256").update(await readFile(resolve(web, path))).digest("hex");
   }
   for (const [demo, params] of Object.entries(workloads)) {
     console.log(demo);
@@ -253,7 +279,7 @@ try {
       }
     }
   }
-  const resultPrefix = canvasControl ? "canvas-control-" : paired ? "paired-" : domControl ? "dom-control-" : prefix;
+  const resultPrefix = minified ? "minified-" : canvasControl ? "canvas-control-" : paired ? "paired-" : domControl ? "dom-control-" : prefix;
   await writeFile(resolve(import.meta.dirname, `results/${resultPrefix}browser.json`), JSON.stringify(result, null, 2) + "\n");
 } finally {
   server.close();
