@@ -11,12 +11,14 @@ import puppeteer from "puppeteer-core";
 const [checkout, matrixPath, output, mode, ...extra] = process.argv.slice(2);
 assert(
   output && !extra.length,
-  "Usage: table-warmup.mjs <built Jco checkout> <matrix.json.gz> <output.json.gz> [trace-directory | --time-weak-adds]",
+  "Usage: table-warmup.mjs <built Jco checkout> <matrix.json.gz> <output.json.gz> [trace-directory | --time-weak-adds | --stages]",
 );
 const language = process.env.GUEST_LANGUAGE ?? "rust";
 assert(["c", "cpp", "rust"].includes(language), "GUEST_LANGUAGE must be c, cpp or rust");
 const timeWeakAdds = mode === "--time-weak-adds";
-const traceDir = timeWeakAdds ? undefined : mode;
+const measureStages = mode === "--stages";
+if (measureStages) assert.equal(language, "c", "The stage probe uses the C guest's named marks");
+const traceDir = timeWeakAdds || measureStages ? undefined : mode;
 if (traceDir) await mkdir(traceDir, { recursive: true });
 const hash = (bytes) => createHash("sha256").update(bytes).digest("hex");
 const matrixBytes = await readFile(matrixPath);
@@ -85,7 +87,7 @@ for (const { version, entry, requests } of cases) {
   }
 }
 
-async function measure({ entry, warmup, rows, calls, audit, timeWeakAdds }) {
+async function measure({ entry, warmup, rows, calls, audit, timeWeakAdds, measureStages }) {
   const { runRawJs, getMeasurements } = await import("/examples/table-update/main.js");
   // Match the matrix: the shared host is present before import and each call
   // starts with a clean body and empty user-timing buffers.
@@ -154,11 +156,24 @@ async function measure({ entry, warmup, rows, calls, audit, timeWeakAdds }) {
       return mark.call(this, name, ...args);
     };
   }
-  function invoke(fn) {
+  const stages = [];
+  function invoke(fn, recordStages = false) {
     document.body.replaceChildren();
     performance.clearMeasures();
     performance.clearMarks();
+    const start = recordStages ? performance.now() : 0;
     fn(rows);
+    if (recordStages) {
+      const end = performance.now();
+      // Read the guest's existing marks only after it returns. In particular,
+      // c-end precedes the final drops of the retained row and cell handles.
+      const marks = Object.fromEntries(performance.getEntriesByType("mark").map(m => [m.name, m.startTime]));
+      const names = ["c-start", "create-start", "create-end", "update-start", "update-end", "clear-start", "clear-end", "c-end"];
+      const times = [start, ...names.map(name => marks[name]), end];
+      if (!times.every((value, i) => Number.isFinite(value) && (i === 0 || times[i-1] <= value)))
+        throw Error("Missing or out-of-order C guest marks");
+      stages.push(Object.fromEntries(["entry", ...names, "return"].map((name, i) => [name, times[i] - start])));
+    }
     const reports = Object.values(getMeasurements());
     if (
       reports.length !== 1 ||
@@ -178,7 +193,8 @@ async function measure({ entry, warmup, rows, calls, audit, timeWeakAdds }) {
   }
   weakAdds.length = 0;
   const measurements = [];
-  for (let i = 0; i < calls; i++) measurements.push(invoke(run));
+  for (let i = 0; i < calls; i++) measurements.push(invoke(run, measureStages));
+  if (measureStages) return { measurements, requests, stages };
   return timeWeakAdds ? { measurements, requests, weakAdds } : { measurements, requests };
 }
 
@@ -220,7 +236,7 @@ for (let round = 0; round < rounds; round++) {
       const trial = queue[position];
       if (trial && path === "/trial/" + position) {
         res.setHeader("Content-Type", "text/html");
-        const args = { ...trial, entry: entries[trial.version], rows, calls, timeWeakAdds };
+        const args = { ...trial, entry: entries[trial.version], rows, calls, timeWeakAdds, measureStages };
         return res.end(
           '<!doctype html><head><script type="importmap">' +
             JSON.stringify({ imports }) +
@@ -308,6 +324,7 @@ await writeFile(
       chromium,
       traced: Boolean(traceDir),
       timeWeakAdds,
+      measureStages,
       calls,
       revision: matrix.candidate,
       matrixSha256: hash(matrixBytes),

@@ -34,6 +34,65 @@ Compared with the previous matrix, the median total JS size changed by +97 bytes
 
 ![Warm and first-result ratios across all 21 workloads.](web/bench/results/review-matrix-minified-47f6dc0c1.png)
 
+### Which differences from Jco 1.13.0 repeat?
+
+A second run at `47f6dc0c1` used 24 fresh Chromium processes and 2,328 documents, following the original 12 rounds and 1,164 documents. All 236 entries in the asset manifest, compiler hashes, workload inputs and the browser version matched. Both builds met the 10× target on all 21 warm workloads in each run. The worst warm ratios to the fastest compiled shim in the repeat were 4.24× internal and 4.51× external. Both builds beat upstream main on all 21 warm medians in the repeat. [Repeat timings and asset hashes](web/bench/results/review-matrix-repeat-47f6dc0c1.json.gz)
+
+| External warm time / 1.13.0 | Initial 12 rounds | Independent 24 rounds |
+| --- | ---: | ---: |
+| C++ tree traversal | 1.332× (1.147–1.595) | 1.050× (0.899–1.206) |
+| C table creation | 1.145× (1.062–1.466) | 1.012× (0.965–1.194) |
+| Rust table creation | 0.987× (0.927–1.103) | 1.097× (1.033–1.229) |
+
+The first two warm comparisons were the ones flagged by the original run. Their repeat intervals both include parity. Rust table creation crossed the threshold in the repeat only. Across 42 warm comparisons, none had an individual 95% interval wholly slower than release in both runs. The repeat's warm medians matched or beat release in 15/21 internal and 14/21 external cases. These intervals allow some remaining warm slowdowns.
+
+| Workloads with an interval wholly slower than release in **both** runs | Internal Oxc | External checked |
+| --- | ---: | ---: |
+| Import and initialization | 21/21 | 21/21 |
+| First guest call after import | 0/21 | 1/21 |
+| First result including import | 4/21 | 15/21 |
+| Second guest call, headline operation | 0/21 | 0/21 |
+
+For the 15 external workloads consistently slower to first result, the median paired difference was **+17.78 ms** to first result, **+17.10 ms** in import and initialization, and **−0.44 ms** in the first guest call. For the four internal workloads the differences were +6.40, +4.91 and +0.95 ms. Each column is summarized independently across workloads. The first guest call includes the entire demo. For external C table update it took 1.197× release initially and 1.196× on repeat, a reproducible cost beyond loading the module. [Browser measurements and release intervals](web/bench/review-matrix-report.py)
+
+![Warm and first-result ratios across all 21 workloads in the independent 24-round run.](web/bench/results/review-matrix-repeat-47f6dc0c1.png)
+
+### C table creation across 24 calls
+
+With no prior work in the document, the aggregate time to create 2,000 rows on each of 24 guest calls was **235.80 ms for release, 228.80 ms internally and 240.27 ms externally**. The paired ratios were 0.978× (0.853–1.137) and 1.031× (0.984–1.097). The aggregate covers the creation loop. The full first guest call also builds the report and releases the retained handles. All three builds created the same rows and made 10,000 audited host calls within the creation phase. [Raw measurements from 18 browser rounds](web/bench/results/table-warmup-c-47f6dc0c1.json.gz)
+
+| Guest call, no prior work | Jco 1.13.0 (ms) | Internal Oxc (ms) | External checked (ms) |
+| ---: | ---: | ---: | ---: |
+| 2 | 10.66 | 9.10 | 10.50 |
+| 6 | 9.54 | 11.88 | 12.83 |
+| 11 | 8.91 | 13.46 | 12.90 |
+| 21 | 8.95 | 8.20 | 8.82 |
+| 22 | 8.77 | 16.01 | 14.14 |
+| 23 | 9.06 | 8.16 | 8.30 |
+
+Calls 6, 11 and 22 took measurably longer than release in both modes. On call 22, the paired ratios were 1.854× (1.472–2.063) and 1.745× (1.506–2.037). The same invocation pattern appeared in the earlier Rust guest. Its instrumented run measured long insertions in the weak set used to track disposed resources. [Rust timings and insertion probe](#rust-table-creation-over-repeated-calls)
+
+![Per-call C table creation relative to release, with no prior work, four prior JS calls or four prior guest calls.](web/bench/results/table-warmup-c-47f6dc0c1.png)
+
+A separate 18-round run read the C guest’s existing performance marks after each call. On the first call, the time from the guest’s final mark to the export returning exceeded release by **0.62 ms internally** (0.45–0.94 ms) and **0.68 ms externally** (0.45–0.99 ms). The guest releases its 2,000 retained row handles and 2,000 cell handles in that interval. On call 22, the largest excess was within the creation loop itself, +6.17 ms internally and +6.78 ms externally. The isolated whole first call had an external difference of +1.05 ms (−1.59 to +2.31 ms), so the final cleanup accounts for a measurable cost without establishing the cause of the full first-call difference seen in the matrix. [Stage timings](web/bench/results/table-stages-c-47f6dc0c1.json.gz) · [C guest implementation](c/table-update/main.c)
+
+<details><summary>Reproduce the release comparison and repeated C table calls</summary>
+
+Build Jco at `47f6dc0c1` and stage upstream main at `326f52ab4` using the [matrix setup](#full-demo-matrix-on-the-merged-pr). The two matrices use the same deterministic scheduling algorithm and fresh browser processes in every round. The repeat report checks the compiler hashes, all served assets, runner, browser, CPU model and workload parameters against the initial archive. It pairs each candidate with the release in its own round. Intervals are individual two-sided sign intervals for the median across rounds.
+
+```sh
+export CHROME_BIN=/path/to/chrome
+initial=web/bench/results/review-matrix-minified-47f6dc0c1.json.gz
+ROUNDS=24 node web/bench/review-matrix.mjs "$after" "$stage" /tmp/repeat.json.gz --minify-checked
+python3 web/bench/review-matrix-report.py /tmp/repeat.json.gz --repeat-of "$initial" --release-intervals --plot /tmp/repeat.png
+GUEST_LANGUAGE=c node web/bench/table-warmup.mjs "$after" "$initial" /tmp/c-table.json.gz
+python3 web/bench/table-warmup-report.py /tmp/c-table.json.gz "$initial" --plot /tmp/c-table.png
+GUEST_LANGUAGE=c node web/bench/table-warmup.mjs "$after" "$initial" /tmp/c-stages.json.gz --stages
+python3 web/bench/table-warmup-report.py /tmp/c-stages.json.gz "$initial"
+```
+
+</details>
+
 ### Allocation and timing of a single export
 
 An export task stores its first implicit thread directly. It allocates an ordered array when a second thread joins. The runtime comment explains why the oldest live thread must remain the default, and the regression test removes siblings out of order. The external checked package and internal Oxc bundle share this implementation. [Runtime change and test](https://github.com/vados-cosmonic/jco/commit/3ffabc739b72a4a8afdcfdd3051d50d5dd1d379f)

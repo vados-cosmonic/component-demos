@@ -35,9 +35,12 @@ assert (rounds, calls) == (18, 24)
 assert run["versions"] == versions and run["warmups"] == warmups
 assert run["matrixSha256"] == digest(args.matrix)
 language = run.get("language", "rust")
-if "language" in run:
+if "measureStages" in run:
     assert language in {"c", "cpp", "rust"}
     assert run["runnerSha256"] == digest(Path(__file__).with_name("table-warmup.mjs"))
+elif "language" in run:
+    assert language in {"c", "cpp", "rust"}
+    assert run["runnerSha256"] == "2a445936ea78737b8763e3f1633991e3ee0948fb680313fe19201d84c52438ba"
 else:
     # The earlier runner always used the Rust component.
     assert run["runnerSha256"] == "f4dc5d2604cb0bff528b48e4b8af0fa61ad7e1414a9c7f03be421db38179fce7"
@@ -128,6 +131,28 @@ def overlap_ms(events, kind):
         end = max(end, b)
     return total / 1000
 
+
+if run.get("measureStages"):
+    assert language == "c"
+    marks = ["entry", "c-start", "create-start", "create-end", "update-start", "update-end",
+             "clear-start", "clear-end", "c-end", "return"]
+    for row in run["samples"]:
+        assert len(row["stages"]) == calls
+        for stage in row["stages"]:
+            assert list(stage) == marks and stage["entry"] == 0
+            assert all(stage[a] <= stage[b] for a, b in zip(marks, marks[1:]))
+    print("C table, no prior calls. Paired time differences from release, in ms.")
+    for invocation in [1, 2, 22]:
+        for a, b in [("entry", "return"), *zip(marks, marks[1:])]:
+            values = []
+            for v in versions:
+                spans = [samples[r, v, "none"]["stages"][invocation - 1] for r in range(rounds)]
+                values.append([stage[b] - stage[a] for stage in spans])
+            differences = []
+            for candidate in values[1:]:
+                diff = sorted(x - y for x, y in zip(candidate, values[0], strict=True))
+                differences.append(f"{median(diff):+.2f} ({diff[rank]:+.2f} to {diff[-rank-1]:+.2f})")
+            print(invocation, a, b, *differences)
 
 if args.spans:
     trace = read_archive(args.spans)
