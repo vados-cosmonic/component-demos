@@ -18,7 +18,7 @@ assert(!previousBuild || minify, "The checked-package comparison uses minified o
 const versions = ["release", "main", "bundled", "external"];
 if (previousBuild) versions.push("previous");
 const checkedPackage = "@bytecodealliance/jco-cm-runtime";
-const rounds = Number(process.env.ROUNDS ?? 8);
+const rounds = Number(process.env.ROUNDS ?? (previousBuild ? 10 : 8));
 assert(Number.isInteger(rounds) && rounds > 0 && rounds % (previousBuild ? 10 : 4) === 0);
 const web = join(import.meta.dirname, "..");
 const hash = bytes => createHash("sha256").update(bytes).digest("hex");

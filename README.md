@@ -2,9 +2,63 @@
 
 This fork benchmarks the browser examples from [eqrion/component-demos at d0b9dd1](https://github.com/eqrion/component-demos/tree/d0b9dd1390a300978193adc623838fef4e4b632b). It runs the same compiled C, C++, and Rust WebAssembly components through jco 1.13.0, pinned upstream main, and a branch that optimizes synchronous host imports and numeric guest exports. The comparison also includes the demos’ JavaScript, Emscripten (Embind and EM_JS), and Rust wasm-bindgen implementations where available.
 
-The current PR head is `95e8ae0d8`. Its minified browser entries and Wasm match the full minified comparison. The slowest of the 21 warm headlines took 5.51× the fastest compiled shim’s time internally and 5.39× externally. Each build matched or beat Jco 1.13.0 on 14 of 21. [Minified results](#minified-browser-bindings) · [Changes since the timing run](#unused-task-and-resource-imports) · [Canvas readback at the PR head](#canvas-readback-at-the-pr-head) · [Fetching or embedding the primary core](#fetching-or-embedding-the-primary-wasm-core)
+## Minified bindings at the PR head
 
-## Browser bindings at the PR head
+At `db4a3aca0`, the external JavaScript entry shrank **15.0–17.9% on every workload** when generated with `--minify --cm-runtime-es-module @bytecodealliance/jco-cm-runtime`. The standard checked package exports an empty logger. Removing its labeled calls before minification also removes their message strings and argument construction. The internal Oxc bundle already removes these calls. Custom and debug provider paths keep them. [Jco implementation, runtime notes and tests](https://github.com/vados-cosmonic/jco/commit/db4a3aca05eb0745561cced24e2407713831074e) · [Fork PR](https://github.com/vados-cosmonic/jco/pull/62)
+
+| Median across 21 workload and language pairs | Jco 1.13.0 | Upstream base | PR internal Oxc | PR external checked |
+| --- | ---: | ---: | ---: | ---: |
+| Minified JS entry (KiB) | 9.58 | 111.34 | 71.71 | 25.18 |
+| Total JS transferred (KiB) | 9.58 | 111.34 | 71.71 | 124.10 |
+| JS requests | 1 | 1 | 1 | 19 |
+| Import (ms) | 5.27 | 11.94 | 10.00 | 22.77 |
+| First full result including import (ms) | 61.83 | 203.50 | 62.76 | 78.30 |
+
+Both PR renderers were within 10× of the fastest compiled shim in **21/21 warm headline cases**. The largest ratios were **4.92× internal and 4.50× external**. Each renderer matched or beat 1.13.0 on 18/21 warm headlines in this run. Each met the shim target in 81/84 comparable subphases. The three exceptions return a materialized list of DOM handles, while the original shim discards a live collection. [Equal-work DOM queries](#materializing-bulk-dom-query-results) · [Warmed tables and traversal](#warm-table-creation-and-tree-traversal) · [Canvas readback](#canvas-readback-at-the-pr-head) · [Wasm packaging](#fetching-or-embedding-the-primary-wasm-core)
+
+![Warm operation time versus the fastest shim and 1.13.0, and first-result time versus 1.13.0, for both PR renderers.](web/bench/results/review-matrix-minified-db4a3aca0.png)
+
+The paired comparison used the same standard package, import map, runtime modules and guest Wasm before and after the minifier change. The previous external entry was 29.86 KiB at the median. The new entries saved 4,175–6,333 bytes each, or 402–549 bytes with gzip. Across the 21 cases, the median paired ratio was **0.971× for first result and 0.983× for warm operation**. Twenty first-result intervals and all warm intervals included parity. This run establishes a size reduction. Cold-start parity with 1.13.0 remains open. [Raw samples and compiler hashes](web/bench/results/review-matrix-minified-db4a3aca0.json.gz)
+
+<details><summary>External after / before, individual 95% median intervals and reproduction</summary>
+
+| Guest and operation | Entry bytes saved | Gzip bytes saved | Paired import | Paired first result | Paired warm operation |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| C Attribute write | 4175 | 412 | 0.97× (0.87–1.10) | 0.95× (0.85–1.01) | 0.92× (0.79–1.06) |
+| C++ Attribute write | 4175 | 416 | 1.01× (0.84–1.19) | 0.96× (0.79–1.29) | 0.98× (0.82–1.29) |
+| Rust Attribute write | 4175 | 427 | 0.98× (0.82–1.05) | 0.93× (0.86–1.10) | 0.97× (0.75–1.09) |
+| C Canvas fillRect | 5642 | 494 | 0.98× (0.85–1.09) | 1.06× (0.80–1.22) | 1.10× (0.92–1.29) |
+| C++ Canvas fillRect | 5642 | 500 | 0.86× (0.77–0.94) | 0.90× (0.84–0.96) | 0.98× (0.81–1.06) |
+| Rust Canvas fillRect | 5643 | 498 | 0.91× (0.81–1.13) | 0.90× (0.79–1.07) | 0.98× (0.92–1.27) |
+| C Canvas pixel read | 6333 | 529 | 1.06× (0.84–1.32) | 1.02× (0.93–1.18) | 1.09× (0.86–1.44) |
+| C++ Canvas pixel read | 6333 | 524 | 1.01× (0.78–1.28) | 0.97× (0.92–1.13) | 1.04× (0.76–1.48) |
+| Rust Canvas pixel read | 6332 | 549 | 0.98× (0.88–1.23) | 0.99× (0.89–1.15) | 0.85× (0.66–1.04) |
+| C DOM ID lookup | 4957 | 451 | 0.92× (0.80–1.20) | 0.95× (0.79–1.20) | 1.12× (0.93–1.35) |
+| C++ DOM ID lookup | 4957 | 467 | 0.98× (0.87–1.06) | 0.97× (0.90–1.05) | 1.05× (0.78–1.24) |
+| Rust DOM ID lookup | 4957 | 475 | 0.98× (0.76–1.51) | 0.98× (0.89–1.21) | 0.97× (0.74–1.43) |
+| C Tree traversal | 4825 | 445 | 1.02× (0.80–1.32) | 0.92× (0.81–1.26) | 0.86× (0.72–1.22) |
+| C++ Tree traversal | 4825 | 455 | 1.02× (0.85–1.56) | 1.02× (0.85–1.22) | 0.98× (0.46–1.17) |
+| Rust Tree traversal | 4825 | 450 | 1.03× (0.90–1.18) | 0.97× (0.87–1.14) | 0.95× (0.73–1.74) |
+| C Read 1 KiB string | 4190 | 402 | 0.93× (0.71–1.25) | 0.94× (0.89–1.04) | 1.02× (0.89–1.20) |
+| C++ Read 1 KiB string | 4190 | 411 | 1.16× (0.40–1.53) | 0.97× (0.89–1.07) | 1.02× (0.90–1.09) |
+| Rust Read 1 KiB string | 4190 | 428 | 1.01× (0.77–1.36) | 0.99× (0.87–1.09) | 0.99× (0.78–1.09) |
+| C Table creation | 4799 | 438 | 1.11× (0.91–1.20) | 0.99× (0.88–1.28) | 1.03× (0.84–1.21) |
+| C++ Table creation | 4799 | 453 | 0.94× (0.80–1.23) | 0.90× (0.78–1.11) | 0.90× (0.70–1.05) |
+| Rust Table creation | 4799 | 444 | 0.98× (0.88–1.10) | 0.93× (0.85–1.08) | 1.01× (0.78–1.27) |
+
+Each of ten rounds ran 118 fresh Chromium documents with DevTools disconnected. The five Jco configurations rotated through every timing position and immediate predecessor for each workload and language. Each page checked the first and second complete guest reports. The size comparison uses actual files. Import and first-result timing include the ordinary browser fetches over uncompressed loopback. The intervals apply individually to paired round ratios.
+
+Follow the [full-matrix setup](#full-demo-matrix-on-the-merged-pr). Build the PR checkout at `db4a3aca0` and the previous transpiler at `95e8ae0d8`. The runner checks that both transpilers use the same bindgen compiler artifacts. The upstream base is `83e25bb19`. Upstream main at `326f52ab4` added one Node HTTP shim change since that base. [Upstream comparison](https://github.com/bytecodealliance/jco/compare/83e25bb19...326f52ab4) · [Measured runner](https://github.com/vados-cosmonic/component-demos/blob/f2d27b218062dbbe77f2da7013f5c613ab3aef87/web/bench/review-matrix.mjs)
+
+```sh
+CHROME_BIN=/path/to/chrome ROUNDS=10 node web/bench/review-matrix.mjs \
+  "$jco" "$stage" /tmp/checked-provider.json.gz --minify "$previous/packages/jco-transpile"
+python3 web/bench/review-matrix-report.py /tmp/checked-provider.json.gz --plot /tmp/checked-provider.png
+```
+
+</details>
+
+## Default browser bindings at revision b731ebc91
 
 In the full timing run at `b731ebc91`, both the internal Oxc bundle and the external checked runtime stayed within 10× of the fastest compiled shim in **all 21 warm headline cases**. Tree traversal had the largest gap. The internal bundle took **5.50×** the shim’s time for the C guest, and the external runtime took **5.78×** for Rust. Cold startup and Jco 1.13.0 parity remain open. [Jco fork PR](https://github.com/vados-cosmonic/jco/pull/62) · [Minified builds](#minified-browser-bindings) · [Equal-work bulk queries](#materializing-bulk-dom-query-results) · [External runtime packaging](#packaging-the-external-runtime-for-browsers) · [Warmed tables and traversal](#warm-table-creation-and-tree-traversal)
 
@@ -212,7 +266,7 @@ python3 web/bench/provider-startup-report.py /tmp/all.json.gz
 
 ## Materializing bulk DOM query results
 
-The original bulk-query benchmark compares a WIT `list<element>` result with an Embind shim that discards a live collection. Here each renderer and the direct shim run the same guest core, return the host’s array to Wasm as a list of handles, and run the guest’s drop loop. At the original size of 2,000 handles per query, the internal Oxc bundle took **1.50–1.57×** the direct shim’s time across C, C++ and Rust. The external checked runtime took **1.53–1.60×**. Against Jco 1.13.0, the two PR renderers took **0.71–0.74×** as long. [Jco revision `eaca992c8`](https://github.com/vados-cosmonic/jco/commit/eaca992c895fbf08bdd7f0968e0e5e4e0fc8643e) · [Original shim comparison](#browser-bindings-at-the-pr-head)
+The original bulk-query benchmark compares a WIT `list<element>` result with an Embind shim that discards a live collection. Here each renderer and the direct shim run the same guest core, return the host’s array to Wasm as a list of handles, and run the guest’s drop loop. At the original size of 2,000 handles per query, the internal Oxc bundle took **1.50–1.57×** the direct shim’s time across C, C++ and Rust. The external checked runtime took **1.53–1.60×**. Against Jco 1.13.0, the two PR renderers took **0.71–0.74×** as long. [Jco revision `eaca992c8`](https://github.com/vados-cosmonic/jco/commit/eaca992c895fbf08bdd7f0968e0e5e4e0fc8643e) · [Original shim comparison](#default-browser-bindings-at-revision-b731ebc91)
 
 ![Bulk DOM query time relative to the direct shim, grouped by language and number of handles returned per query, with paired intervals.](web/bench/results/bulk-dom.png)
 

@@ -20,10 +20,13 @@ runner_hash = hashlib.sha256((bench / "review-matrix.mjs").read_bytes()).hexdige
 if "minify" not in result:
     # Original eight-round archives predate the minification switch.
     assert result["runnerSha256"] == "9b76e7f77a7653cf5ada4b8d114ce9572a0e34796f8ecd904820a0299474289f"
-elif result["runnerSha256"] != "b9e3afa3b4354a6544ebb8ea5d593f7d3ed193706585e6a2db1a103ec6d977de":
-    assert result["runnerSha256"] == runner_hash
-else:
+elif result["runnerSha256"] == "b9e3afa3b4354a6544ebb8ea5d593f7d3ed193706585e6a2db1a103ec6d977de":
     assert "checkedPackage" not in result
+elif result["runnerSha256"] == "cf7384f34b03e4389275108649c7dbbaa719ab94cbcfd91e48fbad5105e49789":
+    # Benchmark commit f2d27b2 supplied ROUNDS=10 explicitly.
+    assert result["checkedPackage"] and result["rounds"] == 10
+else:
+    assert result["runnerSha256"] == runner_hash
 if result.get("minify"):
     inventory = (bench / "results/minified-sizes.json").read_bytes()
     assert result["minifiedInventorySha256"] == hashlib.sha256(inventory).hexdigest()
