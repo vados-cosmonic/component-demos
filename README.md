@@ -21,6 +21,35 @@ CHROME_BIN=/path/to/chrome node web/bench/provider-loop.mjs /path/to/jco \
   /path/to/jco/target/debug/examples/transpile /tmp/provider-loop.json
 ```
 
+### Loading one component and then a second
+
+On the review branch, the first component fetched a median of 23 JavaScript files with the checked external provider. Packing the runtime exports used by these demos into one shared ES module cut that to two files. The median time to the first guest result fell from **50.36 ms to 23.28 ms**, alongside **23.13 ms** for the internal Oxc bundle and **11.26 ms** for Jco 1.13.0. With the shared module already loaded, the second component returned its first result in **15.42 ms**, compared with **21.24 ms** for the internal bundle and **10.45 ms** for 1.13.0. [Measured Jco revision](https://github.com/vados-cosmonic/jco/commit/dc366893262deb4605c5ca7fb35da3f1fe587357)
+
+![Time to first guest result and JavaScript bytes for the first and second components in a document](web/bench/results/provider-startup.png)
+
+| Build | Component | Import (ms) | First result (ms) | JS requests | JS (KiB) | JS gzip (KiB) |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| Jco 1.13.0 | First | 7.45 | 11.26 | 1 | 21.2 | 3.4 |
+| Jco 1.13.0 | Second | 7.39 | 10.45 | 1 | 21.2 | 3.4 |
+| PR bundled | First | 15.34 | 23.13 | 1 | 126.4 | 23.6 |
+| PR bundled | Second | 14.29 | 21.24 | 1 | 126.4 | 23.6 |
+| PR external | First | 41.59 | 50.36 | 23 | 193.2 | 50.8 |
+| PR external | Second | 9.73 | 15.93 | 1 | 67.1 | 8.4 |
+| PR external, packed provider | First | 15.67 | 23.28 | 2 | 115.5 | 23.4 |
+| PR external, packed provider | Second | 9.40 | 15.42 | 1 | 67.1 | 8.4 |
+
+The packed configuration is an application build experiment. Rolldown bundles the named exports that the 15 generated entries import from the checked runtime. A browser import map directs those specifiers to the same file. The generated external bindings and guest Wasm are byte-identical with either provider layout. In all 15 workload and guest pairs, the packed provider returned the first result sooner than the ordinary external package. For the second component, it also beat the internal bundle in all 15 pairs. Every per-case 95% sign-test interval favored packing in those two comparisons. [Shared provider build](web/bench/shared-provider.mjs)
+
+Twelve rounds used 720 fresh Chromium 156 documents with DevTools disconnected. Each document loaded the common host, then imported and ran the same compiled guest twice under distinct entry and Wasm URLs. Both imports transferred their own generated files. The second reused the external runtime by URL. The runner checked all transfer sizes and guest reports and balanced the four build orders within each workload and language. Guests used small fixed workloads for attribute writes, canvas draws, DOM queries, tree traversal and table creation. Each table cell is the median of 15 workload and guest medians. The server served uncompressed responses over loopback. The gzip column sums each requested JS file compressed separately at level 9. [Browser runner](web/bench/provider-startup.mjs) · [Raw samples and asset hashes (gzip)](web/bench/results/provider-startup.json.gz)
+
+To repeat this comparison, use the review checkout and native generator from the preceding commands. Generate the 1.13.0 baseline files using the size comparison setup below. The report can also regenerate the chart with Matplotlib and `--plot web/bench/results/provider-startup.png`.
+
+```sh
+CHROME_BIN=/path/to/chrome node web/bench/provider-startup.mjs /path/to/jco \
+  /path/to/jco/target/debug/examples/transpile web/bench/results/provider-startup.json.gz
+python3 web/bench/provider-startup-report.py
+```
+
 <!-- candidate:start -->
 
 ## Optimized browser bindings
