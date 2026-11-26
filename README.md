@@ -62,6 +62,41 @@ python3 web/bench/bulk-dom-report.py /tmp/bulk.json.gz --matrix /tmp/matrix.json
 
 </details>
 
+### Where first instantiation spends time after compilation
+
+The C, C++ and Rust table workloads still take longer to instantiate on the PR when the browser has already imported the bindings and compiled every Wasm core. Each timing run used 432 fresh Chromium documents over 12 balanced rounds. Each document timed its first call to the public async `instantiate` API, ran the guest and checked all six table measurements. It then timed six batches of eight instances reusing the compiled modules. The repeated figure uses the last five batches. Timings include Wasm start functions and exclude download, compilation, the benchmark guest call and explicit shutdown. [First timing run](web/bench/results/precompiled-repeat-3e25d8d82.json.gz) · [Independent repeat](web/bench/results/precompiled-confirm-3e25d8d82.json.gz)
+
+| Default instantiation | Jco 1.13.0 | Internal Oxc | External runtime |
+| --- | ---: | ---: | ---: |
+| First instance, run 1 | 1.05 ms | 4.62 ms | 5.27 ms |
+| First instance, run 2 | 1.04 ms | 4.78 ms | 5.19 ms |
+| Repeated instance, run 1 | 0.093 ms | 0.404 ms | 0.434 ms |
+| Repeated instance, run 2 | 0.096 ms | 0.392 ms | 0.443 ms |
+
+A separate 108-document trace used the same JS and Wasm bytes and timestamped core lookups and calls to the asynchronous Wasm constructor. Before the first core lookup, internal Oxc spent an additional **1.93 ms** versus 1.13.0 and the external runtime **1.94 ms**. From the lookup to invoking the first constructor, the additional time was **0.80 ms** and **0.85 ms**. After the last Wasm constructor returned, the additional time was **1.04 ms** and **1.12 ms**. All adapter constructors together added just **0.015 ms** and **0.025 ms** versus release. Each difference is the median of the three language-paired differences per round, then the median across rounds. The boundaries include JS execution and scheduling and do not attribute the time to individual runtime functions. [Core order, timestamps, asset hashes and guest sizes](web/bench/results/precompiled-trace-3e25d8d82.json.gz)
+
+![First-instance time by phase in three builds. Most of the extra time falls before core construction or after the final constructor returns.](web/bench/results/precompiled-trace-3e25d8d82.png)
+
+We also tried passing a callback that uses `new WebAssembly.Instance` for the 24–276-byte adapter cores and retains `WebAssembly.instantiate` for the main guest. Against an explicit all-async callback, the first-instance ratios were 1.041× internally and 1.071× externally in run 1, and 0.999× and 1.006× in run 2. All four individual 95% intervals included parity. Synchronous construction of every core also had intervals including parity for both PR builds in both runs. The measurements point to the binding setup and completion paths as the larger opportunity.
+
+<details><summary>Reproduce the precompiled-core measurements</summary>
+
+Use the Jco checkout and Chromium binary from the 21-workload matrix above. Install the benchmark fork's locked web dependencies, which pin Jco 1.13.0. Run from the repository root.
+
+```sh
+set -e
+matrix=web/bench/results/review-matrix-sync-task-3e25d8d82.json.gz
+compiler="$after/packages/jco-transpile"
+runtime="$after/packages/jco-cm-runtime/dist"
+node web/bench/precompiled-instances.mjs "$compiler" "$runtime" "$matrix" /tmp/timing.json.gz
+node web/bench/precompiled-instances.mjs "$compiler" "$runtime" "$matrix" /tmp/repeat.json.gz
+node web/bench/precompiled-instances.mjs "$compiler" "$runtime" "$matrix" /tmp/trace.json.gz --trace
+python3 web/bench/precompiled-instances-report.py /tmp/timing.json.gz "$matrix" --trace /tmp/trace.json.gz --plot /tmp/trace.png
+python3 web/bench/precompiled-instances-report.py /tmp/repeat.json.gz "$matrix"
+```
+
+</details>
+
 ## Reusing resource capture tables during startup
 
 A component must keep enough information to dispose its live, owned host resources when it stops. The checked bindings used to allocate a record and a getter for each imported handle table. The first table for each resource can register its existing capture object instead. Its getter still waits until shutdown to resolve captures by representation. Additional tables sharing that resource still register their own handles. Existing custom providers keep their original registration format. [Bindgen and shared runtime code](https://github.com/vados-cosmonic/jco/commit/c873ff950) · [Retained-resource test](https://github.com/vados-cosmonic/jco/commit/9863264e8)
