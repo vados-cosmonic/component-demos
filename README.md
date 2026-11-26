@@ -2,6 +2,45 @@
 
 This fork benchmarks the browser examples from [eqrion/component-demos at d0b9dd1](https://github.com/eqrion/component-demos/tree/d0b9dd1390a300978193adc623838fef4e4b632b). It runs the same compiled C, C++, and Rust WebAssembly components through jco 1.13.0, pinned upstream main, and a branch that optimizes synchronous host imports and numeric guest exports. The comparison also includes the demos’ JavaScript, Emscripten (Embind and EM_JS), and Rust wasm-bindgen implementations where available.
 
+## Smaller synchronous import adapters at 084063ed1
+
+A general host import copies the adapter’s diagnostic name onto its subtask. The standard checked synchronous lower returns its result directly and never constructs a subtask, including when it must create a task for a detached call. Bindgen now skips that private name assignment on this path. Both internal Oxc and the external checked package benefit. The comparison found 297 assignments across the 21 demos (12–17 per entry). The unminified external adapters differed only in those assignments and whitespace. The checked runtime, guest Wasm and exported interface are shared with the control. [Jco compiler change and regression test](https://github.com/vados-cosmonic/jco/commit/084063ed1)
+
+| Minified JS per entry, paired across 21 workloads | Internal Oxc | External checked |
+| --- | ---: | ---: |
+| Median reduction | 941 bytes (1.31%) | 941 bytes (3.71%) |
+| Range of reductions | 799–1,282 bytes | 799–1,282 bytes |
+| Median gzip reduction | 178 bytes (0.95%) | 183 bytes (2.99%) |
+| Range of gzip reductions | 148–217 bytes | 150–223 bytes |
+
+Every entry became smaller. Gzip measures the entry compressed alone at level 9. The comparison also checked the general lowering path, tracked calls, debug mode and an opted-in custom provider on the same fixture. All four controls produced byte-identical output before and after the change. [Sizes, diagnostic counts, and asset hashes](web/bench/results/sync-import-names-084063ed1.json.gz) · [Source comparison](web/bench/sync-import-names.mjs)
+
+The full comparison used 12 rounds and 1,164 fresh Chromium documents. Each value below summarizes the 21 workload medians. Both modes were within 10× of the fastest compiled shim in 21/21 warm workloads internally and 21/21 externally. The worst ratios were 4.24× and 4.94× respectively. Both builds matched or beat pinned main on 21/21 warm medians, and met the shim target in 81/84 individual phases. Against Jco 1.13.0 the internal and external builds matched or beat release in 18/21 and 15/21 warm workloads and 8/21 and 5/21 first results. These end-to-end comparisons use all PR changes. The controlled size comparison above isolates the removed labels. [Full browser matrix](web/bench/results/review-matrix-minified-084063ed1.json.gz)
+
+| Metric | Jco 1.13.0 | Upstream main at `326f52ab4` | Internal Oxc | External checked |
+| --- | ---: | ---: | ---: | ---: |
+| Import (ms) | 5.13 | 12.04 | 9.46 | 19.44 |
+| Time to first guest result (ms) | 60.55 | 205.03 | 63.03 | 74.29 |
+| Minified JS entry (KiB) | 9.58 | 111.34 | 70.56 | 24.08 |
+| Total JS (KiB) | 9.58 | 111.34 | 70.56 | 122.85 |
+| Total gzipped JS (KiB) | 3.01 | 25.42 | 18.78 | 39.54 |
+| JS requests | 1 | 1 | 1 | 16 |
+
+![All 21 warm operations and first-result timings relative to the shim and release.](web/bench/results/review-matrix-minified-084063ed1.png)
+
+<details><summary>Reproduce the adapter-size and full browser comparisons</summary>
+
+Use built Jco checkouts at `427b9c0d7` (before) and `084063ed1` (after). Prepare the release assets and pinned upstream compiler using the [full matrix setup](#full-demo-matrix-on-the-merged-pr). Run these commands from the benchmark fork.
+
+```sh
+old=web/bench/results/review-matrix-minified-427b9c0d7.json.gz
+ROUNDS=12 node web/bench/review-matrix.mjs "$after" "$stage" /tmp/names-matrix.json.gz --minify-checked
+python3 web/bench/review-matrix-report.py /tmp/names-matrix.json.gz --release-intervals --plot /tmp/names-matrix.png
+node web/bench/sync-import-names.mjs "$before/packages/jco-transpile" "$after/packages/jco-transpile" "$old" /tmp/names-matrix.json.gz /tmp/names.json.gz
+```
+
+</details>
+
 ## External runtime startup at 427b9c0d7
 
 The checked runtime package groups the short UTF-8 decoder, synchronous waiter and JS helpers into one shared chunk. Across all 21 generated C, C++ and Rust demos this removes three runtime requests, from 18 to 15. Each standalone numeric conversion still loads 2,779 bytes. The largest cost is for a standalone import of the component-state module, which grows by 5,613 bytes (1,502 gzipped). All 18 public entries expose the same names. The internal Oxc bundle gets its runtime from the embedded source. [Package build change](https://github.com/vados-cosmonic/jco/commit/427b9c0d7)
