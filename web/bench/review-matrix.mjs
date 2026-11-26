@@ -10,13 +10,14 @@ import { pathToFileURL } from "node:url";
 import { gzipSync } from "node:zlib";
 import puppeteer from "puppeteer-core";
 
-const [checkout, upstreamBuild, output, flag, previousBuild, ...extra] = process.argv.slice(2);
+const [checkout, upstreamBuild, output, flag, previousBuild, previousRuntime, ...extra] = process.argv.slice(2);
 assert(checkout && upstreamBuild && output && !extra.length && [undefined, "--minify", "--minify-checked", "--compare-compilers"].includes(flag),
-  "Usage: review-matrix.mjs <built PR checkout> <upstream dist+vendor directory with commit file> <output.json.gz> [--minify [previous-transpiler-directory] | --minify-checked | --compare-compilers previous-transpiler-directory]");
+  "Usage: review-matrix.mjs <built PR checkout> <upstream dist+vendor directory with commit file> <output.json.gz> [--minify [previous-transpiler-directory] | --minify-checked | --compare-compilers previous-transpiler-directory [previous-runtime-dist]]");
 const minify = flag !== undefined;
 const useCheckedPackage = Boolean(previousBuild) || flag === "--minify-checked";
 const compareCompilers = flag === "--compare-compilers";
 assert(!compareCompilers || previousBuild);
+assert(!previousRuntime || compareCompilers);
 assert(!previousBuild || compareCompilers || flag === "--minify", "The checked-package comparison uses minified output");
 const versions = ["release", "main", "bundled", "external"];
 if (compareCompilers) versions.push("previous-bundled", "previous-external");
@@ -81,8 +82,14 @@ async function readAsset(file) {
   return bytes;
 }
 const runtime = join(checkout, "packages/jco-cm-runtime/dist");
-for (const file of await readdir(runtime, { recursive: true })) {
-  if (file.endsWith(".js") && !file.startsWith("debug/")) register("/runtime/" + file, await readFile(join(runtime, file)));
+// Separate URL roots let the browser resolve each package's relative chunk
+// imports against the distribution built with that compiler.
+const runtimeDirs = [["/runtime/", runtime]];
+if (previousRuntime) runtimeDirs.push(["/previous-runtime/", previousRuntime]);
+for (const [prefix, dir] of runtimeDirs) {
+  for (const file of await readdir(dir, { recursive: true })) {
+    if (file.endsWith(".js") && !file.startsWith("debug/")) register(prefix + file, await readFile(join(dir, file)));
+  }
 }
 for (const path of ["host/common.js", "host/web-host.js", ...Object.keys(workloads).map(d => "examples/" + d + "/main.js")]) {
   register("/" + path, await readFile(join(web, path)));
@@ -179,10 +186,12 @@ function shuffle(items) {
   }
   return result;
 }
-const packageImports = {};
+const importMaps = {};
 if (useCheckedPackage) {
-  for (const path of assets.keys()) {
-    if (path.startsWith("/runtime/")) packageImports[checkedPackage + path.slice("/runtime".length,-3)] = path;
+  for (const [prefix] of runtimeDirs) {
+    const imports = Object.fromEntries([...assets.keys()].filter(path => path.startsWith(prefix)).map(path =>
+      [checkedPackage + "/" + path.slice(prefix.length, -3), path]));
+    importMaps[prefix] = '<script type="importmap">' + JSON.stringify({ imports }) + '</script>';
   }
 }
 const groups = Map.groupBy(builds, b => b.kind === "jco" ? b.demo + "/" + b.lang : b.entry);
@@ -231,9 +240,10 @@ for (let round = 0; round < rounds; round++) {
       if (path === "/gate") { await gate.promise; return res.end(); }
       if (path === "/favicon.ico") return res.writeHead(204).end();
       const build = queue[position];
+      const runtimePrefix = previousRuntime && build.version === "previous-external" ? "/previous-runtime/" : "/runtime/";
       if (path === "/trial/" + position) {
         res.setHeader("Content-Type", "text/html");
-        const map = useCheckedPackage ? '<script type="importmap">' + JSON.stringify({ imports: packageImports }) + '</script>' : "";
+        const map = importMaps[runtimePrefix] ?? "";
         return res.end(`<!doctype html><head>${map}</head><body><script type="module">
           let data;
           try { data = await (${measure})(${JSON.stringify(build)}, ${JSON.stringify(Object.values(workloads[build.demo]))}) }
@@ -253,8 +263,8 @@ for (let round = 0; round < rounds; round++) {
           assert.equal(request.bytes, manifest[request.path].bytes, request.path);
           assert(request.transferred > 0);
         }
-        if (useCheckedPackage && ["previous", "external"].includes(build.version)) {
-          assert(data.requests.some(r => r.path === "/runtime/intrinsics/sync.js"));
+        if (useCheckedPackage && ["previous", "external", "previous-external"].includes(build.version)) {
+          assert(data.requests.some(r => r.path === runtimePrefix + "intrinsics/sync.js"));
         }
         samples.push({ round, position, ...build, ...data });
         position++;

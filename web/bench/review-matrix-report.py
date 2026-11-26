@@ -13,7 +13,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("input", type=Path, nargs="?", default=bench / "results/review-matrix.json.gz")
 parser.add_argument("--plot", type=Path)
 parser.add_argument("--compare-entries", type=Path,
-                    help="compare generated JS sizes to a matrix with the same controls, Wasm and runtime assets")
+                    help="verify previous assets and compare generated JS sizes with an earlier matrix")
 parser.add_argument("--release-intervals", action="store_true",
                     help="show individual paired median intervals against Jco 1.13.0")
 parser.add_argument("--repeat-of", type=Path,
@@ -22,6 +22,7 @@ args = parser.parse_args()
 with gzip.open(args.input) as source:
     result = json.load(source)
 assert result["inventorySha256"] == hashlib.sha256((bench / "results/candidate-sizes.json").read_bytes()).hexdigest()
+separate_runtime = any(k.startswith("/previous-runtime/") for k in result["manifest"])
 if args.compare_entries:
     with gzip.open(args.compare_entries) as source:
         previous = json.load(source)
@@ -34,6 +35,16 @@ if args.compare_entries:
         for path, asset in result["manifest"].items():
             if "/previous-" in path:
                 assert old[path.replace("/previous-", "/")] == asset, path
+    # A comparison can now serve each external compiler with its own runtime.
+    # Verify the entire previous package before comparing the compiler outputs.
+    if separate_runtime:
+        assert result["upstream"] == previous["upstream"]
+        assert result["compilers"]["main"] == previous["compilers"]["main"]
+        prior_runtime = {k.replace("/previous-runtime/", "/runtime/"): v
+                         for k, v in result["manifest"].items() if k.startswith("/previous-runtime/")}
+        assert prior_runtime == {k: v for k, v in old.items() if k.startswith("/runtime/")}
+        old = {k: v for k, v in old.items() if not k.startswith("/runtime/")}
+        new = {k: v for k, v in new.items() if not k.startswith("/runtime/")}
     assert old.keys() == new.keys()
     entries = {s["entry"]: s["version"] for s in result["samples"] if s["version"] in ("bundled", "external")}
     for path in new.keys() - entries.keys():
@@ -45,6 +56,20 @@ if args.compare_entries:
             saved = [old[p][metric] - new[p][metric] for p in paths]
             print(version, metric, "entries smaller", sum(n > 0 for n in saved),
                   "of", len(paths), "bytes saved (min / median / max)", min(saved), median(saved), max(saved))
+    if separate_runtime:
+        for version in ("bundled", "external"):
+            current = {(s["lang"], s["demo"]): s for s in result["samples"]
+                       if s["round"] == 0 and s["version"] == version}
+            controls = {(s["lang"], s["demo"]): s for s in result["samples"]
+                        if s["round"] == 0 and s["version"] == "previous-" + version}
+            assert current.keys() == controls.keys()
+            for metric in ("bytes", "gzip"):
+                def transfer(row):
+                    return sum(result["manifest"][r["path"]][metric] for r in row["requests"]
+                               if r["path"].endswith(".js"))
+                deltas = [transfer(controls[key]) - transfer(current[key]) for key in current]
+                print(version, "complete JS", metric, "saved (min / median / max)",
+                      min(deltas), median(deltas), max(deltas))
 runner_hash = hashlib.sha256((bench / "review-matrix.mjs").read_bytes()).hexdigest()
 if "minify" not in result:
     # Original eight-round archives predate the minification switch.
@@ -55,7 +80,7 @@ elif result["runnerSha256"] == "cf7384f34b03e4389275108649c7dbbaa719ab94cbcfd91e
     # Benchmark commit f2d27b2 supplied ROUNDS=10 explicitly.
     assert result["checkedPackage"] and result["rounds"] == 10
 else:
-    assert result["runnerSha256"] in {runner_hash, "07165d2b608750c3e0c01f73a1bcd2ab8c68761030fe8ff07fa8bb8a4039e297"}
+    assert result["runnerSha256"] in {runner_hash, "3d97f1f9f129c0e2cb208c3af2fe975cf6082343173a102152b3418ef72d4600", "07165d2b608750c3e0c01f73a1bcd2ab8c68761030fe8ff07fa8bb8a4039e297"}
 if result.get("minify"):
     inventory = (bench / "results/minified-sizes.json").read_bytes()
     assert result["minifiedInventorySha256"] == hashlib.sha256(inventory).hexdigest()
@@ -279,7 +304,18 @@ for control in controls:
                 def requests(row):
                     return {q["path"].replace("/" + control + "/", "/" + version + "/"): q["bytes"]
                             for q in row["requests"] if q["path"] != row["entry"]}
-                assert requests(current[r]) == requests(previous[r])
+                prior_requests, current_requests = requests(previous[r]), requests(current[r])
+                if separate_runtime and version == "external":
+                    # Compare the shared guest cores, then validate each package's
+                    # own dependency graph and transfer lengths on every document.
+                    for row, expected_prefix in [(previous[r], "/previous-runtime/"), (current[r], "/runtime/")]:
+                        package = [q for q in row["requests"] if q["path"].startswith(("/previous-runtime/", "/runtime/"))]
+                        assert any(q["path"] == expected_prefix + "intrinsics/sync.js" for q in package)
+                        assert all(q["path"].startswith(expected_prefix) and
+                                   q["bytes"] == result["manifest"][q["path"]]["bytes"] for q in package)
+                    prior_requests = {k: v for k, v in prior_requests.items() if not k.startswith("/previous-runtime/")}
+                    current_requests = {k: v for k, v in current_requests.items() if not k.startswith("/runtime/")}
+                assert prior_requests == current_requests
             n = len(timed_versions)
             assert len(predecessors) == n * (n - 1) and set(predecessors.values()) == {rounds // n}
             fields = []
@@ -318,7 +354,7 @@ if args.plot:
         if key == "shim":
             ax.axvline(10, ls="--", color="#555", lw=1, label="10× target")
         ax.set_title(label, fontsize=11)
-        ticks = [.25, .5, 1, 2, 4, 8, 10] if key == "shim" else [.25, .5, 1, 2, 4]
+        ticks = [.25, .5, 1, 2, 4, 10] if key == "shim" else [.25, .5, 1, 2, 4]
         ax.set_xticks(ticks, [f"{n:g}×" for n in ticks], fontsize=8)
         ax.grid(axis="x", alpha=.18)
     axes[0].set_yticks(range(len(focus)), [s[1] for s in focus.values()])
