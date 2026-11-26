@@ -97,6 +97,39 @@ python3 web/bench/precompiled-instances-report.py /tmp/repeat.json.gz "$matrix"
 
 </details>
 
+#### Does skipping the initialization task improve time to first result?
+
+The initialization task gives a Wasm start function a current task and implicit thread if it calls a component import. In these three table guests, the C and C++ initializers call only local Wasm routines, and the Rust start function fills memory. We compared the shipped bindings with experimental copies that omit task creation, register selection and task cleanup for these exact guest binaries. Both builds still instantiate every core and execute every Wasm start function. The harness checks the reachable startup instructions and the C/C++ start-module import against the measured guest before running. This experiment uses the original cores and ordinary browser constructors. Other components can call the host during startup, and the public instantiation API can receive replacement cores. [Guest checks and experimental edits](web/bench/init-task-probe.mjs)
+
+| Workload and binding | Time saved constructing the instance | Extra time on the first guest call | Time to first result, experiment / shipped (95% interval) |
+| --- | ---: | ---: | ---: |
+| 8 rows, internal Oxc | 2.04 ms | 1.46 ms | 0.947× (0.918–0.985) |
+| 8 rows, external runtime | 2.07 ms | 2.06 ms | 0.991× (0.963–1.039) |
+| 2,000 rows, internal Oxc | 1.94 ms | 2.05 ms | 0.996× (0.965–1.064) |
+| 2,000 rows, external runtime | 2.19 ms | 3.58 ms | 1.026× (0.974–1.114) |
+
+Each workload ran in 300 fresh Chromium documents across 20 balanced rounds. The bindings were imported and Wasm compiled before the clock started. The first-result clock stopped when the guest returned its completed table report. Each column summarizes per-round, language-paired measurements independently. Skipping the task improved the 8-row internal first result by 5.3%. Neither full-workload interval established an improvement. The fork PR keeps the existing initialization behavior. [8-row samples](web/bench/results/init-task-small-3e25d8d82.json.gz) · [2,000-row samples](web/bench/results/init-task-full-3e25d8d82.json.gz)
+
+In a separate 108-document trace, creating the task and selecting its registers took **0.92 ms internally and 1.01 ms externally**. After the last core returned, resolving the task took **0.30 / 0.33 ms**, exiting it took **0.65 / 0.70 ms**, and clearing its registers took about **0.08 ms** in each mode. Before the first lookup, the four named external class factories each took 0.15–0.37 ms. A further 0.83 / 0.98 ms elapsed between starting the timer and the first marker in the generated internal / external function. These instrumented spans include first-use engine costs. The table above uses separate, uninstrumented pages. [Phase timings and served file hashes](web/bench/results/init-task-trace-3e25d8d82.json.gz)
+
+<details><summary>Reproduce the initialization task comparison</summary>
+
+Use the same compiler, runtime and browser as the precompiled-core study above. Put `wasm-tools` on `PATH` so the harness can inspect the original guest functions.
+
+```sh
+set -e
+matrix=web/bench/results/review-matrix-sync-task-3e25d8d82.json.gz
+reference=web/bench/results/precompiled-confirm-3e25d8d82.json.gz
+trial=web/bench/init-task-trial.mjs
+patch -o "$trial" web/bench/precompiled-instances.mjs web/bench/experiments/init-task-trial.patch
+for study in trace small full; do
+  node "$trial" "$compiler" "$runtime" "$matrix" "/tmp/init-$study.json.gz" "$study" "$reference"
+done
+python3 web/bench/init-task-report.py "$matrix" "$reference" "$trial" /tmp/init-trace.json.gz /tmp/init-small.json.gz /tmp/init-full.json.gz
+```
+
+</details>
+
 ## Reusing resource capture tables during startup
 
 A component must keep enough information to dispose its live, owned host resources when it stops. The checked bindings used to allocate a record and a getter for each imported handle table. The first table for each resource can register its existing capture object instead. Its getter still waits until shutdown to resolve captures by representation. Additional tables sharing that resource still register their own handles. Existing custom providers keep their original registration format. [Bindgen and shared runtime code](https://github.com/vados-cosmonic/jco/commit/c873ff950) · [Retained-resource test](https://github.com/vados-cosmonic/jco/commit/9863264e8)
