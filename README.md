@@ -248,6 +248,19 @@ node web/bench/resource-drop-sizes.mjs \
   /path/to/after/target/debug/examples/transpile /tmp/resource-drop-sizes.json
 ```
 
+### Unused task and resource imports
+
+At `95e8ae0d8`, bindgen selects thread metadata when it emits a task-managed call and resource removal when it emits a finalizer or explicit drop. Constructing an async thread class also uses its state and registers directly. Across 34 demo inputs this removed 107 bytes from four unminified external entries and 158 bytes from 28 more. Gzip savings ranged from 7 to 17 bytes per affected entry. The internal Oxc bundle already eliminated these dependencies in all 34 demos. All emitted Wasm files matched the preceding build. For the 21 headline workloads, the minified entries on both renderers also matched their published hashes. [Jco change and regression coverage](https://github.com/vados-cosmonic/jco/commit/95e8ae0d8a92f84d83c7075e28047119a5eec805) · [Default entry sizes and hashes](web/bench/results/unused-intrinsic-sizes.json) · [Minified matrix](#minified-browser-bindings)
+
+The original API-v1 provider configuration dropped 107 bytes on three inputs. Sixteen other entries moved a lookup declaration to its first consumer with the same uncompressed size. For a separate component that retains an imported handle and has no drop trampoline, the checked external entry fell from 15,044 to 14,709 bytes and the internal bundle from 82,481 to 82,455 bytes. The guest retained the resource until shutdown, which disposed it exactly once in both renderers and in the original provider configuration.
+
+To reproduce the demo size comparison, build the native `transpile` example with `embedded-cm-runtime` at `c5870ab66` and `95e8ae0d8`. The verifier checks the Wasm hashes and the permitted declaration and import edits in the generated JavaScript.
+
+```sh
+node web/bench/resource-drop-sizes.mjs /path/to/before/transpile /path/to/after/transpile \
+  /tmp/unused-intrinsic-sizes.json --unused-intrinsics
+```
+
 ## Loading the UTF-8 decoder for synchronous imports
 
 Synchronous host calls can decode a string without loading the general lifting module and its stream, future and error-context dependencies. The checked runtime now exposes the same decoder through the synchronous entry that these components already import. In six small DOM workloads, the external bindings fetched **19 JavaScript files instead of 23** and transferred **27.26 KiB less JavaScript** per component at the median. [Jco implementation](https://github.com/vados-cosmonic/jco/commit/36875ba1a) · [Measured PR head](https://github.com/vados-cosmonic/jco/commit/b731ebc9160203466a5c2bf5bc2debb6a77d28e0)

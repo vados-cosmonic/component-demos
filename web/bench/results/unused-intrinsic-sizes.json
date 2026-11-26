@@ -1,0 +1,1728 @@
+{
+  "before": "ebcc22b75c05f75914200dbfb45a565b33f591f8db0253e420c636cbcb2366b7",
+  "after": "571d779cd6cd0615b49b84d33bc4fd67ebd88a274db58fa2f3fb51e2ac52160d",
+  "rows": [
+    {
+      "path": "c/attribute-churn/native/attribute_churn.wasm",
+      "mode": "bundled",
+      "before": {
+        "bytes": 122519,
+        "gzip": 23843,
+        "sha256": "2b9d276cb91e05f0edd6ccffe8ac3a26bea450d17677cf42a760d49a11f29c5e"
+      },
+      "after": {
+        "bytes": 122519,
+        "gzip": 23843,
+        "sha256": "2b9d276cb91e05f0edd6ccffe8ac3a26bea450d17677cf42a760d49a11f29c5e"
+      },
+      "cores": {
+        "attribute_churn.core.wasm": "1a2784fe914f00594f4b2571d1d048c43b503345a46d3de9c02456da13ba97da"
+      }
+    },
+    {
+      "path": "c/attribute-churn/native/attribute_churn.wasm",
+      "mode": "external",
+      "before": {
+        "bytes": 58245,
+        "gzip": 7911,
+        "sha256": "7ff5978adfd8a8494304b30378e4baf7d1d6f2d43006271f13568448d8eaed41"
+      },
+      "after": {
+        "bytes": 58087,
+        "gzip": 7899,
+        "sha256": "32a60354260acab82ca544bb64a97bdef14e35426c5628e53553e3d40a0cb04f"
+      },
+      "cores": {
+        "attribute_churn.core.wasm": "1a2784fe914f00594f4b2571d1d048c43b503345a46d3de9c02456da13ba97da"
+      }
+    },
+    {
+      "path": "c/attribute-churn/native/attribute_churn.wasm",
+      "mode": "v1",
+      "before": {
+        "bytes": 81794,
+        "gzip": 9300,
+        "sha256": "fd37bdd1d3db66ae561df99c5e9edc823f9ef6ffd95533cdfa8e5d8be163d477"
+      },
+      "after": {
+        "bytes": 81794,
+        "gzip": 9303,
+        "sha256": "58ce35428f226893038bb4b62542e7a4a7c2e30da71b08685d74d69144ac2e75"
+      },
+      "cores": {
+        "attribute_churn.core.wasm": "1a2784fe914f00594f4b2571d1d048c43b503345a46d3de9c02456da13ba97da"
+      }
+    },
+    {
+      "path": "c/calculator/native/calculator.wasm",
+      "mode": "bundled",
+      "before": {
+        "bytes": 77261,
+        "gzip": 18164,
+        "sha256": "1b4b4a1aea5eef9d18e58e7d4db9d87bac8a0f00d70f8fcb6fa8614ef4054c14"
+      },
+      "after": {
+        "bytes": 77261,
+        "gzip": 18164,
+        "sha256": "1b4b4a1aea5eef9d18e58e7d4db9d87bac8a0f00d70f8fcb6fa8614ef4054c14"
+      },
+      "cores": {}
+    },
+    {
+      "path": "c/calculator/native/calculator.wasm",
+      "mode": "external",
+      "before": {
+        "bytes": 14592,
+        "gzip": 3935,
+        "sha256": "837f89101419554faddc9218d54339b91dae71c0022d11dd3325a2c25264e057"
+      },
+      "after": {
+        "bytes": 14485,
+        "gzip": 3924,
+        "sha256": "1d7bc5228d5b133ff33297b04cc4de568b06db7c97ac7da3e83d0ab4c2558591"
+      },
+      "cores": {}
+    },
+    {
+      "path": "c/calculator/native/calculator.wasm",
+      "mode": "v1",
+      "before": {
+        "bytes": 15630,
+        "gzip": 4129,
+        "sha256": "907eacc80bf8ed73547d30ff76c95fddb0e7536a462ada8fdbb1148337680628"
+      },
+      "after": {
+        "bytes": 15523,
+        "gzip": 4118,
+        "sha256": "6223f638129f11cb629e134c07eda954add81e6ec958656557e38efcb59bbe17"
+      },
+      "cores": {}
+    },
+    {
+      "path": "c/canvas-draw/native/canvas_draw.wasm",
+      "mode": "bundled",
+      "before": {
+        "bytes": 131057,
+        "gzip": 24300,
+        "sha256": "f0937bb964632024cbe426fc523dfb718bfb61bf64d07ee5b9c51fd6c5f90310"
+      },
+      "after": {
+        "bytes": 131057,
+        "gzip": 24300,
+        "sha256": "f0937bb964632024cbe426fc523dfb718bfb61bf64d07ee5b9c51fd6c5f90310"
+      },
+      "cores": {
+        "canvas_draw.core.wasm": "bf2dd3bd129a69dad4c3185d2821d55770e1c8530f6355277e27b433aee4ca04"
+      }
+    },
+    {
+      "path": "c/canvas-draw/native/canvas_draw.wasm",
+      "mode": "external",
+      "before": {
+        "bytes": 69018,
+        "gzip": 8421,
+        "sha256": "906b79d373066810c9593e6ab8c23932bff854ba93a7246f37cfbe96f9a798ea"
+      },
+      "after": {
+        "bytes": 68860,
+        "gzip": 8410,
+        "sha256": "56c2b078e2d261bef06283c2e825ebb798d4b0192f6c23b298b0e78778297c06"
+      },
+      "cores": {
+        "canvas_draw.core.wasm": "bf2dd3bd129a69dad4c3185d2821d55770e1c8530f6355277e27b433aee4ca04"
+      }
+    },
+    {
+      "path": "c/canvas-draw/native/canvas_draw.wasm",
+      "mode": "v1",
+      "before": {
+        "bytes": 99514,
+        "gzip": 9999,
+        "sha256": "ff5889cb1ec1839c5140a60602f1ea7ce0d705b69b0611015b6bccaf4a19fe8a"
+      },
+      "after": {
+        "bytes": 99514,
+        "gzip": 10002,
+        "sha256": "9f54bb3daa2841a62183eec3f552aa9dab7d1f7dac687862566e89b563a8c6dc"
+      },
+      "cores": {
+        "canvas_draw.core.wasm": "bf2dd3bd129a69dad4c3185d2821d55770e1c8530f6355277e27b433aee4ca04"
+      }
+    },
+    {
+      "path": "c/canvas-pixels/native/canvas_pixels.wasm",
+      "mode": "bundled",
+      "before": {
+        "bytes": 136563,
+        "gzip": 25466,
+        "sha256": "5839c4c5a6f91215244f4695cae7f187be72e7b1b1bb506060a982cb574e1431"
+      },
+      "after": {
+        "bytes": 136563,
+        "gzip": 25466,
+        "sha256": "5839c4c5a6f91215244f4695cae7f187be72e7b1b1bb506060a982cb574e1431"
+      },
+      "cores": {
+        "canvas_pixels.core.wasm": "dc5c244ccabee52fcc8f750aa772081652b503f18e2e9cedd4dde4294e3e2bf7"
+      }
+    },
+    {
+      "path": "c/canvas-pixels/native/canvas_pixels.wasm",
+      "mode": "external",
+      "before": {
+        "bytes": 74008,
+        "gzip": 9307,
+        "sha256": "45828453fc61e0e771e09f01b4511c5d6e3d2ee42c614be64c67ef5aef9acddc"
+      },
+      "after": {
+        "bytes": 73850,
+        "gzip": 9295,
+        "sha256": "fdd2f678f3fa90617cc3a55121d0c3ef0ee83dd0f0624620287c853f54586bcb"
+      },
+      "cores": {
+        "canvas_pixels.core.wasm": "dc5c244ccabee52fcc8f750aa772081652b503f18e2e9cedd4dde4294e3e2bf7"
+      }
+    },
+    {
+      "path": "c/canvas-pixels/native/canvas_pixels.wasm",
+      "mode": "v1",
+      "before": {
+        "bytes": 107214,
+        "gzip": 11159,
+        "sha256": "07449b3b46cfc2ff2492e31b58bb891b5c5468749c3a272a8d74d06f328bd021"
+      },
+      "after": {
+        "bytes": 107214,
+        "gzip": 11159,
+        "sha256": "07449b3b46cfc2ff2492e31b58bb891b5c5468749c3a272a8d74d06f328bd021"
+      },
+      "cores": {
+        "canvas_pixels.core.wasm": "dc5c244ccabee52fcc8f750aa772081652b503f18e2e9cedd4dde4294e3e2bf7"
+      }
+    },
+    {
+      "path": "c/dom-query/native/dom_query.wasm",
+      "mode": "bundled",
+      "before": {
+        "bytes": 129473,
+        "gzip": 24597,
+        "sha256": "8be26fdeb666cb0d40676d9efd23f0fba7bce573124b32915a4f2c6aafc4e671"
+      },
+      "after": {
+        "bytes": 129473,
+        "gzip": 24597,
+        "sha256": "8be26fdeb666cb0d40676d9efd23f0fba7bce573124b32915a4f2c6aafc4e671"
+      },
+      "cores": {
+        "dom_query.core.wasm": "aaf5fab64c469017aaa049d09b13bcfa24b14be3754c7cddab010cffdf1da381"
+      }
+    },
+    {
+      "path": "c/dom-query/native/dom_query.wasm",
+      "mode": "external",
+      "before": {
+        "bytes": 66330,
+        "gzip": 8618,
+        "sha256": "3fa14e1c35a464899284020adf68ac9cd7ce3d0493b73dac85db3ccbc3eba016"
+      },
+      "after": {
+        "bytes": 66172,
+        "gzip": 8606,
+        "sha256": "3ca61afc8a259cb63888f22c79b38e1465746e56208a946888667df6d2556d92"
+      },
+      "cores": {
+        "dom_query.core.wasm": "aaf5fab64c469017aaa049d09b13bcfa24b14be3754c7cddab010cffdf1da381"
+      }
+    },
+    {
+      "path": "c/dom-query/native/dom_query.wasm",
+      "mode": "v1",
+      "before": {
+        "bytes": 94995,
+        "gzip": 10261,
+        "sha256": "e9d6cee266234847e9a07f4c46a8049eafaa52c9172f42615cc3e0d41203eea3"
+      },
+      "after": {
+        "bytes": 94995,
+        "gzip": 10261,
+        "sha256": "e9d6cee266234847e9a07f4c46a8049eafaa52c9172f42615cc3e0d41203eea3"
+      },
+      "cores": {
+        "dom_query.core.wasm": "aaf5fab64c469017aaa049d09b13bcfa24b14be3754c7cddab010cffdf1da381"
+      }
+    },
+    {
+      "path": "c/dom-traversal/native/dom_traversal.wasm",
+      "mode": "bundled",
+      "before": {
+        "bytes": 126627,
+        "gzip": 24054,
+        "sha256": "9e4a8c1a25bdaac6d55be26fe3bbed0ff44513d73f62449ae8e822119b4c5b98"
+      },
+      "after": {
+        "bytes": 126627,
+        "gzip": 24054,
+        "sha256": "9e4a8c1a25bdaac6d55be26fe3bbed0ff44513d73f62449ae8e822119b4c5b98"
+      },
+      "cores": {
+        "dom_traversal.core.wasm": "19a7cbcf733cdc5bfccf875cf27dab31ff3b4ee6fe9efc75c7e49e9f050eb8c3"
+      }
+    },
+    {
+      "path": "c/dom-traversal/native/dom_traversal.wasm",
+      "mode": "external",
+      "before": {
+        "bytes": 63545,
+        "gzip": 8162,
+        "sha256": "61ba742eb4e316d99370bbef70b5c101cc1b16357daf05db18728b11bd30f9aa"
+      },
+      "after": {
+        "bytes": 63387,
+        "gzip": 8152,
+        "sha256": "26827f98cd0d86ea3c50e52ce0ef5a2ca7bda4b8354c376b4179d87dd754f18a"
+      },
+      "cores": {
+        "dom_traversal.core.wasm": "19a7cbcf733cdc5bfccf875cf27dab31ff3b4ee6fe9efc75c7e49e9f050eb8c3"
+      }
+    },
+    {
+      "path": "c/dom-traversal/native/dom_traversal.wasm",
+      "mode": "v1",
+      "before": {
+        "bytes": 91623,
+        "gzip": 9638,
+        "sha256": "e9968def69338f8fc98ae5d7c30678133cfd7b305d529861e8ebc0b8fed4362f"
+      },
+      "after": {
+        "bytes": 91623,
+        "gzip": 9640,
+        "sha256": "159f14f208564faadc81ba36760b0b823dea6a1111c10d588fb2070f8bf578bb"
+      },
+      "cores": {
+        "dom_traversal.core.wasm": "19a7cbcf733cdc5bfccf875cf27dab31ff3b4ee6fe9efc75c7e49e9f050eb8c3"
+      }
+    },
+    {
+      "path": "c/greet-bindgen/native/greet.wasm",
+      "mode": "bundled",
+      "before": {
+        "bytes": 84063,
+        "gzip": 19930,
+        "sha256": "0396b44e4873b860530e6de7426bf8e43d6f6c13c919230ad57cdcb6cced5fc1"
+      },
+      "after": {
+        "bytes": 84063,
+        "gzip": 19930,
+        "sha256": "0396b44e4873b860530e6de7426bf8e43d6f6c13c919230ad57cdcb6cced5fc1"
+      },
+      "cores": {
+        "greet.core.wasm": "1e3179af6ef86aaca56a41bc06bfb108370f8c2476a6d7c8a744980601cf9c13"
+      }
+    },
+    {
+      "path": "c/greet-bindgen/native/greet.wasm",
+      "mode": "external",
+      "before": {
+        "bytes": 15115,
+        "gzip": 4025,
+        "sha256": "6ae5200e2a5933b66edfca662657ddb086a1c054ab36bf45be05cd06c3eee40f"
+      },
+      "after": {
+        "bytes": 15115,
+        "gzip": 4025,
+        "sha256": "6ae5200e2a5933b66edfca662657ddb086a1c054ab36bf45be05cd06c3eee40f"
+      },
+      "cores": {
+        "greet.core.wasm": "1e3179af6ef86aaca56a41bc06bfb108370f8c2476a6d7c8a744980601cf9c13"
+      }
+    },
+    {
+      "path": "c/greet-bindgen/native/greet.wasm",
+      "mode": "v1",
+      "before": {
+        "bytes": 16676,
+        "gzip": 4286,
+        "sha256": "0c55dfd2a704780128b7cef9ea4f2a8cecc2fa7727e8cb106f58a003971d0fae"
+      },
+      "after": {
+        "bytes": 16676,
+        "gzip": 4286,
+        "sha256": "0c55dfd2a704780128b7cef9ea4f2a8cecc2fa7727e8cb106f58a003971d0fae"
+      },
+      "cores": {
+        "greet.core.wasm": "1e3179af6ef86aaca56a41bc06bfb108370f8c2476a6d7c8a744980601cf9c13"
+      }
+    },
+    {
+      "path": "c/greet-freestanding/native/greet.wasm",
+      "mode": "bundled",
+      "before": {
+        "bytes": 80617,
+        "gzip": 19826,
+        "sha256": "a984923164b81a54f13ffa318bcf3d75949fd0c595906d429cea8305e0d75876"
+      },
+      "after": {
+        "bytes": 80617,
+        "gzip": 19826,
+        "sha256": "a984923164b81a54f13ffa318bcf3d75949fd0c595906d429cea8305e0d75876"
+      },
+      "cores": {}
+    },
+    {
+      "path": "c/greet-freestanding/native/greet.wasm",
+      "mode": "external",
+      "before": {
+        "bytes": 13692,
+        "gzip": 4243,
+        "sha256": "6f899e8c841609cb0d6a2660f04e4ffad0eb3854633c22bcfb6f32cdca495e1c"
+      },
+      "after": {
+        "bytes": 13585,
+        "gzip": 4234,
+        "sha256": "014318bcaf7f201837251425415781695aefc4d52482a18259ec8c884085ad0f"
+      },
+      "cores": {}
+    },
+    {
+      "path": "c/greet-freestanding/native/greet.wasm",
+      "mode": "v1",
+      "before": {
+        "bytes": 14987,
+        "gzip": 4482,
+        "sha256": "63ae65908b0fd7bee425ff6ff391f026b7bd10ca89f747f72d0211f1f0a0373e"
+      },
+      "after": {
+        "bytes": 14987,
+        "gzip": 4482,
+        "sha256": "63ae65908b0fd7bee425ff6ff391f026b7bd10ca89f747f72d0211f1f0a0373e"
+      },
+      "cores": {}
+    },
+    {
+      "path": "c/greet-libc/native/greet.wasm",
+      "mode": "bundled",
+      "before": {
+        "bytes": 84063,
+        "gzip": 19930,
+        "sha256": "0396b44e4873b860530e6de7426bf8e43d6f6c13c919230ad57cdcb6cced5fc1"
+      },
+      "after": {
+        "bytes": 84063,
+        "gzip": 19930,
+        "sha256": "0396b44e4873b860530e6de7426bf8e43d6f6c13c919230ad57cdcb6cced5fc1"
+      },
+      "cores": {
+        "greet.core.wasm": "623d4f316621b31995b2b6979c97731787aa1ba92342de9d205bbfe1ff823b99"
+      }
+    },
+    {
+      "path": "c/greet-libc/native/greet.wasm",
+      "mode": "external",
+      "before": {
+        "bytes": 15115,
+        "gzip": 4025,
+        "sha256": "6ae5200e2a5933b66edfca662657ddb086a1c054ab36bf45be05cd06c3eee40f"
+      },
+      "after": {
+        "bytes": 15115,
+        "gzip": 4025,
+        "sha256": "6ae5200e2a5933b66edfca662657ddb086a1c054ab36bf45be05cd06c3eee40f"
+      },
+      "cores": {
+        "greet.core.wasm": "623d4f316621b31995b2b6979c97731787aa1ba92342de9d205bbfe1ff823b99"
+      }
+    },
+    {
+      "path": "c/greet-libc/native/greet.wasm",
+      "mode": "v1",
+      "before": {
+        "bytes": 16676,
+        "gzip": 4286,
+        "sha256": "0c55dfd2a704780128b7cef9ea4f2a8cecc2fa7727e8cb106f58a003971d0fae"
+      },
+      "after": {
+        "bytes": 16676,
+        "gzip": 4286,
+        "sha256": "0c55dfd2a704780128b7cef9ea4f2a8cecc2fa7727e8cb106f58a003971d0fae"
+      },
+      "cores": {
+        "greet.core.wasm": "623d4f316621b31995b2b6979c97731787aa1ba92342de9d205bbfe1ff823b99"
+      }
+    },
+    {
+      "path": "c/hello-world/native/hello_world.wasm",
+      "mode": "bundled",
+      "before": {
+        "bytes": 110425,
+        "gzip": 22965,
+        "sha256": "97b5a36c4be8f307764bbf357a97e84167c5369883d9c74aa1e712b966d18c27"
+      },
+      "after": {
+        "bytes": 110425,
+        "gzip": 22965,
+        "sha256": "97b5a36c4be8f307764bbf357a97e84167c5369883d9c74aa1e712b966d18c27"
+      },
+      "cores": {
+        "hello_world.core.wasm": "fb24fe5d1baed70dfbf3b77261133f20c4270517b79938868aaf15c4738a33aa"
+      }
+    },
+    {
+      "path": "c/hello-world/native/hello_world.wasm",
+      "mode": "external",
+      "before": {
+        "bytes": 44154,
+        "gzip": 7122,
+        "sha256": "05b9fde983c4e2108242fc68149b9355398c98fcddb70715826230cf12fd0000"
+      },
+      "after": {
+        "bytes": 43996,
+        "gzip": 7112,
+        "sha256": "8dc784093ab402cfc7f59d0763f65401daae445491cc0210df2fcacb90c1d0fb"
+      },
+      "cores": {
+        "hello_world.core.wasm": "fb24fe5d1baed70dfbf3b77261133f20c4270517b79938868aaf15c4738a33aa"
+      }
+    },
+    {
+      "path": "c/hello-world/native/hello_world.wasm",
+      "mode": "v1",
+      "before": {
+        "bytes": 60774,
+        "gzip": 8474,
+        "sha256": "51438c0f10c7fa68ac3dcddfb0e5aa6f03de001a76bbec122610c2db2d17c090"
+      },
+      "after": {
+        "bytes": 60774,
+        "gzip": 8476,
+        "sha256": "180474c0d25f28277a2ec33d4e8fbe3188ad71323c57eec0a3da1280d1060341"
+      },
+      "cores": {
+        "hello_world.core.wasm": "fb24fe5d1baed70dfbf3b77261133f20c4270517b79938868aaf15c4738a33aa"
+      }
+    },
+    {
+      "path": "c/string-marshalling/native/string_marshalling.wasm",
+      "mode": "bundled",
+      "before": {
+        "bytes": 126360,
+        "gzip": 25211,
+        "sha256": "504e5bbb502132a68bec84290ad9b6cb64ab81882f5776a3a99becbc2160e7c0"
+      },
+      "after": {
+        "bytes": 126360,
+        "gzip": 25211,
+        "sha256": "504e5bbb502132a68bec84290ad9b6cb64ab81882f5776a3a99becbc2160e7c0"
+      },
+      "cores": {
+        "string_marshalling.core.wasm": "4d69142dd7ae155cef9b3cdec1a2914f2475bde00c681050b1373e0351649ede"
+      }
+    },
+    {
+      "path": "c/string-marshalling/native/string_marshalling.wasm",
+      "mode": "external",
+      "before": {
+        "bytes": 58164,
+        "gzip": 8062,
+        "sha256": "963539487dc3de4b76ec129d3b4ed4eedb1dbdd19694366efa7d46137c3e0394"
+      },
+      "after": {
+        "bytes": 58006,
+        "gzip": 8050,
+        "sha256": "3d50aae2ffcc39719d95540088c5d4e6042adaef480857fae758bf61f0068d1e"
+      },
+      "cores": {
+        "string_marshalling.core.wasm": "4d69142dd7ae155cef9b3cdec1a2914f2475bde00c681050b1373e0351649ede"
+      }
+    },
+    {
+      "path": "c/string-marshalling/native/string_marshalling.wasm",
+      "mode": "v1",
+      "before": {
+        "bytes": 82299,
+        "gzip": 9571,
+        "sha256": "30a4f375ead88acfae14da3ec1f9a83be33feba7de0f6ef3aa79f81f4d2a3b9f"
+      },
+      "after": {
+        "bytes": 82299,
+        "gzip": 9571,
+        "sha256": "30a4f375ead88acfae14da3ec1f9a83be33feba7de0f6ef3aa79f81f4d2a3b9f"
+      },
+      "cores": {
+        "string_marshalling.core.wasm": "4d69142dd7ae155cef9b3cdec1a2914f2475bde00c681050b1373e0351649ede"
+      }
+    },
+    {
+      "path": "c/table-update/native/table_update.wasm",
+      "mode": "bundled",
+      "before": {
+        "bytes": 131175,
+        "gzip": 25529,
+        "sha256": "ad7e33c567e6021487bd9f6471905d2312dd427277bc1b7c439803407fd1837e"
+      },
+      "after": {
+        "bytes": 131175,
+        "gzip": 25529,
+        "sha256": "ad7e33c567e6021487bd9f6471905d2312dd427277bc1b7c439803407fd1837e"
+      },
+      "cores": {
+        "table_update.core.wasm": "dc2fc3462a0a2b2a3cffbc06c0c718d5f1b6c86ff76a7504a839c79c752b5b4a"
+      }
+    },
+    {
+      "path": "c/table-update/native/table_update.wasm",
+      "mode": "external",
+      "before": {
+        "bytes": 64090,
+        "gzip": 8417,
+        "sha256": "96faef6982ea7f90c2efc29c170b1e66140663f88ce0564805edb2a774bcbcc5"
+      },
+      "after": {
+        "bytes": 63932,
+        "gzip": 8406,
+        "sha256": "9e471b1550902b746cbe20d3987f37e76d3a97c942c075c6cd5bf358fb4fd738"
+      },
+      "cores": {
+        "table_update.core.wasm": "dc2fc3462a0a2b2a3cffbc06c0c718d5f1b6c86ff76a7504a839c79c752b5b4a"
+      }
+    },
+    {
+      "path": "c/table-update/native/table_update.wasm",
+      "mode": "v1",
+      "before": {
+        "bytes": 91822,
+        "gzip": 9981,
+        "sha256": "d09d277c8d8bcdf9856185d6ba4fd773b657aa2de8fc251b32030621675d9471"
+      },
+      "after": {
+        "bytes": 91822,
+        "gzip": 9981,
+        "sha256": "d09d277c8d8bcdf9856185d6ba4fd773b657aa2de8fc251b32030621675d9471"
+      },
+      "cores": {
+        "table_update.core.wasm": "dc2fc3462a0a2b2a3cffbc06c0c718d5f1b6c86ff76a7504a839c79c752b5b4a"
+      }
+    },
+    {
+      "path": "cpp/attribute-churn/native/attribute_churn.wasm",
+      "mode": "bundled",
+      "before": {
+        "bytes": 122515,
+        "gzip": 23844,
+        "sha256": "b8b2be32b06f033c55a903141a56361a78be01cc39a8e95d91bf2c86ff73defb"
+      },
+      "after": {
+        "bytes": 122515,
+        "gzip": 23844,
+        "sha256": "b8b2be32b06f033c55a903141a56361a78be01cc39a8e95d91bf2c86ff73defb"
+      },
+      "cores": {
+        "attribute_churn.core.wasm": "97cb526a3b1eef01c3e1104dbc43974ce930a40ba5797aace830a2215e6f093a"
+      }
+    },
+    {
+      "path": "cpp/attribute-churn/native/attribute_churn.wasm",
+      "mode": "external",
+      "before": {
+        "bytes": 58241,
+        "gzip": 7921,
+        "sha256": "0ed2b2dc4b9f52eea51c1196d69be05af0489384849d95d424e74e4ecb0c1cef"
+      },
+      "after": {
+        "bytes": 58083,
+        "gzip": 7913,
+        "sha256": "c034423bd0a0f1d308eadb3f3879d8083abcead42fc5089ec58881743c775df6"
+      },
+      "cores": {
+        "attribute_churn.core.wasm": "97cb526a3b1eef01c3e1104dbc43974ce930a40ba5797aace830a2215e6f093a"
+      }
+    },
+    {
+      "path": "cpp/attribute-churn/native/attribute_churn.wasm",
+      "mode": "v1",
+      "before": {
+        "bytes": 81789,
+        "gzip": 9288,
+        "sha256": "b7b5478fbe54d6fac66591729dca03637addc95df44c16534fed938f039f12f6"
+      },
+      "after": {
+        "bytes": 81789,
+        "gzip": 9290,
+        "sha256": "c0e1a82e6fe934c509b838edf0784a33c30714f65031c1030549b8c307bdfb9b"
+      },
+      "cores": {
+        "attribute_churn.core.wasm": "97cb526a3b1eef01c3e1104dbc43974ce930a40ba5797aace830a2215e6f093a"
+      }
+    },
+    {
+      "path": "cpp/canvas-draw/native/canvas_draw.wasm",
+      "mode": "bundled",
+      "before": {
+        "bytes": 131045,
+        "gzip": 24315,
+        "sha256": "82542f5da2ad98585f3abb451beffd2e30f1f322ce75d62b94893097039dcf74"
+      },
+      "after": {
+        "bytes": 131045,
+        "gzip": 24315,
+        "sha256": "82542f5da2ad98585f3abb451beffd2e30f1f322ce75d62b94893097039dcf74"
+      },
+      "cores": {
+        "canvas_draw.core.wasm": "afaa5b6281bdd6cf4d33ff9904ad6e5ab8d96ff14cca6ec37dbcd0aa65c10c7a"
+      }
+    },
+    {
+      "path": "cpp/canvas-draw/native/canvas_draw.wasm",
+      "mode": "external",
+      "before": {
+        "bytes": 69006,
+        "gzip": 8473,
+        "sha256": "c78adffd6b0cda7fec5268f0ddda7f1041cb64a4b9d3608449879af6c5fa5317"
+      },
+      "after": {
+        "bytes": 68848,
+        "gzip": 8461,
+        "sha256": "69fd09ec534924e38678d058c0aa58865b8238004261d03aea13f7c79b733f43"
+      },
+      "cores": {
+        "canvas_draw.core.wasm": "afaa5b6281bdd6cf4d33ff9904ad6e5ab8d96ff14cca6ec37dbcd0aa65c10c7a"
+      }
+    },
+    {
+      "path": "cpp/canvas-draw/native/canvas_draw.wasm",
+      "mode": "v1",
+      "before": {
+        "bytes": 99499,
+        "gzip": 9997,
+        "sha256": "e0e3f09da97ecead2e6a540ceceffaccd20b61145dd9e5c2a723c0e3f91fa4e2"
+      },
+      "after": {
+        "bytes": 99499,
+        "gzip": 10001,
+        "sha256": "b8363a1693f4c6e03e877e412ba744e5a10b0cea29f9c67cc17252a153b87538"
+      },
+      "cores": {
+        "canvas_draw.core.wasm": "afaa5b6281bdd6cf4d33ff9904ad6e5ab8d96ff14cca6ec37dbcd0aa65c10c7a"
+      }
+    },
+    {
+      "path": "cpp/canvas-pixels/native/canvas_pixels.wasm",
+      "mode": "bundled",
+      "before": {
+        "bytes": 136551,
+        "gzip": 25469,
+        "sha256": "331677448833e44579628dda151fd4725b6b3572ad9e11f357dc02dbf0207921"
+      },
+      "after": {
+        "bytes": 136551,
+        "gzip": 25469,
+        "sha256": "331677448833e44579628dda151fd4725b6b3572ad9e11f357dc02dbf0207921"
+      },
+      "cores": {
+        "canvas_pixels.core.wasm": "6f825890677d5a575634dca799565c9c7b2957ddc30094b7d5ff077c1d29db89"
+      }
+    },
+    {
+      "path": "cpp/canvas-pixels/native/canvas_pixels.wasm",
+      "mode": "external",
+      "before": {
+        "bytes": 73996,
+        "gzip": 9304,
+        "sha256": "a7b2612b0431228b5e70dcee6e0f33e137ad38fd47e4eaf3f4849ec4e9bfaa3f"
+      },
+      "after": {
+        "bytes": 73838,
+        "gzip": 9293,
+        "sha256": "f0b02711762fe9f1c930f23e87003378dbc875296a0f86ad52f59759c9d03e05"
+      },
+      "cores": {
+        "canvas_pixels.core.wasm": "6f825890677d5a575634dca799565c9c7b2957ddc30094b7d5ff077c1d29db89"
+      }
+    },
+    {
+      "path": "cpp/canvas-pixels/native/canvas_pixels.wasm",
+      "mode": "v1",
+      "before": {
+        "bytes": 107199,
+        "gzip": 11129,
+        "sha256": "28217d5df9e2010d8c6d52be3fe306ac985cfaae693b144607174b5d3ef2ad78"
+      },
+      "after": {
+        "bytes": 107199,
+        "gzip": 11129,
+        "sha256": "28217d5df9e2010d8c6d52be3fe306ac985cfaae693b144607174b5d3ef2ad78"
+      },
+      "cores": {
+        "canvas_pixels.core.wasm": "6f825890677d5a575634dca799565c9c7b2957ddc30094b7d5ff077c1d29db89"
+      }
+    },
+    {
+      "path": "cpp/dom-query/native/dom_query.wasm",
+      "mode": "bundled",
+      "before": {
+        "bytes": 129469,
+        "gzip": 24604,
+        "sha256": "d67d0961d1decad17205bb0c7ceca8e5210d0674a2e77d9156951c076f8c09e9"
+      },
+      "after": {
+        "bytes": 129469,
+        "gzip": 24604,
+        "sha256": "d67d0961d1decad17205bb0c7ceca8e5210d0674a2e77d9156951c076f8c09e9"
+      },
+      "cores": {
+        "dom_query.core.wasm": "65bad7a4a8f3c1608f2fe3f4efbe9be706c420c44dd69c119e84aee29657340f"
+      }
+    },
+    {
+      "path": "cpp/dom-query/native/dom_query.wasm",
+      "mode": "external",
+      "before": {
+        "bytes": 66326,
+        "gzip": 8631,
+        "sha256": "847ef100a25990895de0f0905d4aaf94192f5215f8a55e124a9007e454dfc80a"
+      },
+      "after": {
+        "bytes": 66168,
+        "gzip": 8617,
+        "sha256": "b44a03155d1e787123762af5dfa12158461853351600f145260ab8e273a74181"
+      },
+      "cores": {
+        "dom_query.core.wasm": "65bad7a4a8f3c1608f2fe3f4efbe9be706c420c44dd69c119e84aee29657340f"
+      }
+    },
+    {
+      "path": "cpp/dom-query/native/dom_query.wasm",
+      "mode": "v1",
+      "before": {
+        "bytes": 94990,
+        "gzip": 10219,
+        "sha256": "8e8614bce55944a09cd8724c86de1d207ea868af028b1f98a8b1949f4872ee35"
+      },
+      "after": {
+        "bytes": 94990,
+        "gzip": 10219,
+        "sha256": "8e8614bce55944a09cd8724c86de1d207ea868af028b1f98a8b1949f4872ee35"
+      },
+      "cores": {
+        "dom_query.core.wasm": "65bad7a4a8f3c1608f2fe3f4efbe9be706c420c44dd69c119e84aee29657340f"
+      }
+    },
+    {
+      "path": "cpp/dom-traversal/native/dom_traversal.wasm",
+      "mode": "bundled",
+      "before": {
+        "bytes": 126623,
+        "gzip": 24028,
+        "sha256": "bd7aa48aadf0621d020bec6120f1e9425ec11d79c0a36b7f766aff5625d41160"
+      },
+      "after": {
+        "bytes": 126623,
+        "gzip": 24028,
+        "sha256": "bd7aa48aadf0621d020bec6120f1e9425ec11d79c0a36b7f766aff5625d41160"
+      },
+      "cores": {
+        "dom_traversal.core.wasm": "0dee1c7c6c955fb6610df1ec0124002fca296f10148078d164319b0e2924b04a"
+      }
+    },
+    {
+      "path": "cpp/dom-traversal/native/dom_traversal.wasm",
+      "mode": "external",
+      "before": {
+        "bytes": 63541,
+        "gzip": 8136,
+        "sha256": "1a29ff03bfa286b4eaad13b92accd4fc7b4d7c707c75bfb8c3c36f084c8285ed"
+      },
+      "after": {
+        "bytes": 63383,
+        "gzip": 8129,
+        "sha256": "3cbb543ff5cb9a2d771b748e4a60a534caba3ad3efe746ef227c56c2be36a2be"
+      },
+      "cores": {
+        "dom_traversal.core.wasm": "0dee1c7c6c955fb6610df1ec0124002fca296f10148078d164319b0e2924b04a"
+      }
+    },
+    {
+      "path": "cpp/dom-traversal/native/dom_traversal.wasm",
+      "mode": "v1",
+      "before": {
+        "bytes": 91618,
+        "gzip": 9593,
+        "sha256": "29ab5cbbdee27643e11847e6c62fac9c2ce5951b0edcff8871b1638bde53b6c9"
+      },
+      "after": {
+        "bytes": 91618,
+        "gzip": 9597,
+        "sha256": "ec8b4af50768d282802d4fc606859cf32ca457b81cd6464794b6ccc634361426"
+      },
+      "cores": {
+        "dom_traversal.core.wasm": "0dee1c7c6c955fb6610df1ec0124002fca296f10148078d164319b0e2924b04a"
+      }
+    },
+    {
+      "path": "cpp/hello-world/native/hello_world.wasm",
+      "mode": "bundled",
+      "before": {
+        "bytes": 110425,
+        "gzip": 22973,
+        "sha256": "61716e9e8bffc6034919fb5f35007aa048c83b4078eca75fa61bfed8640081d4"
+      },
+      "after": {
+        "bytes": 110425,
+        "gzip": 22973,
+        "sha256": "61716e9e8bffc6034919fb5f35007aa048c83b4078eca75fa61bfed8640081d4"
+      },
+      "cores": {
+        "hello_world.core.wasm": "809ae810bc39b7fc1aa5c9f3274eaed32cdf085f1bcef6614666b48a9ce5610e"
+      }
+    },
+    {
+      "path": "cpp/hello-world/native/hello_world.wasm",
+      "mode": "external",
+      "before": {
+        "bytes": 44154,
+        "gzip": 7135,
+        "sha256": "e4290cab49763eabf170db3157a1f96520763e240974068091c9159a0997c8c1"
+      },
+      "after": {
+        "bytes": 43996,
+        "gzip": 7124,
+        "sha256": "9a2a6d3a65928cb046881361b6a8ddaeac97488e84c0126cfdab3fcb9ecf6ebd"
+      },
+      "cores": {
+        "hello_world.core.wasm": "809ae810bc39b7fc1aa5c9f3274eaed32cdf085f1bcef6614666b48a9ce5610e"
+      }
+    },
+    {
+      "path": "cpp/hello-world/native/hello_world.wasm",
+      "mode": "v1",
+      "before": {
+        "bytes": 60774,
+        "gzip": 8500,
+        "sha256": "62388ea4ff13b9cb98cb833396efda6743f773aab67ba06c6e1eb349abd4cbf3"
+      },
+      "after": {
+        "bytes": 60774,
+        "gzip": 8506,
+        "sha256": "9da9a0650ef02ff12d9bfa3c4108c27f50f63398f86b97c08bc327a926fdc6cd"
+      },
+      "cores": {
+        "hello_world.core.wasm": "809ae810bc39b7fc1aa5c9f3274eaed32cdf085f1bcef6614666b48a9ce5610e"
+      }
+    },
+    {
+      "path": "cpp/string-marshalling/native/string_marshalling.wasm",
+      "mode": "bundled",
+      "before": {
+        "bytes": 126356,
+        "gzip": 25194,
+        "sha256": "2d40b862e7dd0e2f61212aeaa72c3eb3aff79fa276d1efac895c27c18b94e3ce"
+      },
+      "after": {
+        "bytes": 126356,
+        "gzip": 25194,
+        "sha256": "2d40b862e7dd0e2f61212aeaa72c3eb3aff79fa276d1efac895c27c18b94e3ce"
+      },
+      "cores": {
+        "string_marshalling.core.wasm": "cd52291c02cb65000946f9a9343399c829ee3f201e14682110484691197c4bc3"
+      }
+    },
+    {
+      "path": "cpp/string-marshalling/native/string_marshalling.wasm",
+      "mode": "external",
+      "before": {
+        "bytes": 58160,
+        "gzip": 8051,
+        "sha256": "2954f4a53ba9c4a7e6742a83fbb9a9573bde11e4014a4739392c613e5a7d7a6b"
+      },
+      "after": {
+        "bytes": 58002,
+        "gzip": 8039,
+        "sha256": "c190d9edc80f7f6179bbdb95b3ed070e015b15641f4bb68fb1fa64fbe5dde964"
+      },
+      "cores": {
+        "string_marshalling.core.wasm": "cd52291c02cb65000946f9a9343399c829ee3f201e14682110484691197c4bc3"
+      }
+    },
+    {
+      "path": "cpp/string-marshalling/native/string_marshalling.wasm",
+      "mode": "v1",
+      "before": {
+        "bytes": 82294,
+        "gzip": 9532,
+        "sha256": "40e7e6d1f1a73c99bd48280d1bb30b424dcaad71bf9ee877fc94b016955052fc"
+      },
+      "after": {
+        "bytes": 82294,
+        "gzip": 9532,
+        "sha256": "40e7e6d1f1a73c99bd48280d1bb30b424dcaad71bf9ee877fc94b016955052fc"
+      },
+      "cores": {
+        "string_marshalling.core.wasm": "cd52291c02cb65000946f9a9343399c829ee3f201e14682110484691197c4bc3"
+      }
+    },
+    {
+      "path": "cpp/table-update/native/table_update.wasm",
+      "mode": "bundled",
+      "before": {
+        "bytes": 131171,
+        "gzip": 25532,
+        "sha256": "2321dcc1baaa3b3ce2c19cb314d88e04b8394cd0b76cb95a3165bdc13bb122bb"
+      },
+      "after": {
+        "bytes": 131171,
+        "gzip": 25532,
+        "sha256": "2321dcc1baaa3b3ce2c19cb314d88e04b8394cd0b76cb95a3165bdc13bb122bb"
+      },
+      "cores": {
+        "table_update.core.wasm": "29d0a70d144ecbf8c9e094c762b79ebeabf6ed7da057ddecd327701bc0491339"
+      }
+    },
+    {
+      "path": "cpp/table-update/native/table_update.wasm",
+      "mode": "external",
+      "before": {
+        "bytes": 64086,
+        "gzip": 8438,
+        "sha256": "c891958610b53adefb1d694e742a6e7da9ba0a820b16461ec473ee3ed6078659"
+      },
+      "after": {
+        "bytes": 63928,
+        "gzip": 8428,
+        "sha256": "2206b3c970df3c86d8f2007bc779b8bcaef97c54f2c2ba38d3e01fe16b10d382"
+      },
+      "cores": {
+        "table_update.core.wasm": "29d0a70d144ecbf8c9e094c762b79ebeabf6ed7da057ddecd327701bc0491339"
+      }
+    },
+    {
+      "path": "cpp/table-update/native/table_update.wasm",
+      "mode": "v1",
+      "before": {
+        "bytes": 91817,
+        "gzip": 9959,
+        "sha256": "38b90970b2d4e6e477f74d1552e2e228522e3105e33ec5245757d7ed938a9f0f"
+      },
+      "after": {
+        "bytes": 91817,
+        "gzip": 9959,
+        "sha256": "38b90970b2d4e6e477f74d1552e2e228522e3105e33ec5245757d7ed938a9f0f"
+      },
+      "cores": {
+        "table_update.core.wasm": "29d0a70d144ecbf8c9e094c762b79ebeabf6ed7da057ddecd327701bc0491339"
+      }
+    },
+    {
+      "path": "rust/attribute-churn/native/attribute_churn.wasm",
+      "mode": "bundled",
+      "before": {
+        "bytes": 121174,
+        "gzip": 23616,
+        "sha256": "1466dcbe76e0c27dd402c33a0a628116f5ee0a21be64c5b981786fe8a1b5e097"
+      },
+      "after": {
+        "bytes": 121174,
+        "gzip": 23616,
+        "sha256": "1466dcbe76e0c27dd402c33a0a628116f5ee0a21be64c5b981786fe8a1b5e097"
+      },
+      "cores": {
+        "attribute_churn.core.wasm": "4caf77895217e1e6f48f0a4ee72e5833697f048245c9b6a5fd9757490ddefee7"
+      }
+    },
+    {
+      "path": "rust/attribute-churn/native/attribute_churn.wasm",
+      "mode": "external",
+      "before": {
+        "bytes": 56634,
+        "gzip": 7618,
+        "sha256": "05e40aee8fdef8b8ba8245ce27786ec2e29f1ac8e31e3dccf6b0d6c431127c18"
+      },
+      "after": {
+        "bytes": 56476,
+        "gzip": 7604,
+        "sha256": "c6b856cda198ee1a0e248ba730700dea2efe7709992bb69e432e49f188ede1b9"
+      },
+      "cores": {
+        "attribute_churn.core.wasm": "4caf77895217e1e6f48f0a4ee72e5833697f048245c9b6a5fd9757490ddefee7"
+      }
+    },
+    {
+      "path": "rust/attribute-churn/native/attribute_churn.wasm",
+      "mode": "v1",
+      "before": {
+        "bytes": 80138,
+        "gzip": 8987,
+        "sha256": "939e4574a6bdf90f3849e849f1294500b348d0bc5825e1ed969e2ab5a59e552a"
+      },
+      "after": {
+        "bytes": 80138,
+        "gzip": 8991,
+        "sha256": "4ddddde46cfd05072641317b14842fa86d11d601b16e1b51bf4be19b4df5915b"
+      },
+      "cores": {
+        "attribute_churn.core.wasm": "4caf77895217e1e6f48f0a4ee72e5833697f048245c9b6a5fd9757490ddefee7"
+      }
+    },
+    {
+      "path": "rust/calculator-raw/native/calculator.wasm",
+      "mode": "bundled",
+      "before": {
+        "bytes": 76783,
+        "gzip": 17447,
+        "sha256": "d843c6c5581289eef60442c79a8fe5730a7836726b096d45c9acf24186270930"
+      },
+      "after": {
+        "bytes": 76783,
+        "gzip": 17447,
+        "sha256": "d843c6c5581289eef60442c79a8fe5730a7836726b096d45c9acf24186270930"
+      },
+      "cores": {
+        "calculator.core.wasm": "11803595c81982f4d337a3f769b02679edcb2886c4b5890c7e422cd0ca756460"
+      }
+    },
+    {
+      "path": "rust/calculator-raw/native/calculator.wasm",
+      "mode": "external",
+      "before": {
+        "bytes": 13831,
+        "gzip": 3223,
+        "sha256": "b84264bf70f4d6c287a2abfa81268b5dda3c39aa05e7b0917c4e7110570f08cf"
+      },
+      "after": {
+        "bytes": 13724,
+        "gzip": 3214,
+        "sha256": "ecd1b9f4ea5da78bc0ada814610f95a3278798ad8c34d598533df32e837b2425"
+      },
+      "cores": {
+        "calculator.core.wasm": "11803595c81982f4d337a3f769b02679edcb2886c4b5890c7e422cd0ca756460"
+      }
+    },
+    {
+      "path": "rust/calculator-raw/native/calculator.wasm",
+      "mode": "v1",
+      "before": {
+        "bytes": 14869,
+        "gzip": 3412,
+        "sha256": "b506300d5672f6cd68e0483d98cedecde29b535db903551e8f27c2ff70307a4a"
+      },
+      "after": {
+        "bytes": 14762,
+        "gzip": 3401,
+        "sha256": "47a4f86d077388b3c7ab9eb81b74c7fe82d1f9a21a8a983b51c82b1a3dc625f4"
+      },
+      "cores": {
+        "calculator.core.wasm": "11803595c81982f4d337a3f769b02679edcb2886c4b5890c7e422cd0ca756460"
+      }
+    },
+    {
+      "path": "rust/calculator/native/calculator.wasm",
+      "mode": "bundled",
+      "before": {
+        "bytes": 76783,
+        "gzip": 17447,
+        "sha256": "d843c6c5581289eef60442c79a8fe5730a7836726b096d45c9acf24186270930"
+      },
+      "after": {
+        "bytes": 76783,
+        "gzip": 17447,
+        "sha256": "d843c6c5581289eef60442c79a8fe5730a7836726b096d45c9acf24186270930"
+      },
+      "cores": {
+        "calculator.core.wasm": "36ab0077060d4e794cd29806ddf5cc0545e8c236af982ee4389cc9498cf56ce8"
+      }
+    },
+    {
+      "path": "rust/calculator/native/calculator.wasm",
+      "mode": "external",
+      "before": {
+        "bytes": 13831,
+        "gzip": 3223,
+        "sha256": "b84264bf70f4d6c287a2abfa81268b5dda3c39aa05e7b0917c4e7110570f08cf"
+      },
+      "after": {
+        "bytes": 13724,
+        "gzip": 3214,
+        "sha256": "ecd1b9f4ea5da78bc0ada814610f95a3278798ad8c34d598533df32e837b2425"
+      },
+      "cores": {
+        "calculator.core.wasm": "36ab0077060d4e794cd29806ddf5cc0545e8c236af982ee4389cc9498cf56ce8"
+      }
+    },
+    {
+      "path": "rust/calculator/native/calculator.wasm",
+      "mode": "v1",
+      "before": {
+        "bytes": 14869,
+        "gzip": 3412,
+        "sha256": "b506300d5672f6cd68e0483d98cedecde29b535db903551e8f27c2ff70307a4a"
+      },
+      "after": {
+        "bytes": 14762,
+        "gzip": 3401,
+        "sha256": "47a4f86d077388b3c7ab9eb81b74c7fe82d1f9a21a8a983b51c82b1a3dc625f4"
+      },
+      "cores": {
+        "calculator.core.wasm": "36ab0077060d4e794cd29806ddf5cc0545e8c236af982ee4389cc9498cf56ce8"
+      }
+    },
+    {
+      "path": "rust/canvas-draw/native/canvas_draw.wasm",
+      "mode": "bundled",
+      "before": {
+        "bytes": 129698,
+        "gzip": 24074,
+        "sha256": "3fb596d79eb8378e9afff07b38a79147bab9731451d631b82a1f6b4ad8c372e9"
+      },
+      "after": {
+        "bytes": 129698,
+        "gzip": 24074,
+        "sha256": "3fb596d79eb8378e9afff07b38a79147bab9731451d631b82a1f6b4ad8c372e9"
+      },
+      "cores": {
+        "canvas_draw.core.wasm": "90a3cf1e82b75e75b711bc1e51ada1c5aa41118b72399486bc5a3121d14f961c"
+      }
+    },
+    {
+      "path": "rust/canvas-draw/native/canvas_draw.wasm",
+      "mode": "external",
+      "before": {
+        "bytes": 67387,
+        "gzip": 8159,
+        "sha256": "c2431c2598963e5b0e348680a2c35fbeb2c0dcb2509478767ee1da9d109867c8"
+      },
+      "after": {
+        "bytes": 67229,
+        "gzip": 8145,
+        "sha256": "f6249379f8a4d225dd79fc6c8083ab43c0f899d1e303c8a38de1133696340f5c"
+      },
+      "cores": {
+        "canvas_draw.core.wasm": "90a3cf1e82b75e75b711bc1e51ada1c5aa41118b72399486bc5a3121d14f961c"
+      }
+    },
+    {
+      "path": "rust/canvas-draw/native/canvas_draw.wasm",
+      "mode": "v1",
+      "before": {
+        "bytes": 97836,
+        "gzip": 9636,
+        "sha256": "676dcdf385eb2cc67168979fb38936c48d2cfc769776fdfc65141bb8f77f823f"
+      },
+      "after": {
+        "bytes": 97836,
+        "gzip": 9640,
+        "sha256": "70e41eee6535e5dae08157425f2c964f337630384fd122cc090b3bae000e6e36"
+      },
+      "cores": {
+        "canvas_draw.core.wasm": "90a3cf1e82b75e75b711bc1e51ada1c5aa41118b72399486bc5a3121d14f961c"
+      }
+    },
+    {
+      "path": "rust/canvas-pixels/native/canvas_pixels.wasm",
+      "mode": "bundled",
+      "before": {
+        "bytes": 135200,
+        "gzip": 25287,
+        "sha256": "a5fb1453c90a40e33f0381843401c09606b794edcb58c7127443efe6081b43fa"
+      },
+      "after": {
+        "bytes": 135200,
+        "gzip": 25287,
+        "sha256": "a5fb1453c90a40e33f0381843401c09606b794edcb58c7127443efe6081b43fa"
+      },
+      "cores": {
+        "canvas_pixels.core.wasm": "f427f76b7d366add1b27588aa2ee5ef966f8c32d40edfae6fc73863fcc9db59a"
+      }
+    },
+    {
+      "path": "rust/canvas-pixels/native/canvas_pixels.wasm",
+      "mode": "external",
+      "before": {
+        "bytes": 72369,
+        "gzip": 9071,
+        "sha256": "502bcabcd5aa3e0b02193f3a6c53bccb884f539eff691085f004a45f8bc38adc"
+      },
+      "after": {
+        "bytes": 72211,
+        "gzip": 9056,
+        "sha256": "a38c50cb2ddc4a2789f9d7df00d24a6ce31edd2e0c911266a65e7fde060575fb"
+      },
+      "cores": {
+        "canvas_pixels.core.wasm": "f427f76b7d366add1b27588aa2ee5ef966f8c32d40edfae6fc73863fcc9db59a"
+      }
+    },
+    {
+      "path": "rust/canvas-pixels/native/canvas_pixels.wasm",
+      "mode": "v1",
+      "before": {
+        "bytes": 105512,
+        "gzip": 10821,
+        "sha256": "dafac6e31e433a49a114c15ebba0c3e4c22694259c82bd84dac51c3c521e8680"
+      },
+      "after": {
+        "bytes": 105512,
+        "gzip": 10821,
+        "sha256": "dafac6e31e433a49a114c15ebba0c3e4c22694259c82bd84dac51c3c521e8680"
+      },
+      "cores": {
+        "canvas_pixels.core.wasm": "f427f76b7d366add1b27588aa2ee5ef966f8c32d40edfae6fc73863fcc9db59a"
+      }
+    },
+    {
+      "path": "rust/dom-query/native/dom_query.wasm",
+      "mode": "bundled",
+      "before": {
+        "bytes": 128123,
+        "gzip": 24389,
+        "sha256": "226123a3f1fad922d5f159e9289030ae29410f8a339332ffea0eda12110c5732"
+      },
+      "after": {
+        "bytes": 128123,
+        "gzip": 24389,
+        "sha256": "226123a3f1fad922d5f159e9289030ae29410f8a339332ffea0eda12110c5732"
+      },
+      "cores": {
+        "dom_query.core.wasm": "a27a0a4f740bfe2788482913820b371da42f55a144e74ab67610de4f5b1b517e"
+      }
+    },
+    {
+      "path": "rust/dom-query/native/dom_query.wasm",
+      "mode": "external",
+      "before": {
+        "bytes": 64709,
+        "gzip": 8374,
+        "sha256": "b3e405515f1623d0fc47dd282e7ea03bb7c56b1282574711d671ecc42fdaad16"
+      },
+      "after": {
+        "bytes": 64551,
+        "gzip": 8360,
+        "sha256": "a67cf3822871259d4803770923cb378f5d4ea0d96667a105bb7338001c115bf1"
+      },
+      "cores": {
+        "dom_query.core.wasm": "a27a0a4f740bfe2788482913820b371da42f55a144e74ab67610de4f5b1b517e"
+      }
+    },
+    {
+      "path": "rust/dom-query/native/dom_query.wasm",
+      "mode": "v1",
+      "before": {
+        "bytes": 93313,
+        "gzip": 9932,
+        "sha256": "9c484b87463e1f971eb436f4e72d914779d0e509fe1b6ceddf94b001c33bda34"
+      },
+      "after": {
+        "bytes": 93313,
+        "gzip": 9932,
+        "sha256": "9c484b87463e1f971eb436f4e72d914779d0e509fe1b6ceddf94b001c33bda34"
+      },
+      "cores": {
+        "dom_query.core.wasm": "a27a0a4f740bfe2788482913820b371da42f55a144e74ab67610de4f5b1b517e"
+      }
+    },
+    {
+      "path": "rust/dom-traversal/native/dom_traversal.my.component.wasm",
+      "mode": "bundled",
+      "before": {
+        "bytes": 125492,
+        "gzip": 23600,
+        "sha256": "db9e75e0f40c029fec37246f1d35470eb842f2a22f395aef54e7c2103eabb89b"
+      },
+      "after": {
+        "bytes": 125492,
+        "gzip": 23600,
+        "sha256": "db9e75e0f40c029fec37246f1d35470eb842f2a22f395aef54e7c2103eabb89b"
+      },
+      "cores": {
+        "dom_traversal.my.component.core.wasm": "1f5789019de3722f0ef8283c432b44d4226f3824f53ee4dda04a3e6c4c981735"
+      }
+    },
+    {
+      "path": "rust/dom-traversal/native/dom_traversal.my.component.wasm",
+      "mode": "external",
+      "before": {
+        "bytes": 62274,
+        "gzip": 7751,
+        "sha256": "c76a0108aaa03b00c0a1d5eba25fbcc56f706981658e438a5edf81f83aec71a9"
+      },
+      "after": {
+        "bytes": 62116,
+        "gzip": 7740,
+        "sha256": "c13075cbf875836786f1ddc26a4d98f0cd8d9e3a73019da7f607d3d84f28b7d3"
+      },
+      "cores": {
+        "dom_traversal.my.component.core.wasm": "1f5789019de3722f0ef8283c432b44d4226f3824f53ee4dda04a3e6c4c981735"
+      }
+    },
+    {
+      "path": "rust/dom-traversal/native/dom_traversal.my.component.wasm",
+      "mode": "v1",
+      "before": {
+        "bytes": 90011,
+        "gzip": 9204,
+        "sha256": "6d5f07eaf5c107da8b04057c00242c303c3736af6d8b9424bc8e610b4d63c6b3"
+      },
+      "after": {
+        "bytes": 90011,
+        "gzip": 9208,
+        "sha256": "468e6bb9fbf7fb9ba3b8f25b6ae33741c04896fa3da89623ace9132c1df42cf1"
+      },
+      "cores": {
+        "dom_traversal.my.component.core.wasm": "1f5789019de3722f0ef8283c432b44d4226f3824f53ee4dda04a3e6c4c981735"
+      }
+    },
+    {
+      "path": "rust/dom-traversal/native/dom_traversal.wasm",
+      "mode": "bundled",
+      "before": {
+        "bytes": 125479,
+        "gzip": 23594,
+        "sha256": "34e7fa83834a588d3c7b2ff48f70415da2ef119d1a3a519ed873f187bb62283f"
+      },
+      "after": {
+        "bytes": 125479,
+        "gzip": 23594,
+        "sha256": "34e7fa83834a588d3c7b2ff48f70415da2ef119d1a3a519ed873f187bb62283f"
+      },
+      "cores": {
+        "dom_traversal.core.wasm": "1f5789019de3722f0ef8283c432b44d4226f3824f53ee4dda04a3e6c4c981735"
+      }
+    },
+    {
+      "path": "rust/dom-traversal/native/dom_traversal.wasm",
+      "mode": "external",
+      "before": {
+        "bytes": 62261,
+        "gzip": 7746,
+        "sha256": "9585abebf484a920cde54daf8b26b26326f71b3fb1192efd63616cdb35cb73e4"
+      },
+      "after": {
+        "bytes": 62103,
+        "gzip": 7734,
+        "sha256": "9bea65c6c2ebeef565237097e7e7fcd863038a6a00ebfff143b811ff6e16bcb1"
+      },
+      "cores": {
+        "dom_traversal.core.wasm": "1f5789019de3722f0ef8283c432b44d4226f3824f53ee4dda04a3e6c4c981735"
+      }
+    },
+    {
+      "path": "rust/dom-traversal/native/dom_traversal.wasm",
+      "mode": "v1",
+      "before": {
+        "bytes": 89998,
+        "gzip": 9199,
+        "sha256": "4aa4a2a8df91e5d8187cd93e9270e4167d9e60bf7250acd7e966cc6e71c64ffe"
+      },
+      "after": {
+        "bytes": 89998,
+        "gzip": 9202,
+        "sha256": "16b52ae66332bacb7817b1576c7295536d7aa4fd6f3a364805fadc6851efa434"
+      },
+      "cores": {
+        "dom_traversal.core.wasm": "1f5789019de3722f0ef8283c432b44d4226f3824f53ee4dda04a3e6c4c981735"
+      }
+    },
+    {
+      "path": "rust/hello-world/native/hello_world.wasm",
+      "mode": "bundled",
+      "before": {
+        "bytes": 109100,
+        "gzip": 22727,
+        "sha256": "140ecedff28cdf52fe053ddb1bfa852a90c3b8a37a4378c158b1bfcf3a3db735"
+      },
+      "after": {
+        "bytes": 109100,
+        "gzip": 22727,
+        "sha256": "140ecedff28cdf52fe053ddb1bfa852a90c3b8a37a4378c158b1bfcf3a3db735"
+      },
+      "cores": {
+        "hello_world.core.wasm": "db512871c1fabcad4e75274b89b5df3bfd4d25d9fa1a56e61f6eba2b5399ff57"
+      }
+    },
+    {
+      "path": "rust/hello-world/native/hello_world.wasm",
+      "mode": "external",
+      "before": {
+        "bytes": 42571,
+        "gzip": 6814,
+        "sha256": "2f0c709e9a8de39545e7dcfe3b1a0d9c54b0e86f9ce8db6c3927b8d594f1b21e"
+      },
+      "after": {
+        "bytes": 42413,
+        "gzip": 6799,
+        "sha256": "179c1ad5a758150699059c1e07ae7bc4cd643eb4cfa6ca4e55fc4ab1733c5124"
+      },
+      "cores": {
+        "hello_world.core.wasm": "db512871c1fabcad4e75274b89b5df3bfd4d25d9fa1a56e61f6eba2b5399ff57"
+      }
+    },
+    {
+      "path": "rust/hello-world/native/hello_world.wasm",
+      "mode": "v1",
+      "before": {
+        "bytes": 59149,
+        "gzip": 8152,
+        "sha256": "0ed7ed93cde7dc99be3877ab403addc240a6a38b7697fd4a5bb111f48f2af20b"
+      },
+      "after": {
+        "bytes": 59149,
+        "gzip": 8156,
+        "sha256": "85636a316663a0d53e78b593055d80106192ca288e2046853fc8ccb64f35bdfd"
+      },
+      "cores": {
+        "hello_world.core.wasm": "db512871c1fabcad4e75274b89b5df3bfd4d25d9fa1a56e61f6eba2b5399ff57"
+      }
+    },
+    {
+      "path": "rust/string-marshalling/native/string_marshalling.wasm",
+      "mode": "bundled",
+      "before": {
+        "bytes": 125014,
+        "gzip": 24969,
+        "sha256": "072287643bf0bfa7a526dca6f4c3ebb793cb464ddabdee7675a429577deb2add"
+      },
+      "after": {
+        "bytes": 125014,
+        "gzip": 24969,
+        "sha256": "072287643bf0bfa7a526dca6f4c3ebb793cb464ddabdee7675a429577deb2add"
+      },
+      "cores": {
+        "string_marshalling.core.wasm": "ca99ee91981daebb2253f16bca5ac85d21ba45c28531d69641007bfefe31084f"
+      }
+    },
+    {
+      "path": "rust/string-marshalling/native/string_marshalling.wasm",
+      "mode": "external",
+      "before": {
+        "bytes": 56551,
+        "gzip": 7772,
+        "sha256": "e75357522cdef582e7cd3169f80a3f03603d8889949269d79b9b81515d6ceecc"
+      },
+      "after": {
+        "bytes": 56393,
+        "gzip": 7758,
+        "sha256": "787bc1f3bd83cdebaab434fc1ab119e9e06b107c4ae971276b232463a388bda7"
+      },
+      "cores": {
+        "string_marshalling.core.wasm": "ca99ee91981daebb2253f16bca5ac85d21ba45c28531d69641007bfefe31084f"
+      }
+    },
+    {
+      "path": "rust/string-marshalling/native/string_marshalling.wasm",
+      "mode": "v1",
+      "before": {
+        "bytes": 80625,
+        "gzip": 9256,
+        "sha256": "8864e2bf0c5e8302c6f6b7d47a69f4e13068b1f10feee7a68c7ae26d2303833f"
+      },
+      "after": {
+        "bytes": 80625,
+        "gzip": 9256,
+        "sha256": "8864e2bf0c5e8302c6f6b7d47a69f4e13068b1f10feee7a68c7ae26d2303833f"
+      },
+      "cores": {
+        "string_marshalling.core.wasm": "ca99ee91981daebb2253f16bca5ac85d21ba45c28531d69641007bfefe31084f"
+      }
+    },
+    {
+      "path": "rust/table-rows/native/table_rows.wasm",
+      "mode": "bundled",
+      "before": {
+        "bytes": 108764,
+        "gzip": 22651,
+        "sha256": "cda2a378923f2ff375cd54c97b64fd1ae7a4815ad1f8dd1883cb03a7b0b42e76"
+      },
+      "after": {
+        "bytes": 108764,
+        "gzip": 22651,
+        "sha256": "cda2a378923f2ff375cd54c97b64fd1ae7a4815ad1f8dd1883cb03a7b0b42e76"
+      },
+      "cores": {
+        "table_rows.core.wasm": "4e420ca1bc8dc5c52871d1094ded0bb29e49d8d446b613f8460754f3e89b2b95"
+      }
+    },
+    {
+      "path": "rust/table-rows/native/table_rows.wasm",
+      "mode": "external",
+      "before": {
+        "bytes": 41987,
+        "gzip": 6605,
+        "sha256": "26c00e11eb0e1484609c351dc59068a958041c7b396103e5eca75a33c3beb8dc"
+      },
+      "after": {
+        "bytes": 41829,
+        "gzip": 6591,
+        "sha256": "0582439a87444d85d71db2a6666ed1859858212a3ee9616a9f7e4061737275c9"
+      },
+      "cores": {
+        "table_rows.core.wasm": "4e420ca1bc8dc5c52871d1094ded0bb29e49d8d446b613f8460754f3e89b2b95"
+      }
+    },
+    {
+      "path": "rust/table-rows/native/table_rows.wasm",
+      "mode": "v1",
+      "before": {
+        "bytes": 60004,
+        "gzip": 7914,
+        "sha256": "887b6602b0ef2d37d782931510417e5380dd6ed02827a65f9bdd9036d60603ea"
+      },
+      "after": {
+        "bytes": 60004,
+        "gzip": 7919,
+        "sha256": "e92cfe502cc933ad2e113779c35d063992a0a962d56d544757132d3050d08e57"
+      },
+      "cores": {
+        "table_rows.core.wasm": "4e420ca1bc8dc5c52871d1094ded0bb29e49d8d446b613f8460754f3e89b2b95"
+      }
+    },
+    {
+      "path": "rust/table-update/native/table_update.wasm",
+      "mode": "bundled",
+      "before": {
+        "bytes": 130616,
+        "gzip": 25290,
+        "sha256": "dd6d54a107d417946ffc3b132d335b2df72c1770aeec66b1fecd218a2341242f"
+      },
+      "after": {
+        "bytes": 130616,
+        "gzip": 25290,
+        "sha256": "dd6d54a107d417946ffc3b132d335b2df72c1770aeec66b1fecd218a2341242f"
+      },
+      "cores": {
+        "table_update.core.wasm": "780122d26fa2f30f89df42eb8b49907a5e2b511eb71ee65c33a66c36302d5b27"
+      }
+    },
+    {
+      "path": "rust/table-update/native/table_update.wasm",
+      "mode": "external",
+      "before": {
+        "bytes": 63435,
+        "gzip": 8208,
+        "sha256": "b7c951183f7eaef8e4ccab5a3d7bb4175e38b45818f1a3f1cb0bc6f83a71b8ca"
+      },
+      "after": {
+        "bytes": 63277,
+        "gzip": 8197,
+        "sha256": "b67f53034148b994b98efd422f8f29f0ae598719056e82064fec6f490c56cd81"
+      },
+      "cores": {
+        "table_update.core.wasm": "780122d26fa2f30f89df42eb8b49907a5e2b511eb71ee65c33a66c36302d5b27"
+      }
+    },
+    {
+      "path": "rust/table-update/native/table_update.wasm",
+      "mode": "v1",
+      "before": {
+        "bytes": 90868,
+        "gzip": 9708,
+        "sha256": "75bb8522aa351e793567094159d85640f9c0070d41aacc721b6fb3fe64edc228"
+      },
+      "after": {
+        "bytes": 90868,
+        "gzip": 9708,
+        "sha256": "75bb8522aa351e793567094159d85640f9c0070d41aacc721b6fb3fe64edc228"
+      },
+      "cores": {
+        "table_update.core.wasm": "780122d26fa2f30f89df42eb8b49907a5e2b511eb71ee65c33a66c36302d5b27"
+      }
+    },
+    {
+      "path": "rust/todomvc/native/todomvc.wasm",
+      "mode": "bundled",
+      "before": {
+        "bytes": 112867,
+        "gzip": 22861,
+        "sha256": "56a2cccbd3bb9f69e45327f137520ebf8159be9316dcc8a448adadc88d7e0c6f"
+      },
+      "after": {
+        "bytes": 112867,
+        "gzip": 22861,
+        "sha256": "56a2cccbd3bb9f69e45327f137520ebf8159be9316dcc8a448adadc88d7e0c6f"
+      },
+      "cores": {
+        "todomvc.core.wasm": "fac2fbd34eb6c5e6d9606aa3b217a76df57bf644856426732a0ae2ddf28f1c68"
+      }
+    },
+    {
+      "path": "rust/todomvc/native/todomvc.wasm",
+      "mode": "external",
+      "before": {
+        "bytes": 47295,
+        "gzip": 6938,
+        "sha256": "7ec65aeb1ef2162e5dda4ba6a82885e2001f74742bd50b74287a5f2d730eab73"
+      },
+      "after": {
+        "bytes": 47137,
+        "gzip": 6921,
+        "sha256": "3154c0ff8ec7ad06a483ff4c19e3e77774979bce63349ed06034cc04ae91d350"
+      },
+      "cores": {
+        "todomvc.core.wasm": "fac2fbd34eb6c5e6d9606aa3b217a76df57bf644856426732a0ae2ddf28f1c68"
+      }
+    },
+    {
+      "path": "rust/todomvc/native/todomvc.wasm",
+      "mode": "v1",
+      "before": {
+        "bytes": 66463,
+        "gzip": 8244,
+        "sha256": "4805c20ba1b479519e6e0e3ee89c2b68cb64ba7f641e3303140d7b3a389f315d"
+      },
+      "after": {
+        "bytes": 66463,
+        "gzip": 8247,
+        "sha256": "8d574442015d0334369545e6be0349dac1e521a14990a4569ab2be1ea123d3ee"
+      },
+      "cores": {
+        "todomvc.core.wasm": "fac2fbd34eb6c5e6d9606aa3b217a76df57bf644856426732a0ae2ddf28f1c68"
+      }
+    },
+    {
+      "path": "rust/vdom-diff/native/vdom_diff.wasm",
+      "mode": "bundled",
+      "before": {
+        "bytes": 111904,
+        "gzip": 22863,
+        "sha256": "895eff88dbaa40fad54bec35f328192d3f4132738064530cb2f60202ea963527"
+      },
+      "after": {
+        "bytes": 111904,
+        "gzip": 22863,
+        "sha256": "895eff88dbaa40fad54bec35f328192d3f4132738064530cb2f60202ea963527"
+      },
+      "cores": {
+        "vdom_diff.core.wasm": "8bd4788d6e44eb76a112d900fa3cc694a039238cb6b3233a02c15bf128dadc35"
+      }
+    },
+    {
+      "path": "rust/vdom-diff/native/vdom_diff.wasm",
+      "mode": "external",
+      "before": {
+        "bytes": 45658,
+        "gzip": 6808,
+        "sha256": "9b9f7686e9e4df34b723e3705c92175f91c6c4cce545c041fbc3bfec42f46d8a"
+      },
+      "after": {
+        "bytes": 45500,
+        "gzip": 6791,
+        "sha256": "a60528458cb9be6990c23acae37893876d6855dc238c814f2221c3d00cf80cfc"
+      },
+      "cores": {
+        "vdom_diff.core.wasm": "8bd4788d6e44eb76a112d900fa3cc694a039238cb6b3233a02c15bf128dadc35"
+      }
+    },
+    {
+      "path": "rust/vdom-diff/native/vdom_diff.wasm",
+      "mode": "v1",
+      "before": {
+        "bytes": 65563,
+        "gzip": 8141,
+        "sha256": "10ea811d5d3e53f9ae840018e8e6cb778dd85720cb48dea6cc6fa485e89a97c8"
+      },
+      "after": {
+        "bytes": 65563,
+        "gzip": 8145,
+        "sha256": "98e4a712ac1f3aae636227752aaca01793fdb26a08720958cf6ff95d7646d17b"
+      },
+      "cores": {
+        "vdom_diff.core.wasm": "8bd4788d6e44eb76a112d900fa3cc694a039238cb6b3233a02c15bf128dadc35"
+      }
+    }
+  ]
+}

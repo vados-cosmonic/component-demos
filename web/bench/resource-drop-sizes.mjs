@@ -8,8 +8,10 @@ import { basename, join, resolve } from "node:path";
 import { gzipSync } from "node:zlib";
 import { parse } from "acorn";
 
-const [before, after, output] = process.argv.slice(2);
-assert(output, "Usage: resource-drop-sizes.mjs <before-transpile> <after-transpile> <output.json>");
+const [before, after, output, flag, ...extra] = process.argv.slice(2);
+const unusedIntrinsics = flag === "--unused-intrinsics";
+assert(output && !extra.length && (flag === undefined || unusedIntrinsics),
+  "Usage: resource-drop-sizes.mjs <before-transpile> <after-transpile> <output.json> [--unused-intrinsics]");
 const bench = import.meta.dirname, web = join(bench, "..");
 const hash = bytes => createHash("sha256").update(bytes).digest("hex");
 const inventory = JSON.parse(await readFile(join(bench, "results/candidate-sizes.json")));
@@ -43,6 +45,23 @@ function syntax(bytes) {
     return typeof value === "bigint" ? value.toString() + "n" : value;
   });
 }
+function checkIntrinsicChanges(before, after, path) {
+  let old = before.toString();
+  let updated = after.toString();
+  const threadMeta = "_getGlobalCurrentThreadMeta";
+  if (!updated.includes(threadMeta) && old.includes(threadMeta)) {
+    assert.equal(old.split(threadMeta).length, 2, path + ": thread metadata still used");
+    old = old.replace("getCurrentTaskMeta as " + threadMeta + ", ", "");
+  }
+  const lookup = "_jcoThreadLookupContext";
+  const declaration = "const " + lookup + " = { lookup: _jcoComponentStateLookupContext, registers: CURRENT_TASK_META };\n";
+  // Generic providers can still need this object, in which case its declaration
+  // moves to the first operation that requests it. The declaration itself is identical.
+  if (!updated.includes(declaration)) assert.equal(old.split(lookup).length, 2, path + ": live lookup removed");
+  old = old.replace(declaration, "");
+  updated = updated.replace(declaration, "");
+  assert.equal(old === updated, true, path + ": unexpected generated code change");
+}
 function size(bytes) {
   return {bytes: bytes.length, gzip: gzipSync(bytes).length, sha256: hash(bytes)};
 }
@@ -56,7 +75,8 @@ for (const {input} of inventory.components) {
     assert.deepEqual(updated.coreHashes, old.coreHashes);
     if (mode === "bundled") assert(updated.js.equals(old.js), input.path);
     if (!updated.js.equals(old.js)) {
-      assert(syntax(updated.js) === syntax(old.js), input.path + ": changed JS syntax tree");
+      if (unusedIntrinsics) checkIntrinsicChanges(old.js, updated.js, input.path);
+      else assert(syntax(updated.js) === syntax(old.js), input.path + ": changed JS syntax tree");
     }
     rows.push({path: input.path, mode, before: size(old.js), after: size(updated.js), cores: old.coreHashes});
   }
