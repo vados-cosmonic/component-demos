@@ -1,6 +1,6 @@
 """Compare same-page export timings as more host calls share one guest entry."""
 import argparse
-from collections import defaultdict
+from collections import Counter, defaultdict
 import gzip
 import hashlib
 import json
@@ -31,6 +31,16 @@ assert len(rows) == rounds * len(sizes) * len(modes)
 for group in rows.values():
     assert set(group) == set(passes)
     assert {s["position"] for s in group.values()} == set(range(len(modes)))
+
+for r in range(rounds):
+    for batch in sizes:
+        predecessors = Counter()
+        for p in passes:
+            order = sorted((rows[r, batch, mode][p]["position"], mode) for mode in modes)
+            assert [pos for pos, _ in order] == list(range(len(modes)))
+            predecessors.update((left[1], right[1]) for left, right in zip(order, order[1:]))
+        assert len(predecessors) == len(modes) * (len(modes) - 1)
+        assert set(predecessors.values()) == {1}
 
 rank = max(i for i in range(rounds)
            if 2 * sum(comb(rounds, k) for k in range(i+1)) / 2**rounds <= .05)

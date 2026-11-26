@@ -2,30 +2,70 @@
 
 This fork benchmarks the browser examples from [eqrion/component-demos at d0b9dd1](https://github.com/eqrion/component-demos/tree/d0b9dd1390a300978193adc623838fef4e4b632b). It runs the same compiled C, C++, and Rust WebAssembly components through jco 1.13.0, pinned upstream main, and a branch that optimizes synchronous host imports and numeric guest exports. The comparison also includes the demos’ JavaScript, Emscripten (Embind and EM_JS), and Rust wasm-bindgen implementations where available.
 
-## Browser bindings at e12260509
+## Browser bindings at 0c3d12ad0
 
-The PR uses the same checked synchronous host adapter in the internal Oxc bundle and the external `jco-cm-runtime` package. The table compares minified output with Jco 1.13.0 and the upstream main compiler at `326f52ab4`. Each of 12 Chromium rounds ran the seven demos in C, C++ and Rust, together with their available compiled shims. Lower times and ratios are better. [Fork PR](https://github.com/vados-cosmonic/jco/pull/62) · [Pinned upstream CI build](https://github.com/bytecodealliance/jco/actions/runs/45795485943) · [Raw measurements, asset sizes and compiler hashes](web/bench/results/review-matrix-minified-e12260509.json.gz)
+The PR shares the synchronous host adapter between the internal Oxc bundle and the external runtime package. Twelve Chromium rounds compared the same C, C++ and Rust guests across seven browser workloads. The comparison uses the compiler from upstream main at `326f52ab4`. [Fork PR](https://github.com/vados-cosmonic/jco/pull/62) · [Upstream CI build](https://github.com/bytecodealliance/jco/actions/runs/45795485943) · [Measurements, asset sizes and compiler hashes](web/bench/results/review-matrix-minified-0c3d12ad0.json.gz)
 
-| Median across 21 demo and language pairs | Entry JS (KiB) | Total JS (KiB) | Total JS, gzip¹ (KiB) | JS requests | Import (ms) | First result including import (ms) |
+| Build | Minified JS entry (KiB) | Total JS (KiB) | Total gzipped JS¹ (KiB) | JS requests | Import (ms) | First result including import (ms) |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Jco 1.13.0 | 9.58 | 9.58 | 3.01 | 1 | 5.05 | 58.94 |
-| Upstream main | 111.34 | 111.34 | 25.42 | 1 | 12.29 | 205.04 |
-| PR internal Oxc | 71.40 | 71.40 | 18.91 | 1 | 9.66 | 63.51 |
-| PR external checked | 25.06 | 123.98 | 40.55 | 19 | 22.53 | 76.78 |
+| Jco 1.13.0 | 9.58 | 9.58 | 3.01 | 1 | 5.02 | 60.91 |
+| Upstream main | 111.34 | 111.34 | 25.42 | 1 | 12.29 | 200.95 |
+| Internal Oxc | 71.47 | 71.47 | 18.93 | 1 | 9.82 | 63.21 |
+| External checked | 25.06 | 124.05 | 40.55 | 19 | 21.92 | 78.62 |
 
-¹ Sum of the gzipped JS asset sizes. The timing run served uncompressed assets over loopback.
+¹ Median across 21 workload and language pairs for each column. Gzip is the sum of compressed JS asset sizes. The timings use uncompressed loopback HTTP.
 
-| Warm guest operation | Internal Oxc | External checked |
+| Warm demo measurements | Internal Oxc | External checked |
 | --- | ---: | ---: |
 | Within 10× of the fastest compiled shim | 21/21 | 21/21 |
-| At least as fast as upstream main | 19/21 | 21/21 |
-| At least as fast as Jco 1.13.0 | 16/21 | 16/21 |
-| Comparable subphases within 10× of the fastest compiled shim | 81/84 | 81/84 |
-| Largest warm headline ratio to the fastest shim | 5.03× | 5.21× |
+| Matching or beating upstream main | 21/21 | 21/21 |
+| Matching or beating Jco 1.13.0 | 17/21 | 14/21 |
+| Comparable subphases within 10× of the fastest shim | 81/84 | 81/84 |
+| Worst warm headline ratio to the fastest shim | 4.29× | 4.84× |
 
-The second guest invocation supplies the warm measurement. The individual 95% intervals were entirely slower than 1.13.0 in two external cases, C table creation (1.20×) and C++ table creation (1.10×). The internal renderer had zero such cases. For time to first result, 5 internal and 15 external intervals were entirely slower than release. [Equal-work DOM query comparison](#materializing-bulk-dom-query-results) · [Later warm invocations](#warm-table-creation-and-tree-traversal)
+On the second guest invocation, internal C canvas pixel read took 1.080× the 1.13.0 time (individual 95% interval 1.028–1.278×). It was the only internal interval entirely above parity. All external intervals included parity or favored the PR. For first result, 6 internal and 15 external intervals were entirely slower than release. [Materialized DOM queries](#materializing-bulk-dom-query-results) · [Later warm invocations](#warm-table-creation-and-tree-traversal)
 
-![Warm guest operations relative to the fastest compiled shim and Jco 1.13.0, and first full result relative to Jco 1.13.0.](web/bench/results/review-matrix-minified-e12260509.png)
+![Warm operation and first-result time relative to the compiled shims and Jco 1.13.0 for all seven demos.](web/bench/results/review-matrix-minified-0c3d12ad0.png)
+
+### Host calls per guest export
+
+Returning from a synchronous export previously allocated an array to remove a single active call, then looked for runnable threads even when the suspension table was empty. The shared runtime now pops a lone matching call and skips the empty thread scan. Nested or suspended calls still resolve by task identity. A test covers an unknown task and two calls finishing out of order. [Runtime change and regression test](https://github.com/vados-cosmonic/jco/commit/070c350c7606b5badcdaf41e2bd94a5886d8ab21) · [Embedded Oxc snapshot](https://github.com/vados-cosmonic/jco/commit/0c3d12ad0d8d9dc2b0f9be3c7b51aa1223189041)
+
+One JS invocation enters the guest, which calls a host increment function the indicated number of times before returning. With one host call, the reduction in elapsed time was **9.1% (95% interval 6.7–10.4%) internally** and **10.2% (95% interval 7.2–12.6%) externally**. Each row pairs all six builds on the same pages. The denominator for “before” is PR revision `e12260509`. [Raw timings and asset hashes](web/bench/results/export-host-batch-0c3d12ad0.json.gz)
+
+| Host calls per export | Internal after / before | External after / before | Internal / direct Wasm | External / direct Wasm | Internal / 1.13.0 | External / 1.13.0 |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 1 | 0.909× (0.896–0.933) | 0.898× (0.874–0.928) | 30.81× | 30.75× | 33.39× | 34.01× |
+| 4 | 0.922× (0.864–0.939) | 0.911× (0.882–0.940) | 14.06× | 14.52× | 16.22× | 16.19× |
+| 16 | 0.925× (0.886–0.956) | 0.910× (0.854–0.941) | 5.33× | 5.48× | 5.64× | 5.92× |
+| 64 | 0.932× (0.902–1.000) | 0.951× (0.918–0.992) | 2.20× | 2.51× | 2.38× | 2.65× |
+| 256 | 1.001× (0.975–1.021) | 0.968× (0.940–0.986) | 1.40× | 1.58× | 1.47× | 1.70× |
+
+![Per-export time relative to direct Wasm and Jco 1.13.0 as more host calls share an export task.](web/bench/results/export-host-batch-0c3d12ad0.png)
+
+In the demo matrix, the external entry JS and separately served Wasm cores matched the preceding revision byte for byte. Each internal JS entry grew by 66 bytes. The external renderer fetched the updated shared runtime, increasing the total JavaScript by 66 bytes per demo.
+
+<details><summary>Reproduce these measurements</summary>
+
+Build `js-component-bindgen-component`, `@bytecodealliance/jco-transpile` and `@bytecodealliance/jco-cm-runtime` from both Jco revisions. The [matrix setup](#full-demo-matrix-on-the-merged-pr) describes the guest assets and the upstream CI staging directory. Use run `45795485943` and verify its SHA is `326f52ab4403466b21b989c995f9bb97b2b9e038`. Run the commands from the benchmark fork.
+
+```sh
+export CHROME_BIN=/path/to/chrome
+node web/bench/export-host-batch.mjs \
+  "$before/packages/jco-transpile" "$before/packages/jco-cm-runtime/dist" \
+  "$after/packages/jco-transpile" "$after/packages/jco-cm-runtime/dist" /tmp/batch.json.gz
+python3 web/bench/export-host-batch-report.py /tmp/batch.json.gz --plot /tmp/batch.png
+ROUNDS=12 node web/bench/review-matrix.mjs "$after" "$stage" /tmp/full.json.gz --minify-checked
+python3 web/bench/review-matrix-report.py /tmp/full.json.gz --release-intervals --plot /tmp/full.png
+```
+
+For each batch size, each of 18 fresh pages ran six warmup passes and six measured passes. Each build occupied every timing position once and immediately followed every other build once over the measured passes. All builds ran identical core Wasm and verified the expected checksum. Each individual interval is an order-statistic interval for the median of the within-page ratios.
+
+</details>
+
+## Browser bindings at e12260509
+
+Both renderers met the 10× shim target on all 21 warm demo cases at this revision. Each matched or beat Jco 1.13.0 in 16/21. [Full comparison and graph](https://github.com/vados-cosmonic/component-demos/blob/3af35212fd1332204e24942081cd7cff0094396b/README.md#browser-bindings-at-e12260509)
 
 ### Cost of one synchronous export that calls back into the host
 
