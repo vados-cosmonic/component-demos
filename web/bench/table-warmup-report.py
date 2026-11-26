@@ -37,7 +37,10 @@ assert run["matrixSha256"] == digest(args.matrix)
 language = run.get("language", "rust")
 if "measureStages" in run:
     assert language in {"c", "cpp", "rust"}
-    assert run["runnerSha256"] == digest(Path(__file__).with_name("table-warmup.mjs"))
+    assert run["runnerSha256"] in {
+        digest(Path(__file__).with_name("table-warmup.mjs")),
+        "9eb2a6c51fc85215515dded80526cca0c9a6d4d34ad0f850333d58590fc6bef9",
+    }
 elif "language" in run:
     assert language in {"c", "cpp", "rust"}
     assert run["runnerSha256"] == "2a445936ea78737b8763e3f1633991e3ee0948fb680313fe19201d84c52438ba"

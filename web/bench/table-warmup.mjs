@@ -11,12 +11,13 @@ import puppeteer from "puppeteer-core";
 const [checkout, matrixPath, output, mode, ...extra] = process.argv.slice(2);
 assert(
   output && !extra.length,
-  "Usage: table-warmup.mjs <built Jco checkout> <matrix.json.gz> <output.json.gz> [trace-directory | --time-weak-adds | --stages]",
+  "Usage: table-warmup.mjs <built Jco checkout> <matrix.json.gz> <output.json.gz> [trace-directory | --time-weak-adds | --stages | --drop-history-control]",
 );
 const language = process.env.GUEST_LANGUAGE ?? "rust";
 assert(["c", "cpp", "rust"].includes(language), "GUEST_LANGUAGE must be c, cpp or rust");
 const timeWeakAdds = mode === "--time-weak-adds";
-const measureStages = mode === "--stages";
+const dropHistoryControl = mode === "--drop-history-control";
+const measureStages = mode === "--stages" || dropHistoryControl;
 if (measureStages) assert.equal(language, "c", "The stage probe uses the C guest's named marks");
 const traceDir = timeWeakAdds || measureStages ? undefined : mode;
 if (traceDir) await mkdir(traceDir, { recursive: true });
@@ -27,7 +28,10 @@ const bench = import.meta.dirname,
   web = join(bench, "..");
 const versions = ["release", "bundled", "external"],
   warmups = ["none", "js", "guest"];
-const treatments = versions.flatMap((version) => warmups.map((warmup) => ({ version, warmup })));
+const treatments = dropHistoryControl
+  ? versions.flatMap(version => (version === "release" ? ["normal"] : ["normal", "omit", "grouped"])
+      .map(history => ({ version, warmup: "none", history })))
+  : versions.flatMap((version) => warmups.map((warmup) => ({ version, warmup })));
 const cases = matrix.samples.filter(
   (r) =>
     r.round === 0 && r.lang === language && r.demo === "table-update" && versions.includes(r.version),
@@ -87,19 +91,91 @@ for (const { version, entry, requests } of cases) {
   }
 }
 
-async function measure({ entry, warmup, rows, calls, audit, timeWeakAdds, measureStages }) {
+// The diagnostic variant deletes only the history write from each generated
+// destructor. Guest drops, table removal and host hooks still execute. A real
+// store needs the history when stopping with another alias of a dropped object.
+const modifiedEntries = new Map();
+const modifications = {};
+if (dropHistoryControl) {
+  for (const version of ["bundled", "external"]) {
+    const entry = entries[version], original = Buffer.from(assets.get(entry)).toString("utf8");
+    const writes = /([$\w]+)\.disposed\.add\(([$\w]+)\),/g;
+    const calls = [...original.matchAll(writes)];
+    assert(calls.length > 0 && calls.length === original.split(".disposed.add(").length - 1);
+    for (const match of calls) {
+      assert(original.slice(match.index + match[0].length).startsWith(match[2] + "["),
+        "Each write must immediately precede disposal of the same object");
+    }
+    // Compare the cost of one growing weak set with eight smaller ones. Each
+    // 1,024-insertion block goes to one bucket. Only shutdown scans all eight.
+    // The experimental bindings have a single store. Keep its original set
+    // so any entry added there before the first guest drop is still visible.
+    const groupHelper = `
+var _benchGroupHistory;
+function _benchMakeGroupHistory(store) {
+  const original = store.disposed, buckets = Array.from({length: 8}, () => new WeakSet());
+  let position = 0;
+  return store.disposed = {
+    add(value) {
+      buckets[position >>> 10].add(value);
+      position = (position + 1) & 8191;
+      return this;
+    },
+    has(value) { return original.has(value) || buckets.some(bucket => bucket.has(value)); },
+    delete(value) {
+      let removed = original.delete(value);
+      for (const bucket of buckets) if (bucket.delete(value)) removed = true;
+      return removed;
+    }
+  };
+}`;
+    assert(!original.includes("_benchGroupHistory") && !original.includes("_benchMakeGroupHistory"));
+    const omit = original.replace(writes, "");
+    const grouped = original.replace(writes, "(_benchGroupHistory??=_benchMakeGroupHistory($1)).add($2),") + "\n" + groupHelper;
+    modifiedEntries.set(entry, { omit, grouped });
+    modifications[version] = { sites: calls.length, original: hash(original), omit: hash(omit), grouped: hash(grouped) };
+  }
+}
+
+async function measure({ entry, warmup, rows, calls, audit, stopAudit, timeWeakAdds, measureStages, dropHistoryControl }) {
   const { runRawJs, getMeasurements } = await import("/examples/table-update/main.js");
   // Match the matrix: the shared host is present before import and each call
   // starts with a clean body and empty user-timing buffers.
   await import("/host/web-host.js");
   performance.clearResourceTimings();
-  const { run } = await import(entry);
+  const { run, _util } = await import(entry);
   const requests = performance
     .getEntriesByType("resource")
     .map((r) => new URL(r.name).pathname)
     .sort();
+  if (stopAudit) {
+    // appendChild returns the heading while the C guest still owns its first
+    // handle. Stop in the disposal getter when the guest drops the second handle.
+    const key = Symbol.dispose ?? Symbol.for("dispose");
+    const createElement = Document.prototype.createElement;
+    let disposals = 0, stopping = false, trapped = false;
+    Document.prototype.createElement = function(name, ...args) {
+      const element = createElement.call(this, name, ...args);
+      if (name === "h2") Object.defineProperty(element, key, {
+        get() {
+          if (!stopping) { stopping = true; _util.stop(); }
+          return () => { disposals++; };
+        }
+      });
+      return element;
+    };
+    try { run(rows); } catch (e) { if (!String(e).includes("instance has been stopped")) throw e; trapped = true; }
+    return { requests, disposals, stopping, trapped };
+  }
   const counts = { createElement: 0, setTextContent: 0, appendChild: 0 };
-  let active = false;
+  let active = false, historyWrites = 0;
+  if (audit && dropHistoryControl) {
+    const add = WeakSet.prototype.add;
+    WeakSet.prototype.add = function(value) {
+      if (active) historyWrites++;
+      return add.call(this, value);
+    };
+  }
   if (audit) {
     // This document is never timed. Count host calls and inspect the live rows
     // before the guest removes its working table to publish its result.
@@ -185,7 +261,7 @@ async function measure({ entry, warmup, rows, calls, audit, timeWeakAdds, measur
   }
   if (audit) {
     invoke(run);
-    return { counts, requests };
+    return { counts, requests, ...(dropHistoryControl && { historyWrites }) };
   }
   if (warmup !== "none") {
     const prepare = warmup === "js" ? runRawJs : run;
@@ -199,17 +275,22 @@ async function measure({ entry, warmup, rows, calls, audit, timeWeakAdds, measur
 }
 
 const calls = 24;
-const rounds = 18,
+const rounds = dropHistoryControl ? 28 : 18,
   samples = [],
   audits = [];
 let chromium;
 for (let round = 0; round < rounds; round++) {
-  // For an odd number of treatments, the nine rotations and their reverses
-  // balance both timing position and the immediately preceding treatment.
-  const sequence = [0, 1, 8, 2, 7, 3, 6, 4, 5];
-  if (round >= 9) sequence.reverse();
-  const queue = sequence.map((i) => treatments[(i + round) % 9]);
-  if (round === rounds - 1) queue.push(...versions.map((version) => ({ version, audit: true })));
+  // Rotate a balanced order and its reverse for each odd-sized design.
+  const n = treatments.length;
+  const sequence = Array.from({ length: n }, (_, i) => i % 2 ? (i + 1) / 2 : (n - i / 2) % n);
+  if (Math.floor(round / n) % 2) sequence.reverse();
+  const queue = sequence.map(i => treatments[(i + round) % n]);
+  if (round === rounds - 1) {
+    const checks = dropHistoryControl ? treatments : versions.map(version => ({ version }));
+    queue.push(...checks.map(trial => ({ ...trial, audit: true })));
+  }
+  if (dropHistoryControl && round === 0)
+    queue.push(...treatments.filter(t => t.version !== "release").map(t => ({ ...t, stopAudit: true })));
   const gate = Promise.withResolvers(),
     done = Promise.withResolvers();
   done.promise.catch(() => {});
@@ -225,7 +306,7 @@ for (let round = 0; round < rounds; round++) {
           "Content-Type",
           path.endsWith(".wasm") ? "application/wasm" : "text/javascript",
         );
-        return res.end(assets.get(path));
+        return res.end(modifiedEntries.get(path)?.[queue[position]?.history] ?? assets.get(path));
       }
       if (path === "/")
         return res.end('<script>fetch("/gate").then(()=>location.replace("/trial/0"))</script>');
@@ -236,7 +317,7 @@ for (let round = 0; round < rounds; round++) {
       const trial = queue[position];
       if (trial && path === "/trial/" + position) {
         res.setHeader("Content-Type", "text/html");
-        const args = { ...trial, entry: entries[trial.version], rows, calls, timeWeakAdds, measureStages };
+        const args = { ...trial, entry: entries[trial.version], rows, calls, timeWeakAdds, measureStages, dropHistoryControl };
         return res.end(
           '<!doctype html><head><script type="importmap">' +
             JSON.stringify({ imports }) +
@@ -253,13 +334,19 @@ for (let round = 0; round < rounds; round++) {
         if (path === "/error") throw Error(body);
         const data = JSON.parse(body);
         assert.deepEqual(data.requests, expected[trial.version]);
-        if (trial.audit) {
+        if (trial.stopAudit) {
+          assert(data.trapped && data.stopping);
+          assert.equal(data.disposals, trial.history === "omit" ? 2 : 1);
+          audits.push({ version: trial.version, history: trial.history, stopAudit: true, ...data });
+        } else if (trial.audit) {
           assert.deepEqual(data.counts, {
             createElement: 2 * rows,
             setTextContent: rows,
             appendChild: 2 * rows,
           });
-          audits.push({ version: trial.version, ...data });
+          if (dropHistoryControl)
+            assert.equal(data.historyWrites, trial.history === "omit" || trial.version === "release" ? 0 : 2 * rows + 1);
+          audits.push({ version: trial.version, ...(dropHistoryControl && { history: trial.history }), ...data });
         } else samples.push({ round, position, ...trial, ...data });
         position++;
         res.end(position < queue.length ? "/trial/" + position : "");
@@ -325,6 +412,7 @@ await writeFile(
       traced: Boolean(traceDir),
       timeWeakAdds,
       measureStages,
+      ...(dropHistoryControl && { dropHistoryControl, modifications }),
       calls,
       revision: matrix.candidate,
       matrixSha256: hash(matrixBytes),

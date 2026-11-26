@@ -41,6 +41,32 @@ node web/bench/sync-import-names.mjs "$before/packages/jco-transpile" "$after/pa
 
 </details>
 
+### How much does recording dropped resources cost?
+
+Creating 2,000 C table rows makes 10,000 DOM calls. Jco also records 4,001 resource drops during creation so that shutdown can recognize a host object the guest has already dropped. Across 24 invocations, omitting those writes in a diagnostic build saved a paired median of **48.66 ms internally (20.3%)** and **44.87 ms externally (18.7%)** in row creation. In a separate correctness check, a disposal getter stopped the guest while it held another handle to the same heading. The diagnostic build disposed the heading twice. The PR disposed it once in both binding modes. [Generated drop and shutdown regression](https://github.com/vados-cosmonic/jco/commit/cbd43f45f) · [External runtime shutdown](https://github.com/vados-cosmonic/jco/blob/eade82c6c/packages/jco-cm-runtime/src/intrinsics/component/lifecycle.ts#L130)
+
+A second experiment kept the history and distributed blocks of 1,024 insertions across eight weak sets. Shutdown searched all eight. This preserved single disposal in the reentry check and brought row creation on call 22 down by about 4.4 ms in both builds. Across all 24 calls, the intervals for aggregate creation time and for the worst creation time in each document included zero improvement in both modes. Across the **complete guest calls**, the grouped version took a paired **40.93 ms longer internally** (95% interval 8.67–64.07 ms longer). The extra bookkeeping remains a benchmark experiment. [Raw timings, asset hashes and correctness checks](web/bench/results/table-drop-history-c-084063ed1.json.gz)
+
+| Paired milliseconds saved by the eight-set experiment | Internal Oxc | External checked |
+| --- | ---: | ---: |
+| Row creation on call 22 | 4.37 (3.04 to 5.42) | 4.38 (0.42 to 6.83) |
+| Sum of row creation across 24 calls | −12.99 (−34.39 to 13.50) | 4.62 (−10.24 to 23.30) |
+| Worst row creation in each document | 1.31 (−1.59 to 2.68) | −0.41 (−3.64 to 3.51) |
+
+![Row creation across 24 C guest calls for release, the PR, and both diagnostic builds.](web/bench/results/table-drop-history-c-084063ed1.png)
+
+<details><summary>Reproduce the resource-drop comparison</summary>
+
+Use a built Jco checkout at `084063ed1` and set `CHROME_BIN` to a Chromium executable. The runner verifies the original assets against the full matrix and changes only the generated entries in the two experiments. Each of 28 fresh browser processes ran seven treatments in fresh documents, including an unchanged Jco 1.13.0 control. Every treatment occupied each timing position equally and followed every other treatment equally. The report uses individual two-sided sign intervals on within-browser differences. Separate untimed documents checked the live rows, host call counts, history insertions and reentrant shutdown.
+
+```sh
+matrix=web/bench/results/review-matrix-minified-084063ed1.json.gz
+GUEST_LANGUAGE=c node web/bench/table-warmup.mjs "$after" "$matrix" /tmp/drop-history.json.gz --drop-history-control
+python3 web/bench/drop-history-report.py /tmp/drop-history.json.gz "$matrix" --plot /tmp/drop-history.png
+```
+
+</details>
+
 ## External runtime startup at 427b9c0d7
 
 The checked runtime package groups the short UTF-8 decoder, synchronous waiter and JS helpers into one shared chunk. Across all 21 generated C, C++ and Rust demos this removes three runtime requests, from 18 to 15. Each standalone numeric conversion still loads 2,779 bytes. The largest cost is for a standalone import of the component-state module, which grows by 5,613 bytes (1,502 gzipped). All 18 public entries expose the same names. The internal Oxc bundle gets its runtime from the embedded source. [Package build change](https://github.com/vados-cosmonic/jco/commit/427b9c0d7)
