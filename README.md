@@ -2,6 +2,25 @@
 
 This fork benchmarks the browser examples from [eqrion/component-demos at d0b9dd1](https://github.com/eqrion/component-demos/tree/d0b9dd1390a300978193adc623838fef4e4b632b). It runs the same compiled C, C++, and Rust WebAssembly components through jco 1.13.0, pinned upstream main, and a branch that optimizes synchronous host imports. The comparison also includes the demos’ JavaScript, Emscripten (Embind and EM_JS), and Rust wasm-bindgen implementations where available.
 
+## Bundled and external runtime on the review branch
+
+The review branch uses the same checked operations for synchronous calls in both renderers. This run compares them directly against a custom provider using the original API-v1 contract. All three used the same runtime source and the same two Wasm core binaries. The external modes differ only in whether the provider opts into the synchronous operations. [Jco PR #62](https://github.com/vados-cosmonic/jco/pull/62) · [Measured Jco revision](https://github.com/vados-cosmonic/jco/commit/275c3071a3760180de923cda62388fc08d34f7cf)
+
+| Warm operation, ns per guest iteration | Bundled | External | External API-v1 compatibility |
+| --- | ---: | ---: | ---: |
+| Scalar host call | 42.7 | 54.9 | 6,485.0 |
+| Acquire, borrow and drop a resource | 337.2 | 437.9 | 13,841.2 |
+| Return a 16-byte ASCII string | 1,376.3 | 1,327.5 | 10,458.4 |
+
+Each entry is the median of seven Chromium 156 page medians. Each page ran two warmups and five timed passes of 65,536 iterations per operation and mode, rotating execution order and checking every result. Compare columns within this run. The full demo matrix below used a separate run and workload. [Runner](web/bench/provider-loop.mjs) · [Raw samples and core hashes](web/bench/results/provider-loop.json)
+
+To reproduce, build the review checkout with `cargo build -p js-component-bindgen --example transpile --features embedded-cm-runtime` and build its runtime with `pnpm --filter @bytecodealliance/jco-cm-runtime build`. From this benchmark checkout, after `npm ci --prefix web`, run the following with `wasm-tools` on the path.
+
+```sh
+CHROME_BIN=/path/to/chrome node web/bench/provider-loop.mjs /path/to/jco \
+  /path/to/jco/target/debug/examples/transpile /tmp/provider-loop.json
+```
+
 <!-- candidate:start -->
 
 ## Optimized browser bindings

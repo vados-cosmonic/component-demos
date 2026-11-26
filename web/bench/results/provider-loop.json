@@ -1,0 +1,2218 @@
+{
+  "revision": "275c3071a3760180de923cda62388fc08d34f7cf",
+  "generatorSha256": "85f9ef2e09c785aacb7a3bdb638436d368bb377a38bbe01bd91015d6932a8578",
+  "fixtureSha256": "ec36d497a31aa87ba0e455ab023a39352132e0a7fc320e66012109527a5f019e",
+  "cores": {
+    "loop.core.wasm": "a7dd4c2ed827e00587bff09cb9d117a39627272f442780bcdb491f534b8627b6",
+    "loop.core2.wasm": "a0446a0e9035c8ba8aa65b0a12d55dd0a880d06c476fac804420bcee28385178"
+  },
+  "chrome": "HeadlessChrome/156.0.8078.47",
+  "count": 65536,
+  "samples": [
+    {
+      "round": 0,
+      "pass": 0,
+      "op": "numbers",
+      "name": "compatibility",
+      "elapsedMs": 473
+    },
+    {
+      "round": 0,
+      "pass": 0,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 3.100000023841858
+    },
+    {
+      "round": 0,
+      "pass": 0,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 3.899999976158142
+    },
+    {
+      "round": 0,
+      "pass": 1,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 3.100000023841858
+    },
+    {
+      "round": 0,
+      "pass": 1,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 3.5
+    },
+    {
+      "round": 0,
+      "pass": 1,
+      "op": "numbers",
+      "name": "compatibility",
+      "elapsedMs": 459.69999998807907
+    },
+    {
+      "round": 0,
+      "pass": 2,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 3.899999976158142
+    },
+    {
+      "round": 0,
+      "pass": 2,
+      "op": "numbers",
+      "name": "compatibility",
+      "elapsedMs": 362
+    },
+    {
+      "round": 0,
+      "pass": 2,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 2.5
+    },
+    {
+      "round": 0,
+      "pass": 3,
+      "op": "numbers",
+      "name": "compatibility",
+      "elapsedMs": 265.10000002384186
+    },
+    {
+      "round": 0,
+      "pass": 3,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 1.5999999642372131
+    },
+    {
+      "round": 0,
+      "pass": 3,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 3.200000047683716
+    },
+    {
+      "round": 0,
+      "pass": 4,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 1.5999999642372131
+    },
+    {
+      "round": 0,
+      "pass": 4,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 1.800000011920929
+    },
+    {
+      "round": 0,
+      "pass": 4,
+      "op": "numbers",
+      "name": "compatibility",
+      "elapsedMs": 298.5
+    },
+    {
+      "round": 0,
+      "pass": 0,
+      "op": "resources",
+      "name": "compatibility",
+      "elapsedMs": 819.5999999642372
+    },
+    {
+      "round": 0,
+      "pass": 0,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 16.5
+    },
+    {
+      "round": 0,
+      "pass": 0,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 24.400000035762787
+    },
+    {
+      "round": 0,
+      "pass": 1,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 17.600000023841858
+    },
+    {
+      "round": 0,
+      "pass": 1,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 21
+    },
+    {
+      "round": 0,
+      "pass": 1,
+      "op": "resources",
+      "name": "compatibility",
+      "elapsedMs": 1031.6000000238419
+    },
+    {
+      "round": 0,
+      "pass": 2,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 28.799999952316284
+    },
+    {
+      "round": 0,
+      "pass": 2,
+      "op": "resources",
+      "name": "compatibility",
+      "elapsedMs": 738.2000000476837
+    },
+    {
+      "round": 0,
+      "pass": 2,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 15.900000035762787
+    },
+    {
+      "round": 0,
+      "pass": 3,
+      "op": "resources",
+      "name": "compatibility",
+      "elapsedMs": 707.0999999642372
+    },
+    {
+      "round": 0,
+      "pass": 3,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 21.400000035762787
+    },
+    {
+      "round": 0,
+      "pass": 3,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 37.09999996423721
+    },
+    {
+      "round": 0,
+      "pass": 4,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 35.30000001192093
+    },
+    {
+      "round": 0,
+      "pass": 4,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 34
+    },
+    {
+      "round": 0,
+      "pass": 4,
+      "op": "resources",
+      "name": "compatibility",
+      "elapsedMs": 922.6999999880791
+    },
+    {
+      "round": 0,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "compatibility",
+      "elapsedMs": 853.6999999880791
+    },
+    {
+      "round": 0,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 91.90000003576279
+    },
+    {
+      "round": 0,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 93.19999998807907
+    },
+    {
+      "round": 0,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 89.69999998807907
+    },
+    {
+      "round": 0,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 91.69999998807907
+    },
+    {
+      "round": 0,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "compatibility",
+      "elapsedMs": 905.8999999761581
+    },
+    {
+      "round": 0,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 97.40000003576279
+    },
+    {
+      "round": 0,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "compatibility",
+      "elapsedMs": 944.8999999761581
+    },
+    {
+      "round": 0,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 92.69999998807907
+    },
+    {
+      "round": 0,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "compatibility",
+      "elapsedMs": 819.8000000119209
+    },
+    {
+      "round": 0,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 92.09999996423721
+    },
+    {
+      "round": 0,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 99.30000001192093
+    },
+    {
+      "round": 0,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 91.89999997615814
+    },
+    {
+      "round": 0,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 97.30000001192093
+    },
+    {
+      "round": 0,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "compatibility",
+      "elapsedMs": 846.6000000238419
+    },
+    {
+      "round": 1,
+      "pass": 0,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 3.399999976158142
+    },
+    {
+      "round": 1,
+      "pass": 0,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 3.799999952316284
+    },
+    {
+      "round": 1,
+      "pass": 0,
+      "op": "numbers",
+      "name": "compatibility",
+      "elapsedMs": 528.8000000119209
+    },
+    {
+      "round": 1,
+      "pass": 1,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 3.600000023841858
+    },
+    {
+      "round": 1,
+      "pass": 1,
+      "op": "numbers",
+      "name": "compatibility",
+      "elapsedMs": 452.39999997615814
+    },
+    {
+      "round": 1,
+      "pass": 1,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 3
+    },
+    {
+      "round": 1,
+      "pass": 2,
+      "op": "numbers",
+      "name": "compatibility",
+      "elapsedMs": 458.30000001192093
+    },
+    {
+      "round": 1,
+      "pass": 2,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 3.399999976158142
+    },
+    {
+      "round": 1,
+      "pass": 2,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 4.100000023841858
+    },
+    {
+      "round": 1,
+      "pass": 3,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 3.300000011920929
+    },
+    {
+      "round": 1,
+      "pass": 3,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 3.399999976158142
+    },
+    {
+      "round": 1,
+      "pass": 3,
+      "op": "numbers",
+      "name": "compatibility",
+      "elapsedMs": 468.19999998807907
+    },
+    {
+      "round": 1,
+      "pass": 4,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 3.5
+    },
+    {
+      "round": 1,
+      "pass": 4,
+      "op": "numbers",
+      "name": "compatibility",
+      "elapsedMs": 452.10000002384186
+    },
+    {
+      "round": 1,
+      "pass": 4,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 3.199999988079071
+    },
+    {
+      "round": 1,
+      "pass": 0,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 30.399999976158142
+    },
+    {
+      "round": 1,
+      "pass": 0,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 30.400000035762787
+    },
+    {
+      "round": 1,
+      "pass": 0,
+      "op": "resources",
+      "name": "compatibility",
+      "elapsedMs": 1233.5999999642372
+    },
+    {
+      "round": 1,
+      "pass": 1,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 35.40000003576279
+    },
+    {
+      "round": 1,
+      "pass": 1,
+      "op": "resources",
+      "name": "compatibility",
+      "elapsedMs": 984.1999999880791
+    },
+    {
+      "round": 1,
+      "pass": 1,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 22.099999964237213
+    },
+    {
+      "round": 1,
+      "pass": 2,
+      "op": "resources",
+      "name": "compatibility",
+      "elapsedMs": 815.4000000357628
+    },
+    {
+      "round": 1,
+      "pass": 2,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 21
+    },
+    {
+      "round": 1,
+      "pass": 2,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 18.200000047683716
+    },
+    {
+      "round": 1,
+      "pass": 3,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 17.69999998807907
+    },
+    {
+      "round": 1,
+      "pass": 3,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 20.80000001192093
+    },
+    {
+      "round": 1,
+      "pass": 3,
+      "op": "resources",
+      "name": "compatibility",
+      "elapsedMs": 935.1999999880791
+    },
+    {
+      "round": 1,
+      "pass": 4,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 18.700000047683716
+    },
+    {
+      "round": 1,
+      "pass": 4,
+      "op": "resources",
+      "name": "compatibility",
+      "elapsedMs": 889.1999999880791
+    },
+    {
+      "round": 1,
+      "pass": 4,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 23.5
+    },
+    {
+      "round": 1,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 54.09999996423721
+    },
+    {
+      "round": 1,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 59.5
+    },
+    {
+      "round": 1,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "compatibility",
+      "elapsedMs": 550.8000000119209
+    },
+    {
+      "round": 1,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 53.40000003576279
+    },
+    {
+      "round": 1,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "compatibility",
+      "elapsedMs": 514.2999999523163
+    },
+    {
+      "round": 1,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 63.30000001192093
+    },
+    {
+      "round": 1,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "compatibility",
+      "elapsedMs": 528.9000000357628
+    },
+    {
+      "round": 1,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 67.19999998807907
+    },
+    {
+      "round": 1,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 71.19999998807907
+    },
+    {
+      "round": 1,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 58.89999997615814
+    },
+    {
+      "round": 1,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 65.40000003576279
+    },
+    {
+      "round": 1,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "compatibility",
+      "elapsedMs": 582.8000000119209
+    },
+    {
+      "round": 1,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 81.59999996423721
+    },
+    {
+      "round": 1,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "compatibility",
+      "elapsedMs": 601.1000000238419
+    },
+    {
+      "round": 1,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 58.80000001192093
+    },
+    {
+      "round": 2,
+      "pass": 0,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 3.100000023841858
+    },
+    {
+      "round": 2,
+      "pass": 0,
+      "op": "numbers",
+      "name": "compatibility",
+      "elapsedMs": 392.69999998807907
+    },
+    {
+      "round": 2,
+      "pass": 0,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 2.899999976158142
+    },
+    {
+      "round": 2,
+      "pass": 1,
+      "op": "numbers",
+      "name": "compatibility",
+      "elapsedMs": 436
+    },
+    {
+      "round": 2,
+      "pass": 1,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 3.099999964237213
+    },
+    {
+      "round": 2,
+      "pass": 1,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 3
+    },
+    {
+      "round": 2,
+      "pass": 2,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 2.600000023841858
+    },
+    {
+      "round": 2,
+      "pass": 2,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 3.199999988079071
+    },
+    {
+      "round": 2,
+      "pass": 2,
+      "op": "numbers",
+      "name": "compatibility",
+      "elapsedMs": 389.5
+    },
+    {
+      "round": 2,
+      "pass": 3,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 3.199999988079071
+    },
+    {
+      "round": 2,
+      "pass": 3,
+      "op": "numbers",
+      "name": "compatibility",
+      "elapsedMs": 414.60000002384186
+    },
+    {
+      "round": 2,
+      "pass": 3,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 2.699999988079071
+    },
+    {
+      "round": 2,
+      "pass": 4,
+      "op": "numbers",
+      "name": "compatibility",
+      "elapsedMs": 400.69999998807907
+    },
+    {
+      "round": 2,
+      "pass": 4,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 2.800000011920929
+    },
+    {
+      "round": 2,
+      "pass": 4,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 3
+    },
+    {
+      "round": 2,
+      "pass": 0,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 24.899999976158142
+    },
+    {
+      "round": 2,
+      "pass": 0,
+      "op": "resources",
+      "name": "compatibility",
+      "elapsedMs": 875.3000000119209
+    },
+    {
+      "round": 2,
+      "pass": 0,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 19.69999998807907
+    },
+    {
+      "round": 2,
+      "pass": 1,
+      "op": "resources",
+      "name": "compatibility",
+      "elapsedMs": 807.1000000238419
+    },
+    {
+      "round": 2,
+      "pass": 1,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 17.599999964237213
+    },
+    {
+      "round": 2,
+      "pass": 1,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 19.5
+    },
+    {
+      "round": 2,
+      "pass": 2,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 16.900000035762787
+    },
+    {
+      "round": 2,
+      "pass": 2,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 19.19999998807907
+    },
+    {
+      "round": 2,
+      "pass": 2,
+      "op": "resources",
+      "name": "compatibility",
+      "elapsedMs": 1158.800000011921
+    },
+    {
+      "round": 2,
+      "pass": 3,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 28.299999952316284
+    },
+    {
+      "round": 2,
+      "pass": 3,
+      "op": "resources",
+      "name": "compatibility",
+      "elapsedMs": 876.1000000238419
+    },
+    {
+      "round": 2,
+      "pass": 3,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 21.5
+    },
+    {
+      "round": 2,
+      "pass": 4,
+      "op": "resources",
+      "name": "compatibility",
+      "elapsedMs": 687.1999999880791
+    },
+    {
+      "round": 2,
+      "pass": 4,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 25.80000001192093
+    },
+    {
+      "round": 2,
+      "pass": 4,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 19.30000001192093
+    },
+    {
+      "round": 2,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 61.60000002384186
+    },
+    {
+      "round": 2,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "compatibility",
+      "elapsedMs": 529.3000000119209
+    },
+    {
+      "round": 2,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 65.69999998807907
+    },
+    {
+      "round": 2,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "compatibility",
+      "elapsedMs": 645.6000000238419
+    },
+    {
+      "round": 2,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 89.79999995231628
+    },
+    {
+      "round": 2,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 89.80000001192093
+    },
+    {
+      "round": 2,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 83.40000003576279
+    },
+    {
+      "round": 2,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 105.59999996423721
+    },
+    {
+      "round": 2,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "compatibility",
+      "elapsedMs": 708.6999999880791
+    },
+    {
+      "round": 2,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 84.70000004768372
+    },
+    {
+      "round": 2,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "compatibility",
+      "elapsedMs": 499
+    },
+    {
+      "round": 2,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 68.69999998807907
+    },
+    {
+      "round": 2,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "compatibility",
+      "elapsedMs": 546.0999999642372
+    },
+    {
+      "round": 2,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 68.60000002384186
+    },
+    {
+      "round": 2,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 76.59999996423721
+    },
+    {
+      "round": 3,
+      "pass": 0,
+      "op": "numbers",
+      "name": "compatibility",
+      "elapsedMs": 392.89999997615814
+    },
+    {
+      "round": 3,
+      "pass": 0,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 2.600000023841858
+    },
+    {
+      "round": 3,
+      "pass": 0,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 3.600000023841858
+    },
+    {
+      "round": 3,
+      "pass": 1,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 2.799999952316284
+    },
+    {
+      "round": 3,
+      "pass": 1,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 3.300000011920929
+    },
+    {
+      "round": 3,
+      "pass": 1,
+      "op": "numbers",
+      "name": "compatibility",
+      "elapsedMs": 425.10000002384186
+    },
+    {
+      "round": 3,
+      "pass": 2,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 3.199999988079071
+    },
+    {
+      "round": 3,
+      "pass": 2,
+      "op": "numbers",
+      "name": "compatibility",
+      "elapsedMs": 413.60000002384186
+    },
+    {
+      "round": 3,
+      "pass": 2,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 2.799999952316284
+    },
+    {
+      "round": 3,
+      "pass": 3,
+      "op": "numbers",
+      "name": "compatibility",
+      "elapsedMs": 425
+    },
+    {
+      "round": 3,
+      "pass": 3,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 2.700000047683716
+    },
+    {
+      "round": 3,
+      "pass": 3,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 3.199999988079071
+    },
+    {
+      "round": 3,
+      "pass": 4,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 2.800000011920929
+    },
+    {
+      "round": 3,
+      "pass": 4,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 3.099999964237213
+    },
+    {
+      "round": 3,
+      "pass": 4,
+      "op": "numbers",
+      "name": "compatibility",
+      "elapsedMs": 458.9000000357628
+    },
+    {
+      "round": 3,
+      "pass": 0,
+      "op": "resources",
+      "name": "compatibility",
+      "elapsedMs": 890.3000000119209
+    },
+    {
+      "round": 3,
+      "pass": 0,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 15
+    },
+    {
+      "round": 3,
+      "pass": 0,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 15.199999988079071
+    },
+    {
+      "round": 3,
+      "pass": 1,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 12.899999976158142
+    },
+    {
+      "round": 3,
+      "pass": 1,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 13.800000011920929
+    },
+    {
+      "round": 3,
+      "pass": 1,
+      "op": "resources",
+      "name": "compatibility",
+      "elapsedMs": 964.5
+    },
+    {
+      "round": 3,
+      "pass": 2,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 26
+    },
+    {
+      "round": 3,
+      "pass": 2,
+      "op": "resources",
+      "name": "compatibility",
+      "elapsedMs": 1115.199999988079
+    },
+    {
+      "round": 3,
+      "pass": 2,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 13.899999976158142
+    },
+    {
+      "round": 3,
+      "pass": 3,
+      "op": "resources",
+      "name": "compatibility",
+      "elapsedMs": 802.3999999761581
+    },
+    {
+      "round": 3,
+      "pass": 3,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 14.600000023841858
+    },
+    {
+      "round": 3,
+      "pass": 3,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 16.19999998807907
+    },
+    {
+      "round": 3,
+      "pass": 4,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 13.699999988079071
+    },
+    {
+      "round": 3,
+      "pass": 4,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 15.5
+    },
+    {
+      "round": 3,
+      "pass": 4,
+      "op": "resources",
+      "name": "compatibility",
+      "elapsedMs": 721.4000000357628
+    },
+    {
+      "round": 3,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "compatibility",
+      "elapsedMs": 775.1999999880791
+    },
+    {
+      "round": 3,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 80.5
+    },
+    {
+      "round": 3,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 82.19999998807907
+    },
+    {
+      "round": 3,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 88.30000001192093
+    },
+    {
+      "round": 3,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 87.80000001192093
+    },
+    {
+      "round": 3,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "compatibility",
+      "elapsedMs": 729.1999999880791
+    },
+    {
+      "round": 3,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 62
+    },
+    {
+      "round": 3,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "compatibility",
+      "elapsedMs": 715
+    },
+    {
+      "round": 3,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 60.39999997615814
+    },
+    {
+      "round": 3,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "compatibility",
+      "elapsedMs": 686.3000000119209
+    },
+    {
+      "round": 3,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 87.79999995231628
+    },
+    {
+      "round": 3,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 84.60000002384186
+    },
+    {
+      "round": 3,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 85.39999997615814
+    },
+    {
+      "round": 3,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 85.80000001192093
+    },
+    {
+      "round": 3,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "compatibility",
+      "elapsedMs": 531.5
+    },
+    {
+      "round": 4,
+      "pass": 0,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 2.800000011920929
+    },
+    {
+      "round": 4,
+      "pass": 0,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 3.599999964237213
+    },
+    {
+      "round": 4,
+      "pass": 0,
+      "op": "numbers",
+      "name": "compatibility",
+      "elapsedMs": 421.30000001192093
+    },
+    {
+      "round": 4,
+      "pass": 1,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 4.699999988079071
+    },
+    {
+      "round": 4,
+      "pass": 1,
+      "op": "numbers",
+      "name": "compatibility",
+      "elapsedMs": 411.5
+    },
+    {
+      "round": 4,
+      "pass": 1,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 2.600000023841858
+    },
+    {
+      "round": 4,
+      "pass": 2,
+      "op": "numbers",
+      "name": "compatibility",
+      "elapsedMs": 702
+    },
+    {
+      "round": 4,
+      "pass": 2,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 3
+    },
+    {
+      "round": 4,
+      "pass": 2,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 4.800000011920929
+    },
+    {
+      "round": 4,
+      "pass": 3,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 3.299999952316284
+    },
+    {
+      "round": 4,
+      "pass": 3,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 3.899999976158142
+    },
+    {
+      "round": 4,
+      "pass": 3,
+      "op": "numbers",
+      "name": "compatibility",
+      "elapsedMs": 487
+    },
+    {
+      "round": 4,
+      "pass": 4,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 3.400000035762787
+    },
+    {
+      "round": 4,
+      "pass": 4,
+      "op": "numbers",
+      "name": "compatibility",
+      "elapsedMs": 373.0999999642372
+    },
+    {
+      "round": 4,
+      "pass": 4,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 1.899999976158142
+    },
+    {
+      "round": 4,
+      "pass": 0,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 27.099999964237213
+    },
+    {
+      "round": 4,
+      "pass": 0,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 28.700000047683716
+    },
+    {
+      "round": 4,
+      "pass": 0,
+      "op": "resources",
+      "name": "compatibility",
+      "elapsedMs": 1024.0999999642372
+    },
+    {
+      "round": 4,
+      "pass": 1,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 25.80000001192093
+    },
+    {
+      "round": 4,
+      "pass": 1,
+      "op": "resources",
+      "name": "compatibility",
+      "elapsedMs": 1085.5
+    },
+    {
+      "round": 4,
+      "pass": 1,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 24.600000023841858
+    },
+    {
+      "round": 4,
+      "pass": 2,
+      "op": "resources",
+      "name": "compatibility",
+      "elapsedMs": 1082.0999999642372
+    },
+    {
+      "round": 4,
+      "pass": 2,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 26.69999998807907
+    },
+    {
+      "round": 4,
+      "pass": 2,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 31.69999998807907
+    },
+    {
+      "round": 4,
+      "pass": 3,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 28.19999998807907
+    },
+    {
+      "round": 4,
+      "pass": 3,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 34.19999998807907
+    },
+    {
+      "round": 4,
+      "pass": 3,
+      "op": "resources",
+      "name": "compatibility",
+      "elapsedMs": 779.6999999880791
+    },
+    {
+      "round": 4,
+      "pass": 4,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 16.80000001192093
+    },
+    {
+      "round": 4,
+      "pass": 4,
+      "op": "resources",
+      "name": "compatibility",
+      "elapsedMs": 845.8000000119209
+    },
+    {
+      "round": 4,
+      "pass": 4,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 26.600000023841858
+    },
+    {
+      "round": 4,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 95.69999998807907
+    },
+    {
+      "round": 4,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 97.89999997615814
+    },
+    {
+      "round": 4,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "compatibility",
+      "elapsedMs": 829.1999999880791
+    },
+    {
+      "round": 4,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 94.40000003576279
+    },
+    {
+      "round": 4,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "compatibility",
+      "elapsedMs": 780.0999999642372
+    },
+    {
+      "round": 4,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 94.10000002384186
+    },
+    {
+      "round": 4,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "compatibility",
+      "elapsedMs": 810.3999999761581
+    },
+    {
+      "round": 4,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 98.90000003576279
+    },
+    {
+      "round": 4,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 96.09999996423721
+    },
+    {
+      "round": 4,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 90.10000002384186
+    },
+    {
+      "round": 4,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 93.69999998807907
+    },
+    {
+      "round": 4,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "compatibility",
+      "elapsedMs": 806.9000000357628
+    },
+    {
+      "round": 4,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 106
+    },
+    {
+      "round": 4,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "compatibility",
+      "elapsedMs": 830.5999999642372
+    },
+    {
+      "round": 4,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 94.30000001192093
+    },
+    {
+      "round": 5,
+      "pass": 0,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 3.600000023841858
+    },
+    {
+      "round": 5,
+      "pass": 0,
+      "op": "numbers",
+      "name": "compatibility",
+      "elapsedMs": 510.89999997615814
+    },
+    {
+      "round": 5,
+      "pass": 0,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 2.800000011920929
+    },
+    {
+      "round": 5,
+      "pass": 1,
+      "op": "numbers",
+      "name": "compatibility",
+      "elapsedMs": 446.60000002384186
+    },
+    {
+      "round": 5,
+      "pass": 1,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 2.799999952316284
+    },
+    {
+      "round": 5,
+      "pass": 1,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 3.400000035762787
+    },
+    {
+      "round": 5,
+      "pass": 2,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 3
+    },
+    {
+      "round": 5,
+      "pass": 2,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 3.599999964237213
+    },
+    {
+      "round": 5,
+      "pass": 2,
+      "op": "numbers",
+      "name": "compatibility",
+      "elapsedMs": 387.30000001192093
+    },
+    {
+      "round": 5,
+      "pass": 3,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 6.699999988079071
+    },
+    {
+      "round": 5,
+      "pass": 3,
+      "op": "numbers",
+      "name": "compatibility",
+      "elapsedMs": 464.80000001192093
+    },
+    {
+      "round": 5,
+      "pass": 3,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 3.199999988079071
+    },
+    {
+      "round": 5,
+      "pass": 4,
+      "op": "numbers",
+      "name": "compatibility",
+      "elapsedMs": 409.30000001192093
+    },
+    {
+      "round": 5,
+      "pass": 4,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 2.800000011920929
+    },
+    {
+      "round": 5,
+      "pass": 4,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 2.399999976158142
+    },
+    {
+      "round": 5,
+      "pass": 0,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 35.799999952316284
+    },
+    {
+      "round": 5,
+      "pass": 0,
+      "op": "resources",
+      "name": "compatibility",
+      "elapsedMs": 1568.6000000238419
+    },
+    {
+      "round": 5,
+      "pass": 0,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 34.89999997615814
+    },
+    {
+      "round": 5,
+      "pass": 1,
+      "op": "resources",
+      "name": "compatibility",
+      "elapsedMs": 1425.800000011921
+    },
+    {
+      "round": 5,
+      "pass": 1,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 30.19999998807907
+    },
+    {
+      "round": 5,
+      "pass": 1,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 30.30000001192093
+    },
+    {
+      "round": 5,
+      "pass": 2,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 33.39999997615814
+    },
+    {
+      "round": 5,
+      "pass": 2,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 42.60000002384186
+    },
+    {
+      "round": 5,
+      "pass": 2,
+      "op": "resources",
+      "name": "compatibility",
+      "elapsedMs": 1151
+    },
+    {
+      "round": 5,
+      "pass": 3,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 28.399999976158142
+    },
+    {
+      "round": 5,
+      "pass": 3,
+      "op": "resources",
+      "name": "compatibility",
+      "elapsedMs": 1070.699999988079
+    },
+    {
+      "round": 5,
+      "pass": 3,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 24.900000035762787
+    },
+    {
+      "round": 5,
+      "pass": 4,
+      "op": "resources",
+      "name": "compatibility",
+      "elapsedMs": 1316.0999999642372
+    },
+    {
+      "round": 5,
+      "pass": 4,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 43.60000002384186
+    },
+    {
+      "round": 5,
+      "pass": 4,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 44.69999998807907
+    },
+    {
+      "round": 5,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 66.10000002384186
+    },
+    {
+      "round": 5,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "compatibility",
+      "elapsedMs": 643.6999999880791
+    },
+    {
+      "round": 5,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 72.60000002384186
+    },
+    {
+      "round": 5,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "compatibility",
+      "elapsedMs": 608.6000000238419
+    },
+    {
+      "round": 5,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 110.39999997615814
+    },
+    {
+      "round": 5,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 105.60000002384186
+    },
+    {
+      "round": 5,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 104.89999997615814
+    },
+    {
+      "round": 5,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 100.89999997615814
+    },
+    {
+      "round": 5,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "compatibility",
+      "elapsedMs": 658
+    },
+    {
+      "round": 5,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 78
+    },
+    {
+      "round": 5,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "compatibility",
+      "elapsedMs": 679.8000000119209
+    },
+    {
+      "round": 5,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 92.39999997615814
+    },
+    {
+      "round": 5,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "compatibility",
+      "elapsedMs": 858.3000000119209
+    },
+    {
+      "round": 5,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 94.30000001192093
+    },
+    {
+      "round": 5,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 101.80000001192093
+    },
+    {
+      "round": 6,
+      "pass": 0,
+      "op": "numbers",
+      "name": "compatibility",
+      "elapsedMs": 509.9000000357628
+    },
+    {
+      "round": 6,
+      "pass": 0,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 6.300000011920929
+    },
+    {
+      "round": 6,
+      "pass": 0,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 5.399999976158142
+    },
+    {
+      "round": 6,
+      "pass": 1,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 4.899999976158142
+    },
+    {
+      "round": 6,
+      "pass": 1,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 5.800000011920929
+    },
+    {
+      "round": 6,
+      "pass": 1,
+      "op": "numbers",
+      "name": "compatibility",
+      "elapsedMs": 502.10000002384186
+    },
+    {
+      "round": 6,
+      "pass": 2,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 3.699999988079071
+    },
+    {
+      "round": 6,
+      "pass": 2,
+      "op": "numbers",
+      "name": "compatibility",
+      "elapsedMs": 526.8999999761581
+    },
+    {
+      "round": 6,
+      "pass": 2,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 3.700000047683716
+    },
+    {
+      "round": 6,
+      "pass": 3,
+      "op": "numbers",
+      "name": "compatibility",
+      "elapsedMs": 481.7999999523163
+    },
+    {
+      "round": 6,
+      "pass": 3,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 3.700000047683716
+    },
+    {
+      "round": 6,
+      "pass": 3,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 4.199999988079071
+    },
+    {
+      "round": 6,
+      "pass": 4,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 3.5
+    },
+    {
+      "round": 6,
+      "pass": 4,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 3.899999976158142
+    },
+    {
+      "round": 6,
+      "pass": 4,
+      "op": "numbers",
+      "name": "compatibility",
+      "elapsedMs": 510.10000002384186
+    },
+    {
+      "round": 6,
+      "pass": 0,
+      "op": "resources",
+      "name": "compatibility",
+      "elapsedMs": 920.7000000476837
+    },
+    {
+      "round": 6,
+      "pass": 0,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 13.100000023841858
+    },
+    {
+      "round": 6,
+      "pass": 0,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 16.5
+    },
+    {
+      "round": 6,
+      "pass": 1,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 12.900000035762787
+    },
+    {
+      "round": 6,
+      "pass": 1,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 17.099999964237213
+    },
+    {
+      "round": 6,
+      "pass": 1,
+      "op": "resources",
+      "name": "compatibility",
+      "elapsedMs": 866.1000000238419
+    },
+    {
+      "round": 6,
+      "pass": 2,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 46.09999996423721
+    },
+    {
+      "round": 6,
+      "pass": 2,
+      "op": "resources",
+      "name": "compatibility",
+      "elapsedMs": 878.1000000238419
+    },
+    {
+      "round": 6,
+      "pass": 2,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 29.69999998807907
+    },
+    {
+      "round": 6,
+      "pass": 3,
+      "op": "resources",
+      "name": "compatibility",
+      "elapsedMs": 907.1000000238419
+    },
+    {
+      "round": 6,
+      "pass": 3,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 25.69999998807907
+    },
+    {
+      "round": 6,
+      "pass": 3,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 43.39999997615814
+    },
+    {
+      "round": 6,
+      "pass": 4,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 57.19999998807907
+    },
+    {
+      "round": 6,
+      "pass": 4,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 38.30000001192093
+    },
+    {
+      "round": 6,
+      "pass": 4,
+      "op": "resources",
+      "name": "compatibility",
+      "elapsedMs": 990.1999999880791
+    },
+    {
+      "round": 6,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "compatibility",
+      "elapsedMs": 507.89999997615814
+    },
+    {
+      "round": 6,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 64.40000003576279
+    },
+    {
+      "round": 6,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 65.59999996423721
+    },
+    {
+      "round": 6,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 80.80000001192093
+    },
+    {
+      "round": 6,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 87
+    },
+    {
+      "round": 6,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "compatibility",
+      "elapsedMs": 685.3999999761581
+    },
+    {
+      "round": 6,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 112.69999998807907
+    },
+    {
+      "round": 6,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "compatibility",
+      "elapsedMs": 863.1000000238419
+    },
+    {
+      "round": 6,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 92.30000001192093
+    },
+    {
+      "round": 6,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "compatibility",
+      "elapsedMs": 848
+    },
+    {
+      "round": 6,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 93.40000003576279
+    },
+    {
+      "round": 6,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 106
+    },
+    {
+      "round": 6,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 90.20000004768372
+    },
+    {
+      "round": 6,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 61.5
+    },
+    {
+      "round": 6,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "compatibility",
+      "elapsedMs": 634.3000000119209
+    }
+  ]
+}
