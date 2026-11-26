@@ -50,6 +50,27 @@ CHROME_BIN=/path/to/chrome node web/bench/provider-startup.mjs /path/to/jco \
 python3 web/bench/provider-startup-report.py
 ```
 
+### Allocations before the first result
+
+The checked runtime now allocates a resource map when it first needs to look up a representation and creates a promise when code actually waits for a synchronous import to finish. Across the 15 small workload and guest pairs, the change saved **7–8 Map constructions and one call to `Promise.withResolvers` per component instance** by the first guest result. The median Map count dropped from **14 to 7** for the internal bundle, external runtime and packed external runtime. Jco 1.13.0 also constructed a median of 7 Maps. [Source change](https://github.com/vados-cosmonic/jco/commit/d840e94f7)
+
+The allocation study used 480 documents and 960 instantiations across the two revisions. It counted JavaScript `Map` constructions and calls to `Promise.withResolvers`, including the returned promise and resolver pair as a single call. The counters were installed after host setup and restored after each guest result. Run the provider startup command with `ROUNDS=4` and the final argument `--allocations` at each revision. The report accepts the earlier run with `--allocations-before`. [Before samples](web/bench/results/allocations-before.json.gz) · [After samples](web/bench/results/allocations-after.json.gz)
+
+### Calling a scalar Wasm export from JavaScript
+
+A JS loop called an exported `increment(u32) -> u32` function 65,536 times per pass. The guest has no imports and all five configurations used the same 61-byte core module. Every pass checked the sum of all returned values. Each figure is the median of ten Chromium page medians after two warm-up passes and five measured passes. [Runner](web/bench/scalar-export.mjs) · [Raw samples and asset hashes](web/bench/results/scalar-export.json)
+
+| Per export call | Direct Wasm | Jco 1.13.0 | Upstream main | PR bundled | PR external |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Time (ns) | 17.5 | 18.3 | 1,169.6 | 1,209.3 | 1,221.5 |
+
+This call direction exposes a remaining regression. The checked wrapper creates a task and thread for each exported call, including a guest that only adds one to an integer. The host-import benchmarks below measure calls in the other direction. [Measured PR revision](https://github.com/vados-cosmonic/jco/commit/86d339dd0d3dce2700d3f0f143824cb52b2b5832)
+
+```sh
+CHROME_BIN=/path/to/chrome node web/bench/scalar-export.mjs /path/to/jco \
+  /path/to/jco/target/debug/examples/transpile /tmp/scalar-export.json
+```
+
 <!-- candidate:start -->
 
 ## Optimized browser bindings

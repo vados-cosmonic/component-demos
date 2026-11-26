@@ -10,6 +10,7 @@ from statistics import median
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("input", nargs="?", type=Path, default=Path(__file__).parent / "results/provider-startup.json.gz")
 parser.add_argument("--plot", type=Path, help="Write a PNG of time to first result and JavaScript bytes")
+parser.add_argument("--allocations-before", type=Path, help="Compare allocation counters to a previous run")
 args = parser.parse_args()
 path = args.input
 with gzip.open(path, "rt") as f:
@@ -52,6 +53,31 @@ for case in cases:
             assert info == run["manifest"][path.replace("/shared/", "/external/")]
 assert all(len(values) == rounds for values in by_case.values())
 assert all(set(versions) == set(variants) for versions in pairs.values())
+if run.get("countAllocations"):
+    if args.allocations_before is None or args.plot:
+        parser.error("Use --allocations-before to compare instrumented runs")
+    with gzip.open(args.allocations_before, "rt") as f:
+        previous = json.load(f)
+    assert previous["countAllocations"] and previous["rounds"] == rounds and previous["workload"] == run["workload"]
+    assert previous["chromium"] == run["chromium"] and previous["release"] == run["release"]
+    previous_rows = {(r["round"], r["base"], r["version"]): r["pair"] for r in previous["samples"]}
+    assert len(previous_rows) == len(rows)
+    print("| Build | Maps before | Maps after | Resolver sets before | Resolver sets after | Maps saved per instance |")
+    print("| --- | ---: | ---: | ---: | ---: | ---: |")
+    for version in variants:
+        per_instance = []
+        for row in rows:
+            if row["version"] != version:
+                continue
+            before = previous_rows[row["round"], row["base"], version]
+            for old, new in zip(before, row["pair"], strict=True):
+                per_instance.append((old["atResult"], new["atResult"]))
+        counts = [median(pair[i][k] for pair in per_instance) for k in ["maps", "resolvers"] for i in [0, 1]]
+        saved = [a["maps"] - b["maps"] for a, b in per_instance]
+        print(f"| {version} | {counts[0]:g} | {counts[1]:g} | {counts[2]:g} | {counts[3]:g} | {min(saved)}–{max(saved)} |")
+    raise SystemExit(0)
+if args.allocations_before:
+    parser.error("Use instrumented input with --allocations-before")
 print("| Build | Component | Import (ms) | First result (ms) | JS requests | JS (KiB) | JS gzip (KiB) |")
 print("| --- | --- | ---: | ---: | ---: | ---: | ---: |")
 labels = {"release": "Jco 1.13.0", "bundled": "PR bundled", "external": "PR external", "shared": "PR external, packed provider"}
