@@ -1,12 +1,13 @@
 // Package the checked runtime exports used by this application into one browser module.
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { parse } from "acorn";
 
 export async function bundleSharedProvider(checkout, runtimeDirectory, entries) {
-  const modules = new Map(), owners = new Map();
+  const modules = new Map();
   for (const bytes of entries) {
     const ast = parse(bytes.toString("utf8"), { ecmaVersion: "latest", sourceType: "module" });
     for (const stmt of ast.body) {
@@ -16,14 +17,39 @@ export async function bundleSharedProvider(checkout, runtimeDirectory, entries) 
       for (const spec of stmt.specifiers) {
         assert.equal(spec.type, "ImportSpecifier");
         const name = spec.imported.name;
-        // One ESM namespace must be able to serve every requested named export.
-        assert(!owners.has(name) || owners.get(name) === path, "Ambiguous provider export " + name);
-        owners.set(name, path);
         modules.get(path).add(name);
       }
     }
   }
+  return pack(checkout, runtimeDirectory, modules);
+}
+
+// Enumerate the installed package's public checked entries. This build can be
+// prepared before any components are available, including components loaded later.
+export async function bundleCompleteProvider(checkout, runtimeDirectory) {
+  const manifest = JSON.parse(await readFile(join(checkout, "packages/jco-cm-runtime/package.json")));
+  const modules = new Map();
+  for (const [subpath, target] of Object.entries(manifest.exports)) {
+    // The package root aliases runtime.js. Debug entries use a different implementation.
+    if (subpath === "." || subpath.startsWith("./debug")) continue;
+    assert(target.default.startsWith("./dist/"));
+    const file = target.default.slice("./dist/".length);
+    const namespace = await import(pathToFileURL(join(runtimeDirectory, file)));
+    modules.set("/runtime/" + file, new Set(Object.keys(namespace)));
+  }
+  return pack(checkout, runtimeDirectory, modules);
+}
+
+async function pack(checkout, runtimeDirectory, modules) {
   assert(modules.has("/runtime/intrinsics/sync.js"));
+  const owners = new Map();
+  for (const [path, names] of modules) {
+    for (const name of names) {
+      // Generated named imports can share one namespace only if they stay unambiguous.
+      assert(!owners.has(name), "Ambiguous provider export " + name);
+      owners.set(name, path);
+    }
+  }
   const entry = [...modules].map(([path, names]) => {
     const file = join(runtimeDirectory, path.slice("/runtime/".length));
     return "export { " + [...names].sort().join(", ") + " } from " + JSON.stringify(file) + ";";

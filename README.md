@@ -4,7 +4,7 @@ This fork benchmarks the browser examples from [eqrion/component-demos at d0b9dd
 
 ## Browser bindings at the PR head
 
-In the full timing run at `b731ebc91`, both the internal Oxc bundle and the external checked runtime stayed within 10× of the fastest compiled shim in **all 21 warm headline cases**. Tree traversal had the largest gap. The internal bundle took **5.50×** the shim’s time for the C guest, and the external runtime took **5.78×** for Rust. Cold startup and Jco 1.13.0 parity remain open. [Jco fork PR](https://github.com/vados-cosmonic/jco/pull/62) · [Minified builds](#minified-browser-bindings) · [Equal-work bulk queries](#materializing-bulk-dom-query-results)
+In the full timing run at `b731ebc91`, both the internal Oxc bundle and the external checked runtime stayed within 10× of the fastest compiled shim in **all 21 warm headline cases**. Tree traversal had the largest gap. The internal bundle took **5.50×** the shim’s time for the C guest, and the external runtime took **5.78×** for Rust. Cold startup and Jco 1.13.0 parity remain open. [Jco fork PR](https://github.com/vados-cosmonic/jco/pull/62) · [Minified builds](#minified-browser-bindings) · [Equal-work bulk queries](#materializing-bulk-dom-query-results) · [External runtime packaging](#packaging-the-external-runtime-for-browsers)
 
 | Headline comparison | Internal Oxc | External runtime |
 | --- | ---: | ---: |
@@ -63,6 +63,33 @@ python3 web/bench/review-matrix-report.py web/bench/results/review-matrix-b731eb
 ```
 
 </details>
+
+## Packaging the external runtime for browsers
+
+The checked external bindings at PR revision `eaca992c8` used 59 runtime exports across 15 small browser workloads. Packing those exports into one shared ES module reduced median first-result time from **31.48 to 17.67 ms** and total JavaScript from **161.5 to 111.0 KiB**. The same guests took **17.91 ms** with the internal Oxc bundle and **9.10 ms** with Jco 1.13.0. The first result includes importing the component and running its small workload. [Runner](web/bench/provider-startup.mjs) · [Named exports and import map builder](web/bench/shared-provider.mjs)
+
+![First and second component time and JavaScript transfer for release, internal Oxc, external runtime and the external runtime with the used exports packed.](web/bench/results/provider-startup-used-eaca992c8.png)
+
+| Packed exports | JS requests, ordinary → packed | First-load JS, KiB | First-load JS gzip, KiB | First result, ms | Second component’s first result, ms | Paired first-result time, packed / ordinary |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| 59 used by these components | 19 → 2 | 161.5 → 111.0 | 42.5 → 23.0 | 31.48 → 17.67 | 12.74 → 11.78 | 0.563× |
+| All 318 checked exports | 19 → 2 | 161.5 → 289.4 | 42.5 → 65.5 | 30.54 → 24.62 | 12.44 → 11.36 | 0.791× |
+
+The all-exports build can be prepared before the application knows which components it will load. It fetched more bytes than the shipped provider. Each row compares its packed configuration to the ordinary external runtime **within the same run**. Each run covered 720 fresh Chromium documents over 12 balanced rounds, with five small workloads in C, C++ and Rust. Each document imported and ran two identical guests under different module URLs. The second component could reuse the runtime from the first. The generated bindings and guest Wasm were byte-identical across external layouts. Responses were uncompressed on loopback. The gzip column gives calculated file sizes. [Used-export samples and hashes](web/bench/results/provider-startup-used-eaca992c8.json.gz) · [All-export samples and hashes](web/bench/results/provider-startup-all-eaca992c8.json.gz)
+
+Each paired ratio is the median of the 15 per-case medians over 12 rounds. All 15 individual 95% sign-test intervals favored packing the used exports for the first component. Fourteen favored packing the complete runtime. For the used-export build against the internal Oxc bundle, all 15 intervals included parity. [Analysis script](web/bench/provider-startup-report.py)
+
+To reproduce, build the transpiler and checked runtime at the measured [Jco revision](https://github.com/vados-cosmonic/jco/commit/eaca992c895fbf08bdd7f0968e0e5e4e0fc8643e), then prepare the 1.13.0 baseline files as described in [Reproduce the comparison](#reproduce-the-comparison). Run each configuration with the same Chrome executable.
+
+```sh
+jco_checkout=/path/to/built/jco
+transpiler="$jco_checkout/packages/jco-transpile/dist/transpile.js"
+export CHROME_BIN=/path/to/chrome
+node web/bench/provider-startup.mjs "$jco_checkout" "$transpiler" /tmp/used.json.gz
+node web/bench/provider-startup.mjs "$jco_checkout" "$transpiler" /tmp/all.json.gz --all-exports
+python3 web/bench/provider-startup-report.py /tmp/used.json.gz
+python3 web/bench/provider-startup-report.py /tmp/all.json.gz
+```
 
 ## Materializing bulk DOM query results
 

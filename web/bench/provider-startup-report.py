@@ -81,6 +81,8 @@ if args.allocations_before:
 print("| Build | Component | Import (ms) | First result (ms) | JS requests | JS (KiB) | JS gzip (KiB) |")
 print("| --- | --- | ---: | ---: | ---: | ---: | ---: |")
 labels = {"release": "Jco 1.13.0", "bundled": "PR bundled", "external": "PR external", "shared": "PR external, packed provider"}
+if run.get("allExports"):
+    labels["shared"] = "PR external, all checked exports packed"
 summary = {}
 for version in variants:
     for i, phase in enumerate(["First", "Second"]):
@@ -104,7 +106,7 @@ for i, phase in enumerate(["first", "second"]):
 if args.plot:
     import matplotlib.pyplot as plt
 
-    labels["shared"] = "PR external, packed"
+    labels["shared"] = "PR external, all exports" if run.get("allExports") else "PR external, packed"
     fig, axes = plt.subplots(1, 2, figsize=(9.4, 3.3), sharey=True, layout="constrained")
     for ax, column, title in zip(axes, [1, 3], ["Time to first guest result (ms)", "JavaScript loaded (KiB)"]):
         for i, label, color in [(0, "First component", "#236687"), (1, "Second component", "#b4562c")]:

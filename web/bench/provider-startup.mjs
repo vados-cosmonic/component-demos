@@ -6,14 +6,15 @@ import { mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { createServer } from "node:http";
 import { cpus, tmpdir } from "node:os";
 import { basename, join, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 import { gzipSync } from "node:zlib";
 import puppeteer from "puppeteer-core";
-import { bundleSharedProvider } from "./shared-provider.mjs";
+import { bundleCompleteProvider, bundleSharedProvider } from "./shared-provider.mjs";
 
 const [checkout, generator, output, mode] = process.argv.slice(2);
-assert(mode === undefined || mode === "--allocations");
+assert([undefined, "--allocations", "--all-exports"].includes(mode));
 const countAllocations = mode === "--allocations";
-assert(checkout && generator && output, "Usage: provider-startup.mjs <jco-checkout> <native-generator> <results.json.gz> [--allocations]");
+assert(checkout && generator && output, "Usage: provider-startup.mjs <jco-checkout> <native-generator-or-transpile.js> <results.json.gz> [--allocations | --all-exports]");
 const rounds = Number(process.env.ROUNDS ?? 12);
 assert(Number.isSafeInteger(rounds) && rounds > 0 && rounds % 4 === 0);
 const web = join(import.meta.dirname, "..");
@@ -30,10 +31,12 @@ function register(path, bytes) {
   assets.set(path, bytes);
   manifest[path] = { bytes: bytes.length, gzip: gzipSync(bytes, { level: 9 }).length, sha256: hash(bytes) };
 }
-const mappings = (await readFile(join(web, "host/imports.txt"), "utf8")).trim().split("\n").map(line => {
+const imports = Object.fromEntries((await readFile(join(web, "host/imports.txt"), "utf8")).trim().split("\n").map(line => {
   const [name, symbol] = line.split(/\s+/);
-  return "--map=" + name + "=../../../host/web-host.js#" + symbol;
-});
+  return [name, "../../../host/web-host.js#" + symbol];
+}));
+const mappings = Object.entries(imports).map(([name, value]) => "--map=" + name + "=" + value);
+const transpiler = generator.endsWith(".js") ? await import(pathToFileURL(resolve(generator))) : undefined;
 const runtime = join(checkout, "packages/jco-cm-runtime/dist");
 for (const name of await readdir(runtime, { recursive: true })) {
   if (name.endsWith(".js") && !name.startsWith("debug/")) register("/runtime/" + name, await readFile(join(runtime, name)));
@@ -62,6 +65,12 @@ try {
           assert.equal(hash(bytes), file.sha256);
           return [basename(file.path), bytes];
         }));
+      } else if (transpiler) {
+        const opts = { name, nodejsCompat: false, base64Cutoff: 5000, namespacedExports: true,
+          emitTypescriptDeclarations: false, map: { ...imports } };
+        if (version === "external") Object.assign(opts, { cmRuntimeEsModule: "/runtime", cmRuntimeSyncImports: true });
+        const result = await transpiler.transpileBytes(await readFile(join(web, input.path)), opts);
+        files = Object.entries(result.files).map(([file, bytes]) => [file, Buffer.from(bytes)]);
       } else {
         const flags = version === "external" ? ["--runtime=/runtime", "--cm-runtime-sync-imports"] : [];
         execFileSync(resolve(generator), [join(web, input.path), dir, "--name=" + name, "--no-nodejs-compat",
@@ -84,7 +93,7 @@ try {
   await rm(temp, { recursive: true, force: true });
 }
 assert.equal(cases.length, Object.keys(workload).length * 3);
-const shared = await bundleSharedProvider(resolve(checkout), resolve(runtime),
+const shared = mode === "--all-exports" ? await bundleCompleteProvider(resolve(checkout), resolve(runtime)) : await bundleSharedProvider(resolve(checkout), resolve(runtime),
   cases.map(item => assets.get(item.base + "/external/" + item.name + ".js")));
 register("/runtime/shared-provider.js", shared.bytes);
 
@@ -257,7 +266,7 @@ for (let round = 0; round < rounds; round++) {
   }
   console.log("Completed provider startup round", round + 1);
 }
-const result = { revision, countAllocations, release: inventory.baseline, generatorSha256: hash(await readFile(generator)),
+const result = { revision, countAllocations, allExports: mode === "--all-exports", release: inventory.baseline, generatorSha256: hash(await readFile(generator)),
   runnerSha256: hash(await readFile(import.meta.filename)), chromium, cpu: cpus()[0].model, rounds, seed: 18671,
   workload, manifest, providerImports: shared.imports, providerExports: shared.exports,
   packerSha256: hash(await readFile(join(import.meta.dirname, "shared-provider.mjs"))), samples };
