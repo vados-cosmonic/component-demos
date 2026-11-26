@@ -167,6 +167,34 @@ python3 web/bench/precompiled-instances-report.py /tmp/repeat.json.gz "$matrix"
 
 </details>
 
+#### Cost of building the trap-message table
+
+Both binding modes build a nine-entry map at instantiation to translate engine errors into Component Model trap messages. A trial moved the same factory call into the first read of the instance’s normalization context. Across 480 fresh Chromium documents, both modes preserved the original error object, its normalized message and the single `onTrap` notification. The deferred bindings built zero maps during the checked instantiation and exactly one by the time the host-induced trap was reported. [Timing samples](web/bench/results/trap-map-timing-3e25d8d82.json.gz) · [Repeat and heap samples](web/bench/results/trap-map-heap-3e25d8d82.json.gz)
+
+| Binding mode | First instantiation, trial / shipping (95% interval) | Independent repeat | Retained JS heap saved per live instance |
+| --- | ---: | ---: | ---: |
+| Internal Oxc | 0.950× (0.907–1.046) | 0.978× (0.952–1.027) | 96 B |
+| External runtime | 0.980× (0.942–1.053) | 0.987× (0.886–1.030) | 96 B |
+
+Each run used 20 browser processes and paired the three table guests within each process, with the binding already imported and the guest cores compiled. The repeated-instantiation intervals also included parity in both runs. The heap trial measured the increase from eight to 32 live guests after forced garbage collection in each page. The 96-byte saving was about 0.6% of the shipping JS heap increase per instance. The Jco PR keeps the eager table.
+
+<details><summary>Reproduce the trap-map trials</summary>
+
+Use the built compiler, runtime distribution, benchmark matrix and Chromium from the precompiled-core comparison above.
+
+```sh
+reference=web/bench/results/precompiled-confirm-3e25d8d82.json.gz
+trial=web/bench/trap-map-trial.mjs
+heap=web/bench/trap-map-heap.mjs
+patch -o "$trial" web/bench/precompiled-instances.mjs web/bench/experiments/trap-map-trial.patch
+patch -o "$heap" "$trial" web/bench/experiments/trap-map-heap.patch
+node "$trial" "$compiler" "$runtime" "$matrix" /tmp/trap-timing.json.gz
+node "$heap" "$compiler" "$runtime" "$matrix" /tmp/trap-heap.json.gz
+python3 web/bench/trap-map-report.py "$matrix" "$reference" /tmp/trap-timing.json.gz "$trial" /tmp/trap-heap.json.gz "$heap"
+```
+
+</details>
+
 #### Does skipping the initialization task improve time to first result?
 
 The initialization task gives a Wasm start function a current task and implicit thread if it calls a component import. In these three table guests, the C and C++ initializers call only local Wasm routines, and the Rust start function fills memory. We compared the shipped bindings with experimental copies that omit task creation, register selection and task cleanup for these exact guest binaries. Both builds still instantiate every core and execute every Wasm start function. The harness checks the reachable startup instructions and the C/C++ start-module import against the measured guest before running. This experiment uses the original cores and ordinary browser constructors. Other components can call the host during startup, and the public instantiation API can receive replacement cores. [Guest checks and experimental edits](web/bench/init-task-probe.mjs)

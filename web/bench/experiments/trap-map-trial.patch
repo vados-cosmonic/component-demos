@@ -1,0 +1,126 @@
+--- precompiled-instances.mjs
++++ trap-map-trial.mjs
+@@ -7,6 +7,7 @@
+ import { pathToFileURL } from "node:url";
+ import { gzipSync, gunzipSync } from "node:zlib";
+ import puppeteer from "puppeteer-core";
++import {parse} from "acorn";
+ import { transpile } from "@bytecodealliance/jco";
+
+ const [compiler, dist, matrixFile, destination, traceFlag] = process.argv.slice(2);
+@@ -50,7 +51,7 @@
+ }
+ const langList = ["c", "cpp", "rust"];
+ const builds = ["release", "bundled", "external"];
+-const strategies = ["default", "async", "small", "sync"];
++const strategies = ["default", "lazy"];
+ const hostSpec = "../../../host/web-host.js";
+ const map = Object.fromEntries(
+   (await readFile(join(web, "host/imports.txt"), "utf8"))
+@@ -61,6 +62,38 @@
+       return [id, hostSpec + "#" + name];
+     }),
+ );
++// The two generated bindings both allocate the nine-entry table in a mutable
++// local, then pass it through one normalization context. Move the original
++// factory call into that context's accessor and memoize it per instance.
++function deferTrapMap(bytes) {
++  const src = Buffer.from(bytes).toString();
++  const tree = parse(src, {ecmaVersion:"latest", sourceType:"module"});
++  const todo = [tree], declarations = [], properties = [];
++  for (const n of todo) {
++    if (n.type === "VariableDeclaration" && n.kind !== "const") {
++      for (const d of n.declarations) {
++        if (d.init?.type === "CallExpression" && d.init.arguments[0]?.type === "ObjectExpression" &&
++            d.init.arguments[0].properties.some(p => p.key.value === "call stack exhausted")) declarations.push(d);
++      }
++    }
++    if (n.type === "Property" && n.key.name === "messages") properties.push(n);
++    for (const v of Object.values(n)) {
++      if (Array.isArray(v)) todo.push(...v.filter(x => x?.type));
++      else if (v?.type) todo.push(v);
++    }
++  }
++  assert.equal(declarations.length,1);
++  const decl = declarations[0];
++  assert.equal(decl.init.arguments[0].properties.length,9);
++  const reads = properties.filter(p => p.value.name === decl.id.name && p.start > decl.end);
++  assert.equal(reads.length,1);
++  const p = reads[0], name = decl.id.name;
++  const expr = src.slice(decl.init.start,decl.init.end);
++  const source = src.slice(0,decl.id.end) + src.slice(decl.end,p.start) +
++    "get messages(){return " + name + "??=" + expr + "}" + src.slice(p.end);
++  parse(source,{ecmaVersion:"latest", sourceType:"module"});
++  return source;
++}
+ const files = {},
+   guests = {};
+ for (const lang of langList) {
+@@ -90,6 +123,7 @@
+     for (const [name, bytes] of Object.entries(out.files)) {
+       if (!/\.(wasm|js)$/.test(name)) continue;
+       add(base + name, bytes);
++      if (build !== "release" && name.endsWith(".js")) add(base+"lazy.js",deferTrapMap(bytes));
+       if (name.endsWith(".wasm")) files[base][name] = manifest[base + name];
+     }
+     assert.deepEqual(files[base], files["/" + lang + "/release/"]);
+@@ -128,7 +162,7 @@
+   if (!crossOriginIsolated) throw Error("high-resolution clock unavailable");
+   const host = await import("/host/web-host.js");
+   const { getMeasurements } = await import("/examples/table-update/main.js");
+-  const { instantiate } = await import(base + "table_update.js");
++  const { instantiate } = await import(base + (strategy === "lazy" ? "lazy.js" : "table_update.js"));
+   const mods = new Map(),
+     names = new Map();
+   await Promise.all(
+@@ -163,7 +197,7 @@
+     });
+   };
+   const callback =
+-    strategy === "traced" ? observed : strategy === "default" ? undefined : construct;
++    strategy === "traced" ? observed : (strategy === "default" || strategy === "lazy") ? undefined : construct;
+   const create = () => instantiate(lookup, hostImports, callback);
+   const start = performance.now(),
+     first = await create(),
+@@ -197,12 +231,38 @@
+     return result;
+   });
+   audit._util?.stop();
+-  return { firstMs, batches, calls, measurements };
++  // A fresh instance traps through a real host import. Count map construction
++  // outside every timing and exercise the captured normalization context again
++  // through onTrap. Both paths must preserve the original error object.
++  const trap = new WebAssembly.RuntimeError("unreachable"), sent = [];
++  const fail = () => { throw trap; };
++  const brokenHost = { ...host, getWindow: fail, getPerformance: fail };
++  const MapCtor = globalThis.Map;
++  let maps = 0;
++  globalThis.Map = new Proxy(MapCtor, { construct(target,args,newTarget) {
++    if (Array.isArray(args[0]) && args[0].some(([key]) => key === "unreachable")) maps++;
++    return Reflect.construct(target,args,newTarget);
++  }});
++  let before, after, caught;
++  try {
++    const broken = await instantiate(lookup,{[hostSpec]:brokenHost},undefined,
++      {onTrap:e => sent.push(e)});
++    before = maps;
++    try { broken.run(8); } catch(e) { caught = e; }
++    after = maps;
++    if (caught !== trap || sent.length !== 1 || sent[0] !== trap ||
++        trap.message !== "wasm trap: wasm `unreachable` instruction executed" ||
++        before !== (strategy === "lazy" ? 0 : 1) || after !== 1) {
++      throw Error(JSON.stringify({caught:String(caught),sent:sent.map(String),before,after,strategy}));
++    }
++    broken._util.stop();
++  } finally { globalThis.Map = MapCtor; }
++  return { firstMs, batches, calls, measurements, trapMaps: [before,after] };
+ }
+ const modes = traced
+   ? builds.map((build) => ({ build, strategy: "traced" }))
+-  : builds.flatMap((build) => strategies.map((strategy) => ({ build, strategy })));
+-const rounds = 12,
++  : builds.filter(build => build !== "release").flatMap((build) => strategies.map((strategy) => ({ build, strategy })));
++const rounds = 20,
+   samples = [];
+ let chromium;
+ try {

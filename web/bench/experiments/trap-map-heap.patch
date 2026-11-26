@@ -1,0 +1,35 @@
+--- trap-map-trial.mjs
++++ trap-map-heap.mjs
+@@ -199,6 +199,10 @@
+   const callback =
+     strategy === "traced" ? observed : (strategy === "default" || strategy === "lazy") ? undefined : construct;
+   const create = () => instantiate(lookup, hostImports, callback);
++  globalThis.__createTrapHeapBatch = async (count) => {
++    globalThis.__trapHeapInstances = [];
++    for (let i = 0; i < count; i++) globalThis.__trapHeapInstances.push(await create());
++  };
+   const start = performance.now(),
+     first = await create(),
+     firstMs = performance.now() - start;
+@@ -316,6 +320,21 @@
+                 .flatMap((k) => [k + ": total ms", k + ": µs/row"])
+                 .sort(),
+             );
++            const client = await page.createCDPSession();
++            const heap = async () => {
++              await client.send("HeapProfiler.collectGarbage");
++              return (await client.send("Runtime.getHeapUsage")).usedSize;
++            };
++            try {
++              // Warm the exact batch path before taking the baseline. Use
++              // the slope between two counts to exclude its fixed cost.
++              const retained = [];
++              for (const count of [1, 8, 32]) {
++                await page.evaluate(n => globalThis.__createTrapHeapBatch(n), count);
++                retained.push(await heap());
++              }
++              row.heap = retained;
++            } finally { await client.detach(); }
+             samples.push({ round, pos, lang, build, strategy, ...row });
+           } finally {
+             await page.close();
