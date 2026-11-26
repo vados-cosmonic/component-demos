@@ -17,11 +17,12 @@ import { bundleApp } from "./app-bundle.mjs";
 const [checkout, matrixFile, output, study, ...extra] = process.argv.slice(2);
 const appPreload = study === "--shaped-preload";
 const automaticControl = study === "--automatic-control";
-const shaped = study === "--shaped" || appPreload || automaticControl;
+const coreHints = study === "--core-hints";
+const shaped = coreHints || study === "--shaped" || appPreload || automaticControl;
 const alternative = automaticControl ? "automatic" : "grouped";
 const compactHelpers = study === "--compact-helpers" || study === "--compact-component";
 assert(!extra.length && (!study || shaped || compactHelpers));
-assert(output, "Usage: runtime-chunks.mjs <built Jco checkout> <matrix.json.gz> <output.json.gz> [--shaped|--shaped-preload|--compact-helpers|--compact-component|--automatic-control]");
+assert(output, "Usage: runtime-chunks.mjs <built Jco checkout> <matrix.json.gz> <output.json.gz> [--shaped|--shaped-preload|--compact-helpers|--compact-component|--automatic-control|--core-hints]");
 const digest = (x) => createHash("sha256").update(x).digest("hex");
 const matrixBytes = await readFile(matrixFile);
 const matrix = JSON.parse(gunzipSync(matrixBytes));
@@ -51,7 +52,10 @@ const assets = new Map(),
   graph = {},
   api = {},
   footprints = {};
-const builds = appPreload
+const builds = coreHints
+  ? ["release", "release-core", "bundled", "bundled-core", "external", "external-core",
+     "application", "application-core", "application-preload", "application-both"]
+  : appPreload
   ? ["release", "bundled", "application", "application-preload"]
   : shaped
   ? ["release", "bundled", "external", automaticControl ? "automatic" : "application"]
@@ -123,7 +127,7 @@ if (!shaped || automaticControl) {
     }
   } finally { await bundle.close(); }
 }
-const inputs = automaticControl
+const inputs = automaticControl || coreHints
   ? Object.fromEntries(["dom-query", "table-update"].map(name => [name, Object.values(matrix.workloads[name])]))
   : { "dom-query": [8, 2], "table-update": [8] };
 for (const file of [
@@ -218,9 +222,18 @@ for (const { base, name } of appCases) {
     requests: [...closure([entry]), entry.replace(/\.js$/, ".core.wasm")].sort(),
   };
   expected[base.slice(1)].application = appEntry;
-  if (appPreload) {
+  if (appPreload || coreHints) {
     assert.equal(graph[entry].length, 1, "expected one shared JS chunk");
     expected[base.slice(1)]["application-preload"] = { ...appEntry, hint: graph[entry][0] };
+  }
+  if (coreHints) {
+    const layouts = expected[base.slice(1)];
+    for (const mode of ["release", "bundled", "external", "application"]) {
+      const cores = layouts[mode].requests.filter(path => path.endsWith(".wasm"));
+      assert.equal(cores.length, 1);
+      layouts[mode + "-core"] = { ...layouts[mode], coreHint: cores[0] };
+    }
+    layouts["application-both"] = { ...layouts["application-core"], hint: graph[entry][0] };
   }
 }
 const probe = study === "--compact-component" ? "component" : "conversion";
@@ -231,7 +244,7 @@ for (const layout of shaped ? ["external"] : ["external", "grouped"])
     requests: footprints[layout]["intrinsics/" + probe],
   };
 
-async function measure({ demo, entry, args, probe, hint }) {
+async function measure({ demo, entry, args, probe, hint, coreHint }) {
   let getMeasurements;
   if (!probe) {
     ({ getMeasurements } = await import("/examples/" + demo + "/main.js"));
@@ -243,6 +256,15 @@ async function measure({ demo, entry, args, probe, hint }) {
     const link = document.createElement("link");
     link.rel = "modulepreload";
     link.href = hint;
+    document.head.append(link);
+  }
+  if (coreHint) {
+    const link = document.createElement("link");
+    link.rel = "preload";
+    link.as = "fetch";
+    link.type = "application/wasm";
+    link.crossOrigin = "anonymous";
+    link.href = coreHint;
     document.head.append(link);
   }
   const mod = await import(entry);
@@ -318,10 +340,11 @@ if (shaped) {
     files[path].brotli = body.length;
   }
 }
-const rounds = shaped ? 16 : 20,
+const rounds = shaped && !coreHints ? 16 : 20,
   samples = [],
   servers = [];
 let chromium;
+const served = [];
 function handler(req, res) {
   const path = new URL(req.url, "https://localhost").pathname;
   res.setHeader("cache-control", "no-store");
@@ -341,6 +364,7 @@ function handler(req, res) {
     return res.end();
   }
   res.setHeader("content-type", path.endsWith(".wasm") ? "application/wasm" : "text/javascript");
+  if (coreHints) served.push(path);
   if (shaped) {
     if (!/\bbr\b/.test(req.headers["accept-encoding"] ?? "")) return res.writeHead(406).end();
     res.setHeader("content-encoding", "br");
@@ -374,7 +398,10 @@ try {
         const treatments = protocols.flatMap((protocol, i) =>
           profiles.flatMap((profile) => modes.map((mode) => ({ protocol, mode, profile, server: servers[i] }))),
         );
-        const order = appPreload ? [0, 1, 3, 2] : shaped ? [0, 1, 7, 2, 6, 3, 5, 4] : isProbe ? [0, 1, 3, 2] : [0, 1, 9, 2, 8, 3, 7, 4, 6, 5];
+        // Alternate the low and high remaining indices. Rotating this sequence gives
+        // every ordered pair of distinct treatments the same number of adjacencies.
+        const order = Array.from({ length: treatments.length }, (_, i) =>
+          i % 2 ? (i + 1) / 2 : (treatments.length - i / 2) % treatments.length);
         for (const [position, index] of order.entries()) {
           const { mode, protocol, server, profile } = treatments[(index + round) % order.length];
           const page = await browser.newPage();
@@ -383,7 +410,7 @@ try {
               "https://127.0.0.1:" + server.address().port + "/page/" + mode,
             );
             assert.equal(doc.status(), 200);
-            const { entry, requests, hint } = expected[workload][mode],
+            const { entry, requests, hint, coreHint } = expected[workload][mode],
               demo = workload.split("/")[1];
             if (shaped) {
               // Finish common page setup before throttling the timed import. Both
@@ -396,20 +423,28 @@ try {
                 ? emulation
                 : { latency: 0, download: -1, upload: -1 });
             }
+            served.length = 0;
             const data = await page.evaluate(measure, {
               demo,
               entry,
               args: inputs[demo],
               probe: isProbe ? probe : null,
               hint,
+              coreHint,
             });
             assert(data.importMs > 0 && data.firstMs >= data.importMs);
             assert.deepEqual(data.requests.map((r) => r.path).sort(), requests);
-            if (hint) {
+            if (coreHints) {
+              assert.deepEqual(served.toSorted(), requests, "duplicate or missing request at the server");
+              data.served = served.slice();
+            }
+            if (hint || coreHint) {
               // Chromium can label a modulepreload as "script". Its request
               // must begin before the entry response can reveal the import.
-              const shared = data.requests.find((r) => r.path === hint);
-              assert(shared.start < data.requests.find((r) => r.path === entry).end);
+              const entryEnd = data.requests.find((r) => r.path === entry).end;
+              for (const url of [hint, coreHint].filter(Boolean)) {
+                assert(data.requests.find((r) => r.path === url).start < entryEnd);
+              }
             }
             for (const r of data.requests) {
               assert.equal(r.protocol, protocol);

@@ -43,6 +43,38 @@ On the limited connection, individual paired 95% intervals favored the grouped p
 
 ![First result for the six full workloads over loopback and a limited HTTP/2 connection.](web/bench/results/compact-helpers-http2-427b9c0d7.png)
 
+### Starting the guest Wasm and shared JavaScript together
+
+On a 40 ms, 10 Mbit/s connection, the application bundle of the external bindings reached its first guest result in **131.26 ms** when the page preloaded both assets, down from **218.72 ms** with ordinary loading. Internal Oxc with its guest Wasm preloaded took **130.40 ms**. The equivalent release control took **116.90 ms**. The compiled guest, generated entry and response bytes were identical within each scheduling comparison. [Raw first results, request timings, asset hashes and server inventories](web/bench/results/core-hints-http2-427b9c0d7.json.gz)
+
+| Build at `427b9c0d7` and preload choice | Loopback first result (ms) | Limited first result (ms) | Limited paired reduction vs ordinary |
+| --- | ---: | ---: | ---: |
+| Jco 1.13.0, ordinary → guest Wasm | 58.03 → 58.63 | 161.22 → 116.90 | 27.3% |
+| Internal Oxc, ordinary → guest Wasm | 66.36 → 60.94 | 175.11 → 130.40 | 25.8% |
+| External package, ordinary → guest Wasm | 85.17 → 86.51 | 278.44 → 215.44 | 21.1% |
+| External application bundle, ordinary → guest Wasm | 66.30 → 67.83 | 218.72 → 156.38 | 28.4% |
+| External application bundle, ordinary → shared JS | 66.30 → 63.07 | 218.72 → 178.58 | 19.6% |
+| External application bundle, ordinary → both | 66.30 → 65.11 | 218.72 → 131.26 | 40.1% |
+
+Six full-sized C, C++ and Rust DOM-query and table workloads ran in 20 rounds and 2,400 fresh Chromium documents with HTTP/2 and Brotli. Each page inserted the links immediately before importing its entry. Every observed request matched the server inventory and every guest Wasm transferred exactly once. The guest fetch for the application bundle started at 106.31 ms with ordinary loading and at 0.59 ms with both hints on the limited connection.
+
+On that connection all six individual paired 95% intervals favored both hints over either hint alone. With an equally preloaded release, the median paired ratio was 1.115× for internal Oxc, 1.910× for the separately served external package and 1.121× for the external application bundle. On loopback all six intervals for adding the guest preload to a shared-JS preload included parity. [Application build and preload markup](https://github.com/vados-cosmonic/jco/blob/1cbc8afe9/packages/jco-cm-runtime/docs/runtime.md#bindings-that-import-the-runtime)
+
+![First guest result by build and preload choice on the two HTTP/2 network profiles.](web/bench/results/core-hints-http2-427b9c0d7.png)
+
+<details><summary>Reproduce the HTTP/2 preload comparison</summary>
+
+Use built Jco at `427b9c0d7`, the staged demo assets and the same browser as the full matrix. The runner counterbalances the order of all 20 build, hint and network combinations on each workload. The report verifies their position and predecessor counts as well as the browser and server request records.
+
+```sh
+export CHROME_BIN=/path/to/chrome
+matrix=web/bench/results/review-matrix-minified-427b9c0d7.json.gz
+node web/bench/runtime-chunks.mjs "$before" "$matrix" /tmp/hints.json.gz --core-hints
+python3 web/bench/runtime-chunks-report.py /tmp/hints.json.gz "$matrix" --plot /tmp/hints.png
+```
+
+</details>
+
 ### Full demo matrix
 
 The head-to-head comparison used 12 rounds and 1,164 fresh Chromium documents. Times and sizes below summarize 21 workload medians. The 203 assets outside the external runtime matched their previous hashes, including every generated adapter, internal bundle and guest Wasm file. The two controlled package-layout trials above isolate the effect of the change. [Full timings and served asset hashes](web/bench/results/review-matrix-minified-427b9c0d7.json.gz)
