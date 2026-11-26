@@ -45,6 +45,35 @@ node web/bench/verify-matrix-adapters.mjs "$final" /tmp/init.json.gz
 
 </details>
 
+## Owned resource arguments in synchronous exports
+
+A host can pass a new resource to a guest export that immediately drops it. Both modes ran the destructor on every call, but kept a numeric ID for every resource in a set used for borrowing across component instances. Bindgen now skips that insertion when it can prove the component has one synchronous instance and cannot transfer resources. After 131,072 calls, the set held zero IDs in both modes. The measurements count numeric IDs, not heap bytes. [Compiler change, runtime comments and regression test](https://github.com/vados-cosmonic/jco/commit/1919c56ed6450890eddafc1431d368956b2e3f66)
+
+| Chromium metric | Jco 1.13.0 | Internal Oxc, before → after | External checked, before → after |
+| --- | ---: | ---: | ---: |
+| Numeric IDs retained after 131,072 drops and garbage collection | 0 | 131,072 → 0 | 131,072 → 0 |
+| Disposal callbacks | 131,072 | 131,072 → 131,072 | 131,072 → 131,072 |
+| Time per call (µs) | 0.356 | 2.683 → 2.407 | 2.627 → 2.589 |
+| Paired time ratio, after / before (95% interval) | — | 0.943× (0.882–1.007) | 0.918× (0.851–0.982) |
+| Minified fixture entry (bytes) | 2,606 | 56,638 → 56,647 | 9,705 → 9,714 |
+| Gzipped fixture entry (bytes) | 1,074 | 16,027 → 16,027 | 3,318 → 3,317 |
+
+![In each binding mode, retained IDs previously grew one for one with drops and now remain at zero.](web/bench/results/owned-resource-history.png)
+
+Five Chromium documents measured retention, one per treatment. Twenty separate documents measured timing with ordinary, uninstrumented sets and balanced execution order. Each timing document warmed every treatment, then ran three batches of 8,192 calls per treatment. The absolute times are medians of document medians. The paired ratios compare treatments within each batch before taking the document median. External calls took 8.2% less time in the paired comparison. The internal timing interval included parity. All five treatments ran identical guest Wasm. The 42 adapters from the full demo matrix also matched the preceding revision byte for byte. [Samples, browser version and asset hashes](web/bench/results/owned-resource-history.json.gz)
+
+<details><summary>Reproduce the owned-resource comparison</summary>
+
+Build Jco at `578b213ef` and `1919c56ed` in the directories named by `before` and `after`. Install the pinned web benchmark dependencies and set `CHROME_BIN` to the Chromium executable. The report can also regenerate the chart with `--plot /tmp/owned-resource-history.png` when Matplotlib is installed.
+
+```sh
+node web/bench/owned-resource-history.mjs "$after" "$before/packages/jco-transpile" "$after/packages/jco-transpile" /tmp/owned-resource-history.json.gz
+python3 web/bench/owned-resource-history-report.py /tmp/owned-resource-history.json.gz
+node web/bench/verify-matrix-adapters.mjs "$after" web/bench/results/review-matrix-init-ae16355e9.json.gz
+```
+
+</details>
+
 ## Smaller synchronous import adapters at 084063ed1
 
 A general host import copies the adapter’s diagnostic name onto its subtask. The standard checked synchronous lower returns its result directly and never constructs a subtask, including when it must create a task for a detached call. Bindgen now skips that private name assignment on this path. Both internal Oxc and the external checked package benefit. The comparison found 297 assignments across the 21 demos (12–17 per entry). The unminified external adapters differed only in those assignments and whitespace. The checked runtime, guest Wasm and exported interface are shared with the control. [Jco compiler change and regression test](https://github.com/vados-cosmonic/jco/commit/084063ed1)
