@@ -2,6 +2,55 @@
 
 This fork benchmarks the browser examples from [eqrion/component-demos at d0b9dd1](https://github.com/eqrion/component-demos/tree/d0b9dd1390a300978193adc623838fef4e4b632b). It runs the same compiled C, C++, and Rust WebAssembly components through jco 1.13.0, pinned upstream main, and a branch that optimizes synchronous host imports and numeric guest exports. The comparison also includes the demos’ JavaScript, Emscripten (Embind and EM_JS), and Rust wasm-bindgen implementations where available.
 
+## Browser bindings at 6a00c9e7d
+
+Bindgen now reads the length of a compound list once. The internal Oxc bundle and external runtime use that length to allocate guest memory, lower the elements and report the count to the guest. A host list with 2,000 elements previously received 2,002 length reads. The runner checks that the loop bound is the only generated JS difference in all six DOM-query adapters and verifies identical guest Wasm. [Compiler change and regression test](https://github.com/vados-cosmonic/jco/commit/6a00c9e7d7e0364f6de5eb819e0b944128575ad9)
+
+Across C, C++ and Rust, each guest returned and dropped 20,000 DOM handles per pass. For ordinary arrays, the individual 95% before/after timing intervals included parity in **9/9 internal** and **9/9 external** comparisons. The table shows the range of the three language medians at each batch size. The chart includes every language and its interval. [Matched before/after timings and asset hashes](web/bench/results/bulk-dom-6a00c9e7d.json.gz)
+
+| Handles per query | Internal / prior compiler | External / prior compiler | Internal / direct shim | External / direct shim |
+| ---: | ---: | ---: | ---: | ---: |
+| 25 | 0.99–1.02× | 0.99–1.01× | 1.43–1.44× | 1.45–1.46× |
+| 250 | 1.00–1.01× | 0.98–1.00× | 1.56–1.59× | 1.55–1.63× |
+| 2000 | 1.00–1.03× | 0.98–1.01× | 1.55–1.63× | 1.58–1.64× |
+
+![Timing for list materialization and guest drops against the equal-work shim and previous compiler, with individual 95% intervals.](web/bench/results/bulk-dom-6a00c9e7d.png)
+
+The full comparison used 12 rounds and 21 language/workload pairs. On the warm headline operation, both builds came within 10× of the fastest compiled shim in all 21 cases. Of 84 comparable subphases, 81 internal and 81 external fell within 10×. In the original bulk query the shim discards a live collection. The comparison above makes each implementation return all handles and run the guest's drop loop. [Full demo timings, compiler and module hashes](web/bench/results/review-matrix-minified-6a00c9e7d.json.gz)
+
+| Build | Entry JS (KiB) | Total JS (KiB) | Gzipped JS (KiB) | JS requests | Import (ms) | First result incl. import (ms) |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Jco 1.13.0 | 9.58 | 9.58 | 3.01 | 1 | 5.15 | 60.72 |
+| Upstream main at `326f52ab4` | 111.34 | 111.34 | 25.42 | 1 | 12.14 | 205.50 |
+| Internal Oxc | 71.54 | 71.54 | 18.95 | 1 | 9.71 | 63.65 |
+| External checked | 25.08 | 124.13 | 40.59 | 19 | 22.57 | 77.35 |
+
+Each of the six minified DOM-query entries shrank by seven bytes. The other 36 PR entries, the checked runtime modules and all separately served Wasm cores matched the previous matrix byte for byte. Each column is the median of the 21 workload medians. Gzip is the sum of compressed JS asset sizes per workload. HTTP timings use uncompressed loopback responses.
+
+| Warm headline operation | Internal Oxc | External checked |
+| --- | ---: | ---: |
+| Matching or beating Jco 1.13.0 | 18/21 | 15/21 |
+| Matching or beating upstream main | 21/21 | 20/21 |
+| Worst ratio to the fastest compiled shim | 5.29× | 5.90× |
+
+The internal Rust canvas pixel read took 1.067× the release time (individual 95% interval 1.014–1.152×). It was the only warm headline interval entirely above parity. For first result, seven internal and fourteen external intervals were entirely slower than release.
+
+![All 21 warm headline results relative to shims and release, and first-result times relative to release.](web/bench/results/review-matrix-minified-6a00c9e7d.png)
+
+<details><summary>Reproduce the comparison</summary>
+
+Use built Jco checkouts at `cbd43f45f` (before) and `6a00c9e7d` (after), plus the upstream build at `326f52ab4`. Each bulk comparison runs all six builds on one page with six warmups and six timed passes per build. Each build occupies every timing position. The matrix uses a fresh document per build and reports the second invocation as warm.
+
+```sh
+export CHROME_BIN=/path/to/chrome
+ROUNDS=12 node web/bench/bulk-dom.mjs "$after" /tmp/bulk.json.gz "$before"
+python3 web/bench/bulk-dom-report.py /tmp/bulk.json.gz --plot /tmp/bulk.png
+ROUNDS=12 node web/bench/review-matrix.mjs "$after" "$stage" /tmp/matrix.json.gz --minify-checked
+python3 web/bench/review-matrix-report.py /tmp/matrix.json.gz --release-intervals --plot /tmp/matrix.png
+```
+
+</details>
+
 ## Browser bindings at 89d7306a9
 
 A task normally records its scope ID in a map so that dropping a borrowed handle can find the owning task. For a synchronous component that cannot create a borrowed handle, the checked compiler can prove that this lookup has no reader. The internal Oxc bundle and external runtime both skip the map insertion and deletion. They still assign a distinct scope ID to each task. Borrowed export arguments, cross-instance transfers and custom providers retain registration. [Runtime implementation and tests](https://github.com/vados-cosmonic/jco/commit/4b02f2fc1) · [Custom-provider compatibility](https://github.com/vados-cosmonic/jco/commit/8e64ebfdf)

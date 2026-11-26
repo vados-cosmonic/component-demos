@@ -9,8 +9,8 @@ import { pathToFileURL } from "node:url";
 import { gzipSync } from "node:zlib";
 import puppeteer from "puppeteer-core";
 
-const [checkout, output] = process.argv.slice(2);
-assert(checkout && output, "Usage: bulk-dom.mjs <built Jco checkout> <output.json.gz>");
+const [checkout, output, before, ...extra] = process.argv.slice(2);
+assert(checkout && output && !extra.length, "Usage: bulk-dom.mjs <built Jco checkout> <output.json.gz> [prior built checkout]");
 const bench = import.meta.dirname, web = join(bench, "..");
 const hash = bytes => createHash("sha256").update(bytes).digest("hex");
 const git = (...args) => execFileSync("git", args, { cwd: checkout, encoding: "utf8" }).trim();
@@ -18,6 +18,11 @@ assert.equal(git("status", "--porcelain", "--untracked-files=no"), "");
 const revision = git("rev-parse", "HEAD");
 const inventory = JSON.parse(await readFile(join(bench, "results/candidate-sizes.json")));
 const {transpileBytes} = await import(pathToFileURL(resolve(checkout, "packages/jco-transpile/dist/transpile.js")));
+const prior = before && await import(pathToFileURL(resolve(before, "packages/jco-transpile/dist/transpile.js")));
+const compilerHash = async dir => hash(await readFile(resolve(dir,
+  "packages/jco-transpile/vendor/js-component-bindgen-component.core.wasm")));
+const compilers = {candidate: await compilerHash(checkout)};
+if (before) compilers.before = await compilerHash(before);
 const assets = new Map(), manifest = {};
 function add(path, bytes) {
   assets.set(path, Buffer.from(bytes));
@@ -36,6 +41,7 @@ const imports = Object.fromEntries((await readFile(join(web, "host/imports.txt")
 }));
 const languages = ["c", "cpp", "rust"];
 const modes = ["direct", "release", "bundled", "external"];
+if (before) modes.push("priorBundled", "priorExternal");
 for (const lang of languages) {
   const path = lang + "/dom-query/native/dom_query.wasm", base = "/" + lang + "/dom-query/";
   const c = inventory.components.find(c => c.input.path === path);
@@ -60,6 +66,20 @@ for (const lang of languages) {
       add(base + mode + "/" + f, bytes);
     }
     assert.deepEqual(cores, coreHashes);
+    if (prior) {
+      const tag = mode === "external" ? "priorExternal" : "priorBundled";
+      const original = (await prior.transpileBytes(guest, opts)).files;
+      assert.deepEqual(Object.keys(original).sort(), Object.keys(files).sort());
+      for (const [f, bytes] of Object.entries(original)) {
+        if (f === "dom_query.js") {
+          const source = new TextDecoder().decode(bytes);
+          const bound = /i < vec(\d+)\.length/g;
+          assert.equal([...source.matchAll(bound)].length, 1, "expected one compound list lower");
+          assert.equal(source.replace(bound, "i < len$1"), new TextDecoder().decode(files[f]));
+        } else assert.deepEqual(bytes, files[f]);
+        add(base + tag + "/" + f, bytes);
+      }
+    }
   }
 }
 const server = createServer((req, res) => {
@@ -73,8 +93,10 @@ const server = createServer((req, res) => {
 });
 const sizes = [25, 250, 2000], total = 20000;
 const rounds = Number(process.env.ROUNDS ?? 12);
-assert(Number.isInteger(rounds) && rounds >= 8 && rounds % 4 === 0);
-const orders = [[0,1,3,2], [1,2,0,3], [2,3,1,0], [3,0,2,1]];
+assert(Number.isInteger(rounds) && rounds >= 8 && rounds % modes.length === 0);
+// Each build occupies every timing position and follows every other build once.
+const first = before ? [0, 1, 5, 2, 4, 3] : [0, 1, 3, 2];
+const orders = modes.map((_, r) => first.map(i => (i + r) % modes.length));
 let browser;
 try {
   await new Promise((ok, fail) => server.once("error", fail).listen(0, "127.0.0.1", ok));
@@ -93,7 +115,7 @@ try {
           const {instantiateDomGuest} = await import("/bench/dom-core-shim.mjs");
           const base = "/" + lang + "/dom-query/", guests = {}, iterations = total / size;
           let direct;
-          for (const idx of orders[round % 4]) {
+          for (const idx of orders[round % modes.length]) {
             const mode = modes[idx];
             if (mode === "direct") {
               direct = await instantiateDomGuest(base + "release/dom_query.core.wasm");
@@ -119,15 +141,15 @@ try {
             hostCounts[mode] = {calls, elements};
           }
           const rows = [];
-          for (let pass = 0; pass < 8; pass++) {
-            for (const [position, idx] of orders[(round + pass) % 4].entries()) {
+          for (let pass = 0; pass < 2 * modes.length; pass++) {
+            for (const [position, idx] of orders[(round + pass) % modes.length].entries()) {
               const mode = modes[idx];
               clear(); guests[mode](size, iterations);
               const reports = Object.values(getMeasurements());
               if (reports.length !== 1 || document.querySelectorAll('[id^="item-"]').length !== size) throw Error("Invalid query fixture");
               const bulkMs = reports[0]["bulk: total ms"] * 1000;
               if (!Number.isFinite(bulkMs) || bulkMs <= 0) throw Error("Invalid bulk duration");
-              if (pass >= 4) rows.push({pass, position, mode, bulkMs});
+              if (pass >= modes.length) rows.push({pass, position, mode, bulkMs});
             }
             const c = direct.counts();
             if (c.liveHandles !== 0 || c.listCount !== (pass + 2) * iterations || c.listElements !== (pass + 2) * total) {
@@ -143,7 +165,7 @@ try {
     console.log("Completed bulk DOM round", round + 1, "of", rounds);
   }
   await writeFile(output, gzipSync(JSON.stringify({revision, release:inventory.baseline, chromium:await browser.version(), rounds, sizes,
-    languages, total, modes, manifest, runnerSha256:hash(await readFile(import.meta.filename)), samples, checks})));
+    languages, total, modes, manifest, compilers, runnerSha256:hash(await readFile(import.meta.filename)), samples, checks})));
 } finally {
   await browser?.close();
   server.closeAllConnections(); server.close();
