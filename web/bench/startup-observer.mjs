@@ -53,7 +53,9 @@ async function measure({ demo, path, args }) {
   const { getMeasurements } = await import("/examples/" + demo + "/main.js");
   const start = performance.now();
   const { run } = await import(path);
-  const loadMs = performance.now() - start;
+  const ready = performance.now();
+  run(...args);
+  const complete = performance.now();
   const directory = path.slice(0, path.lastIndexOf("/") + 1);
   const requests = performance.getEntriesByType("resource").flatMap(entry => {
     const path = new URL(entry.name).pathname;
@@ -61,11 +63,10 @@ async function measure({ demo, path, args }) {
     return [{ path, bytes: entry.encodedBodySize, transferred: entry.transferSize,
       startMs: entry.startTime - start, endMs: entry.responseEnd - start }];
   });
-  run(...args);
   const reports = Object.values(getMeasurements());
   if (reports.length !== 1 || !Object.keys(reports[0]).length ||
       !Object.values(reports[0]).every(v => Number.isFinite(v) && v >= 0)) throw Error("Invalid guest result");
-  return { loadMs, requests };
+  return { loadMs: ready - start, firstCallMs: complete - ready, firstResultMs: complete - start, requests };
 }
 
 const samples = [];
@@ -111,9 +112,11 @@ async function runBlock(order, round, attached) {
       if (req.method === "POST" && url.pathname === "/result/" + position) {
         let body = "";
         for await (const chunk of req) body += chunk;
-        const { error, loadMs, requests } = JSON.parse(body);
+        const { error, loadMs, firstCallMs, firstResultMs, requests } = JSON.parse(body);
         assert(!error, error);
         assert(Number.isFinite(loadMs) && loadMs > 0);
+        assert(Number.isFinite(firstCallMs) && firstCallMs > 0);
+        assert(Math.abs(firstResultMs - loadMs - firstCallMs) < 0.001);
         const names = requests.map(r => r.path);
         assert.deepEqual(names.toSorted(), Object.keys(build.paths).sort());
         for (const r of requests) {
@@ -126,7 +129,7 @@ async function runBlock(order, round, attached) {
         const wasmEndMs = Math.max(...wasm.map(r => r.endMs));
         assert(wasm.length > 0 && wasmStartMs >= script.endMs - .01);
         samples.push({ round, attached, demo: build.demo, lang: build.lang, version: build.version,
-          loadMs, jsEndMs: script.endMs, wasmStartMs, wasmEndMs });
+          loadMs, firstCallMs, firstResultMs, jsEndMs: script.endMs, wasmStartMs, wasmEndMs });
         position++;
         watchdog.refresh();
         if (position === order.length) {

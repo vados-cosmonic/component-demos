@@ -749,9 +749,12 @@ observer_groups = defaultdict(dict)
 for row in observer["samples"]:
     key = row["version"], row["attached"], row["lang"], row["demo"]
     if (row["round"] in observer_groups[key]
-            or not 0 <= row["jsEndMs"] <= row["wasmStartMs"] <= row["wasmEndMs"] <= row["loadMs"] + .01):
+            or not 0 <= row["jsEndMs"] <= row["wasmStartMs"] <= row["wasmEndMs"] <= row["loadMs"] + .01
+            or not all(isfinite(row[m]) and row[m] > 0 for m in ("loadMs", "firstCallMs", "firstResultMs"))
+            or abs(row["loadMs"] + row["firstCallMs"] - row["firstResultMs"]) > .001):
         raise ValueError(f"Invalid startup observer record for {key}")
-    observer_groups[key][row["round"]] = (row["loadMs"], row["wasmStartMs"] - row["jsEndMs"])
+    observer_groups[key][row["round"]] = (row["loadMs"], row["wasmStartMs"] - row["jsEndMs"],
+                                          row["firstCallMs"], row["firstResultMs"])
 cases = [(lang, demo) for lang in languages for demo in focus]
 observer_versions = [*distribution, *(["reference"] if reference else [])]
 expected = {(version, attached, *case) for version in observer_versions for attached in (True, False) for case in cases}
@@ -782,6 +785,53 @@ if reference:
     para(f"With DevTools disconnected, default-output startup took **{median(ratios):.2f}×** the previous "
          f"revision’s time. The candidate was faster in {sum(r < 1 for r in ratios)}/{len(ratios)} workloads. "
          "Each workload contributes its median within-round time ratio.")
+
+para("### Time to the first guest result")
+para("Each fresh page called the guest immediately after import, using the same workload arguments across builds. "
+     "The first call includes the complete guest workload and its browser API calls. The final column times "
+     "both import and execution on one clock. Each column reports the median of the 21 workload medians "
+     "with DevTools disconnected.")
+first_rows = []
+for version in observer_versions:
+    base, _, mode = version.partition("-")
+    label = ("Previous branch" if base == "reference" else distribution_names[base]) + (" minified" if mode else " default")
+    first_times = [median(median(row[i] for row in observer_groups[version, False, *case].values())
+                          for case in cases) for i in (0, 2, 3)]
+    first_rows.append([label, *[f"{v:.2f}" for v in first_times]])
+table(["Distribution", "Import (ms)", "First guest call (ms)", "Time to first result (ms)"], first_rows)
+para("The following ratios compare default builds within each round. Each row summarizes the "
+     "three language medians. A ratio below 1 means the candidate returned the guest result sooner.")
+first_ratios = {}
+for compare in ("baseline", "main"):
+    for case in cases:
+        candidate, other = [observer_groups[v, False, *case] for v in ("candidate", compare)]
+        first_ratios[compare, *case] = median(candidate[n][3] / other[n][3] for n in candidate)
+ratio_rows = []
+for demo, (_, name, _) in focus.items():
+    ratios = [median(first_ratios[compare, lang, demo] for lang in languages) for compare in ("baseline", "main")]
+    ratio_rows.append([name, *[f"{v:.2f}×" for v in ratios]])
+table(["Workload", "Candidate / 1.13.0", "Candidate / stock main"], ratio_rows)
+counts = [sum(first_ratios[compare, *case] <= 1 for case in cases) for compare in ("baseline", "main")]
+para(f"The candidate reached the first result at or before 1.13.0 in **{counts[0]}/{len(cases)}** "
+     f"language/workload pairs and at or before stock main in **{counts[1]}/{len(cases)}**.")
+fig, axes = plt.subplots(1, 2, figsize=(9, 4), sharey=True, sharex=True, layout="constrained")
+for ax, compare in zip(axes, ("baseline", "main")):
+    ax.axvline(1, color="#444", linestyle="--", linewidth=1)
+    for (lang, label), (offset, marker, color) in zip(languages.items(), [
+            (-.2, "o", "#067c77"), (0, "s", "#44639b"), (.2, "^", "#a54f12")]):
+        ax.scatter([first_ratios[compare, lang, demo] for demo in focus],
+                   [i + offset for i in range(len(focus))], label=label, marker=marker, color=color, s=30)
+    ax.set_title(f"Candidate / {distribution_names[compare]}")
+    ax.set_xlabel("Time to first result (ratio)")
+    ax.grid(axis="x", alpha=.2)
+    ax.set_axisbelow(True)
+axes[0].set_yticks(range(len(focus)), [name for _, name, _ in focus.values()])
+axes[0].invert_yaxis()
+axes[1].legend(loc="upper right", ncol=3, frameon=False, bbox_to_anchor=(1, -.18))
+fig.savefig(results / "first-result.png", dpi=155)
+plt.close(fig)
+para("![Time to the first guest result for each workload and language relative to 1.13.0 and stock main. "
+     "Points left of 1 favor the candidate.](web/bench/results/first-result.png)")
 
 coverage = json.loads((results / "js-coverage.json").read_text())
 if (coverage["sizesSha256"] != run["sizesSha256"] or coverage["workloads"] != run["workloads"] or

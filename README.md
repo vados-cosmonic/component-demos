@@ -386,15 +386,45 @@ In 1,470 fresh documents, the page timed its own dynamic import, ran the guest a
 
 | Distribution | Attached startup (ms) | Detached startup (ms) | Attached JS end to Wasm request (ms) | Detached JS end to Wasm request (ms) |
 | --- | --- | --- | --- | --- |
-| 1.13.0 default | 8.41 | 6.07 | 3.01 | 1.71 |
-| 1.13.0 minified | 7.84 | 6.00 | 2.53 | 1.66 |
-| Stock main default | 22.10 | 14.42 | 14.82 | 8.39 |
-| Stock main minified | 19.92 | 13.31 | 12.94 | 7.89 |
-| Candidate default | 17.29 | 12.01 | 11.12 | 6.14 |
-| Candidate minified | 16.18 | 11.18 | 9.44 | 5.80 |
-| Previous branch default | 18.40 | 12.27 | 11.27 | 6.71 |
+| 1.13.0 default | 8.25 | 6.08 | 2.89 | 1.74 |
+| 1.13.0 minified | 8.02 | 5.94 | 2.60 | 1.69 |
+| Stock main default | 21.94 | 13.93 | 14.42 | 8.43 |
+| Stock main minified | 19.81 | 13.18 | 13.05 | 7.69 |
+| Candidate default | 17.58 | 11.95 | 10.83 | 6.31 |
+| Candidate minified | 16.64 | 11.45 | 9.75 | 5.96 |
+| Previous branch default | 18.16 | 12.56 | 11.36 | 6.76 |
 
-With DevTools disconnected, default-output startup took **0.99×** the previous revision’s time. The candidate was faster in 12/21 workloads. Each workload contributes its median within-round time ratio.
+With DevTools disconnected, default-output startup took **0.95×** the previous revision’s time. The candidate was faster in 17/21 workloads. Each workload contributes its median within-round time ratio.
+
+### Time to the first guest result
+
+Each fresh page called the guest immediately after import, using the same workload arguments across builds. The first call includes the complete guest workload and its browser API calls. The final column times both import and execution on one clock. Each column reports the median of the 21 workload medians with DevTools disconnected.
+
+| Distribution | Import (ms) | First guest call (ms) | Time to first result (ms) |
+| --- | --- | --- | --- |
+| 1.13.0 default | 6.08 | 59.52 | 67.00 |
+| 1.13.0 minified | 5.94 | 56.04 | 62.33 |
+| Stock main default | 13.93 | 206.28 | 220.02 |
+| Stock main minified | 13.18 | 196.86 | 211.72 |
+| Candidate default | 11.95 | 55.87 | 68.25 |
+| Candidate minified | 11.45 | 55.73 | 71.43 |
+| Previous branch default | 12.56 | 57.59 | 69.14 |
+
+The following ratios compare default builds within each round. Each row summarizes the three language medians. A ratio below 1 means the candidate returned the guest result sooner.
+
+| Workload | Candidate / 1.13.0 | Candidate / stock main |
+| --- | --- | --- |
+| Attribute write | 0.67× | 0.21× |
+| Canvas fillRect | 1.07× | 0.30× |
+| Canvas pixel read | 1.12× | 0.85× |
+| DOM ID lookup | 0.95× | 0.28× |
+| Tree traversal | 1.12× | 0.21× |
+| Read 1 KiB string | 0.96× | 0.78× |
+| Table creation | 1.32× | 0.30× |
+
+The candidate reached the first result at or before 1.13.0 in **11/21** language/workload pairs and at or before stock main in **21/21**.
+
+![Time to the first guest result for each workload and language relative to 1.13.0 and stock main. Points left of 1 favor the candidate.](web/bench/results/first-result.png)
 
 ### Generated JavaScript reached by each demo
 
