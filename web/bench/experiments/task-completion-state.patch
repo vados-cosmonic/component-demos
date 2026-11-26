@@ -1,0 +1,127 @@
+--- a/packages/jco-cm-runtime/src/intrinsics/async-task/async-task.ts
++++ b/packages/jco-cm-runtime/src/intrinsics/async-task/async-task.ts
+@@ -79,12 +79,13 @@
+         #progressWaiters: (() => void)[] | null = null;
+         // The promises of a task are created when first needed: a sync task that
+         // completes normally is never awaited, and every call creates a task.
+-        #completionPromise: Promise<unknown> | undefined;
+-        #resolveCompletionPromise: ((value: unknown) => void) | undefined;
+-        #rejectCompletionPromise: ((reason: unknown) => void) | undefined;
+-        #completionSettled = false;
+-        #completionValue: unknown;
+-        #completionReady = false;
++        // Keep the outcome with its promise. A successful synchronous call has
++        // no completion observer and needs none of these fields on its task.
++        #completion?: {
++            handlers: ReturnType<typeof promiseWithResolvers<unknown>>;
++            state: 'pending' | 'ready' | 'settled';
++            value: unknown;
++        };
+         #rejected = false;
+         #exitPromise: Promise<void> | undefined;
+         #resolveExitPromise: (() => void) | undefined;
+@@ -159,13 +160,15 @@
+             // so only such a task needs the promise, and the handler that records
+             // the result, from the start.
+             if (this.#isAsync || this.#isManualAsync) {
+-                this.#ensureCompletionPromise();
++                const completion = this.#ensureCompletion();
+                 (this.#onResolveHandlers ??= []).push((results) => {
+                     if (this.#parentSubtask !== null) {
+                         return;
+                     }
+-                    this.#completionValue = results;
+-                    this.#completionReady = true;
++                    completion.value = results;
++                    if (completion.state === 'pending') {
++                        completion.state = 'ready';
++                    }
+                     // Publish after the current guest turn returns, so a trap
+                     // in that turn can still reject the call. Do not wait for
+                     // task exit: detached work may require further host calls
+@@ -252,53 +255,50 @@
+             this.#store.scopeTasks?.delete(this.#resourceScopeId);
+         }
+         /**
+-         * Create the completion promise if it does not exist yet.
++         * Create the promise and its settlement state on first use.
+          *
+-         * @returns the promise that settles with the outcome of the task
++         * @returns the state shared by the task and its completion handler
+          */
+-        #ensureCompletionPromise(): Promise<unknown> {
+-            if (this.#completionPromise === undefined) {
+-                const { promise, resolve, reject } = promiseWithResolvers();
+-                this.#completionPromise = promise;
+-                this.#resolveCompletionPromise = resolve;
+-                this.#rejectCompletionPromise = reject;
++        #ensureCompletion() {
++            if (!this.#completion) {
++                const handlers = promiseWithResolvers<unknown>();
++                this.#completion = { handlers, state: 'pending', value: undefined };
+                 // A nested rejection can reach the root task while its Wasm
+                 // entrypoint is still suspended, before the export wrapper awaits
+                 // this promise. Mark it handled immediately while preserving the
+                 // original rejected promise for the eventual caller.
+                 // Do not forward successful results into a derived promise: that
+                 // would assimilate a returned future and read it before the host.
+-                promise.then(emptyFunc, emptyFunc);
+-            }
+-            return this.#completionPromise;
++                handlers.promise.then(emptyFunc, emptyFunc);
++            }
++            return this.#completion;
+         }
+
+         /** Settle the completion promise, once, when the outcome of the task is known. */
+         #settleCompletionPromise() {
+-            if (this.#completionSettled || !this.#completionReady) {
+-                return;
+-            }
+-            this.#completionSettled = true;
+-            this.#ensureCompletionPromise();
+-            const resolve = this.#resolveCompletionPromise!;
+-            const reject = this.#rejectCompletionPromise!;
++            const completion = this.#completion;
++            if (completion?.state !== 'ready') {
++                return;
++            }
++            completion.state = 'settled';
++            const { resolve, reject } = completion.handlers;
+
+             if (this.#errored !== null) {
+                 reject(this.#errored);
+             } else if (this.#rejected) {
+-                reject(this.#completionValue);
++                reject(completion.value);
+             } else if (
+                 this.#preserveFutureResult &&
+                 this.#context.FutureValue &&
+-                this.#completionValue instanceof this.#context.FutureValue
++                completion.value instanceof this.#context.FutureValue
+             ) {
+-                this.#completionValue.resolveAsValue(resolve);
++                completion.value.resolveAsValue(resolve);
+             } else {
+-                resolve(this.#completionValue);
++                resolve(completion.value);
+             }
+         }
+         completionPromise() {
+-            return this.#ensureCompletionPromise();
++            return this.#ensureCompletion().handlers.promise;
+         }
+         settleCompletion() {
+             this.#settleCompletionPromise();
+@@ -1065,7 +1065,10 @@
+         stop(err: unknown) {
+             this.reject(err);
+             // Publish rejection even while a JSPI stack awaits a host import.
+-            this.#completionReady = true;
++            const completion = this.#ensureCompletion();
++            if (completion.state === 'pending') {
++                completion.state = 'ready';
++            }
+             this.#settleCompletionPromise();
+         }
+         reject(taskErr: unknown) {

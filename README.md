@@ -82,6 +82,48 @@ python3 web/bench/runtime-chunks-report.py /tmp/network.json.gz /tmp/full.json.g
 
 </details>
 
+### Does deferring task completion state speed up guest entry?
+
+A synchronous guest that returns to JavaScript normally never uses its task's completion promise. We built a variant of `427b9c0d7` that puts the promise, its resolvers and its settlement state in a single record allocated on first use. The experiment uses the same TypeScript implementation for the checked external package and the runtime embedded by internal Oxc. The change is available as a [standalone experimental patch](web/bench/experiments/task-completion-state.patch).
+
+| One host call per guest entry | Internal Oxc | External checked |
+| --- | ---: | ---: |
+| Sampled allocation, current → experiment (bytes/entry) | 655.7 → 633.1 | 648.6 → 632.4 |
+| Paired allocation ratio, experiment / current | 0.969× (0.956–0.978) | 0.968× (0.954–0.995) |
+| Paired elapsed time, first run | 0.989× (0.975–1.019) | 0.990× (0.966–1.012) |
+| Paired elapsed time, independent run | 0.982× (0.972–1.005) | 0.996× (0.976–1.014) |
+
+The allocation trial used 12 fresh Chromium pages. Each timing run used 18 fresh pages with sampling disabled. Each page ran the same core Wasm in six configurations and checked the result of every batch. Parentheses give individual 95% intervals for the paired median. All browser assets matched by SHA-256 across the three runs. No timing interval favored the experiment in both runs at any tested batch size (1, 4, 16, 64 or 256 host calls). At one host call the experiment still took 25–28× the release time. The approximately 3% allocation saving leaves the latency gap open, so the Jco PR retains its current task representation. [Allocation profiles](web/bench/results/task-completion-heap-427b9c0d7.json.gz) · [First timing run](web/bench/results/task-completion-time-427b9c0d7.json.gz) · [Independent timing run](web/bench/results/task-completion-repeat-427b9c0d7.json.gz)
+
+![Sampled allocation per guest entry in each of the twelve paired pages for the internal and external builds.](web/bench/results/task-completion-heap-427b9c0d7.png)
+
+<details><summary>Reproduce the task completion experiment</summary>
+
+Use two Jco checkouts at `427b9c0d7` with dependencies installed. Set `before` and `after` to their absolute paths, and run these commands from the benchmark fork. The component produced by each compiler contains the same guest Wasm. Its external adapter also matches across both builds.
+
+```sh
+git -C "$after" apply "$PWD/web/bench/experiments/task-completion-state.patch"
+for checkout in "$before" "$after"; do
+  pnpm --dir "$checkout" --filter @bytecodealliance/jco-transpile run build:embedded-runtime
+  pnpm --dir "$checkout" --filter @bytecodealliance/jco-transpile run build
+done
+
+export CHROME_BIN=/path/to/chrome
+run_batch() {
+  node web/bench/export-host-batch.mjs \
+    "$before/packages/jco-transpile" "$before/packages/jco-cm-runtime/dist" \
+    "$after/packages/jco-transpile" "$after/packages/jco-cm-runtime/dist" "$@"
+}
+run_batch /tmp/time.json.gz
+run_batch /tmp/repeat.json.gz
+run_batch /tmp/heap.json.gz --heap
+python3 web/bench/export-host-batch-report.py /tmp/time.json.gz
+python3 web/bench/export-host-batch-report.py /tmp/repeat.json.gz
+python3 web/bench/export-host-batch-report.py /tmp/heap.json.gz --plot /tmp/heap.png
+```
+
+</details>
+
 ## Browser bindings at 47f6dc0c1
 
 Across the branch, reusing the active export task for eligible synchronous host calls produced the largest measured gain. These controlled guest-loop measurements come from the earlier implementation at `ad2aacc9b` and its upstream base at `83e25bb19`. Each guest enters once and repeats the measured operation. [Host-loop experiment and raw data](#pr-head-against-upstream-main)
