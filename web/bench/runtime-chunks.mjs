@@ -9,12 +9,15 @@ import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { basename, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
-import { gunzipSync, gzipSync } from "node:zlib";
+import { brotliCompressSync, constants, gunzipSync, gzipSync } from "node:zlib";
 import puppeteer from "puppeteer-core";
 import { bundleApp } from "./app-bundle.mjs";
 
-const [checkout, matrixFile, output] = process.argv.slice(2);
-assert(output, "Usage: runtime-chunks.mjs <built Jco checkout> <matrix.json.gz> <output.json.gz>");
+const [checkout, matrixFile, output, study, ...extra] = process.argv.slice(2);
+const appPreload = study === "--shaped-preload";
+const shaped = study === "--shaped" || appPreload;
+assert(!extra.length && (!study || shaped));
+assert(output, "Usage: runtime-chunks.mjs <built Jco checkout> <matrix.json.gz> <output.json.gz> [--shaped|--shaped-preload]");
 const digest = (x) => createHash("sha256").update(x).digest("hex");
 const matrixBytes = await readFile(matrixFile);
 const matrix = JSON.parse(gunzipSync(matrixBytes));
@@ -22,7 +25,9 @@ const revision = execFileSync("git", ["rev-parse", "HEAD"], {
   cwd: checkout,
   encoding: "utf8",
 }).trim();
-assert.equal(revision, matrix.candidate);
+// Documentation-only commits can use the same matrix. Each generated entry, guest
+// core and shipped runtime module below must still match its recorded digest.
+if (!shaped) assert.equal(revision, matrix.candidate);
 const web = join(import.meta.dirname, "..");
 const pkg = resolve(checkout, "packages/jco-cm-runtime");
 const manifest = JSON.parse(await readFile(join(pkg, "package.json")));
@@ -42,8 +47,15 @@ const assets = new Map(),
   graph = {},
   api = {},
   footprints = {};
-const builds = ["release", "bundled", "external", "grouped", "application"],
-  protocols = ["http/1.1", "h2"];
+const builds = appPreload
+  ? ["release", "bundled", "application", "application-preload"]
+  : shaped
+  ? ["release", "bundled", "external", "application"]
+  : ["release", "bundled", "external", "grouped", "application"];
+const protocols = shaped ? ["h2"] : ["http/1.1", "h2"];
+const profiles = appPreload ? ["limited"] : shaped ? ["loopback", "limited"] : [null];
+const emulation = { latency: 40, download: 1250000, upload: 1250000 };
+const encoded = new Map();
 function add(path, bytes, reference) {
   const data = Buffer.from(bytes);
   const sha256 = digest(data);
@@ -56,7 +68,7 @@ function closure(initial) {
   for (const path of reached) for (const child of graph[path]) reached.add(child);
   return [...reached].sort();
 }
-for (const layout of ["external", "grouped"]) {
+for (const layout of shaped ? ["external"] : ["external", "grouped"]) {
   const prefix = layout === "external" ? "/runtime/" : "/grouped/";
   const bundle = await rolldown({
     input,
@@ -165,6 +177,7 @@ for (const demo of Object.keys(inputs))
           closure(publicFiles),
           requests.filter((p) => p.startsWith("/runtime/")).sort(),
         );
+        if (shaped) continue;
         const grouped = closure(publicFiles.map((p) => p.replace("/runtime/", "/grouped/")));
         expected[key].grouped = {
           entry: ref.entry,
@@ -186,20 +199,25 @@ for (const [path, bytes] of app.files)
   add(path, bytes, path.endsWith(".wasm") ? path.replace("/external-app/", "/external/") : null);
 for (const { base, name } of appCases) {
   const entry = base + "/external-app/" + name + ".js";
-  expected[base.slice(1)].application = {
+  const appEntry = {
     entry,
     requests: [...closure([entry]), entry.replace(/\.js$/, ".core.wasm")].sort(),
   };
+  expected[base.slice(1)].application = appEntry;
+  if (appPreload) {
+    assert.equal(graph[entry].length, 1, "expected one shared JS chunk");
+    expected[base.slice(1)]["application-preload"] = { ...appEntry, hint: graph[entry][0] };
+  }
 }
 const probe = "conversion";
 expected[probe] = {};
-for (const layout of ["external", "grouped"])
+for (const layout of shaped ? ["external"] : ["external", "grouped"])
   expected[probe][layout] = {
     entry: imports[layout][matrix.checkedPackage + "/intrinsics/conversion"],
     requests: footprints[layout]["intrinsics/conversion"],
   };
 
-async function measure({ demo, entry, args, probe }) {
+async function measure({ demo, entry, args, probe, hint }) {
   let getMeasurements;
   if (!probe) {
     ({ getMeasurements } = await import("/examples/" + demo + "/main.js"));
@@ -207,6 +225,12 @@ async function measure({ demo, entry, args, probe }) {
   }
   performance.clearResourceTimings();
   const t = performance.now();
+  if (hint) {
+    const link = document.createElement("link");
+    link.rel = "modulepreload";
+    link.href = hint;
+    document.head.append(link);
+  }
   const mod = await import(entry);
   const ready = performance.now();
   if (probe) {
@@ -228,7 +252,9 @@ async function measure({ demo, entry, args, probe }) {
     requests: performance.getEntriesByType("resource").map((r) => ({
       path: new URL(r.name).pathname,
       protocol: r.nextHopProtocol,
+      initiator: r.initiatorType,
       bytes: r.encodedBodySize,
+      decoded: r.decodedBodySize,
       transferred: r.transferSize,
       start: r.startTime - t,
       end: r.responseEnd - t,
@@ -268,7 +294,14 @@ try {
 const pin = createHash("sha256")
   .update(new X509Certificate(cert).publicKey.export({ type: "spki", format: "der" }))
   .digest("base64");
-const rounds = 20,
+if (shaped) {
+  for (const [path, bytes] of assets) {
+    const body = brotliCompressSync(bytes, { params: { [constants.BROTLI_PARAM_QUALITY]: 11 } });
+    encoded.set(path, body);
+    files[path].brotli = body.length;
+  }
+}
+const rounds = shaped ? 16 : 20,
   samples = [],
   servers = [];
 let chromium;
@@ -291,7 +324,11 @@ function handler(req, res) {
     return res.end();
   }
   res.setHeader("content-type", path.endsWith(".wasm") ? "application/wasm" : "text/javascript");
-  res.end(assets.get(path));
+  if (shaped) {
+    if (!/\bbr\b/.test(req.headers["accept-encoding"] ?? "")) return res.writeHead(406).end();
+    res.setHeader("content-encoding", "br");
+    res.end(encoded.get(path));
+  } else res.end(assets.get(path));
 }
 try {
   for (const protocol of protocols) {
@@ -312,36 +349,55 @@ try {
     });
     try {
       chromium = await browser.version();
-      const workloads = [...cases, probe];
+      const workloads = shaped ? cases : [...cases, probe];
       for (let j = 0; j < workloads.length; j++) {
         const workload = workloads[(j + round) % workloads.length],
           isProbe = workload === probe;
         const modes = isProbe ? ["external", "grouped"] : builds;
         const treatments = protocols.flatMap((protocol, i) =>
-          modes.map((mode) => ({ protocol, mode, server: servers[i] })),
+          profiles.flatMap((profile) => modes.map((mode) => ({ protocol, mode, profile, server: servers[i] }))),
         );
-        const order = isProbe ? [0, 1, 3, 2] : [0, 1, 9, 2, 8, 3, 7, 4, 6, 5];
+        const order = appPreload ? [0, 1, 3, 2] : shaped ? [0, 1, 7, 2, 6, 3, 5, 4] : isProbe ? [0, 1, 3, 2] : [0, 1, 9, 2, 8, 3, 7, 4, 6, 5];
         for (const [position, index] of order.entries()) {
-          const { mode, protocol, server } = treatments[(index + round) % order.length];
+          const { mode, protocol, server, profile } = treatments[(index + round) % order.length];
           const page = await browser.newPage();
           try {
             const doc = await page.goto(
               "https://127.0.0.1:" + server.address().port + "/page/" + mode,
             );
             assert.equal(doc.status(), 200);
-            const { entry, requests } = expected[workload][mode],
+            const { entry, requests, hint } = expected[workload][mode],
               demo = workload.split("/")[1];
+            if (shaped) {
+              // Finish common page setup before throttling the timed import. Both
+              // profiles use the same CDP command and an already open TLS connection.
+              await page.evaluate(async (demo) => {
+                await import("/examples/" + demo + "/main.js");
+                await import("/host/web-host.js");
+              }, demo);
+              await page.emulateNetworkConditions(profile === "limited"
+                ? emulation
+                : { latency: 0, download: -1, upload: -1 });
+            }
             const data = await page.evaluate(measure, {
               demo,
               entry,
               args: inputs[demo],
               probe: isProbe,
+              hint,
             });
             assert(data.importMs > 0 && data.firstMs >= data.importMs);
             assert.deepEqual(data.requests.map((r) => r.path).sort(), requests);
+            if (hint) {
+              // Chromium can label a modulepreload as "script". Its request
+              // must begin before the entry response can reveal the import.
+              const shared = data.requests.find((r) => r.path === hint);
+              assert(shared.start < data.requests.find((r) => r.path === entry).end);
+            }
             for (const r of data.requests) {
               assert.equal(r.protocol, protocol);
-              assert.equal(r.bytes, files[r.path].bytes);
+              assert.equal(r.bytes, files[r.path][shaped ? "brotli" : "bytes"]);
+              assert.equal(r.decoded, files[r.path].bytes);
               assert(
                 r.transferred > 0 &&
                   r.start >= -0.02 &&
@@ -349,7 +405,7 @@ try {
                   r.end <= data.firstMs + 0.02,
               );
             }
-            samples.push({ round, position, workload, mode, protocol, ...data });
+            samples.push({ round, position, workload, mode, protocol, ...(shaped ? { profile } : {}), ...data });
           } finally {
             await page.close();
           }
@@ -371,6 +427,7 @@ await writeFile(
       rounds,
       chromium,
       protocols,
+      ...(shaped ? { study, profiles, emulation, contentEncoding: "br", brotliQuality: 11 } : {}),
       builds,
       cases,
       inputs,

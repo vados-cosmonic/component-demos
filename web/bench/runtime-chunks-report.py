@@ -19,13 +19,40 @@ with gzip.open(args.samples) as stream:
 with gzip.open(args.matrix) as stream:
     matrix = json.load(stream)
 assert sha256(args.matrix.read_bytes()).hexdigest() == run["matrixSha256"]
-assert sha256(Path(__file__).with_name("runtime-chunks.mjs").read_bytes()).hexdigest() == run["runnerSha256"]
-assert matrix["candidate"] == run["revision"]
+app_preload = run.get("study") == "--shaped-preload"
+shaped = app_preload or run.get("study") == "--shaped"
+runner_hash = sha256(Path(__file__).with_name("runtime-chunks.mjs").read_bytes()).hexdigest()
+# The uncompressed transport trial used the original runner at 2cf7d38.
+archived = {"976c95bd7fdf03cb25f46deb6ef2b87a4ca825cd8fd3b0cd0d6a5e661ddbb8df": "e17ab34cfd9e83216d789a96ee38e599a208c6360a5e4727d7478b6f0b907555"}
+# The Brotli control ran before the preload treatment was added.
+archived["819808b8fabdb74bd34aa85c138eaeaa03c8ce03bfadbf79d8dc63baea8e844d"] = "1d7f89b9f849e407a1d457456c80d03661bd926c82cf8de57c9273f01d54bad2"
+assert run["runnerSha256"] == archived.get(sha256(args.samples.read_bytes()).hexdigest(), runner_hash)
+if not shaped:
+    assert matrix["candidate"] == run["revision"]
 assert sha256(Path(__file__).with_name("app-bundle.mjs").read_bytes()).hexdigest() == run["appBundlerSha256"]
 files, cases, probe = run["files"], run["cases"], run["probe"]
 protocols, builds, rounds = run["protocols"], run["builds"], run["rounds"]
-assert len(cases) == 6 and rounds == 20 and protocols == ["http/1.1", "h2"]
-assert builds == ["release", "bundled", "external", "grouped", "application"]
+assert len(cases) == 6
+if shaped:
+    assert rounds == 16 and protocols == ["h2"]
+    assert run["profiles"] == (["limited"] if app_preload else ["loopback", "limited"])
+    assert run["emulation"] == {"latency": 40, "download": 1250000, "upload": 1250000}
+    assert run["contentEncoding"] == "br" and run["brotliQuality"] == 11
+    assert run["inputs"] == {"dom-query": [8, 2], "table-update": [8]}
+    assert set(cases) == {f"{lang}/{demo}" for lang in ["c", "cpp", "rust"] for demo in run["inputs"]}
+    if app_preload:
+        for w in cases:
+            ordinary, hinted = (run["expected"][w][m] for m in ["application", "application-preload"])
+            assert ordinary["entry"] == hinted["entry"] and ordinary["requests"] == hinted["requests"]
+            assert hinted["hint"] in ordinary["requests"] and hinted["hint"] != ordinary["entry"]
+            assert hinted["hint"].endswith(".js")
+    assert builds == (["release", "bundled", "application", "application-preload"] if app_preload
+                      else ["release", "bundled", "external", "application"])
+else:
+    assert rounds == 20 and protocols == ["http/1.1", "h2"]
+    assert builds == ["release", "bundled", "external", "grouped", "application"]
+conditions = run["profiles"] if shaped else protocols
+workloads = cases if shaped else [*cases, probe]
 for path, asset in files.items():
     if path.startswith(("/grouped/", "/app-chunks/")) or ("/external-app/" in path and path.endswith(".js")):
         continue
@@ -34,13 +61,13 @@ for path, asset in files.items():
 
 cells = {}
 positions, predecessors = Counter(), Counter()
-for work in [*cases, probe]:
+for work in workloads:
     modes = ["external", "grouped"] if work == probe else builds
     for r in range(rounds):
         block = sorted((s for s in run["samples"] if s["workload"] == work and s["round"] == r),
                        key=lambda s: s["position"])
-        order = [(s["protocol"], s["mode"]) for s in block]
-        assert sorted(order) == sorted((p, m) for p in protocols for m in modes)
+        order = [(s.get("profile", s["protocol"]), s["mode"]) for s in block]
+        assert sorted(order) == sorted((p, m) for p in conditions for m in modes)
         assert [s["position"] for s in block] == list(range(len(order)))
         positions.update((work, i, t) for i, t in enumerate(order))
         predecessors.update((work, a, b) for a, b in zip(order, order[1:]))
@@ -51,14 +78,19 @@ for work in [*cases, probe]:
             assert sorted(q["path"] for q in requests) == run["expected"][work][mode]["requests"]
             for q in requests:
                 assert q["protocol"] == protocol and q["transferred"] > 0
-                assert q["bytes"] == files[q["path"]]["bytes"]
+                assert q["bytes"] == files[q["path"]]["brotli" if shaped else "bytes"]
+                if shaped:
+                    assert q["decoded"] == files[q["path"]]["bytes"] and protocol == "h2"
+                if mode == "application-preload" and q["path"] == run["expected"][work][mode]["hint"]:
+                    entry = run["expected"][work][mode]["entry"]
+                    assert q["start"] < next(r["end"] for r in requests if r["path"] == entry)
                 assert -.02 <= q["start"] <= q["end"] <= s["firstMs"] + .02
-            cells[work, protocol, mode, r] = s
-    treatments = len(modes) * len(protocols)
+            cells[work, s.get("profile", protocol), mode, r] = s
+    treatments = len(modes) * len(conditions)
     for counter, count in [(positions, treatments**2), (predecessors, treatments * (treatments - 1))]:
         observed = [n for k, n in counter.items() if k[0] == work]
         assert len(observed) == count and set(observed) == {rounds // treatments}
-assert len(cells) == len(run["samples"]) == 1280
+assert len(cells) == len(run["samples"]) == (len(workloads) * rounds * len(builds) * len(conditions) if shaped else 1280)
 
 rank = max(i for i in range(rounds)
            if 2 * sum(comb(rounds, j) for j in range(i + 1)) / 2**rounds <= .05)
@@ -80,6 +112,51 @@ def ms(workloads, protocol, mode):
 def footprint(paths):
     return len(paths), sum(files[p]["bytes"] for p in paths), sum(files[p]["gzip"] for p in paths)
 
+
+if shaped:
+    for mode in builds:
+        paths = [run["expected"][w][mode]["requests"] for w in cases]
+        js_kib = median(sum(files[p]["brotli"] for p in group if p.endswith(".js")) for group in paths)/1024
+        all_kib = median(sum(files[p]["brotli"] for p in group) for group in paths)/1024
+        print(mode, "Brotli KiB (JS / JS + Wasm)", round(js_kib, 2), round(all_kib, 2),
+              "requests", sorted(set(map(len, paths))))
+    for profile in conditions:
+        print(profile, "median first result (ms)", {m: round(ms(cases, profile, m), 2) for m in builds})
+        for m in builds:
+            def last_js_and_wasm_start(work, r):
+                requests = cells[work, profile, m, r]["requests"]
+                last_js = max(q["end"] for q in requests if q["path"].endswith(".js"))
+                wasm, = [q for q in requests if q["path"].endswith(".wasm")]
+                return last_js, wasm["start"]
+            summaries = [[median(last_js_and_wasm_start(w, r)[index] for r in range(rounds))
+                          for w in cases] for index in [0, 1]]
+            print(m, "last JS response / start of guest Wasm fetch (ms)",
+                  *(round(median(v), 2) for v in summaries))
+        treatment = "application-preload" if app_preload else "application"
+        for baseline in ["application" if app_preload else "external", "release", "bundled"]:
+            pairs = [paired(w, profile, treatment, baseline) for w in cases]
+            print(treatment, "/", baseline, f"{median(p[0] for p in pairs):.3f}×",
+                  "individual intervals below / above parity", sum(p[2] < 1 for p in pairs), sum(p[1] > 1 for p in pairs))
+    if args.plot:
+        import matplotlib.pyplot as plt
+        titles = {"limited": "40 ms latency · 10 Mbit/s", "loopback": "Loopback"}
+        names = {"release": "Jco 1.13.0", "bundled": "Internal Oxc", "external": "External package",
+                 "application": "Application bundle", "application-preload": "Bundle + chunk preload"}
+        labels = [names[m] for m in builds]
+        fig, axes = plt.subplots(1, len(conditions), squeeze=False, figsize=(4.5*len(conditions), 3.5), layout="constrained")
+        for ax, profile in zip(axes[0], conditions, strict=True):
+            for i, mode in enumerate(builds):
+                vals = [median(times(w, profile, mode)) for w in cases]
+                ax.scatter(vals, [i]*len(vals), color="#2c7d82", alpha=.55, s=25)
+                ax.plot(median(vals), i, "|", color="#202b3b", ms=17, mew=2)
+            ax.set_yticks(range(len(labels)), labels)
+            ax.set_title(titles[profile])
+            ax.set_xlabel("First result (ms)")
+            ax.invert_yaxis()
+            ax.set_xlim(left=0)
+            ax.grid(axis="x", alpha=.2)
+        fig.savefig(args.plot, dpi=160)
+    raise SystemExit(0)
 
 print("Static module footprints. Columns give modules, JS bytes and sum of gzipped bytes.")
 for mode, prefix in [("external", "/runtime/"), ("grouped", "/grouped/")]:

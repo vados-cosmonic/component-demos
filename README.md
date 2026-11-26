@@ -82,6 +82,40 @@ python3 web/bench/runtime-chunks-report.py /tmp/chunks.json.gz "$matrix" --plot 
 
 </details>
 
+### Compressed browser startup on a limited connection
+
+How much of the external runtime's startup cost comes from waiting for the next import? With HTTP/2 and Brotli, the multi-entry application bundle and internal Oxc took 29.08 and 27.92 ms on loopback. With Chromium set to 40 ms latency and 10 Mbit/s in both directions, they took 176.48 and 131.62 ms. The application downloaded only 1.10 KiB more JS and Wasm than internal Oxc, but its entry had to request a shared JS chunk before it could start the Wasm fetch. The median Wasm request began at 106.11 ms for the application and 62.59 ms for internal Oxc. [Per-request timings, sizes and digests](web/bench/results/brotli-http2-6a00c9e7d.json.gz)
+
+| Build | JS + Wasm requests | Brotli JS (KiB) | Brotli JS + Wasm (KiB) | First result on loopback (ms) | First result at 40 ms / 10 Mbit/s (ms) |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Jco 1.13.0 | 2 | 2.54 | 24.83 | 15.38 | 114.57 |
+| Internal Oxc | 2 | 16.79 | 39.14 | 27.92 | 131.62 |
+| External checked package | 20 | 36.15 | 58.50 | 51.88 | 277.24 |
+| External multi-entry application | 3 | 17.90 | 40.24 | 29.08 | 176.48 |
+
+![Time to the first guest result in six small DOM workloads with Brotli and HTTP/2. Each point is a workload median and the vertical stroke is the median across those workloads.](web/bench/results/brotli-http2-6a00c9e7d.png)
+
+In a second, paired trial on the limited connection, the page inserted a module preload for its shared chunk immediately before importing the entry. That moved the Wasm fetch from **106.43 to 63.16 ms** and the first result from **177.02 to 133.28 ms**. The same three assets loaded once in both layouts. With the hint, the browser started fetching the shared chunk before the entry response finished on all 96 hinted pages. The paired reduction in first-result time was 24.5%, with all six individual 95% intervals favoring the hint. Internal Oxc took 133.85 ms and Jco 1.13.0 took 113.90 ms in that same trial. All six individual intervals comparing the hinted bundle with internal Oxc included parity. All six still favored release over the hinted bundle. [Preload trial samples](web/bench/results/brotli-preload-6a00c9e7d.json.gz)
+
+![Time to first result on the limited connection. The preloaded and ordinary application use the same entry, shared chunk and Wasm.](web/bench/results/brotli-preload-6a00c9e7d.png)
+
+The two trials used fresh Chromium documents, an established loopback TLS connection, no HTTP caching and precompressed Brotli quality 11 responses. Timing started after common host setup and included component import, any hint, initialization and the first call. Within each workload, every treatment occupied every timing position equally often across 16 fresh browsers. The runner checked the guest reports, HTTP/2, every requested URL, and both compressed and decoded lengths. The shipped inputs matched the matrix digests. The application bundler used those same inputs and copied the guest Wasm unchanged. Each reported time is the median of the six workload medians. The limited profile is Chromium network emulation.
+
+<details><summary>Reproduce the compressed startup and shared-chunk preload trials</summary>
+
+Use a built Jco checkout at `a23e39602`, the six demo guests from the benchmark setup, OpenSSL and Chromium.
+
+```sh
+matrix=web/bench/results/review-matrix-minified-6a00c9e7d.json.gz
+export CHROME_BIN=/path/to/chrome
+node web/bench/runtime-chunks.mjs /path/to/built/jco "$matrix" /tmp/brotli.json.gz --shaped
+node web/bench/runtime-chunks.mjs /path/to/built/jco "$matrix" /tmp/preload.json.gz --shaped-preload
+python3 web/bench/runtime-chunks-report.py /tmp/brotli.json.gz "$matrix" --plot /tmp/brotli.png
+python3 web/bench/runtime-chunks-report.py /tmp/preload.json.gz "$matrix" --plot /tmp/preload.png
+```
+
+</details>
+
 ## Browser bindings at 89d7306a9
 
 A task normally records its scope ID in a map so that dropping a borrowed handle can find the owning task. For a synchronous component that cannot create a borrowed handle, the checked compiler can prove that this lookup has no reader. The internal Oxc bundle and external runtime both skip the map insertion and deletion. They still assign a distinct scope ID to each task. Borrowed export arguments, cross-instance transfers and custom providers retain registration. [Runtime implementation and tests](https://github.com/vados-cosmonic/jco/commit/4b02f2fc1) · [Custom-provider compatibility](https://github.com/vados-cosmonic/jco/commit/8e64ebfdf)
