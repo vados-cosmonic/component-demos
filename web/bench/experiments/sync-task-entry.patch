@@ -1,0 +1,87 @@
+--- runtime-chunks.mjs
++++ sync-task-trial.mjs
+@@ -15,11 +15,12 @@
+ import { bundleApp } from "./app-bundle.mjs";
+
+ const [checkout, matrixFile, output, study, ...extra] = process.argv.slice(2);
++assert.equal(study, "--sync-task-entry");
+ const appPreload = study === "--shaped-preload";
+ const automaticControl = study === "--automatic-control";
+ const coreHints = study === "--core-hints";
+-const shaped = coreHints || study === "--shaped" || appPreload || automaticControl;
+-const alternative = automaticControl ? "automatic" : "grouped";
++const shaped = true;
++const alternative = "sync-task";
+ const compactHelpers = study === "--compact-helpers" || study === "--compact-component";
+ assert(!extra.length && (!study || shaped || compactHelpers));
+ assert(output, "Usage: runtime-chunks.mjs <built Jco checkout> <matrix.json.gz> <output.json.gz> [--shaped|--shaped-preload|--compact-helpers|--compact-component|--automatic-control|--core-hints]");
+@@ -52,14 +53,7 @@
+   graph = {},
+   api = {},
+   footprints = {};
+-const builds = coreHints
+-  ? ["release", "release-core", "bundled", "bundled-core", "external", "external-core",
+-     "application", "application-core", "application-preload", "application-both"]
+-  : appPreload
+-  ? ["release", "bundled", "application", "application-preload"]
+-  : shaped
+-  ? ["release", "bundled", "external", automaticControl ? "automatic" : "application"]
+-  : ["release", "bundled", "external", "grouped", "application"];
++const builds = ["external", alternative];
+ const protocols = shaped ? ["h2"] : ["http/1.1", "h2"];
+ const profiles = appPreload ? ["limited"] : shaped ? ["loopback", "limited"] : [null];
+ const emulation = { latency: 40, download: 1250000, upload: 1250000 };
+@@ -97,15 +91,23 @@
+   api[entry] = Object.keys(await import(pathToFileURL(join(pkg, "dist", name)))).sort();
+   registerEntry("external", entry, "/runtime/" + name);
+ }
+-if (!shaped || automaticControl) {
++{
++  // Keep the broad entry for other package consumers. Only these six checked
++  // demos select the narrower re-export through their document import map.
++  const entryPath = join(pkg, "dist/debug/intrinsics/sync-task.js");
++  const taskExports = `export {createNewCurrentImplicitThread,getCurrentTask} from "./async-task/task-operations.js";
++export {initializeAsyncTaskClass} from "./async-task/async-task.js";
++export {initializeAsyncThreadClass} from "./async-task/async-thread.js";
++export {initializeCurrentComponentIdxs,initializeCurrentTaskIds,initializeTasksByComponent} from "./async-task/initializers.js";`;
+   const bundle = await rolldown({
+-    input, platform: "neutral", external: [/^node:/],
++    input: { ...input, "intrinsics/sync-task": entryPath },
++    plugins: [{ name: "sync-task", resolveId(id) { if (id === entryPath) return id; },
++      load(id) { if (id === entryPath) return taskExports; } }],
++    platform: "neutral", external: [/^node:/],
+     preserveEntrySignatures: "strict", transform: { dropLabels: ["DEBUG"] },
+   });
+   try {
+-    const group = compactHelpers
+-      ? { name: "shared", test: /\/intrinsics\/(?:decode-utf8|sync-waiter|js-helper)\.js$/ }
+-      : { name: "common", minShareCount: 4 };
++    const group = { name: "shared", test: /\/intrinsics\/(?:decode-utf8|sync-waiter|js-helper)\.js$/ };
+     const { output } = await bundle.generate({
+       format: "esm", minify: true, sourcemap: true, entryFileNames: "[name].js",
+       chunkFileNames: "chunks/[name]-[hash].js",
+@@ -125,11 +127,10 @@
+       assert.deepEqual(chunks.find(c => c.fileName === file).exports.toSorted(), api[entry], entry);
+       registerEntry(alternative, entry, "/grouped/" + file);
+     }
++    imports[alternative][matrix.checkedPackage + "/intrinsics/async-task"] = "/grouped/intrinsics/sync-task.js";
+   } finally { await bundle.close(); }
+ }
+-const inputs = automaticControl || coreHints
+-  ? Object.fromEntries(["dom-query", "table-update"].map(name => [name, Object.values(matrix.workloads[name])]))
+-  : { "dom-query": [8, 2], "table-update": [8] };
++const inputs = Object.fromEntries(["dom-query", "table-update"].map(name => [name, Object.values(matrix.workloads[name])]));
+ for (const file of [
+   "host/web-host.js",
+   "host/common.js",
+@@ -195,8 +196,8 @@
+           closure(publicFiles),
+           requests.filter((p) => p.startsWith("/runtime/")).sort(),
+         );
+-        if (shaped && !automaticControl) continue;
+-        const grouped = closure(publicFiles.map((p) => p.replace("/runtime/", "/grouped/")));
++        const grouped = closure(publicFiles.map(p => p === "/runtime/intrinsics/async-task.js"
++          ? "/grouped/intrinsics/sync-task.js" : p.replace("/runtime/", "/grouped/")));
+         expected[key][alternative] = {
+           entry: ref.entry,
+           requests: [...requests.filter((p) => !p.startsWith("/runtime/")), ...grouped].sort(),

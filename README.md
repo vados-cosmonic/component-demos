@@ -44,6 +44,37 @@ The external entry finished downloading in a median of 1.52 ms. The last of its 
 
 The timing probe used 18 balanced rounds on uncompressed loopback, with a fresh browser context per build and the shared host already loaded. It used the same JS and Wasm bytes as the full matrix. Six separate documents collected V8 block coverage at readiness or after the complete guest result. Coverage counts UTF-8 source bytes in reached ranges. Error handling, shutdown and other workloads can reach additional code.
 
+#### How much does the asynchronous driver cost synchronous demos?
+
+The six C, C++ and Rust DOM-query and table-update adapters import seven task operations. An experimental package entry re-exports those operations from their implementations, letting a synchronous page skip the asynchronous driver. A document import map selects that entry for this benchmark. Both treatments run the same generated JavaScript and guest Wasm. The general task entry still exports its original API and costs 193 additional raw bytes when imported alone. No other existing public entry grew. [Runtime package experiment](web/bench/experiments/sync-task-entry.patch)
+
+| External checked runtime, six workloads | Shipped | Narrow task entry |
+| --- | ---: | ---: |
+| Runtime JS requests per workload | 15 | 14 |
+| Runtime JS, uncompressed bytes | 101,147 | 85,602 |
+| Runtime JS, Brotli bytes | 31,045 | 26,833 |
+
+| HTTP/2 transport | Import time, trial / shipped | Time to first result, trial / shipped |
+| --- | ---: | ---: |
+| Loopback | 0.961× (0.915–0.988) | 0.974× (0.956–0.989) |
+| 40 ms latency, 10 Mbit/s | 0.986× (0.983–0.990) | 0.990× (0.985–0.995) |
+
+Across the six workloads, removing 4,212 Brotli bytes cut first-result time by 2.6% on loopback and 1.0% on the limited connection in this run. Each of 16 fresh Chromium processes ran all four treatments for every workload in a balanced order, for 384 documents. The table gives medians and individual 95% sign intervals across rounds, using the geometric mean of the six paired ratios within each round. The experiment exercises external package delivery. The internal Oxc bundle and the public runtime contract on the Jco PR are unchanged. [Per-document timings, request traces and public-entry sizes](web/bench/results/sync-task-entry-eda794c50.json.gz)
+
+<details><summary>Reproduce the narrow runtime entry comparison</summary>
+
+Use a built Jco checkout at `eda794c50` as `$after` and set `CHROME_BIN` to a Chromium executable. From the demo checkout, apply the experimental patch to a copy of the package-layout runner and run the paired comparison.
+
+```sh
+matrix=web/bench/results/review-matrix-registry-eda794c50.json.gz
+runner=web/bench/sync-task-trial.mjs
+patch -o "$runner" web/bench/runtime-chunks.mjs web/bench/experiments/sync-task-entry.patch
+node "$runner" "$after" "$matrix" /tmp/sync-task-entry.json.gz --sync-task-entry
+python3 web/bench/sync-task-entry-report.py /tmp/sync-task-entry.json.gz "$matrix" "$runner"
+```
+
+</details>
+
 #### Does earlier discovery of the last two runtime chunks help?
 
 The checked external runtime's `async-task.js` entry already depends indirectly on the core and numeric-conversion chunks. A benchmark variant appended direct imports for those two files after its existing imports. This added 80 bytes (41 Brotli) to one module. Every document still fetched the same 16 JavaScript URLs and one guest Wasm URL exactly once and completed the 2,000-row C table workload.
