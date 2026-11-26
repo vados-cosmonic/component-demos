@@ -23,7 +23,7 @@ The PR shares the synchronous host adapter between the internal Oxc bundle and t
 | Comparable subphases within 10× of the fastest shim | 81/84 | 81/84 |
 | Worst warm headline ratio to the fastest shim | 4.29× | 4.84× |
 
-On the second guest invocation, internal C canvas pixel read took 1.080× the 1.13.0 time (individual 95% interval 1.028–1.278×). It was the only internal interval entirely above parity. All external intervals included parity or favored the PR. For first result, 6 internal and 15 external intervals were entirely slower than release. [Materialized DOM queries](#materializing-bulk-dom-query-results) · [Later warm invocations](#warm-table-creation-and-tree-traversal)
+On the second guest invocation, internal C canvas pixel read took 1.080× the 1.13.0 time (individual 95% interval 1.028–1.278×). It was the only internal interval entirely above parity. All external intervals included parity or favored the PR. For first result, 6 internal and 15 external intervals were entirely slower than release. [Materialized DOM queries](#materializing-bulk-dom-query-results) · [Later warm invocations](#warm-table-creation-and-tree-traversal) · [Repeat visits and HTTP caching](#repeat-visits-and-http-caching)
 
 ![Warm operation and first-result time relative to the compiled shims and Jco 1.13.0 for all seven demos.](web/bench/results/review-matrix-minified-0c3d12ad0.png)
 
@@ -450,6 +450,42 @@ Use Jco at `ee0d0ff26` and the benchmark setup above to reproduce the comparison
 CHROME_BIN=/path/to/chrome ROUNDS=18 node web/bench/core-startup.mjs /path/to/built/jco /tmp/wasm-preload.json.gz --wasm-preload
 python3 web/bench/modulepreload-report.py /tmp/wasm-preload.json.gz --plot /tmp/wasm-preload.png
 ```
+
+## Repeat visits and HTTP caching
+
+On the full demo matrix at `0c3d12ad0`, import took longer than 1.13.0 in all 21 cases. Across cases, the median paired excess was 4.65 ms for internal Oxc and 16.68 ms for the external runtime. Once import finished, the first guest invocation took a median 1.65 ms less than release internally and 0.21 ms less externally. These comparisons pair each build and release within the same workload, language and round. [Full-size measurements](web/bench/results/review-matrix-minified-0c3d12ad0.json.gz)
+
+To isolate module loading, six small DOM workloads ran in a fresh document on a first visit and again on the next navigation. The server varied the HTTP cache policy separately for generated JavaScript (including external runtime modules) and Wasm. On repeat visits, caching JS alone brought external first result from 27.27 ms to 10.22 ms. Caching the Wasm alone brought it to 26.98 ms. [Per-document timings, server requests and browser transfer counts](web/bench/results/repeat-navigation-0c3d12ad0.json.gz)
+
+| Build | First visit, no-store (ms) | Repeat, no-store (ms) | Repeat, JS cached (ms) | Repeat, Wasm cached (ms) | Repeat, both cached (ms) | Both / no-store on repeat (95% interval) |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Jco 1.13.0 | 8.74 | 6.67 | 4.50 | 6.51 | 4.27 | 0.643× (0.624–0.682) |
+| Upstream main | 28.21 | 16.12 | 11.63 | 16.51 | 12.02 | 0.749× (0.708–0.774) |
+| Internal Oxc | 17.51 | 10.35 | 6.02 | 10.14 | 6.15 | 0.591× (0.540–0.648) |
+| External checked | 33.67 | 27.27 | 10.22 | 26.98 | 10.20 | 0.369× (0.352–0.387) |
+
+All 384 fully cached repeat visits ran the guest with **zero JS or Wasm asset responses** from the server. The timing starts after the page loads the demo host and ends when the guest returns its first result. Even with all component assets cached, paired first-result times were **1.43× release internally and 2.44× externally**. This measures consecutive navigations in one Chromium process on loopback. A first visit, a browser restart or another engine can have different costs.
+
+![Repeat-visit first-result time relative to no-store for each JavaScript and Wasm cache policy. Error bars give individual 95% median intervals.](web/bench/results/repeat-navigation-0c3d12ad0.png)
+
+For a versioned deployment, the timed cacheable responses used `Cache-Control: public, max-age=31536000, immutable`. Changing an asset requires publishing it under a new URL with this policy. Versioning the directory containing the generated bindings and Wasm files preserves their relative imports.
+
+<details><summary>Experimental controls, runtime packaging trial and reproduction</summary>
+
+Sixteen Chromium processes each ran C, C++ and Rust DOM queries (8 elements, 2 iterations) and table updates (8 rows). Each build and cache policy occupied each timing position once and followed each other treatment once per workload across the processes. Each treatment had its own asset URLs and two consecutive documents. Both the first and repeat no-store controls fetched all component assets. Resource Timing and server logs agreed on the transferred assets in every document. Times use one median across the six workloads per browser. Ratios pair runs by browser and workload before computing the median and its individual interval. The two visits share the same URLs and bytes, and the DevTools client disconnects before timing.
+
+A separate packaging trial compared Rolldown 1.2.13's strict entry signatures with `allow-extension`. The strict build reproduced every shipped checked JS module byte for byte. Allowing additional exports reduced the external runtime graph from 18 modules (101,365 bytes) to 14 (100,006 bytes) on every demo. It also exposed 21 extra names across the public conversion, core and JS-helper modules. The trial measures asset graphs only. Reviewers can reproduce the namespace changes with the command below. [Packaging check](web/bench/runtime-entry-signatures.mjs)
+
+Use the benchmark setup above with the built Jco checkout at `0c3d12ad0` and the upstream build at `326f52ab4`.
+
+```sh
+matrix=web/bench/results/review-matrix-minified-0c3d12ad0.json.gz
+CHROME_BIN=/path/to/chrome node web/bench/repeat-navigation.mjs "$jco" "$stage" "$matrix" /tmp/visits.json.gz
+python3 web/bench/repeat-navigation-report.py /tmp/visits.json.gz "$matrix" --plot /tmp/visits.png
+node web/bench/runtime-entry-signatures.mjs "$jco" "$matrix"
+```
+
+</details>
 
 ## Serving the browser bindings with HTTP gzip
 
