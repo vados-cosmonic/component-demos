@@ -2,6 +2,68 @@
 
 This fork benchmarks the browser examples from [eqrion/component-demos at d0b9dd1](https://github.com/eqrion/component-demos/tree/d0b9dd1390a300978193adc623838fef4e4b632b). It runs the same compiled C, C++, and Rust WebAssembly components through jco 1.13.0, pinned upstream main, and a branch that optimizes synchronous host imports and numeric guest exports. The comparison also includes the demos’ JavaScript, Emscripten (Embind and EM_JS), and Rust wasm-bindgen implementations where available.
 
+## Browser bindings at the PR head
+
+Both the internal Oxc bundle and the external checked runtime stayed within 10× of the fastest compiled shim in **all 21 warm headline cases**. Tree traversal had the largest gap. The internal bundle took **5.50×** the shim’s time for the C guest, and the external runtime took **5.78×** for Rust. Cold startup and Jco 1.13.0 parity remain open. [Jco fork PR](https://github.com/vados-cosmonic/jco/pull/62)
+
+| Headline comparison | Internal Oxc | External runtime |
+| --- | ---: | ---: |
+| Warm operation at or faster than upstream main | 20/21 | 21/21 |
+| Warm operation at or faster than Jco 1.13.0 | 13/21 | 12/21 |
+| First full result at or faster than Jco 1.13.0 | 5/21 | 4/21 |
+| Warm subphases within 10× of the fastest compiled shim | 81/84 | 81/84 |
+
+| Median across 21 workload and language pairs | Jco 1.13.0 | Upstream main | Internal Oxc | External runtime |
+| --- | ---: | ---: | ---: | ---: |
+| Import (ms) | 5.74 | 14.59 | 11.66 | 25.94 |
+| First full result, including import (ms) | 65.70 | 246.70 | 72.12 | 87.55 |
+| Generated JS entry (KiB) | 21.23 | 191.50 | 126.43 | 67.01 |
+| Total JS transferred per document (KiB) | 21.23 | 191.50 | 126.43 | 165.94 |
+| JS requests per document | 1 | 1 | 1 | 19 |
+
+![Warm operation relative to the fastest compiled shim, and warm operation and first result relative to Jco 1.13.0. Each row shows C, C++ and Rust for both renderers.](web/bench/results/review-matrix-b731ebc91.png)
+
+The full matrix ran in 776 fresh Chromium documents over eight balanced rounds. Each Jco build ran identical Wasm cores. The browser measured import and the first full guest call, then repeated the workload in the same document for the warm phase. Responses were uncompressed on loopback with caching disabled and DevTools disconnected. Release and upstream comparisons pair times within each round. Shim ratios divide each warm median by the lowest median from the compiled shims available for that operation. [Measured Jco revision](https://github.com/vados-cosmonic/jco/commit/b731ebc9160203466a5c2bf5bc2debb6a77d28e0) · [Measured upstream main](https://github.com/bytecodealliance/jco/commit/83e25bb19bc45c8a346e4ecdd19b4a1541700fe7) · [Raw samples, compiler hashes and request sizes](web/bench/results/review-matrix-b731ebc91.json.gz)
+
+The three subphases outside the 10× target were bulk DOM queries. The WIT interface materializes a list of handles and the Embind shim discards a live collection. An earlier trial that materialized the list on both sides measured 1.30–1.72× the direct shim’s time. The single bundled headline above upstream main was Rust canvas pixel readback at 1.03×, with individual rounds on either side of parity. The number of warm medians at or below 1.13.0 also varied between the two full runs. The separate decoder trial isolates the effect of the import change. [Equal-work DOM comparison](#dom-bindings-with-identical-guest-code) · [Pre-decoder full run](#full-demo-matrix-on-the-merged-pr) · [Decoder trial](#loading-the-utf-8-decoder-for-synchronous-imports)
+
+The synchronous host adapter reuses an enclosing task. An isolated numeric guest export can skip task allocation entirely. The decoder change reduces dependencies when the external adapter takes a string. Each has a separate comparison that measures its effect. [Host calls, resource handles and short string results](#pr-head-against-upstream-main) · [Numeric exports](#calling-a-scalar-wasm-export-from-javascript) · [External decoder requests and bytes](#loading-the-utf-8-decoder-for-synchronous-imports)
+
+<details><summary>All 21 headline comparisons and reproduction</summary>
+
+| Operation | Guest | Bundled / shim | External / shim | Bundled / 1.13 warm | External / 1.13 warm | Bundled / 1.13 first result | External / 1.13 first result |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Attribute write | C | 0.46× | 0.50× | 0.51× | 0.54× | 0.72× | 0.82× |
+| Attribute write | C++ | 0.52× | 0.59× | 0.54× | 0.56× | 0.64× | 0.76× |
+| Attribute write | Rust | 0.56× | 0.59× | 0.54× | 0.56× | 0.72× | 0.90× |
+| Canvas fillRect | C | 0.53× | 0.51× | 0.90× | 0.97× | 1.15× | 1.50× |
+| Canvas fillRect | C++ | 0.60× | 0.61× | 0.94× | 0.96× | 1.11× | 1.39× |
+| Canvas fillRect | Rust | 0.59× | 0.53× | 0.97× | 0.87× | 1.16× | 1.28× |
+| Canvas pixel read | C | 1.90× | 2.05× | 1.00× | 1.05× | 1.29× | 1.52× |
+| Canvas pixel read | C++ | 1.90× | 2.05× | 1.00× | 1.02× | 1.08× | 1.30× |
+| Canvas pixel read | Rust | 1.99× | 1.79× | 1.06× | 1.01× | 1.22× | 1.31× |
+| DOM ID lookup | C | 0.74× | 0.83× | 0.69× | 0.68× | 1.04× | 1.20× |
+| DOM ID lookup | C++ | 0.97× | 1.03× | 0.72× | 0.75× | 1.07× | 1.31× |
+| DOM ID lookup | Rust | 0.92× | 0.86× | 0.73× | 0.71× | 1.09× | 1.24× |
+| Tree traversal | C | 5.50× | 5.49× | 1.13× | 1.27× | 1.07× | 1.34× |
+| Tree traversal | C++ | 3.92× | 5.35× | 0.79× | 1.13× | 1.16× | 1.22× |
+| Tree traversal | Rust | 4.47× | 5.78× | 1.09× | 1.25× | 1.12× | 1.29× |
+| Read 1 KiB string | C | 0.33× | 0.33× | 0.44× | 0.44× | 1.00× | 1.05× |
+| Read 1 KiB string | C++ | 0.34× | 0.33× | 0.47× | 0.44× | 0.89× | 1.01× |
+| Read 1 KiB string | Rust | 0.36× | 0.30× | 0.46× | 0.42× | 0.89× | 0.94× |
+| Table creation | C | 2.32× | 3.01× | 1.05× | 1.21× | 1.29× | 2.01× |
+| Table creation | C++ | 2.38× | 2.93× | 1.02× | 1.06× | 1.25× | 1.84× |
+| Table creation | Rust | 2.29× | 2.99× | 1.06× | 1.22× | 1.32× | 2.03× |
+
+Use Jco revision `b731ebc91` for the PR checkout in the [full-matrix setup](#full-demo-matrix-on-the-merged-pr). The same runner, pinned upstream compiler, release entries and alternative shims were used in both runs. To reproduce the table and figure from the saved data, run the following from this fork with Matplotlib installed.
+
+```sh
+python3 web/bench/review-matrix-report.py web/bench/results/review-matrix-b731ebc91.json.gz \
+  --plot /tmp/review-matrix-b731ebc91.png
+```
+
+</details>
+
 ## Loading the UTF-8 decoder for synchronous imports
 
 Synchronous host calls can decode a string without loading the general lifting module and its stream, future and error-context dependencies. The checked runtime now exposes the same decoder through the synchronous entry that these components already import. In six small DOM workloads, the external bindings fetched **19 JavaScript files instead of 23** and transferred **27.26 KiB less JavaScript** per component at the median. [Jco implementation](https://github.com/vados-cosmonic/jco/commit/36875ba1a) · [Measured PR head](https://github.com/vados-cosmonic/jco/commit/b731ebc9160203466a5c2bf5bc2debb6a77d28e0)
