@@ -555,6 +555,41 @@ fig.savefig(results / "minified-startup.png", dpi=155)
 plt.close(fig)
 para("![Default and minified gzip payloads and fresh-page startup for three Jco builds](web/bench/results/minified-startup.png)")
 
+observer_path = results / "startup-observer.json"
+observer = json.loads(observer_path.read_bytes())
+if (observer["originalSha256"] != sha256((results / "minified-browser.json").read_bytes()).hexdigest()
+        or observer["runnerSha256"] != sha256((bench / "startup-observer.mjs").read_bytes()).hexdigest()
+        or any(observer[key] != minified_run[key] for key in ("browser", "cpu"))):
+    raise ValueError("Startup observer did not use the measured browser and bindings")
+observer_groups = defaultdict(dict)
+for row in observer["samples"]:
+    key = row["version"], row["attached"], row["lang"], row["demo"]
+    if (row["round"] in observer_groups[key]
+            or not 0 <= row["jsEndMs"] <= row["wasmStartMs"] <= row["wasmEndMs"] <= row["loadMs"] + .01):
+        raise ValueError(f"Invalid startup observer record for {key}")
+    observer_groups[key][row["round"]] = (row["loadMs"], row["wasmStartMs"] - row["jsEndMs"])
+cases = [(lang, demo) for lang in languages for demo in focus]
+expected = {(version, attached, *case) for version in distribution for attached in (True, False) for case in cases}
+if (set(observer_groups) != expected or
+        any(set(rows) != set(range(1, observer["rounds"] + 1)) for rows in observer_groups.values())):
+    raise ValueError("Missing startup observer trials")
+para("### Startup with DevTools disconnected")
+para(f"In {len(observer['samples']):,} fresh documents, the page timed its own dynamic import, ran the guest "
+     "and sent the result to a local server. One browser kept the Puppeteer DevTools connection open. "
+     "The other disconnected before the first measured navigation. Both navigated the same tab, with matching "
+     "Chrome flags, no-store responses and verified network transfers. The order of the two browsers alternated "
+     f"over {observer['rounds']} rounds. Each table cell is the median of the 21 workload medians. "
+     "[Observer timings](web/bench/results/startup-observer.json)")
+observer_rows = []
+for version in distribution:
+    base, _, mode = version.partition("-")
+    label = distribution_names[base] + (" minified" if mode else " default")
+    columns = [median(median(row[column] for row in observer_groups[version, attached, *case].values())
+                      for case in cases) for column in (0, 1) for attached in (True, False)]
+    observer_rows.append([label, *[f"{value:.2f}" for value in columns]])
+table(["Distribution", "Attached startup (ms)", "Detached startup (ms)", "Attached JS end to Wasm request (ms)",
+       "Detached JS end to Wasm request (ms)"], observer_rows)
+
 coverage = json.loads((results / "js-coverage.json").read_text())
 if (coverage["sizesSha256"] != run["sizesSha256"] or coverage["workloads"] != run["workloads"] or
         coverage["runnerSha256"] != sha256((bench / "coverage.mjs").read_bytes()).hexdigest()):
@@ -625,6 +660,7 @@ pnpm -C ../jco-candidate --filter @bytecodealliance/jco-transpile run build
 node web/bench/candidate.mjs --verify-wasm ../jco-candidate
 node web/bench/minified.mjs ../jco-candidate
 CHROME_BIN=/path/to/chrome BENCH_MINIFIED=1 ROUNDS={minified_run['rounds']} node web/bench/browser.mjs
+CHROME_BIN=/path/to/chrome ROUNDS={observer['rounds']} node web/bench/startup-observer.mjs
 python3 web/bench/report.py --from-candidate
 python3 web/bench/candidate-report.py
 ```""")

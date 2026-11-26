@@ -319,6 +319,19 @@ Minifying the branch reduced startup by 10% on the median same-workload comparis
 
 ![Default and minified gzip payloads and fresh-page startup for three Jco builds](web/bench/results/minified-startup.png)
 
+### Startup with DevTools disconnected
+
+In 1,260 fresh documents, the page timed its own dynamic import, ran the guest and sent the result to a local server. One browser kept the Puppeteer DevTools connection open. The other disconnected before the first measured navigation. Both navigated the same tab, with matching Chrome flags, no-store responses and verified network transfers. The order of the two browsers alternated over 5 rounds. Each table cell is the median of the 21 workload medians. [Observer timings](web/bench/results/startup-observer.json)
+
+| Distribution | Attached startup (ms) | Detached startup (ms) | Attached JS end to Wasm request (ms) | Detached JS end to Wasm request (ms) |
+| --- | --- | --- | --- | --- |
+| 1.13.0 default | 8.07 | 5.96 | 2.83 | 1.67 |
+| 1.13.0 minified | 7.84 | 5.66 | 2.52 | 1.62 |
+| Stock main default | 21.06 | 13.78 | 14.38 | 8.22 |
+| Stock main minified | 19.64 | 12.98 | 12.85 | 7.47 |
+| Candidate default | 18.21 | 12.34 | 11.42 | 6.90 |
+| Candidate minified | 16.00 | 11.59 | 9.96 | 6.25 |
+
 ### Generated JavaScript reached by each demo
 
 Chromium recorded block coverage on 126 fresh pages in a separate run. One page imported each module and finished initialization. A second also ran the demo once and checked its output. The table reports medians over the 21 guest and workload combinations. Sizes count UTF-8 bytes in V8’s covered source ranges. A demo can leave error handling, shutdown or other supported operations unexercised. [Per-module coverage and hashes](web/bench/results/js-coverage.json)
@@ -382,6 +395,7 @@ pnpm -C ../jco-candidate --filter @bytecodealliance/jco-transpile run build
 node web/bench/candidate.mjs --verify-wasm ../jco-candidate
 node web/bench/minified.mjs ../jco-candidate
 CHROME_BIN=/path/to/chrome BENCH_MINIFIED=1 ROUNDS=5 node web/bench/browser.mjs
+CHROME_BIN=/path/to/chrome ROUNDS=5 node web/bench/startup-observer.mjs
 python3 web/bench/report.py --from-candidate
 python3 web/bench/candidate-report.py
 ```
