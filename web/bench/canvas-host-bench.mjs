@@ -15,19 +15,21 @@ const inventoryBytes = await readFile(join(bench, "results/candidate-sizes.json"
 const inventory = JSON.parse(inventoryBytes);
 const args = process.argv.slice(2);
 const isolated = args[0] === "--isolated";
-if (isolated) args.shift();
+const observed = args[0] === "--observe-host";
+if (isolated || observed) args.shift();
 const [checkout, generator, previousRef, previousGenerator, output] = args;
-assert((!isolated && args.length === 0) || args.length === 5,
-  "Use no arguments for the inventory run, or [--isolated] <jco-checkout> <generator> <previous-ref> <previous-generator> <output.json> for paired C canvas timings");
-const versions = isolated ? ["before", "after", "control"] : checkout ? ["direct", "baseline", "main", "before", "after"] : ["direct", "baseline", "main", "candidate"];
+assert((!isolated && !observed && args.length === 0) || args.length === 5,
+  "Use no arguments for the inventory run, or [--isolated|--observe-host] <jco-checkout> <generator> <previous-ref> <previous-generator> <output.json> for paired C canvas timings");
+const versions = isolated || observed ? ["before", "after", "control"] : checkout ? ["direct", "baseline", "main", "before", "after"] : ["direct", "baseline", "main", "candidate"];
 const langs = checkout ? ["c"] : ["c", "cpp", "rust"];
 const rounds = Number(process.env.ROUNDS ?? (isolated ? 24 : 9));
 assert(Number.isInteger(rounds) && rounds > 0);
 const size = 256;
-const minMs = 10;
+const minMs = Number(process.env.MIN_MS ?? 10);
+assert(Number.isSafeInteger(minMs) && minMs > 0);
 const sources = {};
 const assets = new Map();
-for (const path of ["bench/canvas-host.mjs", "bench/dom-core-shim.mjs", "examples/canvas-pixels/main.js",
+for (const path of ["bench/canvas-host.mjs", "bench/canvas-readback.mjs", "bench/dom-core-shim.mjs", "examples/canvas-pixels/main.js",
                     "host/common.js", "host/web-host.js"]) {
   const bytes = await readFile(join(web, path));
   sources[path] = hash(bytes);
@@ -87,19 +89,20 @@ for (const lang of langs) {
       }
     } finally { await rm(staging, { recursive: true, force: true }); }
   }
-  if (isolated) paths[lang].control = paths[lang].before;
+  if (isolated || observed) paths[lang].control = paths[lang].before + "?control";
   assert.deepEqual(Object.keys(paths[lang]).sort(), [...versions].sort());
 }
 
 async function sample(page, lang, host, round, selected = versions) {
-  return page.evaluate(async ({ builds, host, round, size, minMs, versions }) => {
+  return page.evaluate(async ({ builds, host, round, size, minMs, versions, observed }) => {
     const { getMeasurements } = await import("/examples/canvas-pixels/main.js");
     const { installPixelViews, checkCanvasPixels } = await import("/bench/canvas-host.mjs");
     if (host === "view") installPixelViews();
     const { instantiateDomGuest } = await import("/bench/dom-core-shim.mjs");
+    const observer = observed ? (await import("/bench/canvas-readback.mjs")).observeReadback(size) : undefined;
     const direct = versions.includes("direct") ? await instantiateDomGuest(builds.direct) : undefined;
     const guests = { direct };
-    for (const version of versions.filter(v => v !== "direct")) guests[version] = await import(builds[version] + (versions.length === 1 ? "?round=" + round + "&slot=" + version : ""));
+    for (const version of versions.filter(v => v !== "direct")) guests[version] = await import(builds[version] + (versions.length === 1 ? (builds[version].includes("?") ? "&" : "?") + "round=" + round + "&slot=" + version : ""));
     const rows = [];
     for (let pass = 0; pass <= 4; pass++) {
       for (let i = 0; i < versions.length; i++) {
@@ -112,13 +115,14 @@ async function sample(page, lang, host, round, selected = versions) {
         const readUs = times["getImageData(): µs/call"] * 1e6;
         const writeUs = times["putImageData(): µs/call"] * 1e6;
         if (![readUs, writeUs].every(v => Number.isFinite(v) && v > 0)) throw Error("Missing guest timing");
+        const readback = observer?.finish(readUs / 1e6);
         const pixelsChecked = checkCanvasPixels(size);
         if (direct && direct.counts().liveHandles !== 0) throw Error("Direct guest leaked a resource");
-        if (pass) rows.push({ pass, version, readUs, writeUs, pixelsChecked });
+        if (pass) rows.push({ pass, version, readUs, writeUs, pixelsChecked, readback });
       }
     }
     return rows;
-  }, { builds: paths[lang], host, round, size, minMs, versions: selected });
+  }, { builds: paths[lang], host, round, size, minMs, versions: selected, observed });
 }
 
 const server = createServer((req, res) => {
@@ -145,7 +149,7 @@ try {
       const order = isolated
         ? versions.map((_, j) => versions[((round - 1) + (round % 2 ? j : -j) + versions.length) % versions.length])
         : [undefined];
-      const hosts = isolated ? ["original"] : (i + round) % 2 ? ["original", "view"] : ["view", "original"];
+      const hosts = isolated || observed ? ["original"] : (i + round) % 2 ? ["original", "view"] : ["view", "original"];
       for (const host of hosts) for (const version of order) {
         const page = await browser.newPage();
         try {
@@ -161,7 +165,7 @@ try {
   await writeFile(output ?? join(bench, "results/canvas-host.json"), JSON.stringify({
     date: new Date().toISOString(), browser: await browser.version(), cpu: cpus()[0].model,
     runnerSha256: hash(await readFile(import.meta.filename)), sizesSha256: hash(inventoryBytes),
-    sources, isolated, candidate: comparison ?? inventory.candidate, rounds, passes: 4, size, minMs, samples,
+    sources, isolated, observed, candidate: comparison ?? inventory.candidate, rounds, passes: 4, size, minMs, samples,
   }, null, 2) + "\n");
 } finally {
   server.close();
