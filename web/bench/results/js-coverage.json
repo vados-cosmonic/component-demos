@@ -1,9 +1,9 @@
 {
-  "date": "2026-11-26T01:43:36.931Z",
+  "date": "2026-11-26T02:39:01.692Z",
   "browser": "HeadlessChrome/156.0.8078.47",
   "node": "v26.13.0",
-  "sizesSha256": "3090c573834cf63694e76e8d561d03da28895bb5c27160cd2655177881223fab",
-  "runnerSha256": "b43678cdfc02f3573986abc51ad534e49ae9f80821450ac82d7acb17ec6fec3a",
+  "sizesSha256": "a9dd4fbb28d9daca530b1a33a595011ca81cbcb831f2ae8bc100c3a7ecd29187",
+  "runnerSha256": "3432c227ed847a80a35838446a0de724bf8432dbf4fd6be8689926a0b83fda2f",
   "sources": {
     "host/common.js": "4e3f3437d37d8e150708efb3e33551dffa6c83164e165ed1750936f6a10c3c83",
     "host/web-host.js": "205bef0524eceb2fa4ccfa5e3988ccb9096eb52430e98099dcc4a73f97170492",
@@ -68,40 +68,84 @@
       "demo": "attribute-churn",
       "version": "main",
       "path": "c/attribute-churn/jco-main/attribute_churn.js",
-      "sha256": "6164f871ba785a4bd0b7778bc21f83bb5e1fe6508ab05b0468220265c993999c",
+      "sha256": "51cde859f0647e57b9a57c37a01068d2eab7f7a6219910aa347384440d7d05ac",
       "phase": "init",
-      "bytes": 179132,
-      "used": 53156
+      "bytes": 182133,
+      "used": 53818
     },
     {
       "lang": "c",
       "demo": "attribute-churn",
       "version": "main",
       "path": "c/attribute-churn/jco-main/attribute_churn.js",
-      "sha256": "6164f871ba785a4bd0b7778bc21f83bb5e1fe6508ab05b0468220265c993999c",
+      "sha256": "51cde859f0647e57b9a57c37a01068d2eab7f7a6219910aa347384440d7d05ac",
       "phase": "firstRun",
-      "bytes": 179132,
-      "used": 91001
+      "bytes": 182133,
+      "used": 91959
     },
     {
       "lang": "c",
       "demo": "attribute-churn",
       "version": "candidate",
       "path": "c/attribute-churn/jco-candidate/attribute_churn.js",
-      "sha256": "2fd48eb8ba240cf3797b585c671d846d3d42aa3891fc16fd26035d691f629d22",
+      "sha256": "bfdb127e8df43da4aafb0037a6bec4ac5ab90287bfd02de88d4e09f56532e722",
       "phase": "init",
-      "bytes": 139336,
-      "used": 40373
+      "bytes": 136197,
+      "used": 39250,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 1930
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1127
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 5992
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     },
     {
       "lang": "c",
       "demo": "attribute-churn",
       "version": "candidate",
       "path": "c/attribute-churn/jco-candidate/attribute_churn.js",
-      "sha256": "2fd48eb8ba240cf3797b585c671d846d3d42aa3891fc16fd26035d691f629d22",
+      "sha256": "bfdb127e8df43da4aafb0037a6bec4ac5ab90287bfd02de88d4e09f56532e722",
       "phase": "firstRun",
-      "bytes": 139336,
-      "used": 63110
+      "bytes": 136197,
+      "used": 62001,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 2945
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1391
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 7615
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     },
     {
       "lang": "c",
@@ -128,40 +172,84 @@
       "demo": "canvas-draw",
       "version": "main",
       "path": "c/canvas-draw/jco-main/canvas_draw.js",
-      "sha256": "66fb06c626ebd467c9849a4545cb21c89659320cfaf1d5565cb534b86a47c101",
+      "sha256": "038aac40049a031e64410fe4ef5b5a7f41e90000d0e1c67da0a6fb8478ceb377",
       "phase": "init",
-      "bytes": 193935,
-      "used": 57015
+      "bytes": 196948,
+      "used": 57677
     },
     {
       "lang": "c",
       "demo": "canvas-draw",
       "version": "main",
       "path": "c/canvas-draw/jco-main/canvas_draw.js",
-      "sha256": "66fb06c626ebd467c9849a4545cb21c89659320cfaf1d5565cb534b86a47c101",
+      "sha256": "038aac40049a031e64410fe4ef5b5a7f41e90000d0e1c67da0a6fb8478ceb377",
       "phase": "firstRun",
-      "bytes": 193935,
-      "used": 101284
+      "bytes": 196948,
+      "used": 102254
     },
     {
       "lang": "c",
       "demo": "canvas-draw",
       "version": "candidate",
       "path": "c/canvas-draw/jco-candidate/canvas_draw.js",
-      "sha256": "cb6be0e56eb47a68d6c2283c6b04f65c5c5a961f7d25ec733998e0134c9d20f6",
+      "sha256": "d1807132591ebd1e0ea7410b31de02771e26cc74c83f51765d3b7e9274e25b32",
       "phase": "init",
-      "bytes": 147907,
-      "used": 41436
+      "bytes": 144768,
+      "used": 40313,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 1930
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1127
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 5992
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     },
     {
       "lang": "c",
       "demo": "canvas-draw",
       "version": "candidate",
       "path": "c/canvas-draw/jco-candidate/canvas_draw.js",
-      "sha256": "cb6be0e56eb47a68d6c2283c6b04f65c5c5a961f7d25ec733998e0134c9d20f6",
+      "sha256": "d1807132591ebd1e0ea7410b31de02771e26cc74c83f51765d3b7e9274e25b32",
       "phase": "firstRun",
-      "bytes": 147907,
-      "used": 67485
+      "bytes": 144768,
+      "used": 66376,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 2945
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1391
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 7615
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     },
     {
       "lang": "c",
@@ -188,40 +276,84 @@
       "demo": "canvas-pixels",
       "version": "main",
       "path": "c/canvas-pixels/jco-main/canvas_pixels.js",
-      "sha256": "5d5f0a2637e29bf223160e6d004f9f7c22df5e968a813ba118cdc2d797ad7758",
+      "sha256": "d51fdd6a0e4a55ed9f128212f5dcf85517bbfc3059fa85165c165dc8795d01fe",
       "phase": "init",
-      "bytes": 212815,
-      "used": 60590
+      "bytes": 215831,
+      "used": 61252
     },
     {
       "lang": "c",
       "demo": "canvas-pixels",
       "version": "main",
       "path": "c/canvas-pixels/jco-main/canvas_pixels.js",
-      "sha256": "5d5f0a2637e29bf223160e6d004f9f7c22df5e968a813ba118cdc2d797ad7758",
+      "sha256": "d51fdd6a0e4a55ed9f128212f5dcf85517bbfc3059fa85165c165dc8795d01fe",
       "phase": "firstRun",
-      "bytes": 212815,
-      "used": 108285
+      "bytes": 215831,
+      "used": 109258
     },
     {
       "lang": "c",
       "demo": "canvas-pixels",
       "version": "candidate",
       "path": "c/canvas-pixels/jco-candidate/canvas_pixels.js",
-      "sha256": "969cd6bff62eb884703fd0d1ec998a5c45eb9c8f81cb71f8ce62931d2755ba52",
+      "sha256": "51e539b37cb017837b01c44b6c29d2442eae2a10040b301d5e71c1b0d405a27c",
       "phase": "init",
-      "bytes": 153881,
-      "used": 42624
+      "bytes": 150742,
+      "used": 41501,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 1930
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1127
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 5992
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     },
     {
       "lang": "c",
       "demo": "canvas-pixels",
       "version": "candidate",
       "path": "c/canvas-pixels/jco-candidate/canvas_pixels.js",
-      "sha256": "969cd6bff62eb884703fd0d1ec998a5c45eb9c8f81cb71f8ce62931d2755ba52",
+      "sha256": "51e539b37cb017837b01c44b6c29d2442eae2a10040b301d5e71c1b0d405a27c",
       "phase": "firstRun",
-      "bytes": 153881,
-      "used": 70746
+      "bytes": 150742,
+      "used": 69637,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 2945
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1391
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 7615
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     },
     {
       "lang": "c",
@@ -248,40 +380,84 @@
       "demo": "dom-query",
       "version": "main",
       "path": "c/dom-query/jco-main/dom_query.js",
-      "sha256": "b9f2762423c899163c0c0f6cc72ff4110d320649988d6b811415f947d1068620",
+      "sha256": "0f8ecd7082c739e93eb14f07507c721b655b267567a312d86ea1161f4ca140f5",
       "phase": "init",
-      "bytes": 195755,
-      "used": 56591
+      "bytes": 198762,
+      "used": 57253
     },
     {
       "lang": "c",
       "demo": "dom-query",
       "version": "main",
       "path": "c/dom-query/jco-main/dom_query.js",
-      "sha256": "b9f2762423c899163c0c0f6cc72ff4110d320649988d6b811415f947d1068620",
+      "sha256": "0f8ecd7082c739e93eb14f07507c721b655b267567a312d86ea1161f4ca140f5",
       "phase": "firstRun",
-      "bytes": 195755,
-      "used": 100237
+      "bytes": 198762,
+      "used": 101201
     },
     {
       "lang": "c",
       "demo": "dom-query",
       "version": "candidate",
       "path": "c/dom-query/jco-candidate/dom_query.js",
-      "sha256": "625d59d1359ff3e63f127d02e53ea34aed3e29e8bc895565144c0e6b8d7ae7fc",
+      "sha256": "c60b8bfc750fe650757c09dd6f3ea069fd324e24daa5347f0047e35b58b837ff",
       "phase": "init",
-      "bytes": 146312,
-      "used": 41063
+      "bytes": 143173,
+      "used": 39940,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 1930
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1127
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 5992
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     },
     {
       "lang": "c",
       "demo": "dom-query",
       "version": "candidate",
       "path": "c/dom-query/jco-candidate/dom_query.js",
-      "sha256": "625d59d1359ff3e63f127d02e53ea34aed3e29e8bc895565144c0e6b8d7ae7fc",
+      "sha256": "c60b8bfc750fe650757c09dd6f3ea069fd324e24daa5347f0047e35b58b837ff",
       "phase": "firstRun",
-      "bytes": 146312,
-      "used": 67579
+      "bytes": 143173,
+      "used": 66470,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 2945
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1391
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 7615
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     },
     {
       "lang": "c",
@@ -308,40 +484,84 @@
       "demo": "dom-traversal",
       "version": "main",
       "path": "c/dom-traversal/jco-main/dom_traversal.js",
-      "sha256": "32db04f01b96fe21b173fe4f98ba6dda61e8acc23e84ed13e208e3db752b892d",
+      "sha256": "ae5712be19a9ae0c9c40a4d8770a9afc19c5802d90f62b5da9cde9fc30849e86",
       "phase": "init",
-      "bytes": 186735,
-      "used": 55253
+      "bytes": 189742,
+      "used": 55915
     },
     {
       "lang": "c",
       "demo": "dom-traversal",
       "version": "main",
       "path": "c/dom-traversal/jco-main/dom_traversal.js",
-      "sha256": "32db04f01b96fe21b173fe4f98ba6dda61e8acc23e84ed13e208e3db752b892d",
+      "sha256": "ae5712be19a9ae0c9c40a4d8770a9afc19c5802d90f62b5da9cde9fc30849e86",
       "phase": "firstRun",
-      "bytes": 186735,
-      "used": 96441
+      "bytes": 189742,
+      "used": 97405
     },
     {
       "lang": "c",
       "demo": "dom-traversal",
       "version": "candidate",
       "path": "c/dom-traversal/jco-candidate/dom_traversal.js",
-      "sha256": "a2caafcd27aa9d33db450bc731004c08724a03abaadc549ef7dd1d647534ce85",
+      "sha256": "778618845ccc10ff35495d400b21d4b100d4b3f0b8bd16abfa7c022c0587d6ed",
       "phase": "init",
-      "bytes": 143444,
-      "used": 40675
+      "bytes": 140305,
+      "used": 39552,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 1930
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1127
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 5992
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     },
     {
       "lang": "c",
       "demo": "dom-traversal",
       "version": "candidate",
       "path": "c/dom-traversal/jco-candidate/dom_traversal.js",
-      "sha256": "a2caafcd27aa9d33db450bc731004c08724a03abaadc549ef7dd1d647534ce85",
+      "sha256": "778618845ccc10ff35495d400b21d4b100d4b3f0b8bd16abfa7c022c0587d6ed",
       "phase": "firstRun",
-      "bytes": 143444,
-      "used": 65393
+      "bytes": 140305,
+      "used": 64284,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 2945
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1391
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 7615
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     },
     {
       "lang": "c",
@@ -368,40 +588,84 @@
       "demo": "string-marshalling",
       "version": "main",
       "path": "c/string-marshalling/jco-main/string_marshalling.js",
-      "sha256": "478ea59978b3f146fd891d637b741778a7f2ede5b9f6f89daa1decdecbe22d4d",
+      "sha256": "bb61450a5c96d0ac2a0a8bb98b4d5172e60e11d724cf61a0891e1c011c6934ef",
       "phase": "init",
-      "bytes": 186312,
-      "used": 54431
+      "bytes": 189313,
+      "used": 55093
     },
     {
       "lang": "c",
       "demo": "string-marshalling",
       "version": "main",
       "path": "c/string-marshalling/jco-main/string_marshalling.js",
-      "sha256": "478ea59978b3f146fd891d637b741778a7f2ede5b9f6f89daa1decdecbe22d4d",
+      "sha256": "bb61450a5c96d0ac2a0a8bb98b4d5172e60e11d724cf61a0891e1c011c6934ef",
       "phase": "firstRun",
-      "bytes": 186312,
-      "used": 93901
+      "bytes": 189313,
+      "used": 94859
     },
     {
       "lang": "c",
       "demo": "string-marshalling",
       "version": "candidate",
       "path": "c/string-marshalling/jco-candidate/string_marshalling.js",
-      "sha256": "479a387a1bffffdf18aacf8729b1321d533297fe51c2ff4f110182e37ec4f242",
+      "sha256": "ae8fdde457ea8653193c7d383b22a589fcd8b432be059f7374d0aa6732e4e6e9",
       "phase": "init",
-      "bytes": 143698,
-      "used": 41031
+      "bytes": 140559,
+      "used": 39908,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 1930
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1127
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 5992
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     },
     {
       "lang": "c",
       "demo": "string-marshalling",
       "version": "candidate",
       "path": "c/string-marshalling/jco-candidate/string_marshalling.js",
-      "sha256": "479a387a1bffffdf18aacf8729b1321d533297fe51c2ff4f110182e37ec4f242",
+      "sha256": "ae8fdde457ea8653193c7d383b22a589fcd8b432be059f7374d0aa6732e4e6e9",
       "phase": "firstRun",
-      "bytes": 143698,
-      "used": 65908
+      "bytes": 140559,
+      "used": 64799,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 2945
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1391
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 7615
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     },
     {
       "lang": "c",
@@ -428,40 +692,84 @@
       "demo": "table-update",
       "version": "main",
       "path": "c/table-update/jco-main/table_update.js",
-      "sha256": "6ca471717c497364100c07af38fa4c0f9e222fa04fae9c5182c24b0396cc47b9",
+      "sha256": "fbeb197075ff2503b9c6a9f331a7521d3d57ad6e080bf1047b43718cdc45c4ac",
       "phase": "init",
-      "bytes": 193947,
-      "used": 56644
+      "bytes": 196954,
+      "used": 57306
     },
     {
       "lang": "c",
       "demo": "table-update",
       "version": "main",
       "path": "c/table-update/jco-main/table_update.js",
-      "sha256": "6ca471717c497364100c07af38fa4c0f9e222fa04fae9c5182c24b0396cc47b9",
+      "sha256": "fbeb197075ff2503b9c6a9f331a7521d3d57ad6e080bf1047b43718cdc45c4ac",
       "phase": "firstRun",
-      "bytes": 193947,
-      "used": 99890
+      "bytes": 196954,
+      "used": 100854
     },
     {
       "lang": "c",
       "demo": "table-update",
       "version": "candidate",
       "path": "c/table-update/jco-candidate/table_update.js",
-      "sha256": "406a7d41ec2640b85ed5983d5dc5d9763c89cfc2e396e8c760a45632ee6007a4",
+      "sha256": "432be90e739833e1112d74feb5d40175c1b9d5d296b0f0a5931da4b646b857df",
       "phase": "init",
-      "bytes": 148546,
-      "used": 41664
+      "bytes": 145407,
+      "used": 40541,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 1930
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1127
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 5992
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     },
     {
       "lang": "c",
       "demo": "table-update",
       "version": "candidate",
       "path": "c/table-update/jco-candidate/table_update.js",
-      "sha256": "406a7d41ec2640b85ed5983d5dc5d9763c89cfc2e396e8c760a45632ee6007a4",
+      "sha256": "432be90e739833e1112d74feb5d40175c1b9d5d296b0f0a5931da4b646b857df",
       "phase": "firstRun",
-      "bytes": 148546,
-      "used": 67799
+      "bytes": 145407,
+      "used": 66690,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 2945
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1391
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 7615
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     },
     {
       "lang": "cpp",
@@ -488,40 +796,84 @@
       "demo": "attribute-churn",
       "version": "main",
       "path": "cpp/attribute-churn/jco-main/attribute_churn.js",
-      "sha256": "2e5cf31decbbcae81367f95262cf641d41e8836bdaad97f897f63fa91a98a412",
+      "sha256": "b54b854f9fd35457624d7599b1e24aa70612299e191f5a9ea7e7bc69b9310634",
       "phase": "init",
-      "bytes": 179127,
-      "used": 53150
+      "bytes": 182128,
+      "used": 53812
     },
     {
       "lang": "cpp",
       "demo": "attribute-churn",
       "version": "main",
       "path": "cpp/attribute-churn/jco-main/attribute_churn.js",
-      "sha256": "2e5cf31decbbcae81367f95262cf641d41e8836bdaad97f897f63fa91a98a412",
+      "sha256": "b54b854f9fd35457624d7599b1e24aa70612299e191f5a9ea7e7bc69b9310634",
       "phase": "firstRun",
-      "bytes": 179127,
-      "used": 90996
+      "bytes": 182128,
+      "used": 91954
     },
     {
       "lang": "cpp",
       "demo": "attribute-churn",
       "version": "candidate",
       "path": "cpp/attribute-churn/jco-candidate/attribute_churn.js",
-      "sha256": "a93baae59cf0c8e76a2e0c0bdd4c4b2a2c3ce7d882a1e7bbe61947c87aae0546",
+      "sha256": "6b67378864175cff1a48e5ba870649b0c053a6a1d1b14f4dee1c087e321cc193",
       "phase": "init",
-      "bytes": 139332,
-      "used": 40371
+      "bytes": 136193,
+      "used": 39248,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 1930
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1127
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 5992
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     },
     {
       "lang": "cpp",
       "demo": "attribute-churn",
       "version": "candidate",
       "path": "cpp/attribute-churn/jco-candidate/attribute_churn.js",
-      "sha256": "a93baae59cf0c8e76a2e0c0bdd4c4b2a2c3ce7d882a1e7bbe61947c87aae0546",
+      "sha256": "6b67378864175cff1a48e5ba870649b0c053a6a1d1b14f4dee1c087e321cc193",
       "phase": "firstRun",
-      "bytes": 139332,
-      "used": 63107
+      "bytes": 136193,
+      "used": 61998,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 2945
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1391
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 7615
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     },
     {
       "lang": "cpp",
@@ -548,40 +900,84 @@
       "demo": "canvas-draw",
       "version": "main",
       "path": "cpp/canvas-draw/jco-main/canvas_draw.js",
-      "sha256": "75f9368be01ad2fc0561a308571e1eda8d99a46c36747677ff8421dcc09c828d",
+      "sha256": "3c06d51eab3c247b9af323bfee73b41d5b8798fadc8a82e1f8a6556c4a8d7156",
       "phase": "init",
-      "bytes": 193920,
-      "used": 56997
+      "bytes": 196933,
+      "used": 57659
     },
     {
       "lang": "cpp",
       "demo": "canvas-draw",
       "version": "main",
       "path": "cpp/canvas-draw/jco-main/canvas_draw.js",
-      "sha256": "75f9368be01ad2fc0561a308571e1eda8d99a46c36747677ff8421dcc09c828d",
+      "sha256": "3c06d51eab3c247b9af323bfee73b41d5b8798fadc8a82e1f8a6556c4a8d7156",
       "phase": "firstRun",
-      "bytes": 193920,
-      "used": 101269
+      "bytes": 196933,
+      "used": 102239
     },
     {
       "lang": "cpp",
       "demo": "canvas-draw",
       "version": "candidate",
       "path": "cpp/canvas-draw/jco-candidate/canvas_draw.js",
-      "sha256": "b5d917c471f5bd265e35bea7e3a98922802113fe0e5dce210983831c39a14314",
+      "sha256": "9db6114c6ace919dfaeb178e3c775219ed621251438ccf46da78265847624227",
       "phase": "init",
-      "bytes": 147895,
-      "used": 41430
+      "bytes": 144756,
+      "used": 40307,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 1930
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1127
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 5992
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     },
     {
       "lang": "cpp",
       "demo": "canvas-draw",
       "version": "candidate",
       "path": "cpp/canvas-draw/jco-candidate/canvas_draw.js",
-      "sha256": "b5d917c471f5bd265e35bea7e3a98922802113fe0e5dce210983831c39a14314",
+      "sha256": "9db6114c6ace919dfaeb178e3c775219ed621251438ccf46da78265847624227",
       "phase": "firstRun",
-      "bytes": 147895,
-      "used": 67476
+      "bytes": 144756,
+      "used": 66367,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 2945
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1391
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 7615
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     },
     {
       "lang": "cpp",
@@ -608,40 +1004,84 @@
       "demo": "canvas-pixels",
       "version": "main",
       "path": "cpp/canvas-pixels/jco-main/canvas_pixels.js",
-      "sha256": "ba9f2772ff491955e6826c1397a8c9c8dc4151f6efe95c330c0354e6c6b5abc3",
+      "sha256": "28759a2dd04868d1082953a7d3a61aaec0fc763c6b8eb5d0381d7f1f793d7b23",
       "phase": "init",
-      "bytes": 212800,
-      "used": 60572
+      "bytes": 215816,
+      "used": 61234
     },
     {
       "lang": "cpp",
       "demo": "canvas-pixels",
       "version": "main",
       "path": "cpp/canvas-pixels/jco-main/canvas_pixels.js",
-      "sha256": "ba9f2772ff491955e6826c1397a8c9c8dc4151f6efe95c330c0354e6c6b5abc3",
+      "sha256": "28759a2dd04868d1082953a7d3a61aaec0fc763c6b8eb5d0381d7f1f793d7b23",
       "phase": "firstRun",
-      "bytes": 212800,
-      "used": 108270
+      "bytes": 215816,
+      "used": 109243
     },
     {
       "lang": "cpp",
       "demo": "canvas-pixels",
       "version": "candidate",
       "path": "cpp/canvas-pixels/jco-candidate/canvas_pixels.js",
-      "sha256": "70c527550d2d35bcbf79e86316728276c2845a18c106f826fcd73c5944571a9a",
+      "sha256": "79caac64cf1b78384ba73659174de3f3cd01060e8981212abe883fd0e837adb8",
       "phase": "init",
-      "bytes": 153869,
-      "used": 42618
+      "bytes": 150730,
+      "used": 41495,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 1930
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1127
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 5992
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     },
     {
       "lang": "cpp",
       "demo": "canvas-pixels",
       "version": "candidate",
       "path": "cpp/canvas-pixels/jco-candidate/canvas_pixels.js",
-      "sha256": "70c527550d2d35bcbf79e86316728276c2845a18c106f826fcd73c5944571a9a",
+      "sha256": "79caac64cf1b78384ba73659174de3f3cd01060e8981212abe883fd0e837adb8",
       "phase": "firstRun",
-      "bytes": 153869,
-      "used": 70737
+      "bytes": 150730,
+      "used": 69628,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 2945
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1391
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 7615
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     },
     {
       "lang": "cpp",
@@ -668,40 +1108,84 @@
       "demo": "dom-query",
       "version": "main",
       "path": "cpp/dom-query/jco-main/dom_query.js",
-      "sha256": "fcec04921641249d3e93a98d72a83128f7efc038731abe3049ba81c57b693fae",
+      "sha256": "b462e639e738360008e77e9d61123a3149e8c70a0facbcba747ed07dfb792b70",
       "phase": "init",
-      "bytes": 195750,
-      "used": 56585
+      "bytes": 198757,
+      "used": 57247
     },
     {
       "lang": "cpp",
       "demo": "dom-query",
       "version": "main",
       "path": "cpp/dom-query/jco-main/dom_query.js",
-      "sha256": "fcec04921641249d3e93a98d72a83128f7efc038731abe3049ba81c57b693fae",
+      "sha256": "b462e639e738360008e77e9d61123a3149e8c70a0facbcba747ed07dfb792b70",
       "phase": "firstRun",
-      "bytes": 195750,
-      "used": 100232
+      "bytes": 198757,
+      "used": 101196
     },
     {
       "lang": "cpp",
       "demo": "dom-query",
       "version": "candidate",
       "path": "cpp/dom-query/jco-candidate/dom_query.js",
-      "sha256": "f5ce8253e1c454ef3ba464130be0342d86201d7b3ddbc2092fe9a05ca74668fe",
+      "sha256": "1db9f90930bb63362f78ff82630076a6cfd0dd3c1de422c0e817ed6c596cb528",
       "phase": "init",
-      "bytes": 146308,
-      "used": 41061
+      "bytes": 143169,
+      "used": 39938,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 1930
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1127
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 5992
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     },
     {
       "lang": "cpp",
       "demo": "dom-query",
       "version": "candidate",
       "path": "cpp/dom-query/jco-candidate/dom_query.js",
-      "sha256": "f5ce8253e1c454ef3ba464130be0342d86201d7b3ddbc2092fe9a05ca74668fe",
+      "sha256": "1db9f90930bb63362f78ff82630076a6cfd0dd3c1de422c0e817ed6c596cb528",
       "phase": "firstRun",
-      "bytes": 146308,
-      "used": 67576
+      "bytes": 143169,
+      "used": 66467,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 2945
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1391
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 7615
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     },
     {
       "lang": "cpp",
@@ -728,40 +1212,84 @@
       "demo": "dom-traversal",
       "version": "main",
       "path": "cpp/dom-traversal/jco-main/dom_traversal.js",
-      "sha256": "9db499d34873628262812a5a5c8f401a2294c28679a0964c218f4d7f3b76d9e8",
+      "sha256": "41030cd8d20375955e1526b003ae0abafd34d282e1697ee58091aa676c184187",
       "phase": "init",
-      "bytes": 186730,
-      "used": 55247
+      "bytes": 189737,
+      "used": 55909
     },
     {
       "lang": "cpp",
       "demo": "dom-traversal",
       "version": "main",
       "path": "cpp/dom-traversal/jco-main/dom_traversal.js",
-      "sha256": "9db499d34873628262812a5a5c8f401a2294c28679a0964c218f4d7f3b76d9e8",
+      "sha256": "41030cd8d20375955e1526b003ae0abafd34d282e1697ee58091aa676c184187",
       "phase": "firstRun",
-      "bytes": 186730,
-      "used": 96436
+      "bytes": 189737,
+      "used": 97400
     },
     {
       "lang": "cpp",
       "demo": "dom-traversal",
       "version": "candidate",
       "path": "cpp/dom-traversal/jco-candidate/dom_traversal.js",
-      "sha256": "08ecab2e0ac3dd45fb4d603c98abefe36c0f531247d10f5f30931153fdb0399d",
+      "sha256": "7710dbddc144b2f71b39feb33ac38ab4b61a402f63551656e2bc1d8dcceaa6f1",
       "phase": "init",
-      "bytes": 143440,
-      "used": 40673
+      "bytes": 140301,
+      "used": 39550,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 1930
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1127
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 5992
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     },
     {
       "lang": "cpp",
       "demo": "dom-traversal",
       "version": "candidate",
       "path": "cpp/dom-traversal/jco-candidate/dom_traversal.js",
-      "sha256": "08ecab2e0ac3dd45fb4d603c98abefe36c0f531247d10f5f30931153fdb0399d",
+      "sha256": "7710dbddc144b2f71b39feb33ac38ab4b61a402f63551656e2bc1d8dcceaa6f1",
       "phase": "firstRun",
-      "bytes": 143440,
-      "used": 65390
+      "bytes": 140301,
+      "used": 64281,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 2945
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1391
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 7615
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     },
     {
       "lang": "cpp",
@@ -788,40 +1316,84 @@
       "demo": "string-marshalling",
       "version": "main",
       "path": "cpp/string-marshalling/jco-main/string_marshalling.js",
-      "sha256": "6f803f19651766053a16880e824c50682dc77e43e3c07273b3381472048d1b7a",
+      "sha256": "99855a90e780c29c677e8990bd678cb3b6835baf83617f852a128df39452f19c",
       "phase": "init",
-      "bytes": 186307,
-      "used": 54425
+      "bytes": 189308,
+      "used": 55087
     },
     {
       "lang": "cpp",
       "demo": "string-marshalling",
       "version": "main",
       "path": "cpp/string-marshalling/jco-main/string_marshalling.js",
-      "sha256": "6f803f19651766053a16880e824c50682dc77e43e3c07273b3381472048d1b7a",
+      "sha256": "99855a90e780c29c677e8990bd678cb3b6835baf83617f852a128df39452f19c",
       "phase": "firstRun",
-      "bytes": 186307,
-      "used": 93896
+      "bytes": 189308,
+      "used": 94854
     },
     {
       "lang": "cpp",
       "demo": "string-marshalling",
       "version": "candidate",
       "path": "cpp/string-marshalling/jco-candidate/string_marshalling.js",
-      "sha256": "75b125a25eba7a74a7ac6df4587f82a02d64d98829672cc7a44a8d057550efd0",
+      "sha256": "d8ddd17ac76a1a16b3fb3399aec453cddc75b8a33e6402a1b04573480146a92a",
       "phase": "init",
-      "bytes": 143694,
-      "used": 41029
+      "bytes": 140555,
+      "used": 39906,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 1930
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1127
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 5992
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     },
     {
       "lang": "cpp",
       "demo": "string-marshalling",
       "version": "candidate",
       "path": "cpp/string-marshalling/jco-candidate/string_marshalling.js",
-      "sha256": "75b125a25eba7a74a7ac6df4587f82a02d64d98829672cc7a44a8d057550efd0",
+      "sha256": "d8ddd17ac76a1a16b3fb3399aec453cddc75b8a33e6402a1b04573480146a92a",
       "phase": "firstRun",
-      "bytes": 143694,
-      "used": 65905
+      "bytes": 140555,
+      "used": 64796,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 2945
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1391
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 7615
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     },
     {
       "lang": "cpp",
@@ -848,40 +1420,84 @@
       "demo": "table-update",
       "version": "main",
       "path": "cpp/table-update/jco-main/table_update.js",
-      "sha256": "8cda4022d6475ebe89a2f1641dae2279becdb01d11d4b2726fcf8189e7cc3776",
+      "sha256": "7bb7fced6cbea319f8dc64a244a1e81dffbd83ab5522154abab0169b0c213b72",
       "phase": "init",
-      "bytes": 193942,
-      "used": 56638
+      "bytes": 196949,
+      "used": 57300
     },
     {
       "lang": "cpp",
       "demo": "table-update",
       "version": "main",
       "path": "cpp/table-update/jco-main/table_update.js",
-      "sha256": "8cda4022d6475ebe89a2f1641dae2279becdb01d11d4b2726fcf8189e7cc3776",
+      "sha256": "7bb7fced6cbea319f8dc64a244a1e81dffbd83ab5522154abab0169b0c213b72",
       "phase": "firstRun",
-      "bytes": 193942,
-      "used": 99885
+      "bytes": 196949,
+      "used": 100849
     },
     {
       "lang": "cpp",
       "demo": "table-update",
       "version": "candidate",
       "path": "cpp/table-update/jco-candidate/table_update.js",
-      "sha256": "0ee54e18dd83479d55aceb6f12853b358c63072edaa95750a461c1139515fd06",
+      "sha256": "0c0e0e99c547103305319ee9085be78abdf59c78eb9b7fcbf2f958fe39b066e5",
       "phase": "init",
-      "bytes": 148542,
-      "used": 41662
+      "bytes": 145403,
+      "used": 40539,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 1930
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1127
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 5992
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     },
     {
       "lang": "cpp",
       "demo": "table-update",
       "version": "candidate",
       "path": "cpp/table-update/jco-candidate/table_update.js",
-      "sha256": "0ee54e18dd83479d55aceb6f12853b358c63072edaa95750a461c1139515fd06",
+      "sha256": "0c0e0e99c547103305319ee9085be78abdf59c78eb9b7fcbf2f958fe39b066e5",
       "phase": "firstRun",
-      "bytes": 148542,
-      "used": 67796
+      "bytes": 145403,
+      "used": 66687,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 2945
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1391
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 7615
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     },
     {
       "lang": "rust",
@@ -908,40 +1524,84 @@
       "demo": "attribute-churn",
       "version": "main",
       "path": "rust/attribute-churn/jco-main/attribute_churn.js",
-      "sha256": "610f45e29f3f797431a27c780a8e5ded060ec7aa6306fda4f2bacf6561ba5066",
+      "sha256": "c5a036ecd74218fc117c2c80fecf736975e2353dc2f6e1cc7fb036e9ac75ac12",
       "phase": "init",
-      "bytes": 177711,
-      "used": 40006
+      "bytes": 180712,
+      "used": 40064
     },
     {
       "lang": "rust",
       "demo": "attribute-churn",
       "version": "main",
       "path": "rust/attribute-churn/jco-main/attribute_churn.js",
-      "sha256": "610f45e29f3f797431a27c780a8e5ded060ec7aa6306fda4f2bacf6561ba5066",
+      "sha256": "c5a036ecd74218fc117c2c80fecf736975e2353dc2f6e1cc7fb036e9ac75ac12",
       "phase": "firstRun",
-      "bytes": 177711,
-      "used": 88493
+      "bytes": 180712,
+      "used": 89451
     },
     {
       "lang": "rust",
       "demo": "attribute-churn",
       "version": "candidate",
       "path": "rust/attribute-churn/jco-candidate/attribute_churn.js",
-      "sha256": "5675ce3f58575de546b66ab5a8b1f62f932835af71ea6ee04424ebe253c9eb73",
+      "sha256": "7cd84132d6d44bbd0889f4f9a6742c103480ab20f5cbf77d3ce5357c1ca7d42f",
       "phase": "init",
-      "bytes": 137957,
-      "used": 27337
+      "bytes": 134818,
+      "used": 25310,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 543
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 110
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 750
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 321
+        }
+      ]
     },
     {
       "lang": "rust",
       "demo": "attribute-churn",
       "version": "candidate",
       "path": "rust/attribute-churn/jco-candidate/attribute_churn.js",
-      "sha256": "5675ce3f58575de546b66ab5a8b1f62f932835af71ea6ee04424ebe253c9eb73",
+      "sha256": "7cd84132d6d44bbd0889f4f9a6742c103480ab20f5cbf77d3ce5357c1ca7d42f",
       "phase": "firstRun",
-      "bytes": 137957,
-      "used": 60637
+      "bytes": 134818,
+      "used": 59528,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 2945
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1127
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 7504
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     },
     {
       "lang": "rust",
@@ -968,40 +1628,84 @@
       "demo": "canvas-draw",
       "version": "main",
       "path": "rust/canvas-draw/jco-main/canvas_draw.js",
-      "sha256": "9653036e135427c5f46ad2ba234e0783524e5a23bc7cbd9db55a983cb5fe16b1",
+      "sha256": "515073232ac167c0d299317f9ebcf05d911d8959e830dcff4fab1f56bacef8c2",
       "phase": "init",
-      "bytes": 192498,
-      "used": 43847
+      "bytes": 195511,
+      "used": 43905
     },
     {
       "lang": "rust",
       "demo": "canvas-draw",
       "version": "main",
       "path": "rust/canvas-draw/jco-main/canvas_draw.js",
-      "sha256": "9653036e135427c5f46ad2ba234e0783524e5a23bc7cbd9db55a983cb5fe16b1",
+      "sha256": "515073232ac167c0d299317f9ebcf05d911d8959e830dcff4fab1f56bacef8c2",
       "phase": "firstRun",
-      "bytes": 192498,
-      "used": 98760
+      "bytes": 195511,
+      "used": 99730
     },
     {
       "lang": "rust",
       "demo": "canvas-draw",
       "version": "candidate",
       "path": "rust/canvas-draw/jco-candidate/canvas_draw.js",
-      "sha256": "5a33e90d0023b1272bb29351a4e8f42d2126bcc2c7a356909f434056e880b067",
+      "sha256": "165748f1b2c3e28e6e70c38f62df2014baa8b790f43f0ed4c71390711b131ab1",
       "phase": "init",
-      "bytes": 146514,
-      "used": 28390
+      "bytes": 143375,
+      "used": 26363,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 543
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 110
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 750
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 321
+        }
+      ]
     },
     {
       "lang": "rust",
       "demo": "canvas-draw",
       "version": "candidate",
       "path": "rust/canvas-draw/jco-candidate/canvas_draw.js",
-      "sha256": "5a33e90d0023b1272bb29351a4e8f42d2126bcc2c7a356909f434056e880b067",
+      "sha256": "165748f1b2c3e28e6e70c38f62df2014baa8b790f43f0ed4c71390711b131ab1",
       "phase": "firstRun",
-      "bytes": 146514,
-      "used": 65000
+      "bytes": 143375,
+      "used": 63891,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 2945
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1127
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 7504
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     },
     {
       "lang": "rust",
@@ -1028,40 +1732,84 @@
       "demo": "canvas-pixels",
       "version": "main",
       "path": "rust/canvas-pixels/jco-main/canvas_pixels.js",
-      "sha256": "2279882c009daba892877319c16f17551c1efcd17e975fd8d2d7e1646cb354ae",
+      "sha256": "c4603ddec9c5d4eb7dfa56d03a4a61ab79c0d09befe01286c25cd10d61e16c08",
       "phase": "init",
-      "bytes": 211371,
-      "used": 47415
+      "bytes": 214387,
+      "used": 47473
     },
     {
       "lang": "rust",
       "demo": "canvas-pixels",
       "version": "main",
       "path": "rust/canvas-pixels/jco-main/canvas_pixels.js",
-      "sha256": "2279882c009daba892877319c16f17551c1efcd17e975fd8d2d7e1646cb354ae",
+      "sha256": "c4603ddec9c5d4eb7dfa56d03a4a61ab79c0d09befe01286c25cd10d61e16c08",
       "phase": "firstRun",
-      "bytes": 211371,
-      "used": 105754
+      "bytes": 214387,
+      "used": 106727
     },
     {
       "lang": "rust",
       "demo": "canvas-pixels",
       "version": "candidate",
       "path": "rust/canvas-pixels/jco-candidate/canvas_pixels.js",
-      "sha256": "854f1301e0e4f11a722970c38c6bf3c363263ef357ffb4f4379a364a17597844",
+      "sha256": "bc46d3475314939fbb9d229faa5911af5810a7ba87fe48571d2b0ef2818f8a7b",
       "phase": "init",
-      "bytes": 152484,
-      "used": 29574
+      "bytes": 149345,
+      "used": 27547,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 543
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 110
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 750
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 321
+        }
+      ]
     },
     {
       "lang": "rust",
       "demo": "canvas-pixels",
       "version": "candidate",
       "path": "rust/canvas-pixels/jco-candidate/canvas_pixels.js",
-      "sha256": "854f1301e0e4f11a722970c38c6bf3c363263ef357ffb4f4379a364a17597844",
+      "sha256": "bc46d3475314939fbb9d229faa5911af5810a7ba87fe48571d2b0ef2818f8a7b",
       "phase": "firstRun",
-      "bytes": 152484,
-      "used": 68257
+      "bytes": 149345,
+      "used": 67148,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 2945
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1127
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 7504
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     },
     {
       "lang": "rust",
@@ -1088,40 +1836,84 @@
       "demo": "dom-query",
       "version": "main",
       "path": "rust/dom-query/jco-main/dom_query.js",
-      "sha256": "f67940b092338ce072686b71e788c87255f5d33b26f30317d0c73c62e7f34ad3",
+      "sha256": "e8b3fdd62f8e716e412356c80423e75b72c7e7a633dc4971cd02244cdc782a64",
       "phase": "init",
-      "bytes": 194326,
-      "used": 43433
+      "bytes": 197333,
+      "used": 43491
     },
     {
       "lang": "rust",
       "demo": "dom-query",
       "version": "main",
       "path": "rust/dom-query/jco-main/dom_query.js",
-      "sha256": "f67940b092338ce072686b71e788c87255f5d33b26f30317d0c73c62e7f34ad3",
+      "sha256": "e8b3fdd62f8e716e412356c80423e75b72c7e7a633dc4971cd02244cdc782a64",
       "phase": "firstRun",
-      "bytes": 194326,
-      "used": 97721
+      "bytes": 197333,
+      "used": 98685
     },
     {
       "lang": "rust",
       "demo": "dom-query",
       "version": "candidate",
       "path": "rust/dom-query/jco-candidate/dom_query.js",
-      "sha256": "005a9d434ec1073d1a77097262b4b36290c02de33e3e3c48216571fdcfad7f8b",
+      "sha256": "ad76defd692976f9524adef6d1482fe5ae9ad3319871e40900dd5e3e5a0911b1",
       "phase": "init",
-      "bytes": 144928,
-      "used": 28022
+      "bytes": 141789,
+      "used": 25995,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 543
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 110
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 750
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 321
+        }
+      ]
     },
     {
       "lang": "rust",
       "demo": "dom-query",
       "version": "candidate",
       "path": "rust/dom-query/jco-candidate/dom_query.js",
-      "sha256": "005a9d434ec1073d1a77097262b4b36290c02de33e3e3c48216571fdcfad7f8b",
+      "sha256": "ad76defd692976f9524adef6d1482fe5ae9ad3319871e40900dd5e3e5a0911b1",
       "phase": "firstRun",
-      "bytes": 144928,
-      "used": 65101
+      "bytes": 141789,
+      "used": 63992,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 2945
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1127
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 7504
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     },
     {
       "lang": "rust",
@@ -1148,40 +1940,84 @@
       "demo": "dom-traversal",
       "version": "main",
       "path": "rust/dom-traversal/jco-main/dom_traversal.js",
-      "sha256": "ba5efa922abf4587f128bc7d12d859fba41f143420b569befaa5ab7fe06bf8e5",
+      "sha256": "9dceb969b52ee724dc4e6e24864d809b76247c55c1769f4644e27d6c6d1992ac",
       "phase": "init",
-      "bytes": 185270,
-      "used": 53799
+      "bytes": 188277,
+      "used": 54461
     },
     {
       "lang": "rust",
       "demo": "dom-traversal",
       "version": "main",
       "path": "rust/dom-traversal/jco-main/dom_traversal.js",
-      "sha256": "ba5efa922abf4587f128bc7d12d859fba41f143420b569befaa5ab7fe06bf8e5",
+      "sha256": "9dceb969b52ee724dc4e6e24864d809b76247c55c1769f4644e27d6c6d1992ac",
       "phase": "firstRun",
-      "bytes": 185270,
-      "used": 94992
+      "bytes": 188277,
+      "used": 95956
     },
     {
       "lang": "rust",
       "demo": "dom-traversal",
       "version": "candidate",
       "path": "rust/dom-traversal/jco-candidate/dom_traversal.js",
-      "sha256": "d90fceb3f7de6bbe99862a5e206abd65f3388fab327c3848a7651a8bdbfbbc2d",
+      "sha256": "ebbda36289dc2ce682bf1ec857eb38642e6882aa9b67be60309587bcdf8146db",
       "phase": "init",
-      "bytes": 142296,
-      "used": 39553
+      "bytes": 139157,
+      "used": 38430,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 1930
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1127
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 5992
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     },
     {
       "lang": "rust",
       "demo": "dom-traversal",
       "version": "candidate",
       "path": "rust/dom-traversal/jco-candidate/dom_traversal.js",
-      "sha256": "d90fceb3f7de6bbe99862a5e206abd65f3388fab327c3848a7651a8bdbfbbc2d",
+      "sha256": "ebbda36289dc2ce682bf1ec857eb38642e6882aa9b67be60309587bcdf8146db",
       "phase": "firstRun",
-      "bytes": 142296,
-      "used": 64266
+      "bytes": 139157,
+      "used": 63157,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 2945
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1391
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 7615
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     },
     {
       "lang": "rust",
@@ -1208,40 +2044,84 @@
       "demo": "string-marshalling",
       "version": "main",
       "path": "rust/string-marshalling/jco-main/string_marshalling.js",
-      "sha256": "efa54a7453760aae8c5a165954007d578d9601d0c41b4ed6b16cebb1e6b5e6fb",
+      "sha256": "bbfa9861dcadcc64ba441c78fdeacd7b44ddede96e5f8de8606cde225c05c1b3",
       "phase": "init",
-      "bytes": 184887,
-      "used": 41277
+      "bytes": 187888,
+      "used": 41335
     },
     {
       "lang": "rust",
       "demo": "string-marshalling",
       "version": "main",
       "path": "rust/string-marshalling/jco-main/string_marshalling.js",
-      "sha256": "efa54a7453760aae8c5a165954007d578d9601d0c41b4ed6b16cebb1e6b5e6fb",
+      "sha256": "bbfa9861dcadcc64ba441c78fdeacd7b44ddede96e5f8de8606cde225c05c1b3",
       "phase": "firstRun",
-      "bytes": 184887,
-      "used": 91389
+      "bytes": 187888,
+      "used": 92347
     },
     {
       "lang": "rust",
       "demo": "string-marshalling",
       "version": "candidate",
       "path": "rust/string-marshalling/jco-candidate/string_marshalling.js",
-      "sha256": "20c0eb065e54e171845e652568f9b713ad11aad6ec2ac6b2d42bf759f263b388",
+      "sha256": "cdd74ee089cd16a0c09c5c7681245d6f775f59aa3c97a51fa6734db505b04bb0",
       "phase": "init",
-      "bytes": 142318,
-      "used": 27994
+      "bytes": 139179,
+      "used": 25967,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 543
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 110
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 750
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 321
+        }
+      ]
     },
     {
       "lang": "rust",
       "demo": "string-marshalling",
       "version": "candidate",
       "path": "rust/string-marshalling/jco-candidate/string_marshalling.js",
-      "sha256": "20c0eb065e54e171845e652568f9b713ad11aad6ec2ac6b2d42bf759f263b388",
+      "sha256": "cdd74ee089cd16a0c09c5c7681245d6f775f59aa3c97a51fa6734db505b04bb0",
       "phase": "firstRun",
-      "bytes": 142318,
-      "used": 63434
+      "bytes": 139179,
+      "used": 62325,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 2945
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1127
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 7504
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     },
     {
       "lang": "rust",
@@ -1268,40 +2148,84 @@
       "demo": "table-update",
       "version": "main",
       "path": "rust/table-update/jco-main/table_update.js",
-      "sha256": "5176c4f60fab20d4db72143deadea8694ce8cb1f43f4199f134fdbfdceefd5a9",
+      "sha256": "1c8da9b80e6c9edddbdf16f65e51281a03ac52d08c4212991ffcf7e33d0d73d1",
       "phase": "init",
-      "bytes": 193110,
-      "used": 55810
+      "bytes": 196117,
+      "used": 56472
     },
     {
       "lang": "rust",
       "demo": "table-update",
       "version": "main",
       "path": "rust/table-update/jco-main/table_update.js",
-      "sha256": "5176c4f60fab20d4db72143deadea8694ce8cb1f43f4199f134fdbfdceefd5a9",
+      "sha256": "1c8da9b80e6c9edddbdf16f65e51281a03ac52d08c4212991ffcf7e33d0d73d1",
       "phase": "firstRun",
-      "bytes": 193110,
-      "used": 99061
+      "bytes": 196117,
+      "used": 100025
     },
     {
       "lang": "rust",
       "demo": "table-update",
       "version": "candidate",
       "path": "rust/table-update/jco-candidate/table_update.js",
-      "sha256": "487980a4696151aa1279ca22a02ac9eea56f6a1669e629cbec110e6f389fd40c",
+      "sha256": "fba8ba1d5b74e8d2115a072558a9f68f84414c065337d244500104a0a030c785",
       "phase": "init",
-      "bytes": 147987,
-      "used": 41123
+      "bytes": 144848,
+      "used": 40000,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 1930
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1127
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 5992
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     },
     {
       "lang": "rust",
       "demo": "table-update",
       "version": "candidate",
       "path": "rust/table-update/jco-candidate/table_update.js",
-      "sha256": "487980a4696151aa1279ca22a02ac9eea56f6a1669e629cbec110e6f389fd40c",
+      "sha256": "fba8ba1d5b74e8d2115a072558a9f68f84414c065337d244500104a0a030c785",
       "phase": "firstRun",
-      "bytes": 147987,
-      "used": 67253
+      "bytes": 144848,
+      "used": 66144,
+      "factories": [
+        {
+          "name": "ComponentAsyncState",
+          "bytes": 19067,
+          "used": 2945
+        },
+        {
+          "name": "RepTable",
+          "bytes": 3109,
+          "used": 1391
+        },
+        {
+          "name": "AsyncTask",
+          "bytes": 26585,
+          "used": 7615
+        },
+        {
+          "name": "AsyncThread",
+          "bytes": 3718,
+          "used": 898
+        }
+      ]
     }
   ]
 }

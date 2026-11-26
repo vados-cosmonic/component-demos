@@ -28,12 +28,12 @@ for (const [path, digest] of Object.entries(trial.sources)) {
   if (!path.startsWith("bench/")) assets.set("/" + path, "text/javascript");
 }
 const minified = JSON.parse(min).components;
+const inventory = JSON.parse(full);
 const builds = [];
-for (const { input, variants } of JSON.parse(full).components) {
+for (const { input, variants } of inventory.components) {
   const [lang, demo] = input.path.split("/");
   if (!Object.hasOwn(trial.workloads, demo) || basename(input.path) !== demo.replaceAll("-", "_") + ".wasm") continue;
   for (const [version, files] of Object.entries({ ...variants, ...minified[input.path] })) {
-    if (version === "reference") continue;
     const paths = {};
     for (const file of files) {
       const path = "/" + file.path;
@@ -46,7 +46,7 @@ for (const { input, variants } of JSON.parse(full).components) {
     builds.push({ lang, demo, version, path: scripts[0], paths });
   }
 }
-assert.equal(builds.length, Object.keys(trial.workloads).length * 3 * 6);
+assert.equal(builds.length, Object.keys(trial.workloads).length * 3 * (inventory.reference ? 7 : 6));
 
 // Stringified into a module script in the trial document.
 async function measure({ demo, path, args }) {

@@ -40,15 +40,32 @@ for (const component of inventory.components) {
 
 // Puppeteer returns disjoint V8 ranges in UTF-16 code units. Report the size
 // of those slices in UTF-8 bytes, matching the uncompressed payload inventory.
-function usedBytes(entry) {
+function usedBytes(entry, from = 0, to = entry.text.length) {
   let end = 0;
   let used = 0;
   for (const range of entry.ranges) {
     assert(range.start >= end && range.start <= range.end && range.end <= entry.text.length);
-    used += Buffer.byteLength(entry.text.slice(range.start, range.end));
+    const start = Math.max(range.start, from);
+    const stop = Math.min(range.end, to);
+    if (start < stop) used += Buffer.byteLength(entry.text.slice(start, stop));
     end = range.end;
   }
   return used;
+}
+
+// V8 gives the outer function's offsets, including any nested class methods.
+// Intersect with disjoint block ranges to count each reached byte once.
+function runtimeFactories(entry) {
+  const factories = [];
+  for (const fn of entry.rawScriptCoverage.functions) {
+    const name = /^__jcoEmbeddedRuntime\$define([A-Z]\w*)$/.exec(fn.functionName)?.[1];
+    if (!name) continue;
+    const { startOffset, endOffset } = fn.ranges[0];
+    assert(0 <= startOffset && startOffset < endOffset && endOffset <= entry.text.length);
+    factories.push({ name, bytes: Buffer.byteLength(entry.text.slice(startOffset, endOffset)),
+      used: usedBytes(entry, startOffset, endOffset) });
+  }
+  return factories;
 }
 
 const browser = await puppeteer.launch({
@@ -73,7 +90,7 @@ try {
           } });
         });
         await page.goto(origin);
-        await page.coverage.startJSCoverage({ useBlockCoverage: true });
+        await page.coverage.startJSCoverage({ useBlockCoverage: true, includeRawScriptCoverage: build.version === "candidate" });
         await page.evaluate(async ({ path, demo, args, runGuest }) => {
           const guest = await import("/" + path);
           if (runGuest) {
@@ -89,7 +106,8 @@ try {
         const entry = (await page.coverage.stopJSCoverage()).find(source => source.url === origin + "/" + build.path);
         assert(entry && hash(entry.text) === build.sha256, "Unexpected script for " + build.path);
         samples.push({ ...build, phase: runGuest ? "firstRun" : "init",
-          bytes: Buffer.byteLength(entry.text), used: usedBytes(entry) });
+          bytes: Buffer.byteLength(entry.text), used: usedBytes(entry),
+          ...(build.version === "candidate" ? { factories: runtimeFactories(entry) } : {}) });
       } finally {
         await page.close();
       }

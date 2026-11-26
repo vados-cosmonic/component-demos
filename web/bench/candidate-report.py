@@ -214,7 +214,8 @@ table(["Operation", "C++ / Embind", "C++ / EM_JS", "Rust / wasm-bindgen"], shim_
 para("<details><summary>How the synchronous bindings work</summary>")
 para("Eligible single-instance, synchronous components reuse the caller’s task for host imports. "
      "The adapter keeps direct references to its task stack and instance flags and checks for store interruptions. "
-     "Oxc removes the asynchronous import fallback and the subtask constructor, which these imports never use. The generator skips asynchronous wrappers for synchronous allocators "
+     "Oxc removes the asynchronous import fallback and the subtask, waitable, and future constructors. "
+     "The shutdown path skips creating the two empty stream and future tables. The generator skips asynchronous wrappers for synchronous allocators "
      "and post-return hooks. Standalone modules also omit suspension markers on core imports.")
 para("During a guest allocation, the checked runtime clears the instance’s may-leave flag and restores it on return or throw. "
      "Allocators in components with context-slot operations use the general guard to supply fresh slots for each call. "
@@ -225,7 +226,7 @@ para("Resource drops check the instance flag and record traps. When lifting a bo
      "the adapter validates the handle and reads its 32-bit representation directly. Imported host resources with automatically "
      "assigned representations use their guest handle as an array index. Explicit host representations and shared tables use a "
      "representation map. Components with async operations, cross-component resource transfers or call tracking use the general adapter.")
-para("The preceding run measures the change from removing the subtask constructor from synchronous components. "
+para("An earlier run measures the change from removing the subtask constructor from synchronous components. "
      "[Archived report](https://github.com/vados-cosmonic/component-demos/blob/255eca61b14b5ab63567da558b5f561149cc5163/README.md#change-from-the-previous-branch-revision)")
 para("</details>")
 if reference:
@@ -237,23 +238,29 @@ if reference:
     unchanged = {}
     js_deltas = []
     gzip_deltas = []
+    matching_cores = 0
+    inputs_with_cores = 0
     for component in sizes["components"]:
         current, previous = [component["variants"][version] for version in ("candidate", "reference")]
         js_deltas.append(sum(a["bytes"] for a in current if a["path"].endswith(".js"))
                          - sum(a["bytes"] for a in previous if a["path"].endswith(".js")))
         gzip_deltas.append(sum(a["gzip"] for a in current) - sum(a["gzip"] for a in previous))
+        outputs = [{Path(a["path"]).name: a["sha256"] for a in files} for files in (current, previous)]
+        cores = [{name: digest for name, digest in output.items() if name.endswith(".wasm")} for output in outputs]
+        if any(cores):
+            inputs_with_cores += 1
+            matching_cores += cores[0] == cores[1]
         path = Path(component["input"]["path"])
         lang, demo = path.parts[:2]
         if demo not in focus or path.name != demo.replace("-", "_") + ".wasm":
             continue
-        outputs = [{Path(asset["path"]).name: asset["sha256"] for asset in component["variants"][version]}
-                   for version in ("candidate", "reference")]
         unchanged[demo, lang] = outputs[0] == outputs[1]
     if len(unchanged) != len(focus) * len(languages):
         raise ValueError("No corresponding generated files for a headline workload")
     cold_ratios = [median(loads[demo, f"{lang} candidate"].values()) / median(loads[demo, f"{lang} reference"].values())
                    for demo, lang in unchanged]
     para(f"Generated JavaScript was smaller for {sum(v < 0 for v in js_deltas)}/{len(js_deltas)} inputs. "
+         f"External core Wasm files matched byte for byte for {matching_cores}/{inputs_with_cores} inputs that emitted them. "
          f"The median per-input change was {median(js_deltas):+,.0f} bytes of JavaScript and {median(gzip_deltas):+,.0f} bytes "
          f"of total gzip payload. Across the {len(cold_ratios)} timed guest and workload combinations, the median ratio of "
          f"candidate to previous startup time was {median(cold_ratios):.2f}×.")
@@ -746,7 +753,8 @@ for row in observer["samples"]:
         raise ValueError(f"Invalid startup observer record for {key}")
     observer_groups[key][row["round"]] = (row["loadMs"], row["wasmStartMs"] - row["jsEndMs"])
 cases = [(lang, demo) for lang in languages for demo in focus]
-expected = {(version, attached, *case) for version in distribution for attached in (True, False) for case in cases}
+observer_versions = [*distribution, *(["reference"] if reference else [])]
+expected = {(version, attached, *case) for version in observer_versions for attached in (True, False) for case in cases}
 if (set(observer_groups) != expected or
         any(set(rows) != set(range(1, observer["rounds"] + 1)) for rows in observer_groups.values())):
     raise ValueError("Missing startup observer trials")
@@ -758,14 +766,22 @@ para(f"In {len(observer['samples']):,} fresh documents, the page timed its own d
      f"over {observer['rounds']} rounds. Each table cell is the median of the 21 workload medians. "
      "[Observer timings](web/bench/results/startup-observer.json)")
 observer_rows = []
-for version in distribution:
+for version in observer_versions:
     base, _, mode = version.partition("-")
-    label = distribution_names[base] + (" minified" if mode else " default")
+    label = ("Previous branch" if base == "reference" else distribution_names[base]) + (" minified" if mode else " default")
     columns = [median(median(row[column] for row in observer_groups[version, attached, *case].values())
                       for case in cases) for column in (0, 1) for attached in (True, False)]
     observer_rows.append([label, *[f"{value:.2f}" for value in columns]])
 table(["Distribution", "Attached startup (ms)", "Detached startup (ms)", "Attached JS end to Wasm request (ms)",
        "Detached JS end to Wasm request (ms)"], observer_rows)
+if reference:
+    ratios = []
+    for case in cases:
+        current, previous = [observer_groups[version, False, *case] for version in ("candidate", "reference")]
+        ratios.append(median(current[n][0] / previous[n][0] for n in current))
+    para(f"With DevTools disconnected, default-output startup took **{median(ratios):.2f}×** the previous "
+         f"revision’s time. The candidate was faster in {sum(r < 1 for r in ratios)}/{len(ratios)} workloads. "
+         "Each workload contributes its median within-round time ratio.")
 
 coverage = json.loads((results / "js-coverage.json").read_text())
 if (coverage["sizesSha256"] != run["sizesSha256"] or coverage["workloads"] != run["workloads"] or
@@ -800,6 +816,34 @@ para(f"Chromium recorded block coverage on {len(used)} fresh pages in a separate
      "[Per-module coverage and hashes](web/bench/results/js-coverage.json)")
 table(["Build", "Reached at init (KiB)", "Reached through first run (KiB)", "Share through first run",
        "Unreached through first run (KiB)"], coverage_rows)
+
+factory_cases = defaultdict(dict)
+for sample in coverage["samples"]:
+    if sample["version"] != "candidate":
+        continue
+    for factory in sample["factories"]:
+        case = sample["lang"], sample["demo"]
+        phases = factory_cases[factory["name"]].setdefault(case, {})
+        if sample["phase"] in phases or not 0 <= factory["used"] <= factory["bytes"] <= sample["bytes"]:
+            raise ValueError(f"Invalid runtime factory coverage for {case}")
+        phases[sample["phase"]] = factory
+factory_rows = []
+for name, observations in factory_cases.items():
+    values = []
+    for phases in observations.values():
+        init, run_guest = phases["init"], phases["firstRun"]
+        size = run_guest["bytes"]
+        if size != init["bytes"] or not size:
+            raise ValueError(f"Inconsistent emitted size for {name}")
+        values.append((size, init["used"], run_guest["used"], size - run_guest["used"]))
+    medians = [median(column) / 1024 for column in zip(*values)]
+    factory_rows.append((medians[-1], [f"`{name}`", str(len(observations)), *[f"{v:.1f}" for v in medians]]))
+if factory_rows:
+    para("V8 also identified the functions that define the candidate’s shared runtime classes. "
+         "Each row counts the function and its nested methods in the generated JavaScript. Reached bytes come "
+         "from V8 block coverage on the same pages. The values are medians across modules containing that function.")
+    table(["Runtime class", "Modules", "Emitted (KiB)", "Reached at init (KiB)", "Through first run (KiB)",
+           "Unreached through first run (KiB)"], [row for _, row in sorted(factory_rows, reverse=True)])
 
 para("<details><summary>Candidate startup, variation and paired comparison to 1.13.0</summary>")
 para("The paired ratio divides the candidate time by the 1.13.0 time within each round, then takes the median. "
@@ -844,6 +888,25 @@ python3 web/bench/candidate-report.py
 ```""")
 para("The minification comparison uses each version’s packaged transpiler. The verification command compares "
      "the packaged candidate’s default JavaScript and core Wasm to the native generator’s measured output for every input.")
+para("<details><summary>Run the Jco binding correctness checks</summary>")
+para("After building the candidate above, these tests exercise the inline and bundled generators, both runtime "
+     "profiles, synchronous imports and the async operations that share their runtime. The integration tests use "
+     "the guest fixtures from the pinned upstream build.")
+para(f"""```sh
+cd ../jco-candidate
+cargo test --locked -p js-component-bindgen --lib
+cargo test --locked -p js-component-bindgen --lib --features embedded-cm-runtime
+pnpm --filter @bytecodealliance/jco-cm-runtime test
+pnpm --filter @bytecodealliance/jco-cm-runtime test:checked
+gh run download {pin["run"]} --repo bytecodealliance/jco --name js-generated-tests --dir packages/jco-transpile/test/fixtures/generated
+cd packages/jco-transpile
+node node_modules/vitest/vitest.mjs run -c test/vitest.ts \\
+  test/sync-host-import.ts test/p3/canonical-abi-traps.ts test/p3/task-return-memory.ts \\
+  test/p3/sync-call-block-trap.ts test/p3/async-export-future-result.ts \\
+  test/p3/future-lifts.ts test/p3/future-lowers.ts test/p3/future-drop.ts test/p3/future-transfer-g2g.ts \\
+  test/p3/stream-lifts.ts test/p3/stream-lowers.ts test/p3/stream-pass-through.ts test/p3/sync-stream-copy.ts
+```""")
+para("</details>")
 readme = bench.parents[1] / "README.md"
 text = readme.read_text()
 a, b = "<!-- candidate:start -->", "<!-- candidate:end -->"
