@@ -2,7 +2,7 @@
 
 This fork benchmarks the browser examples from [eqrion/component-demos at d0b9dd1](https://github.com/eqrion/component-demos/tree/d0b9dd1390a300978193adc623838fef4e4b632b). It runs the same compiled C, C++, and Rust WebAssembly components through jco 1.13.0, pinned upstream main, and a branch that optimizes synchronous host imports and numeric guest exports. The comparison also includes the demos’ JavaScript, Emscripten (Embind and EM_JS), and Rust wasm-bindgen implementations where available.
 
-The current PR head is `95e8ae0d8`. Its minified browser entries and Wasm match the full minified comparison. The slowest of the 21 warm headlines took 5.51× the fastest compiled shim’s time internally and 5.39× externally. Each build matched or beat Jco 1.13.0 on 14 of 21. [Minified results](#minified-browser-bindings) · [Changes since the timing run](#unused-task-and-resource-imports) · [Canvas readback at the PR head](#canvas-readback-at-the-pr-head)
+The current PR head is `95e8ae0d8`. Its minified browser entries and Wasm match the full minified comparison. The slowest of the 21 warm headlines took 5.51× the fastest compiled shim’s time internally and 5.39× externally. Each build matched or beat Jco 1.13.0 on 14 of 21. [Minified results](#minified-browser-bindings) · [Changes since the timing run](#unused-task-and-resource-imports) · [Canvas readback at the PR head](#canvas-readback-at-the-pr-head) · [Fetching or embedding the primary core](#fetching-or-embedding-the-primary-wasm-core)
 
 ## Browser bindings at the PR head
 
@@ -142,6 +142,43 @@ Use the built Jco checkout and minified 1.13.0 files from the full matrix, then 
 CHROME_BIN=/path/to/chrome ROUNDS=16 node web/bench/paired-dom-review.mjs \
   /path/to/built/jco /tmp/paired-dom.json.gz --minify
 python3 web/bench/paired-dom-report.py /tmp/paired-dom.json.gz --plot /tmp/paired-dom.png
+```
+
+</details>
+
+## Fetching or embedding the primary Wasm core
+
+Raising `base64Cutoff` from 5,000 to 262,144 bytes moved the primary Wasm core into the JavaScript entry for all six DOM query and table workloads. This saved one request per document. Median paired time to the first guest result was **1.02×** the ordinary layout for internal Oxc, **0.97×** for the external runtime, and **2.17×** for Jco 1.13.0. Every build transferred more bytes with the core embedded. [Timings, request sizes and hashes](web/bench/results/core-startup.json.gz)
+
+| Build | Import ms, fetched → embedded | First result ms, fetched → embedded | Paired first result | All JS + Wasm KiB, fetched → embedded | Gzip estimate KiB, fetched → embedded |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Jco 1.13.0 | 5.52 → 15.17 | 8.54 → 18.32 | 2.174× | 78.91 → 101.85 | 30.48 → 39.37 |
+| Internal Oxc | 11.08 → 11.12 | 17.14 → 17.40 | 1.021× | 141.52 → 163.92 | 46.70 → 55.95 |
+| External runtime | 24.28 → 24.04 | 30.52 → 29.84 | 0.967× | 198.31 → 221.21 | 68.60 → 77.91 |
+
+![Time to first guest result when the main Wasm core is embedded relative to fetching it separately, for three builds across six workloads.](web/bench/results/core-startup.png)
+
+<details><summary>Individual median intervals and reproduction</summary>
+
+| Guest and workload | 1.13.0 | Internal Oxc | External runtime |
+| --- | ---: | ---: | ---: |
+| C DOM query | 2.06× (1.84–2.38) | 1.01× (0.92–1.14) | 0.96× (0.86–1.02) |
+| C++ DOM query | 1.87× (1.71–2.24) | 0.98× (0.89–1.06) | 0.97× (0.95–1.06) |
+| Rust DOM query | 3.60× (3.06–4.08) | 1.09× (0.98–1.19) | 0.98× (0.87–1.04) |
+| C table update | 2.18× (1.92–2.40) | 1.01× (0.92–1.18) | 0.94× (0.85–1.05) |
+| C++ table update | 2.17× (1.89–2.31) | 1.03× (0.92–1.09) | 0.96× (0.86–1.00) |
+| Rust table update | 3.45× (2.86–4.08) | 1.11× (1.00–1.22) | 1.04× (0.89–1.33) |
+
+Each of 18 rounds used 36 fresh Chromium documents with DevTools disconnected. All builds ran the same C, C++ and Rust guest cores. The runner matched the fetched layouts to the full minified matrix and decoded and hashed the embedded modules to verify identical Wasm. The two DOM workloads used small inputs so the first result includes import and a short guest call. The primary cores ranged from 65,203 to 149,690 bytes. Embedding cut release and bundled requests from two to one and external requests from 20 to 19. The common demo host was loaded before timing.
+
+The first table summarizes six workload medians. The paired column divides first-result times within each workload and round before taking medians. The per-workload table and chart show individual two-sided median intervals with at least 95% coverage. Eleven of the twelve PR intervals included parity. Internal Rust table creation was slower with embedding (unrounded interval 1.001–1.225×). Responses were served uncompressed on loopback with caching disabled. The gzip estimates compress the requested assets individually. [Runner](web/bench/core-startup.mjs) · [Verifier and plot](web/bench/core-startup-report.py)
+
+Build the PR at `95e8ae0d8` and install the demo’s pinned web dependencies, then run these commands in the fork.
+
+```sh
+CHROME_BIN=/path/to/chrome ROUNDS=18 node web/bench/core-startup.mjs \
+  /path/to/built/jco /tmp/core-startup.json.gz
+python3 web/bench/core-startup-report.py /tmp/core-startup.json.gz --plot /tmp/core-startup.png
 ```
 
 </details>
