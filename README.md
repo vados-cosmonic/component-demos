@@ -2,6 +2,65 @@
 
 This fork benchmarks the browser examples from [eqrion/component-demos at d0b9dd1](https://github.com/eqrion/component-demos/tree/d0b9dd1390a300978193adc623838fef4e4b632b). It runs the same compiled C, C++, and Rust WebAssembly components through jco 1.13.0, pinned upstream main, and a branch that optimizes synchronous host imports and numeric guest exports. The comparison also includes the demos’ JavaScript, Emscripten (Embind and EM_JS), and Rust wasm-bindgen implementations where available.
 
+## Resource table initialization at eda794c50
+
+A resource transfer between component instances needs to find the destination table by ID. A synchronous component with one instance can use its table directly. The checked compiler now omits the array that indexed these tables and the assignments that populated it. Shutdown still uses its separate list of live tables and captures. Custom runtime providers continue to receive the registry. [Compiler change, runtime explanation and regression test](https://github.com/vados-cosmonic/jco/commit/eda794c504bb0a53ac50bf41ee1b240d3e714aab)
+
+Across 21 external demo entries, the compiler removed 21 array initializations and 156 table assignments (7–8 per component). Removing the initializer import and those statements from the previous unminified output reproduced the new external source apart from blank lines. Internal Oxc already eliminated the registry in the 21 minified direct modules. Bindings that expose an explicit `instantiate` function were smaller in both modes. [Per-entry sizes and hashes](web/bench/results/resource-table-registry-eda794c50.json.gz)
+
+| Minified entry size reduction, raw / gzip bytes | Internal Oxc | External checked |
+| --- | ---: | ---: |
+| Direct module, median of 21 demos | 0 / 0 | 98 / 63 |
+| C table, direct module | 0 / 0 | 107 / 68 |
+| C table, synchronous `instantiate` | 137 / 67 | 105 / 66 |
+| C table, asynchronous `instantiate` | 137 / 65 | 101 / 64 |
+
+In the paired Chromium comparison with `1919c56ed`, the suite-wide external time ratios were 1.014× for import (95% interval 0.956–1.037), 0.996× for first result (0.970–1.016) and 0.983× for warm execution (0.926–1.050). Each interval includes parity. The measurable gain from removing the registry was in generated size and initialization work. [All 1,668 documents from 12 paired browser rounds](web/bench/results/review-matrix-registry-eda794c50.json.gz)
+
+| Browser metric | Jco 1.13.0 | Upstream main at `326f52ab4` | Internal Oxc | External checked |
+| --- | ---: | ---: | ---: | ---: |
+| Import and initialization (ms) | 5.00 | 11.97 | 9.50 | 19.36 |
+| Time to first guest result (ms) | 57.59 | 201.02 | 61.77 | 72.86 |
+| Minified JS entry (KiB) | 9.58 | 111.34 | 70.21 | 23.62 |
+| Total gzipped JS (KiB) | 3.01 | 25.42 | 18.63 | 39.32 |
+
+Both modes finished within 10× of the fastest compiled shim on 21/21 warm headline operations and 81/84 individual phases. The worst headline ratios were 3.96× internally and 5.15× externally. Warm medians matched or beat release on 18/21 internal and 16/21 external workloads. First result matched or beat release on 8/21 and 4/21, respectively. No individual warm interval was wholly slower than release in this run. The earlier 18-round matrix found one such case. The table summarizes medians across the 21 workload medians.
+
+![Warm execution compared with the fastest compiled shim, and warm and first results compared with Jco 1.13.0.](web/bench/results/review-matrix-registry-eda794c50.png)
+
+### Where C table startup spends time
+
+The external entry finished downloading in a median of 1.52 ms. The last of its JavaScript dependencies finished another **16.60 ms** later (95% interval 13.85–18.81 ms across rounds). Internal Oxc and release each served one JavaScript module. Between the final JavaScript response and the start of the guest Wasm request, internal Oxc took a paired **6.42 ms more** than release (5.43–6.55 ms). That interval can include linking, parsing, running module code and browser scheduling. [Per-request timings and V8 coverage](web/bench/results/c-table-registry-startup-eda794c50.json.gz)
+
+| C table, fresh document | Jco 1.13.0 | Internal Oxc | External checked |
+| --- | ---: | ---: | ---: |
+| Final JS response to guest Wasm request (ms) | 2.81 | 9.16 | 7.34 |
+| Guest Wasm request to response end (ms) | 1.64 | 1.43 | 1.56 |
+| Guest Wasm response end to import ready (ms) | 2.77 | 2.92 | 3.37 |
+| Total import (ms) | 8.78 | 15.24 | 30.55 |
+| JS served (bytes) | 9,809 | 73,079 | 125,332 |
+| JS reached by import readiness (bytes) | 2,799 | 17,343 | 26,328 |
+| JS reached by the first guest result (bytes) | 6,983 | 28,184 | 36,811 |
+
+The timing probe used 18 balanced rounds on uncompressed loopback, with a fresh browser context per build and the shared host already loaded. It used the same JS and Wasm bytes as the full matrix. Six separate documents collected V8 block coverage at readiness or after the complete guest result. Coverage counts UTF-8 source bytes in reached ranges. Error handling, shutdown and other workloads can reach additional code.
+
+<details><summary>Reproduce the size, timing and startup comparisons</summary>
+
+Build `1919c56ed` in `before` and `eda794c50` in `after`. Install the benchmark dependencies, prepare the upstream distribution using the full matrix setup and point `CHROME_BIN` at Chromium. The first command checks the staged upstream revision used in this comparison.
+
+```sh
+set -e
+test "$(cat "$stage/commit")" = 326f52ab4403466b21b989c995f9bb97b2b9e038
+previous=web/bench/results/review-matrix-init-ae16355e9.json.gz
+node web/bench/resource-table-registry.mjs "$before/packages/jco-transpile" "$after/packages/jco-transpile" "$previous" /tmp/registry-sizes.json.gz
+ROUNDS=12 node web/bench/review-matrix.mjs "$after" "$stage" /tmp/registry-matrix.json.gz --compare-compilers "$before/packages/jco-transpile"
+python3 web/bench/review-matrix-report.py /tmp/registry-matrix.json.gz --release-intervals --plot /tmp/registry-matrix.png
+node web/bench/matrix-startup-phases.mjs "$after" /tmp/registry-matrix.json.gz c table-update /tmp/registry-startup.json.gz
+python3 web/bench/matrix-startup-phases-report.py /tmp/registry-startup.json.gz /tmp/registry-matrix.json.gz
+```
+
+</details>
+
 ## Native await in browser module initialization
 
 A direct ES module already waits for core Wasm compilation and instantiation. Jco now emits native `await` for the internal Oxc bundle and the standard checked external runtime. This removes the per-module generator and its promise driver from all 42 measured entries. A custom instantiator or a `--tla-compat` caller can observe synchronous completion, so these modes still use the driver. [Compiler change](https://github.com/vados-cosmonic/jco/commit/ae16355e9)
