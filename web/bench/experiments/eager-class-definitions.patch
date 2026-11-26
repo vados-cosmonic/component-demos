@@ -1,0 +1,60 @@
+--- a/packages/jco-cm-runtime/src/intrinsics/async-task/async-task.ts
++++ b/packages/jco-cm-runtime/src/intrinsics/async-task/async-task.ts
+@@ -1408,10 +1408,10 @@
+         }
+     };
+ }
+-let sharedAsyncTask: ReturnType<typeof defineAsyncTask>;
++const sharedAsyncTask = /* @__PURE__ */ defineAsyncTask();
+
+ export function initializeAsyncTaskClass(context: TaskClassContext): AsyncTaskConstructor {
+-    const AsyncTask = (sharedAsyncTask ??= defineAsyncTask());
++    const AsyncTask = sharedAsyncTask;
+     // Removing a borrow handle looks up the task by its resource scope. When
+     // the bindings cannot create such a handle, registering and deleting every
+     // call would churn the map without a reader. Older bindings omit the hint.
+--- a/packages/jco-cm-runtime/src/intrinsics/async-task/async-thread.ts
++++ b/packages/jco-cm-runtime/src/intrinsics/async-task/async-thread.ts
+@@ -205,10 +205,10 @@
+         }
+     };
+ }
+-let sharedAsyncThread: ReturnType<typeof defineAsyncThread>;
++const sharedAsyncThread = /* @__PURE__ */ defineAsyncThread();
+
+ export function initializeAsyncThreadClass(context: AsyncThreadClassContext): AsyncThreadConstructor {
+-    const AsyncThread = (sharedAsyncThread ??= defineAsyncThread());
++    const AsyncThread = sharedAsyncThread;
+     /**
+      * Construct a thread that uses the context.
+      *
+--- a/packages/jco-cm-runtime/src/intrinsics/component.ts
++++ b/packages/jco-cm-runtime/src/intrinsics/component.ts
+@@ -1447,10 +1447,10 @@
+         }
+     };
+ }
+-let sharedComponentAsyncState: ReturnType<typeof defineComponentAsyncState>;
++const sharedComponentAsyncState = /* @__PURE__ */ defineComponentAsyncState();
+
+ export function initializeComponentAsyncStateClass(context: StateClassContext): ComponentAsyncStateConstructor {
+-    const ComponentAsyncState = (sharedComponentAsyncState ??= defineComponentAsyncState());
++    const ComponentAsyncState = sharedComponentAsyncState;
+     /**
+      * Construct a state of a component instance that uses the context.
+      *
+--- a/packages/jco-cm-runtime/src/intrinsics/rep-table.ts
++++ b/packages/jco-cm-runtime/src/intrinsics/rep-table.ts
+@@ -166,10 +166,10 @@
+         }
+     };
+ }
+-let sharedRepTable: ReturnType<typeof defineRepTable>;
++const sharedRepTable = /* @__PURE__ */ defineRepTable();
+
+ export function initializeRepTableClass(context: TrapContext): RepTableConstructor {
+-    const RepTable = (sharedRepTable ??= defineRepTable());
++    const RepTable = sharedRepTable;
+     // Sentinel marking a freed slot; the freelist link for a freed slot
+     // lives in the odd cell. This keeps get()/contains()/remove() on freed
+     // reps well-defined (previously they returned/corrupted freelist links).

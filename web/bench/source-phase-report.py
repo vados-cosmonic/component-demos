@@ -1,7 +1,7 @@
 """Compare source-phase imports to the ordinary loader within each Chromium process."""
+from sign_interval import median_sign_index
 import gzip
 import json
-import math
 import sys
 from collections import Counter
 from hashlib import sha256
@@ -60,7 +60,7 @@ for case in cases:
 def interval(values):
     # Exact two-sided sign interval; discrete coverage is at least 95%.
     n = len(values)
-    rank = max(i for i in range(n // 2) if 2 * sum(math.comb(n, j) for j in range(i)) <= .05 * 2**n)
+    rank = median_sign_index(n)
     values = sorted(values)
     return f"{median(values):.3f} ({values[rank]:.3f}–{values[-1-rank]:.3f})"
 

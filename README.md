@@ -2,6 +2,26 @@
 
 This fork benchmarks the browser examples from [eqrion/component-demos at d0b9dd1](https://github.com/eqrion/component-demos/tree/d0b9dd1390a300978193adc623838fef4e4b632b). It runs the same compiled C, C++, and Rust WebAssembly components through jco 1.13.0, pinned upstream main, and a branch that optimizes synchronous host imports and numeric guest exports. The comparison also includes the demos’ JavaScript, Emscripten (Embind and EM_JS), and Rust wasm-bindgen implementations where available.
 
+## Browser performance on the Jco review branch
+
+The review branch beat upstream main on all 21 warm headline workloads. Across C, C++ and Rust, tree traversal ran **8.4–9.2× faster internally** and **7.8–7.9× faster externally** than main. For warm table creation the ranges were **4.9–5.5×** and **4.5–5.5×**. These are within-round comparisons against main at `326f52ab4`. [Jco performance PR](https://github.com/vados-cosmonic/jco/pull/62) · [Pinned upstream revision](https://github.com/bytecodealliance/jco/commit/326f52ab4403466b21b989c995f9bb97b2b9e038)
+
+| Median across the 21 workloads | Jco 1.13.0 | Upstream main at `326f52ab4` | Internal Oxc | External runtime |
+| --- | ---: | ---: | ---: | ---: |
+| Import and initialization (ms) | 5.19 | 11.94 | 9.47 | 18.38 |
+| Time to first result (ms) | 63.33 | 207.45 | 62.06 | 76.78 |
+| Complete JavaScript, raw (KiB) | 9.58 | 111.34 | 69.75 | 106.75 |
+| Complete JavaScript, gzip (KiB) | 3.01 | 25.42 | 18.57 | 34.67 |
+| JavaScript requests | 1 | 1 | 1 | 15 |
+
+The two PR modes met the 10× shim target on 21/21 warm headline operations. C++ tree traversal had the largest gap at 4.93× internally and 4.98× externally. Against Jco 1.13.0, the internal and external modes matched or beat 16/21 and 13/21 warm medians and 9/21 and 5/21 first-result medians. Four internal and fourteen external first-result intervals were wholly slower than release. The only warm interval wholly slower than release was external C++ tree traversal (1.103×, individual 95% interval 1.001–1.404). [1,668 Chromium documents, module hashes and timings](web/bench/results/review-matrix-sync-task-3e25d8d82.json.gz)
+
+A second 12-round matrix used byte-identical shipping assets, the same Chromium and the same pinned main. Across the two runs, first result was measurably slower than 1.13.0 in both runs on three internal workloads (all three table guests) and thirteen external workloads. Import and initialization were slower in both runs on 20/21 internal and 21/21 external workloads. No warm headline or first guest call in isolation had an interval wholly slower than release in both runs. [Repeat timings and hashes](web/bench/results/class-definitions-matrix-3e25d8d82.json.gz)
+
+In each row, a marker shows the median across the three guest languages and a line spans their range. Lower ratios mean less time. The left panel compares warm execution against the fastest compiled shim for that operation. The right compares time from module import to the first completed guest result against Jco 1.13.0 within the same language and browser round.
+
+![Warm time relative to the fastest compiled shim and first-result time relative to release for Jco 1.13.0, main, internal Oxc and external runtime.](web/bench/results/builds-overview-3e25d8d82.png)
+
 ## Loading synchronous task operations in the browser
 
 Synchronous imports on these 21 demos use seven task operations. The external runtime previously loaded the asynchronous task driver to get them. The new package entry re-exports those same seven functions. The compiler uses it when the standard synchronous adapter covers every requested task operation. Tracked calls, specialization opt-outs and custom providers keep their existing imports. Internal Oxc already removes the unused code. All 21 minified internal entries and all guest Wasm files matched their previous builds byte for byte. [Compiler and runtime rationale](https://github.com/vados-cosmonic/jco/commit/b51743055ea7205d972b6aa1fd0e83db1c218198) · [Entry hashes and provider controls](web/bench/results/sync-task-entries-3e25d8d82.json.gz)
@@ -14,26 +34,16 @@ Synchronous imports on these 21 demos use seven task operations. The external ru
 
 These sizes cover the runtime modules and exclude the generated entry and guest cores. Putting the seven functions in the existing sync entry saved another 424 Brotli bytes per demo, but increased a standalone import of that public entry by 10,216 Brotli bytes. The dedicated entry preserves the standalone sync cost. Importing the full async-task entry on its own costs 785 more Brotli bytes with this package layout. [Four layouts and standalone public-entry sizes](web/bench/results/sync-task-layouts-3e25d8d82.json.gz)
 
-Across 1,668 fresh Chromium documents in 12 balanced rounds, both modes beat pinned upstream main on every warm headline operation. The worst ratios to the fastest compiled shim were 4.93× internal and 4.98× external, both on C++ tree traversal. Warm medians matched or beat Jco 1.13.0 on 16/21 workloads internally and 13/21 externally. The only individual warm interval wholly slower than release was external C++ tree traversal (1.103×, 95% interval 1.001–1.404). Four internal and fourteen external first-result intervals were wholly slower than release. [Timings, transfer sizes, module digests and browser version](web/bench/results/review-matrix-sync-task-3e25d8d82.json.gz)
-
-| Median across the 21 workloads | Jco 1.13.0 | Upstream main at `326f52ab4` | Internal Oxc | External runtime |
-| --- | ---: | ---: | ---: | ---: |
-| Import and initialization (ms) | 5.19 | 11.94 | 9.47 | 18.38 |
-| Time to first result (ms) | 63.33 | 207.45 | 62.06 | 76.78 |
-| Complete JavaScript, raw (KiB) | 9.58 | 111.34 | 69.75 | 106.75 |
-| Complete JavaScript, gzip (KiB) | 3.01 | 25.42 | 18.57 | 34.67 |
-| JavaScript requests | 1 | 1 | 1 | 15 |
-
 The external build saved 4,677 gzip bytes at the median across its generated entry and runtime. Its paired import time fell 6.7% versus the previous external build (new/previous 0.933×, 95% interval 0.867–0.975). The first-result ratio was 0.970× (0.957–1.005) and warm execution was 0.995× (0.940–1.041). The byte-identical internal control measured 1.022× (1.002–1.030) for import, 1.000× (0.985–1.044) for first result and 1.028× (0.913–1.071) for warm execution. These suite-wide intervals use the median of the 21 paired workload ratios in each browser round.
 
-A separate HTTP/2 trial served the actual packages with Brotli compression. It used the DOM-query and table-update workloads for each guest language, for a total of 768 fresh documents. On the 40 ms, 10 Mbit/s connection, the smaller package reduced paired first-result time by 1.2% (95% interval 0.9–2.0%). The loopback interval included parity. Each process ran all six workloads and four builds under both network profiles. The paired ratios below summarize the geometric mean across its six workloads. [Individual HTTP/2 requests and timing samples](web/bench/results/shipped-task-entry-3e25d8d82.json.gz)
+A separate HTTP/2 trial served the actual packages with Brotli compression. It used the DOM-query and table-update workloads for each guest language, for a total of 768 fresh documents. On the 40 ms, 10 Mbit/s connection, the smaller package reduced paired first-result time by 1.2% (95% interval 0.7–2.2%). The loopback interval included parity. Each process ran all six workloads and four builds under both network profiles. The paired ratios below summarize the geometric mean across its six workloads. [Individual HTTP/2 requests and timing samples](web/bench/results/shipped-task-entry-3e25d8d82.json.gz)
 
 | HTTP/2 time to first result | Jco 1.13.0 | Internal Oxc | Previous external | New external | Paired new / previous (95% interval) |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Loopback | 57.12 ms | 62.93 ms | 82.71 ms | 82.62 ms | 1.013× (0.958–1.078) |
-| 40 ms, 10 Mbit/s | 159.34 ms | 172.83 ms | 275.98 ms | 272.37 ms | 0.988× (0.980–0.991) |
+| Loopback | 57.12 ms | 62.93 ms | 82.71 ms | 82.62 ms | 1.013× (0.955–1.111) |
+| 40 ms, 10 Mbit/s | 159.34 ms | 172.83 ms | 275.98 ms | 272.37 ms | 0.988× (0.978–0.993) |
 
-The first four columns are medians across the six workload medians. On the limited connection, paired new-external first result took 1.723× release time (1.702–1.733) and 1.590× internal time (1.575–1.600).
+The first four columns are medians across the six workload medians. On the limited connection, paired new-external first result took 1.723× release time (1.699–1.745) and 1.590× internal time (1.566–1.603).
 
 Both modes met the 10× shim target on 81/84 original warm phases. In the three bulk DOM queries the fastest shim discards a live collection, while the component returns the handles. When the direct shim also materialized and dropped all 2,000 handles per query, the two modes took 1.46–1.64× its time across C, C++ and Rust, and 0.69–0.74× the release time. [Equal-work checks and timings](web/bench/results/bulk-dom-sync-task-3e25d8d82.json.gz)
 
@@ -52,12 +62,46 @@ dist="$before/packages/jco-cm-runtime/dist"
 node web/bench/sync-task-layouts.mjs "$before" "$prev" "$old" /tmp/layouts.json.gz
 node web/bench/sync-task-entries.mjs "$prev" "$after/packages/jco-transpile" "$old" /tmp/entries.json.gz
 ROUNDS=12 node web/bench/review-matrix.mjs "$after" "$stage" /tmp/matrix.json.gz --compare-compilers "$prev" "$dist"
-python3 web/bench/review-matrix-report.py /tmp/matrix.json.gz --compare-entries "$old" --release-intervals --plot /tmp/matrix.png
+python3 web/bench/review-matrix-report.py /tmp/matrix.json.gz --compare-entries "$old" --release-intervals --plot /tmp/matrix.png --plot-builds /tmp/builds.png
 patch -o web/bench/shipped-task-trial.mjs web/bench/runtime-chunks.mjs web/bench/experiments/shipped-task-entry.patch
 ROUNDS=16 node web/bench/shipped-task-trial.mjs "$after" /tmp/matrix.json.gz /tmp/http2.json.gz --compare-packages "$prev" "$dist"
 python3 web/bench/shipped-task-report.py /tmp/http2.json.gz /tmp/matrix.json.gz web/bench/shipped-task-trial.mjs
 ROUNDS=12 node web/bench/bulk-dom.mjs "$after" /tmp/bulk.json.gz --checked-matrix /tmp/matrix.json.gz
 python3 web/bench/bulk-dom-report.py /tmp/bulk.json.gz --matrix /tmp/matrix.json.gz
+```
+
+</details>
+
+### When should the runtime define its shared classes?
+
+The runtime shares the implementation of `RepTable`, `ComponentAsyncState`, `AsyncTask` and `AsyncThread` across instances. Each store still has its own subclass, state and constructor identity. We tried defining the four implementation classes when their modules load. The standard package currently defines each one on first use. The trial rebuilt both the external runtime and the internal Oxc compiler from the same four source changes. The previous first-instance trace measured 0.15–0.37 ms in each external factory, including the work to construct the store-specific subclass. [Exact runtime patch](web/bench/experiments/eager-class-definitions.patch) · [First-instance trace](web/bench/results/init-task-trace-3e25d8d82.json.gz)
+
+Across the full 21-workload, 1,668-document matrix, the paired first-result ratio (trial / shipping) was **0.999× internally** (individual 95% interval 0.943–1.027) and **0.992× externally** (0.963–1.021). The warm ratios were 1.013× (0.994–1.032) and 1.017× (0.971–1.065). Median complete gzip JS shrank by four bytes internally and grew by 18 bytes externally. The trial passed 525 checked-runtime tests and 71 integration tests covering synchronous host imports, numeric exports, resources and shutdown. The PR retains first-use class definitions. [Full paired matrix](web/bench/results/class-definitions-matrix-3e25d8d82.json.gz)
+
+In a second trial, each page compiled the table guest’s Wasm before importing its bindings, constructed its first instance and ran eight rows. Moving the class definitions saved **0.65 ms** at instantiation internally and **0.82 ms** externally. The internal import took 0.56 ms longer (0.06–1.06 ms). From starting the import to the completed guest result, the ratios were 0.989× (0.929–1.064) and 0.969× (0.925–1.090). Each estimate pairs treatments in the same process and summarizes the C, C++ and Rust guests. [Phase timings and module digests](web/bench/results/class-definitions-startup-3e25d8d82.json.gz)
+
+The same 20-round trial included fresh pages that imported a public entry for one lightweight operation. The table shows the increase in live V8 JS heap after forced GC, relative to the pre-import measurement in each page. Eager class definitions increased every entry’s retained heap, even though none of these calls needed a class instance.
+
+| Standalone operation | Shipping heap delta | Trial heap delta | Paired extra bytes |
+| --- | ---: | ---: | ---: |
+| Read the disposal symbol from `core` | 56,056 B | 75,684 B | 19,628 B |
+| Create the instance flag map from `component` | 37,392 B | 54,088 B | 16,696 B |
+| Create the current task ID list from `sync-task` | 56,208 B | 103,120 B | 46,912 B |
+
+<details><summary>Reproduce the class-definition trials</summary>
+
+Build the shipping Jco checkout at `3e25d8d82` in `$stock`. In a second checkout of the same revision at `$trial`, apply the patch before building the runtime package, regenerating the embedded runtime and building the transpiler. Set `$stage` to the staged upstream compiler and `CHROME_BIN` to Chromium. Run from this repository. The matrix uses the shipping PR checkout as its primary build. Its two archive labels beginning with `previous-` hold the experimental compilers. The report prints experimental / shipping timing ratios.
+
+```sh
+set -e
+git -C "$trial" apply "$PWD/web/bench/experiments/eager-class-definitions.patch"
+# Build the trial checkout and embedded compiler after applying the patch.
+control=web/bench/results/review-matrix-sync-task-3e25d8d82.json.gz
+reference=web/bench/results/precompiled-confirm-3e25d8d82.json.gz
+ROUNDS=12 node web/bench/review-matrix.mjs "$stock" "$stage" /tmp/classes.json.gz --compare-compilers "$trial/packages/jco-transpile" "$trial/packages/jco-cm-runtime/dist"
+node web/bench/class-definition-startup.mjs "$stock" "$trial" /tmp/classes.json.gz "$reference" /tmp/classes-startup.json.gz
+python3 web/bench/review-matrix-report.py /tmp/classes.json.gz --release-intervals
+python3 web/bench/class-definition-report.py "$control" /tmp/classes.json.gz "$reference" /tmp/classes-startup.json.gz
 ```
 
 </details>
@@ -103,10 +147,10 @@ The initialization task gives a Wasm start function a current task and implicit 
 
 | Workload and binding | Time saved constructing the instance | Extra time on the first guest call | Time to first result, experiment / shipped (95% interval) |
 | --- | ---: | ---: | ---: |
-| 8 rows, internal Oxc | 2.04 ms | 1.46 ms | 0.947× (0.918–0.985) |
-| 8 rows, external runtime | 2.07 ms | 2.06 ms | 0.991× (0.963–1.039) |
-| 2,000 rows, internal Oxc | 1.94 ms | 2.05 ms | 0.996× (0.965–1.064) |
-| 2,000 rows, external runtime | 2.19 ms | 3.58 ms | 1.026× (0.974–1.114) |
+| 8 rows, internal Oxc | 2.04 ms | 1.46 ms | 0.947× (0.907–0.997) |
+| 8 rows, external runtime | 2.07 ms | 2.06 ms | 0.991× (0.963–1.048) |
+| 2,000 rows, internal Oxc | 1.94 ms | 2.05 ms | 0.996× (0.945–1.086) |
+| 2,000 rows, external runtime | 2.19 ms | 3.58 ms | 1.026× (0.971–1.117) |
 
 Each workload ran in 300 fresh Chromium documents across 20 balanced rounds. The bindings were imported and Wasm compiled before the clock started. The first-result clock stopped when the guest returned its completed table report. Each column summarizes per-round, language-paired measurements independently. Skipping the task improved the 8-row internal first result by 5.3%. Neither full-workload interval established an improvement. The fork PR keeps the existing initialization behavior. [8-row samples](web/bench/results/init-task-small-3e25d8d82.json.gz) · [2,000-row samples](web/bench/results/init-task-full-3e25d8d82.json.gz)
 
@@ -129,6 +173,8 @@ python3 web/bench/init-task-report.py "$matrix" "$reference" "$trial" /tmp/init-
 ```
 
 </details>
+
+The loader and task experiments above and below use two-sided sign intervals over independent browser rounds. Earlier versions of several secondary reports used bounds one observation too far toward the center. Recomputing the intervals widened those bounds. For example, the shipped task-entry improvement on the limited HTTP/2 connection is 1.2% with a corrected 95% interval of 0.7–2.2%. The primary 21-workload matrix already used the inclusive binomial tail. [Interval calculation and examples](web/bench/sign_interval.py)
 
 ## Reusing resource capture tables during startup
 
@@ -284,12 +330,12 @@ Each trial adapter statically imports the primary Wasm as a compiled `WebAssembl
 
 | Transport | Build | Wasm request started earlier | Import time, trial / control | First result, trial / control |
 | --- | --- | ---: | ---: | ---: |
-| HTTP/2 loopback | Jco 1.13.0 | 1.3 ms | 1.015× (0.986–1.033) | 1.001× (0.946–1.035) |
-| | Internal Oxc | 4.5 ms | 0.873× (0.845–0.912) | 0.961× (0.922–1.013) |
-| | External runtime | 24.6 ms | 0.955× (0.919–0.995) | 1.009× (0.956–1.029) |
-| HTTP/2, 40 ms, 10 Mbit/s | Jco 1.13.0 | 0.9 ms | 1.001× (0.991–1.007) | 0.994× (0.983–1.000) |
-| | Internal Oxc | 3.6 ms | 0.979× (0.977–0.991) | 0.974× (0.963–0.998) |
-| | External runtime | 113.3 ms | 0.722× (0.720–0.725) | 0.759× (0.753–0.767) |
+| HTTP/2 loopback | Jco 1.13.0 | 1.3 ms | 1.015× (0.960–1.097) | 1.001× (0.942–1.039) |
+| | Internal Oxc | 4.5 ms | 0.873× (0.831–0.939) | 0.961× (0.880–1.019) |
+| | External runtime | 24.6 ms | 0.955× (0.914–1.024) | 1.009× (0.954–1.057) |
+| HTTP/2, 40 ms, 10 Mbit/s | Jco 1.13.0 | 0.9 ms | 1.001× (0.990–1.013) | 0.994× (0.983–1.000) |
+| | Internal Oxc | 3.6 ms | 0.979× (0.974–0.991) | 0.974× (0.955–1.006) |
+| | External runtime | 113.3 ms | 0.722× (0.715–0.726) | 0.759× (0.747–0.770) |
 
 On the limited connection, the external first result arrived 24.1% sooner and still took 1.33× the ordinary 1.13.0 time. Chromium 156.0.8078.47 required `--enable-features=JavaScriptSourcePhaseImports` to parse and load the Wasm import. Both the trial and its controls used that flag. The experiment ran 12 balanced rounds in 864 documents. Each round contributes the median paired ratio across its six workloads. Parentheses give individual 95% sign intervals. [Request traces, file sizes and per-document timings](web/bench/results/source-phase-4b9682bfe.json.gz)
 
@@ -299,12 +345,12 @@ With `--instantiation async`, a browser application can use standard `fetch` and
 
 | First result in the full C table workload (ms) | Ordinary direct module | Explicit loader, serial | Explicit loader, concurrent | Concurrent / serial (paired 95% interval) |
 | --- | ---: | ---: | ---: | ---: |
-| Loopback, internal Oxc | 50.33 | 51.40 | 48.68 | 0.916× (0.864–0.999) |
-| Loopback, external runtime | 68.77 | 76.23 | 71.29 | 0.928× (0.848–0.988) |
-| 40 ms, 10 Mbit/s, internal Oxc | 153.18 | 156.43 | 110.66 | 0.719× (0.683–0.725) |
-| 40 ms, 10 Mbit/s, external runtime | 252.52 | 255.48 | 198.50 | 0.770× (0.763–0.789) |
+| Loopback, internal Oxc | 50.33 | 51.40 | 48.68 | 0.916× (0.864–1.037) |
+| Loopback, external runtime | 68.77 | 76.23 | 71.29 | 0.928× (0.845–1.078) |
+| 40 ms, 10 Mbit/s, internal Oxc | 153.18 | 156.43 | 110.66 | 0.719× (0.683–0.728) |
+| 40 ms, 10 Mbit/s, external runtime | 252.52 | 255.48 | 198.50 | 0.770× (0.758–0.790) |
 
-On the limited connection, the concurrent loader delivered its first result **28.0% sooner internally and 21.5% sooner externally** against the ordinary direct modules. Ordinary Jco 1.13.0 took 136.87 ms. Internal Oxc took 0.810× the release time (0.786–0.825) and the external runtime took 1.453× (1.440–1.474). On loopback the concurrent and ordinary direct module first-result intervals included parity in both modes. The trial ran seven treatments on each of two transports across 14 balanced rounds, for 196 fresh documents. The runtime guide includes an executable two-mode example using the existing API. [Browser loading recipe](https://github.com/vados-cosmonic/jco/blob/c7b54f851/packages/jco-cm-runtime/docs/runtime.md#loading-explicit-instantiation-bindings-in-a-browser) · [Exact requests and timing samples](web/bench/results/parallel-loader-4b9682bfe.json.gz)
+On the limited connection, the concurrent loader delivered its first result **28.0% sooner internally and 21.5% sooner externally** against the ordinary direct modules. Ordinary Jco 1.13.0 took 136.87 ms. Internal Oxc took 0.810× the release time (0.781–0.851) and the external runtime took 1.453× (1.410–1.504). On loopback the concurrent and ordinary direct module first-result intervals included parity in both modes. The trial ran seven treatments on each of two transports across 14 balanced rounds, for 196 fresh documents. The runtime guide includes an executable two-mode example using the existing API. [Browser loading recipe](https://github.com/vados-cosmonic/jco/blob/c7b54f851/packages/jco-cm-runtime/docs/runtime.md#loading-explicit-instantiation-bindings-in-a-browser) · [Exact requests and timing samples](web/bench/results/parallel-loader-4b9682bfe.json.gz)
 
 <details><summary>Reproduce the two loading studies</summary>
 
@@ -338,9 +384,9 @@ We bundled the six external explicit-instantiation entries as one application an
 | External application bundle, concurrent loader | 65.47 | 151.74 | 2 | 41,022 |
 | Same application bundle with shared chunk preloaded | 62.71 | 135.48 | 2 | 41,022 |
 
-On the limited connection, bundling and preloading reduced first-result time by **37.1%** versus the external package (paired ratio 0.629×, individual 95% interval 0.618–0.636). Preloading alone saved 13.7% versus the same bundle (0.851–0.890×). The resulting time was **1.020× internal Oxc** (1.007–1.032), **0.831× ordinary 1.13.0** (0.830–0.843), and **1.154× 1.13.0 using the same concurrent loader** (1.151–1.179). On loopback, preloading the application chunk had no clear additional effect. [Raw browser results and asset inventory](web/bench/results/packed-loader-4b9682bfe.json.gz)
+On the limited connection, bundling and preloading reduced first-result time by **37.1%** versus the external package (paired ratio 0.629×, individual 95% interval 0.611–0.642). Preloading alone saved 13.7% versus the same bundle (0.848–0.903×). The resulting time was **1.020× internal Oxc** (1.006–1.032), **0.831× ordinary 1.13.0** (0.823–0.847), and **1.154× 1.13.0 using the same concurrent loader** (1.143–1.188). On loopback, preloading the application chunk had no clear additional effect. [Raw browser results and asset inventory](web/bench/results/packed-loader-4b9682bfe.json.gz)
 
-Most of the remaining difference against concurrent 1.13.0 occurred before the final network response. On the limited connection the last response finished 13.13 ms later for the preloaded external bundle (12.61–13.30). From that point to guest readiness, the difference was another 2.82 ms (2.68–2.84). For internal Oxc those differences were 11.40 ms and 2.71 ms. Across the 864 fresh documents, the server log and Chromium agreed on every transferred file and the checked guest Wasm matched the matrix. Each of 12 browser rounds supplied one paired median across the six workloads. The absolute times above summarize workload medians independently. [Browser deployment guide](https://github.com/vados-cosmonic/jco/blob/b7edbf6bf/packages/jco-cm-runtime/docs/runtime.md#loading-explicit-instantiation-bindings-in-a-browser)
+Most of the remaining difference against concurrent 1.13.0 occurred before the final network response. On the limited connection the last response finished 13.13 ms later for the preloaded external bundle (12.57–13.30). From that point to guest readiness, the difference was another 2.82 ms (2.64–2.85). For internal Oxc those differences were 11.40 ms and 2.71 ms. Across the 864 fresh documents, the server log and Chromium agreed on every transferred file and the checked guest Wasm matched the matrix. Each of 12 browser rounds supplied one paired median across the six workloads. The absolute times above summarize workload medians independently. [Browser deployment guide](https://github.com/vados-cosmonic/jco/blob/b7edbf6bf/packages/jco-cm-runtime/docs/runtime.md#loading-explicit-instantiation-bindings-in-a-browser)
 
 ![Time to first result on loopback and a limited connection for the six loader configurations.](web/bench/results/packed-loader-4b9682bfe.png)
 
@@ -415,8 +461,8 @@ The six C, C++ and Rust DOM-query and table-update adapters import seven task op
 
 | HTTP/2 transport | Import time, trial / shipped | Time to first result, trial / shipped |
 | --- | ---: | ---: |
-| Loopback | 0.961× (0.915–0.988) | 0.974× (0.956–0.989) |
-| 40 ms latency, 10 Mbit/s | 0.986× (0.983–0.990) | 0.990× (0.985–0.995) |
+| Loopback | 0.961× (0.912–0.997) | 0.974× (0.954–0.997) |
+| 40 ms latency, 10 Mbit/s | 0.986× (0.980–0.991) | 0.990× (0.984–0.995) |
 
 Across the six workloads, removing 4,212 Brotli bytes cut first-result time by 2.6% on loopback and 1.0% on the limited connection in this run. Each of 16 fresh Chromium processes ran all four treatments for every workload in a balanced order, for 384 documents. The table gives medians and individual 95% sign intervals across rounds, using the geometric mean of the six paired ratios within each round. The experiment exercises external package delivery. The internal Oxc bundle and the public runtime contract on the Jco PR are unchanged. [Per-document timings, request traces and public-entry sizes](web/bench/results/sync-task-entry-eda794c50.json.gz)
 

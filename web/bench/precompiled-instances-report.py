@@ -1,10 +1,11 @@
 """Compare construction of precompiled cores in the public async instantiation API."""
+from sign_interval import median_sign_index
 import argparse
 from collections import Counter
 import gzip
 from hashlib import sha256
 import json
-from math import comb, isclose
+from math import isclose
 from pathlib import Path
 from statistics import median
 
@@ -55,7 +56,7 @@ for lang in languages:
 def interval(values):
     # Distribution-free, two-sided interval for the population median.
     data = sorted(values)
-    k = max(i for i in range(len(data)//2) if 2*sum(comb(len(data), j) for j in range(i)) <= .05 * 2**len(data))
+    k = median_sign_index(len(data))
     return f"{median(data):.3f} ({data[k]:.3f}–{data[-1-k]:.3f})"
 
 def value(row, phase):

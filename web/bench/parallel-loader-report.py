@@ -1,9 +1,9 @@
 """Check the C table loader trial and report paired ratios within each browser."""
+from sign_interval import median_sign_index
 from collections import Counter
 import gzip
 from hashlib import sha256
 import json
-from math import comb
 from pathlib import Path
 from statistics import median
 import sys
@@ -53,7 +53,7 @@ for mode in ("bundled", "external"):
 
 def describe(v):
     v = sorted(v)
-    rank = max(i for i in range(len(v)//2) if 2*sum(comb(len(v), j) for j in range(i)) <= .05*2**len(v))
+    rank = median_sign_index(len(v))
     return f"{median(v):.3f} ({v[rank]:.3f}–{v[-1-rank]:.3f})"
 
 for profile in profiles:

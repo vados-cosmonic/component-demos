@@ -1,10 +1,10 @@
 """Summarize paired browser rounds from the merged Jco branch and its upstream base."""
+from sign_interval import median_sign_index
 import argparse
 from collections import Counter, defaultdict
 import gzip
 import hashlib
 import json
-from math import comb
 from pathlib import Path
 from statistics import median
 
@@ -12,6 +12,7 @@ bench = Path(__file__).resolve().parent
 parser = argparse.ArgumentParser()
 parser.add_argument("input", type=Path, nargs="?", default=bench / "results/review-matrix.json.gz")
 parser.add_argument("--plot", type=Path)
+parser.add_argument("--plot-builds", type=Path, help="compare all four Jco builds across the guest languages")
 parser.add_argument("--compare-entries", type=Path,
                     help="verify previous assets and compare generated JS sizes with an earlier matrix")
 parser.add_argument("--release-intervals", action="store_true",
@@ -152,6 +153,10 @@ for demo, (metric, title) in focus.items():
         shims = [(language, rows) for (d, language, v), rows in samples.items() if d == demo and v not in timed_versions]
         best = min(median(map(warm, rows.values())) for _, rows in shims)
         matched = [median(map(warm, rows.values())) for language, rows in shims if language == lang]
+        if args.plot_builds:
+            for v in ["release", "main"]:
+                plotted[v, "shim", lang].append(median(map(warm, builds[v].values())) / best)
+                plotted[v, "first", lang].append(paired(builds[v], builds["release"], first))
         cells = []
         for key in ("shim", "warm", "first"):
             for v in versions[2:]:
@@ -201,7 +206,7 @@ def median_interval(ratios):
     n = len(ordered)
     if n < 6:
         parser.error("median intervals require at least six paired rounds")
-    rank = max(i for i in range(n) if 2 * sum(comb(n, j) for j in range(i+1)) / 2**n <= .05)
+    rank = median_sign_index(n)
     return median(ordered), ordered[rank], ordered[-rank-1]
 
 
@@ -361,3 +366,33 @@ if args.plot:
     axes[0].invert_yaxis()
     fig.legend(*axes[0].get_legend_handles_labels(), loc="outside lower center", ncol=3)
     fig.savefig(args.plot, dpi=160)
+
+
+if args.plot_builds:
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from matplotlib.ticker import FuncFormatter, LogLocator, NullFormatter
+    fig, axes = plt.subplots(1, 2, figsize=(10.4, 5.2), sharey=True, layout="constrained")
+    series = [("release", "Jco 1.13.0", "#485462", "o"), ("main", "Upstream main", "#915087", "s"),
+              ("bundled", "PR internal Oxc", "#087c72", "^"), ("external", "PR external", "#b34a27", "D")]
+    for ax, key, title in zip(axes, ["shim", "first"], ["Warm time / fastest compiled shim", "Time to first result / Jco 1.13.0"]):
+        for i, (v, label, color, marker) in enumerate(series):
+            groups = list(zip(*(plotted[v, key, lang] for lang in languages), strict=True))
+            y = [j + (i-1.5)*.18 for j in range(len(focus))]
+            ax.hlines(y, [min(row) for row in groups], [max(row) for row in groups], color=color, linewidth=1.4)
+            ax.scatter([median(row) for row in groups], y, s=24, marker=marker, c=color, label=label, zorder=3)
+        ax.set_xscale("log", base=2)
+        ax.axvline(1, color="#555", lw=1)
+        if key == "shim":
+            ax.axvline(10, color="#555", lw=1, ls="--", label="10× target")
+        ax.xaxis.set_major_locator(LogLocator(base=2, numticks=12))
+        ax.xaxis.set_major_formatter(FuncFormatter(lambda x, _: f"{x:g}×"))
+        ax.xaxis.set_minor_formatter(NullFormatter())
+        ax.grid(axis="x", alpha=.15)
+        ax.set_title(title, fontsize=12)
+        ax.spines[["right","top"]].set_visible(False)
+    axes[0].set_yticks(range(len(focus)), [s[1] for s in focus.values()])
+    axes[0].invert_yaxis()
+    fig.legend(*axes[0].get_legend_handles_labels(), loc="outside lower center", ncols=5)
+    fig.savefig(args.plot_builds, dpi=160)

@@ -1,10 +1,10 @@
 """Summarize cold loading of the shipped task entry and its preceding package."""
+from sign_interval import median_sign_index
 import argparse
 import gzip
 import hashlib
 import json
 from collections import Counter, defaultdict
-from math import comb
 from pathlib import Path
 from statistics import geometric_mean, median
 
@@ -55,7 +55,7 @@ for mode, prefix in [("previous-external", "/previous-runtime/"), ("external", "
 def describe(ratios):
     ordered = sorted(ratios)
     n = len(ordered)
-    rank = max(i for i in range(n // 2) if 2 * sum(comb(n, j) for j in range(i)) <= .05 * 2**n)
+    rank = median_sign_index(n)
     return f"{median(ordered):.3f} ({ordered[rank]:.3f}–{ordered[-1-rank]:.3f})"
 
 for profile in run["profiles"]:

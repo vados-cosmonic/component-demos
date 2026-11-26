@@ -1,7 +1,7 @@
 """Report paired effects of changing the checked runtime module used by six adapters."""
+from sign_interval import median_sign_index
 import gzip
 import json
-import math
 import sys
 from hashlib import sha256
 from pathlib import Path
@@ -56,8 +56,7 @@ print("Standalone entries growing in raw bytes:", {k: v for k, v in deltas.items
 def describe(values):
     # Largest symmetric order-statistic bound with at least 95% coverage.
     n = len(values)
-    rank = max(i for i in range(n // 2) if
-               2 * sum(math.comb(n, j) for j in range(i)) <= 0.05 * 2**n)
+    rank = median_sign_index(n)
     values = sorted(values)
     return f"{median(values):.3f} ({values[rank]:.3f}–{values[-1-rank]:.3f})"
 

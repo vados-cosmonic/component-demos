@@ -1,9 +1,9 @@
 """Compare six cold component loads using one multi-entry application bundle."""
+from sign_interval import median_sign_index
 from collections import Counter
 from hashlib import sha256
 import gzip
 import json
-from math import comb
 from pathlib import Path
 from statistics import median
 import argparse
@@ -77,7 +77,7 @@ for case in cases:
 def interval(values):
     values = sorted(values)
     n = len(values)
-    rank = max(i for i in range(n//2) if 2*sum(comb(n, j) for j in range(i)) <= .05*2**n)
+    rank = median_sign_index(n)
     return f"{median(values):.3f} ({values[rank]:.3f}–{values[-1-rank]:.3f})"
 
 for profile in run["profiles"]:

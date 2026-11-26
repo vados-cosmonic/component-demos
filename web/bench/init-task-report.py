@@ -1,10 +1,10 @@
 """Check the guest-specific task experiment and report the paired browser timings."""
+from sign_interval import median_sign_index
 import argparse
 import gzip
 from collections import Counter
 from hashlib import sha256
 import json
-from math import comb
 from pathlib import Path
 from statistics import median
 
@@ -21,7 +21,7 @@ builds, langs = ["release","bundled","external"], ["c","cpp","rust"]
 def interval(values):
     ordered = sorted(values)
     n = len(ordered)
-    rank = max(i for i in range(n//2) if 2*sum(comb(n,j) for j in range(i)) <= .05*2**n)
+    rank = median_sign_index(n)
     return f"{median(ordered):.3f} ({ordered[rank]:.3f}–{ordered[-1-rank]:.3f})"
 
 assets = None
