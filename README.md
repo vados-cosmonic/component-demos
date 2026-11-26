@@ -94,6 +94,28 @@ The report can regenerate the figure with `--plot /tmp/review-matrix.png` and Ma
 
 </details>
 
+### Repeated DOM workloads on one page
+
+The merged-head matrix found that external C table creation took 1.14× the 1.13.0 time after one warmup in separate documents. With the four builds interleaved on one page, external C table creation took **0.99×** the release time after four warmups, with an individual 95% median interval of **0.94–1.04×**. In this same-page run, even the second guest call had a median ratio of 0.99×. The two studies change both page isolation and execution order, so the difference cannot be attributed to warmup alone. [Fresh-document results](#full-demo-matrix-on-the-merged-pr) · [All paired samples](web/bench/results/paired-dom-review.json.gz)
+
+| Workload phase | Internal / 1.13.0 | External / 1.13.0 | Packed / external |
+| --- | ---: | ---: | ---: |
+| C table creation | 0.99× (0.91–1.04) | 0.99× (0.94–1.04) | 0.98× (0.94–1.08) |
+| C selected-row update | 0.85× (0.83–0.88) | 0.87× (0.81–0.93) | 0.98× (0.96–1.06) |
+| C unselected-row removal | 0.72× (0.71–0.75) | 0.75× (0.71–0.78) | 1.01× (0.97–1.05) |
+| Rust tree construction | 0.80× (0.73–0.88) | 0.83× (0.70–1.07) | 0.96× (0.88–0.99) |
+| Rust tree traversal | 0.87× (0.71–0.94) | 0.88× (0.84–0.92) | 0.98× (0.92–1.03) |
+
+Each workload ran on 16 fresh Chromium pages. Each page loaded all four implementations, ran four warmups and measured four passes. Every build occupied each position once in those four passes. The denominator for each ratio ran on the same page in the same pass. Each page contributed its median ratio, and the reported intervals use the order statistics of the 16 page medians. Each row uses the same Wasm cores and host functions across renderers. For the packed comparison, a scoped import map served the exact same external entry against one application-bundled runtime module. The runner verified both provider layouts, the table report, and all 19,531 visited tree nodes per traversal.
+
+With the built PR checkout used above, run the following from the benchmark fork. The report prints the table and the external-to-release ratio on each of the eight guest invocations. [Runner](web/bench/paired-dom-review.mjs) · [Report](web/bench/paired-dom-report.py)
+
+```sh
+CHROME_BIN=/path/to/chrome ROUNDS=16 node web/bench/paired-dom-review.mjs \
+  /path/to/built/jco-pr /tmp/paired-dom-review.json.gz
+python3 web/bench/paired-dom-report.py /tmp/paired-dom-review.json.gz
+```
+
 ## Bundled and external runtime on the review branch
 
 The review branch uses the same checked operations for synchronous calls in both renderers. This run compares them directly against a custom provider using the original API-v1 contract. All three used the same runtime source and the same two Wasm core binaries. The external modes differ only in whether the provider opts into the synchronous operations. [Jco PR #62](https://github.com/vados-cosmonic/jco/pull/62) · [Measured Jco revision](https://github.com/vados-cosmonic/jco/commit/275c3071a3760180de923cda62388fc08d34f7cf)
