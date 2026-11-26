@@ -29,9 +29,11 @@ assert digest(matrix) == data["matrixSha256"]
 # The initial core-packaging study used the runner before it also supported preload hints.
 runner_hash = digest(bench / "core-startup.mjs")
 if application:
-    archived = digest(args.input) == "47e8ebdc26bdc78349ccaa1ea87f72521aaa3f0bde6469e2baa761c65fd606d2"
-    expected = "466960754fb757fcf1c9d427b20e81ca859813b16324d6acb560f59aed73888f" if archived else runner_hash
-    assert data["runnerSha256"] == expected
+    archived_runners = {
+        "47e8ebdc26bdc78349ccaa1ea87f72521aaa3f0bde6469e2baa761c65fd606d2": "466960754fb757fcf1c9d427b20e81ca859813b16324d6acb560f59aed73888f",
+        "abfd104b4c5a01c8bad931ac7db76ac3175a0353dd773c99c452a3e8145963f8": "a304bdccbb58668c9d025529c0499892b7198a05a63f7788aa9672dadc06d584",
+    }
+    assert data["runnerSha256"] == archived_runners.get(digest(args.input), runner_hash)
     assert data["appBundlerSha256"] == digest(bench / "app-bundle.mjs")
     if data["study"] == "--single-entry":
         assert all(not imports for imports in data["appGraph"].values())

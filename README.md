@@ -326,6 +326,34 @@ python3 web/bench/modulepreload-report.py /tmp/modulepreload.json.gz --plot /tmp
 
 </details>
 
+### Preloading the guest Wasm
+
+A page that knows the URL of its generated `.core.wasm` file can start the fetch alongside the bindings. With a 10 ms server delay per asset, this saved about **11 ms to the first guest result** on all three builds. The external runtime still took 66.11 ms with the hint, compared with 21.12 ms for internal Oxc and 16.29 ms for Jco 1.13.0. The external-to-release gap was about 50 ms with either layout. Without the added delay, the paired ratios for the PR builds were close to one. [Request timings, server counts and asset hashes](web/bench/results/wasm-preload.json.gz)
+
+| Delay | Build | Wasm request start (ms), ordinary → hinted | First result (ms), ordinary → hinted | Paired first result |
+| --- | --- | ---: | ---: | ---: |
+| 0 ms | Jco 1.13.0 | 3.21 → 0.24 | 7.66 → 7.04 | 0.931× |
+| 0 ms | Internal Oxc | 6.79 → 0.25 | 12.47 → 12.04 | 1.016× |
+| 0 ms | External runtime | 22.42 → 0.25 | 27.64 → 28.41 | 1.001× |
+| 10 ms | Jco 1.13.0 | 13.00 → 0.22 | 27.02 → 16.29 | 0.598× |
+| 10 ms | Internal Oxc | 16.32 → 0.22 | 31.98 → 21.12 | 0.651× |
+| 10 ms | External runtime | 62.25 → 0.23 | 76.73 → 66.11 | 0.856× |
+
+The timed page inserted one link immediately before importing the component entry. The browser reused the response when the generated bindings called `fetch` for streaming compilation. Both the server request count and the browser timing entries showed one Wasm transfer in every one of the 1,296 fresh Chromium documents. All 18 individual paired intervals favored preloading with the simulated delay. The table summarizes six workload medians. Ratios pair the two layouts within each round and workload before aggregation.
+
+```html
+<link rel="preload" as="fetch" type="application/wasm" crossorigin="anonymous" href="/app/dom_query.core.wasm">
+```
+
+![Time to first guest result with a Wasm preload relative to the same build without a hint, for six workloads on loopback and with a 10 ms per-asset delay.](web/bench/results/wasm-preload.png)
+
+Use Jco at `ee0d0ff26` and the benchmark setup above to reproduce the comparison.
+
+```sh
+CHROME_BIN=/path/to/chrome ROUNDS=18 node web/bench/core-startup.mjs /path/to/built/jco /tmp/wasm-preload.json.gz --wasm-preload
+python3 web/bench/modulepreload-report.py /tmp/wasm-preload.json.gz --plot /tmp/wasm-preload.png
+```
+
 ## Serving the browser bindings with HTTP gzip
 
 Across six small DOM workloads, gzip reduced the median JS and Wasm response bodies from **141.52 to 46.70 KiB** for the internal Oxc bundle and **193.73 to 68.18 KiB** for the external runtime. On HTTP/1.1 loopback, time to first result with gzip was **8.25 ms** on Jco 1.13.0, **15.09 ms** internally and **29.36 ms** externally. Smaller transfers alone did not close the startup gap on this connection. [Samples, asset hashes and browser-reported transfer sizes](web/bench/results/http-gzip.json.gz)

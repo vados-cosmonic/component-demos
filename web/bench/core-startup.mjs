@@ -12,13 +12,14 @@ import puppeteer from "puppeteer-core";
 import { parse } from "acorn";
 
 const [checkout, output, study, ...extra] = process.argv.slice(2);
-const preload = study === "--modulepreload";
+const wasmPreload = study === "--wasm-preload";
+const preload = study === "--modulepreload" || wasmPreload;
 const compression = study === "--gzip";
 const singleEntry = study === "--single-entry";
 const application = study === "--app-bundle" || singleEntry;
 const checkedPackage = preload || compression || application;
 assert(!extra.length && (study === undefined || checkedPackage));
-assert(checkout && output, "Usage: core-startup.mjs <built Jco checkout> <output.json.gz> [--modulepreload|--gzip|--app-bundle|--single-entry]");
+assert(checkout && output, "Usage: core-startup.mjs <built Jco checkout> <output.json.gz> [--modulepreload|--wasm-preload|--gzip|--app-bundle|--single-entry]");
 const rounds = Number(process.env.ROUNDS ?? 18);
 assert(Number.isInteger(rounds) && rounds >= 6 && rounds % 6 === 0);
 const bench = import.meta.dirname, web = join(bench, "..");
@@ -120,7 +121,8 @@ function dependencies(path) {
 }
 const hintLists = {};
 if (preload) {
-  modes.push("direct", "transitive", "all");
+  if (wasmPreload) modes.push(...modes.map(build => build + "-preload"));
+  else modes.push("direct", "transitive", "all");
   for (const {base,name} of cases) {
     const direct = [...new Set(dependencies(base+"/external/"+name+".js"))];
     const all = new Set(direct);
@@ -138,7 +140,16 @@ async function measure({demo,entry,args,hints,compression}) {
   const start = performance.now();
   for (const path of hints ?? []) {
     const link = document.createElement("link");
-    link.rel = "modulepreload";
+    if (path.endsWith(".wasm")) {
+      // Match the bindings' fetch mode and credentials so the browser can use
+      // the preload response when compileStreaming starts.
+      link.rel = "preload";
+      link.as = "fetch";
+      link.type = "application/wasm";
+      link.crossOrigin = "anonymous";
+    } else {
+      link.rel = "modulepreload";
+    }
     link.href = path;
     document.head.append(link);
   }
@@ -169,6 +180,7 @@ for (let round = 0; round < rounds; round++) {
     }
   }
   let cursor = 0;
+  let wasmResponses = 0;
   const gate = Promise.withResolvers(), done = Promise.withResolvers();
   done.promise.catch(() => {});
   const watchdog = setTimeout(() => done.reject(Error("Timed out at page "+cursor)), 60000);
@@ -182,9 +194,10 @@ for (let round = 0; round < rounds; round++) {
       if (path === "/gate") { await gate.promise; return res.end(); }
       if (path === "/favicon.ico") return res.writeHead(204).end();
       const {base,mode,name,demo,delay} = queue[cursor];
-      const hints = preload ? hintLists[base][mode] ?? [] : undefined;
+      let hints = preload ? hintLists[base][mode] ?? [] : undefined;
       const compressed = compression && mode.endsWith("-gzip");
-      const build = compressed ? mode.slice(0,-5) : hints?.length ? "external" : mode;
+      const build = hints?.length ? "external" : mode.replace(/-(?:preload|gzip)$/, "");
+      if (wasmPreload && mode.endsWith("-preload")) hints = [base+"/"+build+"/"+name+".core.wasm"];
       const entry = base+"/"+build+"/"+name+".js";
       if (path === "/trial/"+cursor) {
         const args = {demo,entry,args:inputs[demo],hints,compression};
@@ -221,6 +234,13 @@ for (let round = 0; round < rounds; round++) {
           for (const r of row.requests) {
             assert(r.startMs >= -0.02 && r.endMs >= r.startMs && r.endMs <= row.firstMs+0.02);
           }
+          if (wasmPreload) {
+            assert.equal(wasmResponses, 1);
+            row.wasmResponses = wasmResponses;
+            wasmResponses = 0;
+            const wasm = row.requests.find(r => r.path.endsWith(".wasm"));
+            assert.equal(wasm.initiator, mode.endsWith("-preload") ? "link" : "fetch");
+          }
           row.delay = delay;
         }
         samples.push({round,cursor,base,mode,...row});
@@ -230,6 +250,7 @@ for (let round = 0; round < rounds; round++) {
         return;
       }
       assert(assets.has(path),path);
+      if (wasmPreload && path.endsWith(".wasm")) wasmResponses++;
       if (delay && !path.startsWith("/host/") && !path.startsWith("/examples/")) {
         await new Promise(resolve => setTimeout(resolve,delay));
       }
