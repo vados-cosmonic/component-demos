@@ -44,6 +44,24 @@ The external entry finished downloading in a median of 1.52 ms. The last of its 
 
 The timing probe used 18 balanced rounds on uncompressed loopback, with a fresh browser context per build and the shared host already loaded. It used the same JS and Wasm bytes as the full matrix. Six separate documents collected V8 block coverage at readiness or after the complete guest result. Coverage counts UTF-8 source bytes in reached ranges. Error handling, shutdown and other workloads can reach additional code.
 
+#### Does earlier discovery of the last two runtime chunks help?
+
+The checked external runtime's `async-task.js` entry already depends indirectly on the core and numeric-conversion chunks. A benchmark variant appended direct imports for those two files after its existing imports. This added 80 bytes (41 Brotli) to one module. Every document still fetched the same 16 JavaScript URLs and one guest Wasm URL exactly once and completed the 2,000-row C table workload.
+
+| Transport | Last of the two chunks discovered earlier, trial 1 / repeat | Paired first-result ratio, trial 1 (95% interval) | Paired first-result ratio, repeat (95% interval) |
+| --- | ---: | ---: | ---: |
+| HTTP/1.1, uncompressed loopback | 3.91 / 4.21 ms | 1.011× (0.963–1.167) | 0.972× (0.935–1.031) |
+| HTTP/2, Brotli loopback | 2.75 / 1.99 ms | 0.940× (0.890–1.100) | 1.032× (0.964–1.120) |
+| HTTP/2, Brotli, 40 ms and 10 Mbit/s | 3.43 / 3.14 ms | 1.009× (0.996–1.018) | 0.992× (0.978–1.015) |
+
+The first-result ratios compare the added imports with the shipped package. On the limited connection, the paired median time saved at the **last JS response** was only 0.05 ms in trial 1 (−0.92 to 1.55) and 0.10 ms in the repeat (−1.45 to 1.58). Earlier discovery did not produce a repeatable import or first-result improvement on any transport. The extra imports remain a benchmark experiment. Each trial ran 18 balanced rounds in a new Chromium process with 108 fresh browser contexts. The raw samples distinguish when Chromium scheduled the fetch, sent its request, received its first byte and finished the response. [First trial](web/bench/results/task-import-order-eda794c50.json.gz) · [Independent repeat](web/bench/results/task-import-order-repeat-eda794c50.json.gz)
+
+```sh
+matrix=web/bench/results/review-matrix-registry-eda794c50.json.gz
+node web/bench/task-import-order.mjs "$after" "$matrix" /tmp/task-order.json.gz
+python3 web/bench/task-import-order-report.py /tmp/task-order.json.gz "$matrix"
+```
+
 <details><summary>Reproduce the size, timing and startup comparisons</summary>
 
 Build `1919c56ed` in `before` and `eda794c50` in `after`. Install the benchmark dependencies, prepare the upstream distribution using the full matrix setup and point `CHROME_BIN` at Chromium. The first command checks the staged upstream revision used in this comparison.
