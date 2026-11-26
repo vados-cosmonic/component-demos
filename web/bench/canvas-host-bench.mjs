@@ -1,10 +1,11 @@
 // Compare browser host copies using the same core Wasm and pixel workload.
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { createServer } from "node:http";
-import { readFile, writeFile } from "node:fs/promises";
-import { cpus } from "node:os";
-import { join } from "node:path";
+import { mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
+import { cpus, tmpdir } from "node:os";
+import { join, resolve } from "node:path";
 import puppeteer from "puppeteer-core";
 
 const bench = import.meta.dirname;
@@ -12,8 +13,11 @@ const web = join(bench, "..");
 const hash = bytes => createHash("sha256").update(bytes).digest("hex");
 const inventoryBytes = await readFile(join(bench, "results/candidate-sizes.json"));
 const inventory = JSON.parse(inventoryBytes);
-const versions = ["direct", "baseline", "main", "candidate"];
-const langs = ["c", "cpp", "rust"];
+const [checkout, generator, previousRef, previousGenerator, output] = process.argv.slice(2);
+assert(process.argv.length === 2 || process.argv.length === 7,
+  "Use no arguments for the inventory run, or <jco-checkout> <generator> <previous-ref> <previous-generator> <output.json> for paired C canvas timings");
+const versions = checkout ? ["direct", "baseline", "main", "before", "after"] : ["direct", "baseline", "main", "candidate"];
+const langs = checkout ? ["c"] : ["c", "cpp", "rust"];
 const rounds = Number(process.env.ROUNDS ?? 9);
 assert(Number.isInteger(rounds) && rounds > 0);
 const size = 256;
@@ -26,12 +30,20 @@ for (const path of ["bench/canvas-host.mjs", "bench/dom-core-shim.mjs", "example
   sources[path] = hash(bytes);
   assets.set("/" + path, bytes);
 }
+let comparison;
+if (checkout) {
+  const git = (...args) => execFileSync("git", args, { cwd: checkout, encoding: "utf8" }).trim();
+  assert.equal(git("status", "--porcelain", "--untracked-files=no"), "");
+  comparison = { revision: git("rev-parse", "HEAD"), previous: git("rev-parse", previousRef + "^{commit}"),
+    generatorSha256: hash(await readFile(generator)), previousGeneratorSha256: hash(await readFile(previousGenerator)),
+    entries: {} };
+}
 const paths = {};
 for (const lang of langs) {
-  const { variants } = inventory.components.find(c => c.input.path === lang + "/canvas-pixels/native/canvas_pixels.wasm");
+  const { input, variants } = inventory.components.find(c => c.input.path === lang + "/canvas-pixels/native/canvas_pixels.wasm");
   paths[lang] = {};
   let coreSha;
-  for (const version of versions.slice(1)) {
+  for (const version of versions.slice(1).filter(v => variants[v])) {
     for (const file of variants[version]) {
       const bytes = await readFile(join(web, file.path));
       assert.equal(hash(bytes), file.sha256);
@@ -43,6 +55,34 @@ for (const lang of langs) {
         if (version === "baseline") paths[lang].direct = "/" + file.path;
       }
     }
+  }
+  if (comparison) {
+    const staging = await mkdtemp(join(tmpdir(), "jco-canvas-"));
+    try {
+      const component = join(web, input.path);
+      assert.equal(hash(await readFile(component)), input.sha256);
+      const mappings = (await readFile(join(web, "host/imports.txt"), "utf8")).trim().split("\n").map(line => {
+        const [name, target] = line.trim().split(/\s+/);
+        return "--map=" + name + "=../../../host/web-host.js#" + target;
+      });
+      for (const [version, binary] of [["before", previousGenerator], ["after", generator]]) {
+        const dir = join(staging, version);
+        execFileSync(resolve(binary), [component, dir, "--name=canvas_pixels", "--no-nodejs-compat",
+          "--base64-cutoff=5000", "--namespaced-exports", ...mappings]);
+        for (const f of await readdir(dir)) {
+          const url = "/" + lang + "/canvas-pixels/jco-" + version + "/" + f;
+          const bytes = await readFile(join(dir, f));
+          if (f === "canvas_pixels.js") {
+            paths[lang][version] = url;
+            comparison.entries[version] = hash(bytes);
+          } else {
+            const baseline = variants.baseline.find(asset => asset.path.endsWith("/" + f));
+            assert.equal(hash(bytes), baseline?.sha256, "Generated core differs for " + f);
+          }
+          assets.set(url, bytes);
+        }
+      }
+    } finally { await rm(staging, { recursive: true, force: true }); }
   }
   assert.deepEqual(Object.keys(paths[lang]).sort(), [...versions].sort());
 }
@@ -108,10 +148,10 @@ try {
     }
     console.log(`Canvas host round ${round}/${rounds}`);
   }
-  await writeFile(join(bench, "results/canvas-host.json"), JSON.stringify({
+  await writeFile(output ?? join(bench, "results/canvas-host.json"), JSON.stringify({
     date: new Date().toISOString(), browser: await browser.version(), cpu: cpus()[0].model,
     runnerSha256: hash(await readFile(import.meta.filename)), sizesSha256: hash(inventoryBytes),
-    sources, candidate: inventory.candidate, rounds, passes: 4, size, minMs, samples,
+    sources, candidate: comparison ?? inventory.candidate, rounds, passes: 4, size, minMs, samples,
   }, null, 2) + "\n");
 } finally {
   server.close();
