@@ -1,0 +1,159 @@
+--- runtime-chunks.mjs
++++ parallel-loader-trial.mjs
+@@ -18,7 +18,8 @@
+ const appPreload = study === "--shaped-preload";
+ const automaticControl = study === "--automatic-control";
+ const coreHints = study === "--core-hints";
+-const shaped = coreHints || study === "--shaped" || appPreload || automaticControl;
++assert.equal(study, "--parallel-loader");
++const shaped = true;
+ const alternative = automaticControl ? "automatic" : "grouped";
+ const compactHelpers = study === "--compact-helpers" || study === "--compact-component";
+ assert(!extra.length && (!study || shaped || compactHelpers));
+@@ -52,14 +53,7 @@
+   graph = {},
+   api = {},
+   footprints = {};
+-const builds = coreHints
+-  ? ["release", "release-core", "bundled", "bundled-core", "external", "external-core",
+-     "application", "application-core", "application-preload", "application-both"]
+-  : appPreload
+-  ? ["release", "bundled", "application", "application-preload"]
+-  : shaped
+-  ? ["release", "bundled", "external", automaticControl ? "automatic" : "application"]
+-  : ["release", "bundled", "external", "grouped", "application"];
++const builds = ["release", "bundled", "external", "bundled-serial", "bundled-parallel", "external-serial", "external-parallel"];
+ const protocols = shaped ? ["h2"] : ["http/1.1", "h2"];
+ const profiles = appPreload ? ["limited"] : shaped ? ["loopback", "limited"] : [null];
+ const emulation = { latency: 40, download: 1250000, upload: 1250000 };
+@@ -127,9 +121,7 @@
+     }
+   } finally { await bundle.close(); }
+ }
+-const inputs = automaticControl || coreHints
+-  ? Object.fromEntries(["dom-query", "table-update"].map(name => [name, Object.values(matrix.workloads[name])]))
+-  : { "dom-query": [8, 2], "table-update": [8] };
++const inputs = { "table-update": [matrix.workloads["table-update"].rows] };
+ for (const file of [
+   "host/web-host.js",
+   "host/common.js",
+@@ -152,7 +144,7 @@
+ const cases = [],
+   expected = {};
+ for (const demo of Object.keys(inputs))
+-  for (const lang of ["c", "cpp", "rust"]) {
++  for (const lang of ["c"]) {
+     const key = lang + "/" + demo,
+       name = demo.replaceAll("-", "_");
+     const guest = await readFile(join(web, key, "native", name + ".wasm"));
+@@ -188,6 +180,31 @@
+         );
+       }
+       expected[key][version] = { entry: ref.entry, requests: requests.sort() };
++      if (version !== "release") {
++        const options = { name, map: mapping, minify: true, instantiation: "async", nodejsCompat: false,
++          base64Cutoff: 5000, namespacedExports: true, emitTypescriptDeclarations: false,
++          ...(version === "external" ? { cmRuntimeEsModule: matrix.checkedPackage } : {}) };
++        const explicit = await transpileBytes(guest, options);
++        assert.deepEqual(explicit.imports, ["../../../host/web-host.js"]);
++        const entry = ref.entry.replace("/" + version + "/", "/" + version + "-instantiate/");
++        const base = posix.dirname(entry);
++        for (const [f, bytes] of Object.entries(explicit.files)) add(base + "/" + f, bytes);
++        const cores = Object.keys(explicit.files).filter(f => f.endsWith(".wasm")).sort();
++        assert.equal(cores.length, 4);
++        const directCore = requests.filter(p => p.endsWith(".wasm"));
++        assert.equal(directCore.length, 1);
++        const inline = [...assets.get(ref.entry).toString().matchAll(/["'`](AGFzbQ[A-Za-z0-9+/=]+)["'`]/g)]
++          .map(m => digest(Buffer.from(m[1], "base64")));
++        assert.deepEqual(cores.map(f => files[base + "/" + f].sha256).sort(),
++          [...inline, files[directCore[0]].sha256].sort());
++        const ast = parse(assets.get(entry).toString(), {ecmaVersion: "latest", sourceType: "module"});
++        const deps = ast.body.filter(n => n.type === "ImportDeclaration").map(n => imports.external[n.source.value]);
++        assert(deps.every(Boolean));
++        const explicitRequests = [entry, ...closure(deps), ...cores.map(f => base + "/" + f)].sort();
++        for (const timing of ["serial", "parallel"]) expected[key][version + "-" + timing] = {
++          entry, requests: explicitRequests, cores, timing,
++        };
++      }
+       if (version === "external") {
+         // Public paths are the adapter's static imports. Compare both complete transitive closures.
+         const publicFiles = requests.filter((p) => Object.values(imports.external).includes(p));
+@@ -244,11 +261,11 @@
+     requests: footprints[layout]["intrinsics/" + probe],
+   };
+
+-async function measure({ demo, entry, args, probe, hint, coreHint }) {
+-  let getMeasurements;
++async function measure({ demo, entry, args, probe, hint, coreHint, cores, timing }) {
++  let getMeasurements, host;
+   if (!probe) {
+     ({ getMeasurements } = await import("/examples/" + demo + "/main.js"));
+-    await import("/host/web-host.js");
++    host = await import("/host/web-host.js");
+   }
+   performance.clearResourceTimings();
+   const t = performance.now();
+@@ -267,7 +284,18 @@
+     link.href = coreHint;
+     document.head.append(link);
+   }
+-  const mod = await import(entry);
++  let mod;
++  if (timing) {
++    const compile = () => Promise.all(cores.map(async name => [name,
++      await WebAssembly.compileStreaming(fetch(new URL(name, new URL(entry, location.href))))]));
++    const [bindings, modules] = timing === "parallel"
++      ? await Promise.all([import(entry), compile()]) : [await import(entry), await compile()];
++    const byName = new Map(modules);
++    mod = await bindings.instantiate(name => {
++      if (!byName.has(name)) throw Error("unexpected core: " + name);
++      return byName.get(name);
++    }, { "../../../host/web-host.js": host });
++  } else mod = await import(entry);
+   const ready = performance.now();
+   if (probe) {
+     if (probe === "component") {
+@@ -340,7 +368,7 @@
+     files[path].brotli = body.length;
+   }
+ }
+-const rounds = shaped && !coreHints ? 16 : 20,
++const rounds = 14,
+   samples = [],
+   servers = [];
+ let chromium;
+@@ -364,7 +392,7 @@
+     return res.end();
+   }
+   res.setHeader("content-type", path.endsWith(".wasm") ? "application/wasm" : "text/javascript");
+-  if (coreHints) served.push(path);
++  served.push(path);
+   if (shaped) {
+     if (!/\bbr\b/.test(req.headers["accept-encoding"] ?? "")) return res.writeHead(406).end();
+     res.setHeader("content-encoding", "br");
+@@ -410,7 +438,7 @@
+               "https://127.0.0.1:" + server.address().port + "/page/" + mode,
+             );
+             assert.equal(doc.status(), 200);
+-            const { entry, requests, hint, coreHint } = expected[workload][mode],
++            const { entry, requests, hint, coreHint, cores, timing } = expected[workload][mode],
+               demo = workload.split("/")[1];
+             if (shaped) {
+               // Finish common page setup before throttling the timed import. Both
+@@ -427,14 +455,14 @@
+             const data = await page.evaluate(measure, {
+               demo,
+               entry,
+-              args: inputs[demo],
++              args: inputs[demo], cores, timing,
+               probe: isProbe ? probe : null,
+               hint,
+               coreHint,
+             });
+             assert(data.importMs > 0 && data.firstMs >= data.importMs);
+             assert.deepEqual(data.requests.map((r) => r.path).sort(), requests);
+-            if (coreHints) {
++            {
+               assert.deepEqual(served.toSorted(), requests, "duplicate or missing request at the server");
+               data.served = served.slice();
+             }

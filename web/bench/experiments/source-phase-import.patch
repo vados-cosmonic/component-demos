@@ -1,0 +1,104 @@
+--- runtime-chunks.mjs
++++ source-phase-trial.mjs
+@@ -18,7 +18,8 @@
+ const appPreload = study === "--shaped-preload";
+ const automaticControl = study === "--automatic-control";
+ const coreHints = study === "--core-hints";
+-const shaped = coreHints || study === "--shaped" || appPreload || automaticControl;
++assert.equal(study, "--source-import");
++const shaped = true;
+ const alternative = automaticControl ? "automatic" : "grouped";
+ const compactHelpers = study === "--compact-helpers" || study === "--compact-component";
+ assert(!extra.length && (!study || shaped || compactHelpers));
+@@ -52,14 +53,7 @@
+   graph = {},
+   api = {},
+   footprints = {};
+-const builds = coreHints
+-  ? ["release", "release-core", "bundled", "bundled-core", "external", "external-core",
+-     "application", "application-core", "application-preload", "application-both"]
+-  : appPreload
+-  ? ["release", "bundled", "application", "application-preload"]
+-  : shaped
+-  ? ["release", "bundled", "external", automaticControl ? "automatic" : "application"]
+-  : ["release", "bundled", "external", "grouped", "application"];
++const builds = ["release", "release-source", "bundled", "bundled-source", "external", "external-source"];
+ const protocols = shaped ? ["h2"] : ["http/1.1", "h2"];
+ const profiles = appPreload ? ["limited"] : shaped ? ["loopback", "limited"] : [null];
+ const emulation = { latency: 40, download: 1250000, upload: 1250000 };
+@@ -127,9 +121,7 @@
+     }
+   } finally { await bundle.close(); }
+ }
+-const inputs = automaticControl || coreHints
+-  ? Object.fromEntries(["dom-query", "table-update"].map(name => [name, Object.values(matrix.workloads[name])]))
+-  : { "dom-query": [8, 2], "table-update": [8] };
++const inputs = Object.fromEntries(["dom-query", "table-update"].map(name => [name, Object.values(matrix.workloads[name])]));
+ for (const file of [
+   "host/web-host.js",
+   "host/common.js",
+@@ -188,6 +180,21 @@
+         );
+       }
+       expected[key][version] = { entry: ref.entry, requests: requests.sort() };
++      // Replace just the primary core compilation expression. Both arms use the
++      // same relative Wasm URL and bindings; embedded helper modules still compile normally.
++      const original = assets.get(ref.entry).toString();
++      const core = requests.filter(p => p.endsWith(".wasm"));
++      assert.equal(core.length, 1);
++      const filename = basename(core[0]);
++      const compilation = version === "release" ? /fetch\(([$\w]+)\)\.then\(WebAssembly\.compileStreaming\)/g
++        : /[$\w]+\([$\w]+,new URL\(`\.\/[^`]+\.wasm`,import\.meta\.url\)\)/g;
++      assert.equal([...original.matchAll(compilation)].length, 1, ref.entry);
++      assert(original.includes("./" + filename));
++      assert(!original.includes("sourceCoreModule"));
++      const trial = ref.entry.replace(/\.js$/, ".source.js");
++      add(trial, 'import source sourceCoreModule from "./' + filename + '";\n' +
++        original.replace(compilation, "sourceCoreModule"));
++      expected[key][version + "-source"] = { entry: trial, requests: requests.map(p => p === ref.entry ? trial : p).sort() };
+       if (version === "external") {
+         // Public paths are the adapter's static imports. Compare both complete transitive closures.
+         const publicFiles = requests.filter((p) => Object.values(imports.external).includes(p));
+@@ -340,7 +347,7 @@
+     files[path].brotli = body.length;
+   }
+ }
+-const rounds = shaped && !coreHints ? 16 : 20,
++const rounds = 12,
+   samples = [],
+   servers = [];
+ let chromium;
+@@ -364,7 +371,7 @@
+     return res.end();
+   }
+   res.setHeader("content-type", path.endsWith(".wasm") ? "application/wasm" : "text/javascript");
+-  if (coreHints) served.push(path);
++  served.push(path);
+   if (shaped) {
+     if (!/\bbr\b/.test(req.headers["accept-encoding"] ?? "")) return res.writeHead(406).end();
+     res.setHeader("content-encoding", "br");
+@@ -384,6 +391,7 @@
+     const browser = await puppeteer.launch({
+       executablePath: process.env.CHROME_BIN,
+       args: [
++        "--enable-features=JavaScriptSourcePhaseImports",
+         "--ignore-certificate-errors-spki-list=" + pin,
+         ...(process.env.CHROME_NO_SANDBOX === "1" ? ["--no-sandbox"] : []),
+       ],
+@@ -434,7 +442,7 @@
+             });
+             assert(data.importMs > 0 && data.firstMs >= data.importMs);
+             assert.deepEqual(data.requests.map((r) => r.path).sort(), requests);
+-            if (coreHints) {
++            {
+               assert.deepEqual(served.toSorted(), requests, "duplicate or missing request at the server");
+               data.served = served.slice();
+             }
+@@ -476,6 +484,7 @@
+   gzipSync(
+     JSON.stringify({
+       revision,
++      chromiumFeature: "JavaScriptSourcePhaseImports",
+       rounds,
+       chromium,
+       protocols,

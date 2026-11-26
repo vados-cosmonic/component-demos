@@ -54,6 +54,57 @@ python3 web/bench/bulk-dom-report.py /tmp/bulk.json.gz --matrix /tmp/matrix.json
 
 </details>
 
+### Loading the guest Wasm alongside the bindings
+
+Across the last two full matrices, the external C, C++ and Rust table components took about 14–16 ms longer to import than Jco 1.13.0 on loopback (median across languages of paired differences). For a direct external module, Chromium discovers the guest Wasm after loading and evaluating the JS dependencies. We compared two ways of starting compilation earlier.
+
+#### Source-phase Wasm imports
+
+Each trial adapter statically imports the primary Wasm as a compiled `WebAssembly.Module` and passes it to the usual Jco instantiation code. The controls use the ordinary loader. All six adapters (DOM query and table update in C, C++ and Rust) loaded the same runtime modules and guest Wasm as the matrix. Each guest Wasm transferred exactly once. The trial changed one compilation expression and added one import. [TC39 source-phase import proposal](https://github.com/tc39/proposal-source-phase-imports) · [Experimental adapter changes](web/bench/experiments/source-phase-import.patch)
+
+| Transport | Build | Wasm request started earlier | Import time, trial / control | First result, trial / control |
+| --- | --- | ---: | ---: | ---: |
+| HTTP/2 loopback | Jco 1.13.0 | 1.3 ms | 1.015× (0.986–1.033) | 1.001× (0.946–1.035) |
+| | Internal Oxc | 4.5 ms | 0.873× (0.845–0.912) | 0.961× (0.922–1.013) |
+| | External runtime | 24.6 ms | 0.955× (0.919–0.995) | 1.009× (0.956–1.029) |
+| HTTP/2, 40 ms, 10 Mbit/s | Jco 1.13.0 | 0.9 ms | 1.001× (0.991–1.007) | 0.994× (0.983–1.000) |
+| | Internal Oxc | 3.6 ms | 0.979× (0.977–0.991) | 0.974× (0.963–0.998) |
+| | External runtime | 113.3 ms | 0.722× (0.720–0.725) | 0.759× (0.753–0.767) |
+
+On the limited connection, the external first result arrived 24.1% sooner and still took 1.33× the ordinary 1.13.0 time. Chromium 156.0.8078.47 required `--enable-features=JavaScriptSourcePhaseImports` to parse and load the Wasm import. Both the trial and its controls used that flag. The experiment ran 12 balanced rounds in 864 documents. Each round contributes the median paired ratio across its six workloads. Parentheses give individual 95% sign intervals. [Request traces, file sizes and per-document timings](web/bench/results/source-phase-4b9682bfe.json.gz)
+
+#### Compiling cores through the public instantiation API
+
+With `--instantiation async`, a browser application can use standard `fetch` and `WebAssembly.compileStreaming` while it imports the generated JS. In this C table workload the explicit instantiation build emits the guest and three small adapter cores as separate Wasm files. We verified their bytes against the guest and three embedded helpers in the ordinary direct module. The serial and concurrent loaders fetched exactly the same URLs once per document. All treatments completed the full 2,000-row guest call in Chromium with its default Wasm features.
+
+| First result in the full C table workload (ms) | Ordinary direct module | Explicit loader, serial | Explicit loader, concurrent | Concurrent / serial (paired 95% interval) |
+| --- | ---: | ---: | ---: | ---: |
+| Loopback, internal Oxc | 50.33 | 51.40 | 48.68 | 0.916× (0.864–0.999) |
+| Loopback, external runtime | 68.77 | 76.23 | 71.29 | 0.928× (0.848–0.988) |
+| 40 ms, 10 Mbit/s, internal Oxc | 153.18 | 156.43 | 110.66 | 0.719× (0.683–0.725) |
+| 40 ms, 10 Mbit/s, external runtime | 252.52 | 255.48 | 198.50 | 0.770× (0.763–0.789) |
+
+On the limited connection, the concurrent loader delivered its first result **28.0% sooner internally and 21.5% sooner externally** against the ordinary direct modules. Ordinary Jco 1.13.0 took 136.87 ms. Internal Oxc took 0.810× the release time (0.786–0.825) and the external runtime took 1.453× (1.440–1.474). On loopback the concurrent and ordinary direct module first-result intervals included parity in both modes. The trial ran seven treatments on each of two transports across 14 balanced rounds, for 196 fresh documents. The runtime guide includes an executable two-mode example using the existing API. [Browser loading recipe](https://github.com/vados-cosmonic/jco/blob/c7b54f851/packages/jco-cm-runtime/docs/runtime.md#loading-explicit-instantiation-bindings-in-a-browser) · [Exact requests and timing samples](web/bench/results/parallel-loader-4b9682bfe.json.gz)
+
+<details><summary>Reproduce the two loading studies</summary>
+
+Use a built Jco checkout at `4b9682bfe` as `$after` and point `CHROME_BIN` at the Chromium executable. These experiments apply to separate copies of the HTTP/2 package-layout harness.
+
+```sh
+matrix=web/bench/results/review-matrix-history-4b9682bfe.json.gz
+runner=web/bench/source-phase-trial.mjs
+patch -o "$runner" web/bench/runtime-chunks.mjs web/bench/experiments/source-phase-import.patch
+node "$runner" "$after" "$matrix" /tmp/source-phase.json.gz --source-import
+python3 web/bench/source-phase-report.py /tmp/source-phase.json.gz "$matrix" "$runner"
+
+runner=web/bench/parallel-loader-trial.mjs
+patch -o "$runner" web/bench/runtime-chunks.mjs web/bench/experiments/parallel-loader.patch
+node "$runner" "$after" "$matrix" /tmp/parallel-loader.json.gz --parallel-loader
+python3 web/bench/parallel-loader-report.py /tmp/parallel-loader.json.gz "$matrix" "$runner"
+```
+
+</details>
+
 ## Resource table initialization at eda794c50
 
 A resource transfer between component instances needs to find the destination table by ID. A synchronous component with one instance can use its table directly. The checked compiler now omits the array that indexed these tables and the assignments that populated it. Shutdown still uses its separate list of live tables and captures. Custom runtime providers continue to receive the registry. [Compiler change, runtime explanation and regression test](https://github.com/vados-cosmonic/jco/commit/eda794c504bb0a53ac50bf41ee1b240d3e714aab)
