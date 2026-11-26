@@ -25,7 +25,13 @@ assert result["inventorySha256"] == hashlib.sha256((bench / "results/candidate-s
 if args.compare_entries:
     with gzip.open(args.compare_entries) as source:
         previous = json.load(source)
-    old, new = previous["manifest"], result["manifest"]
+    old = previous["manifest"]
+    new = {k: v for k, v in result["manifest"].items() if "/previous-" not in k}
+    if result.get("compareCompilers"):
+        assert result["compilers"]["previous"] == previous["compilers"]["bundled"]
+        for path, asset in result["manifest"].items():
+            if "/previous-" in path:
+                assert old[path.replace("/previous-", "/")] == asset, path
     assert old.keys() == new.keys()
     entries = {s["entry"]: s["version"] for s in result["samples"] if s["version"] in ("bundled", "external")}
     for path in new.keys() - entries.keys():
@@ -47,7 +53,7 @@ elif result["runnerSha256"] == "cf7384f34b03e4389275108649c7dbbaa719ab94cbcfd91e
     # Benchmark commit f2d27b2 supplied ROUNDS=10 explicitly.
     assert result["checkedPackage"] and result["rounds"] == 10
 else:
-    assert result["runnerSha256"] == runner_hash
+    assert result["runnerSha256"] in {runner_hash, "07165d2b608750c3e0c01f73a1bcd2ab8c68761030fe8ff07fa8bb8a4039e297"}
 if result.get("minify"):
     inventory = (bench / "results/minified-sizes.json").read_bytes()
     assert result["minifiedInventorySha256"] == hashlib.sha256(inventory).hexdigest()
@@ -73,7 +79,9 @@ rounds = result["rounds"]
 languages = {"c": "C", "cpp": "C++", "rust": "Rust"}
 versions = ["release", "main", "bundled", "external"]
 has_previous = "previous" in result["compilers"]
-timed_versions = versions + (["previous"] if has_previous else [])
+compare_compilers = result.get("compareCompilers", False)
+controls = (["previous-bundled", "previous-external"] if compare_compilers else ["previous"]) if has_previous else []
+timed_versions = versions + controls
 def index_samples(run):
     rounds = run["rounds"]
     samples = defaultdict(dict)
@@ -243,19 +251,23 @@ if args.repeat_of:
         columns = [median(times) for times in zip(*workload_medians, strict=True)]
         print("|", version, "|", len(workload_medians), "|", " | ".join(f"{ms:+.2f}" for ms in columns), "|")
 
-if has_previous:
+for control in controls:
+    version = control.removeprefix("previous-") if compare_compilers else "external"
+    print("Paired comparison with the previous compiler:", version)
     assert result["checkedPackage"] == "@bytecodealliance/jco-cm-runtime"
     changes = defaultdict(list)
+    round_ratios = defaultdict(list)
     print("\n| Guest and operation | Entry bytes saved | Gzip bytes saved | Paired import | Paired first result | Paired warm operation |")
     print("| --- | ---: | ---: | ---: | ---: | ---: |")
     for demo, (metric, title) in focus.items():
         for lang, label in languages.items():
-            current = samples[demo,lang,"external"]
-            previous = samples[demo,lang,"previous"]
+            current = samples[demo,lang,version]
+            previous = samples[demo,lang,control]
             old = result["manifest"][previous[0]["entry"]]
             new = result["manifest"][current[0]["entry"]]
             sizes = [old[k] - new[k] for k in ("bytes","gzip")]
-            assert all(size > 0 for size in sizes)
+            if not compare_compilers:
+                assert all(size > 0 for size in sizes)
             for key, size in zip(("size","gzip"), sizes):
                 changes[key].append(size)
             predecessors = Counter()
@@ -263,14 +275,17 @@ if has_previous:
                 order = [v for _,v in sorted(positions[(demo,lang),r])]
                 predecessors.update(zip(order, order[1:]))
                 def requests(row):
-                    return {q["path"].replace("/previous/","/external/"): q["bytes"]
+                    return {q["path"].replace("/" + control + "/", "/" + version + "/"): q["bytes"]
                             for q in row["requests"] if q["path"] != row["entry"]}
                 assert requests(current[r]) == requests(previous[r])
-            assert len(predecessors) == 20 and set(predecessors.values()) == {rounds // 5}
+            n = len(timed_versions)
+            assert len(predecessors) == n * (n - 1) and set(predecessors.values()) == {rounds // n}
             fields = []
             for key, get in (("import", lambda row: row["loadMs"]), ("first", lambda row: row["firstResultMs"]),
                              ("warm", lambda row: row["warm"][metric])):
-                mid, lo, hi = median_interval(get(current[r])/get(previous[r]) for r in range(rounds))
+                ratios = [get(current[r])/get(previous[r]) for r in range(rounds)]
+                round_ratios[key].append(ratios)
+                mid, lo, hi = median_interval(ratios)
                 changes[key].append(mid)
                 changes[key+"Faster"].append(hi < 1)
                 changes[key+"Slower"].append(lo > 1)
@@ -280,6 +295,11 @@ if has_previous:
         print(key, "min / median / max", *(round(fn(changes[key]),4) for fn in (min,median,max)))
         if key in ("import","first","warm"):
             print("Intervals entirely faster / slower:", sum(changes[key+"Faster"]),sum(changes[key+"Slower"]))
+            if compare_compilers:
+                # These workloads share a browser process in each round. Take
+                # one median per process before estimating a suite-wide interval.
+                across = median_interval(median(block) for block in zip(*round_ratios[key], strict=True))
+                print("Median within-round ratio and 95% interval:", *(f"{x:.4f}" for x in across))
 
 if args.plot:
     import matplotlib

@@ -11,16 +11,20 @@ import { gzipSync } from "node:zlib";
 import puppeteer from "puppeteer-core";
 
 const [checkout, upstreamBuild, output, flag, previousBuild, ...extra] = process.argv.slice(2);
-assert(checkout && upstreamBuild && output && !extra.length && [undefined, "--minify", "--minify-checked"].includes(flag),
-  "Usage: review-matrix.mjs <built PR checkout> <upstream dist+vendor directory with commit file> <output.json.gz> [--minify [previous-transpiler-directory] | --minify-checked]");
+assert(checkout && upstreamBuild && output && !extra.length && [undefined, "--minify", "--minify-checked", "--compare-compilers"].includes(flag),
+  "Usage: review-matrix.mjs <built PR checkout> <upstream dist+vendor directory with commit file> <output.json.gz> [--minify [previous-transpiler-directory] | --minify-checked | --compare-compilers previous-transpiler-directory]");
 const minify = flag !== undefined;
 const useCheckedPackage = Boolean(previousBuild) || flag === "--minify-checked";
-assert(!previousBuild || flag === "--minify", "The checked-package comparison uses minified output");
+const compareCompilers = flag === "--compare-compilers";
+assert(!compareCompilers || previousBuild);
+assert(!previousBuild || compareCompilers || flag === "--minify", "The checked-package comparison uses minified output");
 const versions = ["release", "main", "bundled", "external"];
-if (previousBuild) versions.push("previous");
+if (compareCompilers) versions.push("previous-bundled", "previous-external");
+else if (previousBuild) versions.push("previous");
 const checkedPackage = "@bytecodealliance/jco-cm-runtime";
-const rounds = Number(process.env.ROUNDS ?? (previousBuild ? 10 : 8));
-assert(Number.isInteger(rounds) && rounds > 0 && rounds % (previousBuild ? 10 : 4) === 0);
+const period = versions.length % 2 ? 2 * versions.length : versions.length;
+const rounds = Number(process.env.ROUNDS ?? (compareCompilers ? 12 : previousBuild ? 10 : 8));
+assert(Number.isInteger(rounds) && rounds > 0 && rounds % period === 0);
 const web = join(import.meta.dirname, "..");
 const hash = bytes => createHash("sha256").update(bytes).digest("hex");
 const git = (...args) => execFileSync("git", args, { cwd: checkout, encoding: "utf8" }).trim();
@@ -56,7 +60,7 @@ for (const [version, dir] of generators) {
     }
   }
 }
-if (previousBuild) {
+if (previousBuild && !compareCompilers) {
   // The adapter minifier is the only changed compiler stage. The runtime files
   // served to both configurations come from the same directory below.
   for (const [file, sha] of Object.entries(compilers.previous)) {
@@ -93,7 +97,7 @@ for (const { input, variants } of inventory.components) {
     const dir = "/" + lang + "/" + demo + "/" + version;
     const options = { name, nodejsCompat: false, minify, base64Cutoff: 5000, namespacedExports: true,
       emitTypescriptDeclarations: false, map: Object.fromEntries(maps) };
-    if (version === "external" || version === "previous") {
+    if (version === "external" || version === "previous" || version === "previous-external") {
       Object.assign(options, useCheckedPackage ? { cmRuntimeEsModule: checkedPackage } : { cmRuntimeEsModule: "/runtime", cmRuntimeSyncImports: true });
     }
     let files;
@@ -108,7 +112,8 @@ for (const { input, variants } of inventory.components) {
     } else if (version === "release") {
       files = Object.fromEntries(await Promise.all(variants.baseline.map(async file => [basename(file.path), await readAsset(file)])));
     } else {
-      files = (await (tools[version] ?? tools.bundled)(component, options)).files;
+      const generator = version.startsWith("previous") ? tools.previous : tools[version] ?? tools.bundled;
+      files = (await generator(component, options)).files;
     }
     const cores = {};
     for (const [file, bytes] of Object.entries(files)) {
@@ -182,7 +187,12 @@ if (useCheckedPackage) {
 }
 const groups = Map.groupBy(builds, b => b.kind === "jco" ? b.demo + "/" + b.lang : b.entry);
 const sequences = [[0,1,3,2], [1,2,0,3], [2,3,1,0], [3,0,2,1]];
-if (previousBuild) {
+if (compareCompilers) {
+  // Six rotations cover each timing position and each immediate predecessor.
+  sequences.length = 0;
+  for (let shift = 0; shift < versions.length; shift++)
+    sequences.push([0,1,5,2,4,3].map(i => (i + shift) % versions.length));
+} else if (previousBuild) {
   // An odd number of treatments needs both directions of each rotation for
   // every ordered pair to occur equally often as immediate predecessors.
   sequences.length = 0;
@@ -281,6 +291,6 @@ for (let round = 0; round < rounds; round++) {
   console.log("Completed full matrix round", round + 1, "of", rounds);
 }
 await writeFile(output, gzipSync(JSON.stringify({ release: inventory.baseline, upstream, commonBase, candidate, compilers, rounds, chromium,
-  minify, checkedPackage: useCheckedPackage ? checkedPackage : undefined, minifiedInventorySha256: minify ? hash(minifiedSizes) : undefined,
+  minify, ...(compareCompilers && { compareCompilers }), checkedPackage: useCheckedPackage ? checkedPackage : undefined, minifiedInventorySha256: minify ? hash(minifiedSizes) : undefined,
   node: process.version, cpu: cpus()[0].model, inventorySha256: hash(inventoryBytes), runnerSha256: hash(await readFile(import.meta.filename)),
   workloads, manifest, samples }), { level: 9 }));

@@ -2,6 +2,49 @@
 
 This fork benchmarks the browser examples from [eqrion/component-demos at d0b9dd1](https://github.com/eqrion/component-demos/tree/d0b9dd1390a300978193adc623838fef4e4b632b). It runs the same compiled C, C++, and Rust WebAssembly components through jco 1.13.0, pinned upstream main, and a branch that optimizes synchronous host imports and numeric guest exports. The comparison also includes the demos’ JavaScript, Emscripten (Embind and EM_JS), and Rust wasm-bindgen implementations where available.
 
+## Native await in browser module initialization
+
+A direct ES module already waits for core Wasm compilation and instantiation. Jco now emits native `await` for the internal Oxc bundle and the standard checked external runtime. This removes the per-module generator and its promise driver from all 42 measured entries. A custom instantiator or a `--tla-compat` caller can observe synchronous completion, so these modes still use the driver. [Compiler change](https://github.com/vados-cosmonic/jco/commit/ae16355e9)
+
+The remaining driver now returns as soon as its generator finishes. Previously it resolved the initialization promise, tried to call `.then` on the generator’s final `undefined` value and caught the resulting `TypeError`. An ordinary import appeared to succeed either way. A Node inspector check recorded one caught exception on the old compiler and zero on the final compiler, in both binding modes with and without `--tla-compat`. The loader tests also exercise host errors and JSPI suspension during a core start. [Driver fix and regression test](https://github.com/vados-cosmonic/jco/commit/578b213ef)
+
+| Change from the preceding PR compiler | Internal Oxc | External checked |
+| --- | ---: | ---: |
+| Median reduction per minified JS entry | 362 bytes | 365 bytes |
+| Median reduction per gzipped JS entry | 148 bytes | 158 bytes |
+| Import and initialization time, new / previous | 0.999× (0.964–1.011) | 0.950× (0.926–0.977) |
+| First-result time, new / previous | 0.999× (0.966–1.014) | 1.004× (0.994–1.024) |
+| Warm operation time, new / previous | 1.026× (0.967–1.052) | 1.026× (0.976–1.049) |
+
+External import and initialization took 5.0% less time in the paired comparison (95% interval 2.3–7.4% less). The intervals for internal import, first result and warm execution included parity. Some earlier rounds shared the machine with compiler checks. In the final six-round scheduling block the paired median import ratios were 1.002× internally and 0.960× externally.
+
+Each of 18 Chromium processes ran the previous and new compilers in both modes, Jco 1.13.0, pinned upstream main and the available compiled shims. The 2,502 fresh documents each executed a full first call and a second call. The timing ratios above use one median across the 21 paired workloads within each browser process, then an individual 95% sign interval across processes. Every treatment occupied every position and followed every other treatment equally within each workload. The separately served Wasm and external runtime bytes matched across both compilers. [Raw samples, assets and compiler hashes](web/bench/results/review-matrix-init-ae16355e9.json.gz)
+
+| Browser metric | Jco 1.13.0 | Upstream main at `326f52ab4` | Internal Oxc | External checked |
+| --- | ---: | ---: | ---: | ---: |
+| Import (ms) | 5.26 | 12.53 | 9.83 | 20.80 |
+| Time to first guest result (ms) | 60.88 | 210.92 | 65.44 | 76.50 |
+| Minified JS entry (KiB) | 9.58 | 111.34 | 70.21 | 23.72 |
+| Total JS (KiB) | 9.58 | 111.34 | 70.21 | 122.50 |
+| Total gzipped JS (KiB) | 3.01 | 25.42 | 18.63 | 39.38 |
+
+Across the 21 warm headline workloads, internal Oxc met the 10× shim target in 21/21 and the external runtime in 21/21. The slowest ratios were 4.78× and 5.26× respectively. Internal and external matched or beat release on 16/21 and 16/21 warm workloads and 8/21 and 6/21 first results. Both modes met the 10× target on 81/84 individual phases. Absolute times and sizes in the table are medians of workload medians.
+
+![Warm and first-result comparisons across all 21 workloads.](web/bench/results/review-matrix-init-ae16355e9.png)
+
+<details><summary>Reproduce the paired compiler comparison</summary>
+
+Build Jco at `084063ed1` for `before`, at `ae16355e9` for `after`, and at `578b213ef` for `final`. Prepare `stage` using the [full matrix setup](#full-demo-matrix-on-the-merged-pr) and set `CHROME_BIN` to Chromium. The final revision consolidates the driver used by custom instantiation and TLA compatibility. The adapter verifier checks all 42 timed default-mode entries and their guest and runtime files against the final build.
+
+```sh
+old=web/bench/results/review-matrix-minified-084063ed1.json.gz
+ROUNDS=18 node web/bench/review-matrix.mjs "$after" "$stage" /tmp/init.json.gz --compare-compilers "$before/packages/jco-transpile"
+python3 web/bench/review-matrix-report.py /tmp/init.json.gz --compare-entries "$old" --release-intervals --plot /tmp/init.png
+node web/bench/verify-matrix-adapters.mjs "$final" /tmp/init.json.gz
+```
+
+</details>
+
 ## Smaller synchronous import adapters at 084063ed1
 
 A general host import copies the adapter’s diagnostic name onto its subtask. The standard checked synchronous lower returns its result directly and never constructs a subtask, including when it must create a task for a detached call. Bindgen now skips that private name assignment on this path. Both internal Oxc and the external checked package benefit. The comparison found 297 assignments across the 21 demos (12–17 per entry). The unminified external adapters differed only in those assignments and whitespace. The checked runtime, guest Wasm and exported interface are shared with the control. [Jco compiler change and regression test](https://github.com/vados-cosmonic/jco/commit/084063ed1)
