@@ -2,7 +2,7 @@
 from collections import defaultdict
 from hashlib import sha256
 import json
-from math import isfinite
+from math import comb, isfinite
 from pathlib import Path
 from statistics import median
 
@@ -16,6 +16,9 @@ bench = Path(__file__).resolve().parent
 results = bench / "results"
 inventory = (results / "candidate-sizes.json").read_bytes()
 sizes = json.loads(inventory)
+pin = json.loads((bench / "pin.json").read_text())
+if pin["commit"] != sizes["main"]:
+    raise ValueError("The candidate inventory uses a different upstream revision from pin.json")
 run = json.loads((results / "candidate-browser.json").read_text())
 if run["sizesSha256"] != sha256(inventory).hexdigest() or run["candidate"] != sizes["candidate"]:
     raise ValueError("Timing samples and assets come from different builds")
@@ -116,6 +119,23 @@ def paired_page_ratios(demo, lang, metric):
         result.append(median(ratios))
     return result
 
+def median_interval(pages):
+    """Two-sided sign-test interval with at least 95% marginal coverage."""
+    ordered = sorted(pages)
+    n = len(ordered)
+    tail = 0
+    bounds = (0, float("inf"))
+    for k in range((n + 1) // 2):
+        tail += comb(n, k)
+        if 40 * tail > 2**n:
+            break
+        bounds = ordered[k], ordered[-1 - k]
+    return bounds
+
+def interval_text(bounds):
+    lo, hi = bounds
+    return f"{lo:.3f}–{hi:.3f}×" if isfinite(hi) else "Unbounded"
+
 paired_rows = []
 paired_intervals = defaultdict(list)
 paired_winners = 0
@@ -127,13 +147,16 @@ for demo, (metric, label, unit) in focus.items():
         paired_intervals[title].append((midpoint, quantile(per_page, .25), quantile(per_page, .75)))
         paired_rows.append([label, title, f"{midpoint:.2f}×",
                             f"{quantile(per_page, .25):.2f}–{quantile(per_page, .75):.2f}×",
+                            interval_text(median_interval(per_page)),
                             f"{sum(v <= 1 for v in per_page)}/{len(per_page)}"])
 all_paired = []
+phase_bounds = {}
 for demo in focus:
     for lang, title in languages.items():
         metrics = paired_samples[demo, f"{lang} baseline", 1, 1]
         for metric in metrics:
             pages = paired_page_ratios(demo, lang, metric)
+            phase_bounds[demo, title, metric] = median_interval(pages)
             all_paired.append((median(pages), demo, title, metric, sum(r <= 1 for r in pages)))
 paired_medians = {(demo, guest, metric): value for value, demo, guest, metric, _ in all_paired}
 slow_paired = sorted((entry for entry in all_paired if entry[0] > 1), reverse=True)
@@ -156,6 +179,9 @@ para(f"The branch uses js-component-bindgen’s internal Oxc bundler and the che
 para(f"All Jco builds used the same guest binaries. Each value is the median of "
      f"{run['rounds']} fresh-page samples with one warm-up per page. The run collected {len(run['samples'])} "
      f"samples on {run['date'][:10]} with {run['browser']} on {run['cpu']}.")
+para(f"Stock main is pinned to `{pin['commit'][:9]}`. "
+     f"[Upstream source](https://github.com/bytecodealliance/jco/commit/{pin['commit']}) · "
+     f"[Transpiler CI build](https://github.com/bytecodealliance/jco/actions/runs/{pin['run']})")
 para(f"The candidate finished within **10× of the fastest available compiled shim in "
      f"{sum(r <= 10 for r in shim_ratios)}/{len(rows)}** headline comparisons. The largest ratio was **{max(shim_ratios):.2f}×**. "
      "On separate fresh pages it matched or beat "
@@ -168,6 +194,23 @@ para(f"The candidate finished within **10× of the fastest available compiled sh
 para("![Candidate runtime relative to the two targets by operation and language](web/bench/results/candidate-runtime.png)")
 table(["Operation", "Guest", "Unit", "1.13.0", "Stock main", "Candidate", "Candidate / 1.13.0",
        "Fastest shim", "Shim time", "Candidate / shim"], rows)
+shim_guests = {"C++ emscripten": "cpp", "C++ em-js": "cpp", "Rust wasm-bindgen": "rust"}
+matched_shims, shim_by_guest = [], []
+for demo, (metric, label, _) in focus.items():
+    row = [label]
+    for impl, lang in shim_guests.items():
+        if (demo, impl, metric) in times:
+            value = time(demo, f"{lang} candidate", metric) / time(demo, impl, metric)
+            matched_shims.append(value)
+            row.append(f"{value:.2f}×")
+        else:
+            row.append("—")
+    shim_by_guest.append(row)
+para(f"Comparing implementations in the same language, the branch stayed within 10× in "
+     f"**{sum(value <= 10 for value in matched_shims)}/{len(matched_shims)}** available headline comparisons. "
+     "Each cell divides the branch’s median by that shim’s median. A dash means the demo has no implementation "
+     "for that binding. The demos supply compiled shims for C++ and Rust.")
+table(["Operation", "C++ / Embind", "C++ / EM_JS", "Rust / wasm-bindgen"], shim_by_guest)
 para("<details><summary>How the synchronous bindings work</summary>")
 para("Eligible single-instance, synchronous components reuse the caller’s task for host imports. "
      "The adapter keeps direct references to its task stack and instance flags and checks for store interruptions. "
@@ -182,6 +225,8 @@ para("Resource drops check the instance flag and record traps. When lifting a bo
      "the adapter validates the handle and reads its 32-bit representation directly. Imported host resources with automatically "
      "assigned representations use their guest handle as an array index. Explicit host representations and shared tables use a "
      "representation map. Components with async operations, cross-component resource transfers or call tracking use the general adapter.")
+para("The preceding run measures the change from removing the subtask constructor from synchronous components. "
+     "[Archived report](https://github.com/vados-cosmonic/component-demos/blob/255eca61b14b5ab63567da558b5f561149cc5163/README.md#change-from-the-previous-branch-revision)")
 para("</details>")
 if reference:
     ref = reference["commit"]
@@ -285,12 +330,18 @@ fig.savefig(results / "paired-runtime.png", dpi=155)
 plt.close(fig)
 para("![Median paired time ratios by workload and guest, with bars spanning the middle half of page ratios]"
      "(web/bench/results/paired-runtime.png)")
-table(["Operation", "Guest", "Candidate / 1.13.0", "Middle 50% of page ratios", "Pages at or below 1×"], paired_rows)
+para("The middle 50% describes variation between pages. The median interval uses a two-sided sign test over "
+     "independent page medians at the 95% level for each phase individually. Measurements on this CPU and browser "
+     "can share machine load across pages.")
+table(["Operation", "Guest", "Candidate / 1.13.0", "Middle 50% of page ratios", "95% median interval",
+       "Pages at or below 1×"], paired_rows)
+above_baseline = sum(lo > 1 for lo, _ in phase_bounds.values())
 para(f"Across all {len(all_paired)} reported phases and string lengths, the same-page comparison matched or beat "
-     f"1.13.0 in **{len(all_paired) - len(slow_paired)}/{len(all_paired)}** cases. Totals and subphases overlap.")
+     f"1.13.0 in **{len(all_paired) - len(slow_paired)}/{len(all_paired)}** cases. The median interval lay entirely "
+     f"above 1× in **{above_baseline}/{len(all_paired)}** cases. Totals and subphases overlap.")
 if slow_paired:
-    table(["Slower paired phase", "Guest", "Metric", "Candidate / 1.13.0", "Pages at or below 1×"],
-          [[demo, guest, metric, f"{ratio:.3f}×", f"{wins}/{paired_run['rounds']}"]
+    table(["Slower paired phase", "Guest", "Metric", "Candidate / 1.13.0", "95% median interval", "Pages at or below 1×"],
+          [[demo, guest, metric, f"{ratio:.3f}×", interval_text(phase_bounds[demo, guest, metric]), f"{wins}/{paired_run['rounds']}"]
            for ratio, demo, guest, metric, wins in slow_paired])
 phase_rows, phase_baseline, phase_shim, misses = [], [], [], []
 for demo in focus:
@@ -330,7 +381,13 @@ if control_path.exists():
             raise ValueError(f"DOM control source has changed: {path}")
     control_rounds = set(range(1, control["rounds"] + 1))
     durations = defaultdict(dict)
+    control_loads = defaultdict(dict)
     for sample in control["samples"]:
+        group = control_loads[sample["demo"], sample["implementation"]]
+        load = sample["loadMs"]
+        if sample["round"] in group or not isfinite(load) or load <= 0:
+            raise ValueError("Invalid DOM control startup measurement")
+        group[sample["round"]] = load
         for metric, seconds in sample["seconds"].items():
             key = (sample["demo"], sample["implementation"], metric)
             if sample["round"] in durations[key]:
@@ -396,6 +453,20 @@ if control_path.exists():
     table(["Phase", "Guest", "Direct (ms)", "1.13.0 (ms)", "Candidate (ms)", "Candidate / direct",
            "Candidate / 1.13.0", "Rounds at or below 1.13.0",
            *(["Candidate / previous", "Rounds at or below previous"] if previous else [])], matched_rows)
+    startup_rows = []
+    for demo, title in (("dom-query", "ID and bulk query"), ("dom-traversal", "Tree traversal")):
+        for lang, guest in languages.items():
+            groups = [control_loads[demo, f"{lang} {v}"] for v in ("direct", "baseline", "candidate")]
+            if any(set(group) != control_rounds for group in groups):
+                raise ValueError(f"Incomplete DOM startup samples for {demo} / {lang}")
+            direct, baseline, candidate = [median(group.values()) for group in groups]
+            startup_rows.append([title, guest, *[f"{v:.2f}" for v in (direct, baseline, candidate)],
+                                 f"{candidate / direct:.2f}×", f"{candidate / baseline:.2f}×"])
+    para(f"On the same guest binaries, initialization took the following times before the first guest call. "
+         f"Each median covers {len(control_rounds)} fresh pages and includes importing the binding module, fetching "
+         "the guest and instantiating it. The direct shim uses `WebAssembly.instantiateStreaming`.")
+    table(["Workload", "Guest", "Direct startup (ms)", "1.13.0 (ms)", "Candidate (ms)", "Candidate / direct",
+           "Candidate / 1.13.0"], startup_rows)
 loop = json.loads((results / "import-loop.json").read_text())
 if any(loop[key] != sizes[key] for key in ("candidate", "main", "baseline")):
     raise ValueError("Import loop and demo measurements use different builds")

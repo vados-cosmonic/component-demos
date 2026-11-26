@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-26T01:08:30.067Z",
+  "date": "2026-11-26T01:37:37.973Z",
   "browser": "HeadlessChrome/156.0.8078.47",
   "node": "v26.13.0",
   "os": "linux 6.12.111 x64",
@@ -12,18 +12,13 @@
     }
   },
   "baseline": "1.13.0",
-  "main": "37f1dfaa31eef82d4ac38975cba66bafaca20b73",
+  "main": "3e5c52279b7ad45b8f15a2bca07569364c8d0c3f",
   "candidate": {
-    "commit": "d7ac58241e950ad78e950663509c3c34cee599bf",
+    "commit": "d21cb546b5013233b3036937794968b0ac8161f5",
     "dirty": false,
-    "generatorSha256": "6583197b55cd685c8ba4c3f42ca575dde370c539f1b7c0c36ab05f1de0d004aa"
+    "generatorSha256": "3e64c507d880832e0b93f35ed5c627799eed29fcb01611a138c3db580e2e2bae"
   },
-  "reference": {
-    "commit": "8400d667ff71addffcd184046fc47bc9c99a02be",
-    "dirty": false,
-    "generatorSha256": "db0a7f3e924a86ba7c7b8484d5152c390c1a5e94f7210b7027fb94e4096400ac"
-  },
-  "sizesSha256": "49f2e12700bad4199bd9a5c9df01fa22917b267f92caea68e67abda6386549c3",
+  "sizesSha256": "3090c573834cf63694e76e8d561d03da28895bb5c27160cd2655177881223fab",
   "samples": [
     {
       "demo": "canvas-pixels",
@@ -31,49 +26,49 @@
       "round": 1,
       "pass": 1,
       "seconds": {
-        "getImageData(): µs/call": 0.0011591,
-        "putImageData(): µs/call": 0.0001998
+        "getImageData(): µs/call": 0.00027319999999999997,
+        "putImageData(): µs/call": 0.00035860000000000004
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 273.2031252235174,
+        "hostUs": 262.1874986216426,
+        "remainderUs": 11.015626601874828
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c baseline",
+      "round": 1,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003009,
+        "putImageData(): µs/call": 0.0002099
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 300.8593749254942,
+        "hostUs": 288.59375230968,
+        "remainderUs": 12.265622615814209
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c baseline",
+      "round": 1,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.0007969,
+        "putImageData(): µs/call": 0.0004053
       },
       "canvas": {
         "reps": 16,
         "bytes": 123904,
-        "totalUs": 1159.0625010430813,
-        "hostUs": 1135.937500745058,
-        "remainderUs": 23.125000298023224
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c baseline",
-      "round": 1,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.0002747,
-        "putImageData(): µs/call": 0.0002049
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 274.6874997392297,
-        "hostUs": 262.9687516018748,
-        "remainderUs": 11.71874813735485
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c baseline",
-      "round": 1,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.0002865,
-        "putImageData(): µs/call": 0.0003808
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 286.4843746647239,
-        "hostUs": 273.98437913507223,
-        "remainderUs": 12.499995529651642
+        "totalUs": 796.875,
+        "hostUs": 776.8749929964542,
+        "remainderUs": 20.00000700354576
       }
     },
     {
@@ -82,15 +77,15 @@
       "round": 1,
       "pass": 2,
       "seconds": {
-        "getImageData(): µs/call": 0.00028169999999999996,
-        "putImageData(): µs/call": 0.00020119999999999998
+        "getImageData(): µs/call": 0.00038439999999999997,
+        "putImageData(): µs/call": 0.0002609
       },
       "canvas": {
-        "reps": 64,
+        "reps": 32,
         "bytes": 123904,
-        "totalUs": 281.71875048428774,
-        "hostUs": 269.29687429219484,
-        "remainderUs": 12.421876192092896
+        "totalUs": 384.37500037252903,
+        "hostUs": 369.6875013411045,
+        "remainderUs": 14.687499031424522
       }
     },
     {
@@ -99,15 +94,15 @@
       "round": 1,
       "pass": 3,
       "seconds": {
-        "getImageData(): µs/call": 0.0003028,
-        "putImageData(): µs/call": 0.0002065
+        "getImageData(): µs/call": 0.0003252,
+        "putImageData(): µs/call": 0.0002553
       },
       "canvas": {
-        "reps": 64,
+        "reps": 32,
         "bytes": 123904,
-        "totalUs": 302.8124999254942,
-        "hostUs": 268.75000447034836,
-        "remainderUs": 34.062495455145836
+        "totalUs": 325.1562491059303,
+        "hostUs": 313.12499940395355,
+        "remainderUs": 12.031249701976776
       }
     },
     {
@@ -116,15 +111,15 @@
       "round": 1,
       "pass": 3,
       "seconds": {
-        "getImageData(): µs/call": 0.0002743,
-        "putImageData(): µs/call": 0.000208
+        "getImageData(): µs/call": 0.00034389999999999996,
+        "putImageData(): µs/call": 0.0006425
       },
       "canvas": {
-        "reps": 64,
+        "reps": 32,
         "bytes": 123904,
-        "totalUs": 274.2968751117587,
-        "hostUs": 264.14062455296516,
-        "remainderUs": 10.156250558793545
+        "totalUs": 343.9062498509884,
+        "hostUs": 329.2187452316284,
+        "remainderUs": 14.68750461935997
       }
     },
     {
@@ -133,15 +128,15 @@
       "round": 1,
       "pass": 4,
       "seconds": {
-        "getImageData(): µs/call": 0.0003796,
-        "putImageData(): µs/call": 0.0002092
+        "getImageData(): µs/call": 0.0003469,
+        "putImageData(): µs/call": 0.0003814
       },
       "canvas": {
-        "reps": 64,
+        "reps": 32,
         "bytes": 123904,
-        "totalUs": 379.6093752607703,
-        "hostUs": 367.65624955296516,
-        "remainderUs": 11.953125707805157
+        "totalUs": 346.87500074505806,
+        "hostUs": 333.43750052154064,
+        "remainderUs": 13.437500223517418
       }
     },
     {
@@ -150,100 +145,100 @@
       "round": 1,
       "pass": 4,
       "seconds": {
-        "getImageData(): µs/call": 0.00030439999999999997,
-        "putImageData(): µs/call": 0.0002298
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 304.37499936670065,
-        "hostUs": 290.15625547617674,
-        "remainderUs": 14.21874389052391
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp candidate",
-      "round": 1,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003481,
-        "putImageData(): µs/call": 0.0002447
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 348.12499955296516,
-        "hostUs": 332.03124441206455,
-        "remainderUs": 16.093755140900612
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp baseline",
-      "round": 1,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.00031810000000000003,
-        "putImageData(): µs/call": 0.0002437
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 318.12499836087227,
-        "hostUs": 305.15624955296516,
-        "remainderUs": 12.968748807907104
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp baseline",
-      "round": 1,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.0004171,
-        "putImageData(): µs/call": 0.0005362
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 417.1093748882413,
-        "hostUs": 404.37500085681677,
-        "remainderUs": 12.734374031424522
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp candidate",
-      "round": 1,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.00033519999999999996,
-        "putImageData(): µs/call": 0.000243
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 335.15625074505806,
-        "hostUs": 320.78124955296516,
-        "remainderUs": 14.375001192092896
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp candidate",
-      "round": 1,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.0007847,
-        "putImageData(): µs/call": 0.0002448
+        "getImageData(): µs/call": 0.0010409,
+        "putImageData(): µs/call": 0.0002487
       },
       "canvas": {
         "reps": 16,
         "bytes": 123904,
-        "totalUs": 784.6875004470348,
-        "hostUs": 754.3749995529652,
-        "remainderUs": 30.31250089406967
+        "totalUs": 1040.937501937151,
+        "hostUs": 1023.1250002980232,
+        "remainderUs": 17.81250163912773
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp candidate",
+      "round": 1,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.00172,
+        "putImageData(): µs/call": 0.00022869999999999998
+      },
+      "canvas": {
+        "reps": 8,
+        "bytes": 123904,
+        "totalUs": 1720.0000062584877,
+        "hostUs": 1216.2500023841858,
+        "remainderUs": 503.7500038743019
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp baseline",
+      "round": 1,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.00028680000000000003,
+        "putImageData(): µs/call": 0.0002127
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 286.79687436670065,
+        "hostUs": 275.85937920957804,
+        "remainderUs": 10.937495157122612
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp baseline",
+      "round": 1,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.0002983,
+        "putImageData(): µs/call": 0.0002387
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 298.28124959021807,
+        "hostUs": 286.7187485098839,
+        "remainderUs": 11.562501080334187
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp candidate",
+      "round": 1,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.000333,
+        "putImageData(): µs/call": 0.0002529
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 333.0468749627471,
+        "hostUs": 320.15624921768904,
+        "remainderUs": 12.89062574505806
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp candidate",
+      "round": 1,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.0007056,
+        "putImageData(): µs/call": 0.000254
+      },
+      "canvas": {
+        "reps": 16,
+        "bytes": 123904,
+        "totalUs": 705.6250013411045,
+        "hostUs": 679.6875037252903,
+        "remainderUs": 25.93749761581421
       }
     },
     {
@@ -252,15 +247,15 @@
       "round": 1,
       "pass": 3,
       "seconds": {
-        "getImageData(): µs/call": 0.0003305,
-        "putImageData(): µs/call": 0.0002406
+        "getImageData(): µs/call": 0.00032219999999999997,
+        "putImageData(): µs/call": 0.0002364
       },
       "canvas": {
         "reps": 32,
         "bytes": 123904,
-        "totalUs": 330.46874962747097,
-        "hostUs": 318.59375536441803,
-        "remainderUs": 11.87499426305294
+        "totalUs": 322.1875000745058,
+        "hostUs": 308.9062515646219,
+        "remainderUs": 13.28124850988388
       }
     },
     {
@@ -269,15 +264,15 @@
       "round": 1,
       "pass": 4,
       "seconds": {
-        "getImageData(): µs/call": 0.0003416,
-        "putImageData(): µs/call": 0.00022009999999999998
+        "getImageData(): µs/call": 0.0003245,
+        "putImageData(): µs/call": 0.00023380000000000002
       },
       "canvas": {
         "reps": 32,
         "bytes": 123904,
-        "totalUs": 341.5625002235174,
-        "hostUs": 327.8125040233135,
-        "remainderUs": 13.749996200203896
+        "totalUs": 324.5312497019768,
+        "hostUs": 310.9374940395355,
+        "remainderUs": 13.593755662441254
       }
     },
     {
@@ -286,15 +281,15 @@
       "round": 1,
       "pass": 4,
       "seconds": {
-        "getImageData(): µs/call": 0.000316,
-        "putImageData(): µs/call": 0.00023180000000000002
+        "getImageData(): µs/call": 0.0003392,
+        "putImageData(): µs/call": 0.0006877999999999999
       },
       "canvas": {
-        "reps": 64,
+        "reps": 32,
         "bytes": 123904,
-        "totalUs": 316.01562537252903,
-        "hostUs": 304.0624978020787,
-        "remainderUs": 11.953127570450306
+        "totalUs": 339.21875059604645,
+        "hostUs": 323.1250047683716,
+        "remainderUs": 16.093745827674866
       }
     },
     {
@@ -303,15 +298,15 @@
       "round": 1,
       "pass": 1,
       "seconds": {
-        "getImageData(): µs/call": 0.0003877,
-        "putImageData(): µs/call": 0.00033
+        "getImageData(): µs/call": 0.0003683,
+        "putImageData(): µs/call": 0.0002701
       },
       "canvas": {
-        "reps": 64,
+        "reps": 32,
         "bytes": 123904,
-        "totalUs": 387.6562500372529,
-        "hostUs": 372.4218728020787,
-        "remainderUs": 15.234377235174179
+        "totalUs": 368.2812489569187,
+        "hostUs": 347.9687515646219,
+        "remainderUs": 20.31249739229679
       }
     },
     {
@@ -320,15 +315,15 @@
       "round": 1,
       "pass": 1,
       "seconds": {
-        "getImageData(): µs/call": 0.0003238,
-        "putImageData(): µs/call": 0.0002538
+        "getImageData(): µs/call": 0.0003702,
+        "putImageData(): µs/call": 0.00025130000000000004
       },
       "canvas": {
         "reps": 32,
         "bytes": 123904,
-        "totalUs": 323.75000044703484,
-        "hostUs": 312.03125044703484,
-        "remainderUs": 11.71875
+        "totalUs": 370.1562508940697,
+        "hostUs": 355.31250573694706,
+        "remainderUs": 14.843745157122612
       }
     },
     {
@@ -337,1035 +332,1035 @@
       "round": 1,
       "pass": 2,
       "seconds": {
-        "getImageData(): µs/call": 0.0003198,
-        "putImageData(): µs/call": 0.00022830000000000002
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 319.8437485843897,
-        "hostUs": 305.6249972432852,
-        "remainderUs": 14.218751341104507
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust candidate",
-      "round": 1,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003236,
-        "putImageData(): µs/call": 0.0002229
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 323.59375059604645,
-        "hostUs": 309.68750081956387,
-        "remainderUs": 13.906249776482582
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust candidate",
-      "round": 1,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003086,
-        "putImageData(): µs/call": 0.000238
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 308.59375,
-        "hostUs": 296.48437444120646,
-        "remainderUs": 12.109375558793545
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust baseline",
-      "round": 1,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003164,
-        "putImageData(): µs/call": 0.0003052
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 316.40625,
-        "hostUs": 301.4062512665987,
-        "remainderUs": 14.999998733401299
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust baseline",
-      "round": 1,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.00032669999999999997,
-        "putImageData(): µs/call": 0.0003584
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 326.71874947845936,
-        "hostUs": 313.9062412083149,
-        "remainderUs": 12.812508270144463
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust candidate",
-      "round": 1,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.00028589999999999996,
-        "putImageData(): µs/call": 0.000228
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 285.9375001862645,
-        "hostUs": 276.0937502607703,
-        "remainderUs": 9.843749925494194
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp baseline",
-      "round": 2,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.0002591,
-        "putImageData(): µs/call": 0.0002295
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 259.1406246647239,
-        "hostUs": 249.60937350988388,
-        "remainderUs": 9.531251154839993
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp candidate",
-      "round": 2,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.0002649,
-        "putImageData(): µs/call": 0.0002005
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 264.9218747392297,
-        "hostUs": 253.90624720603228,
-        "remainderUs": 11.015627533197403
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp candidate",
-      "round": 2,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.0012902999999999999,
-        "putImageData(): µs/call": 0.00023909999999999998
+        "getImageData(): µs/call": 0.0008893999999999999,
+        "putImageData(): µs/call": 0.0002577
       },
       "canvas": {
         "reps": 16,
         "bytes": 123904,
-        "totalUs": 1290.312498807907,
-        "hostUs": 1269.6875035762787,
-        "remainderUs": 20.624995231628418
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp baseline",
-      "round": 2,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.0002528,
-        "putImageData(): µs/call": 0.000205
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 252.8125001117587,
-        "hostUs": 242.2656249254942,
-        "remainderUs": 10.546875186264515
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp baseline",
-      "round": 2,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.00028480000000000004,
-        "putImageData(): µs/call": 0.0002016
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 284.76562537252903,
-        "hostUs": 274.296872317791,
-        "remainderUs": 10.468753054738045
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp candidate",
-      "round": 2,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.0006427999999999999,
-        "putImageData(): µs/call": 0.0002045
-      },
-      "canvas": {
-        "reps": 16,
-        "bytes": 123904,
-        "totalUs": 642.8124979138374,
-        "hostUs": 622.4999949336052,
-        "remainderUs": 20.31250298023224
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp candidate",
-      "round": 2,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.0002677,
-        "putImageData(): µs/call": 0.00021119999999999998
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 267.6562499254942,
-        "hostUs": 257.5000021606684,
-        "remainderUs": 10.156247764825821
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp baseline",
-      "round": 2,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.00027689999999999995,
-        "putImageData(): µs/call": 0.0001962
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 276.87499951571226,
-        "hostUs": 268.51562689989805,
-        "remainderUs": 8.359372615814209
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c baseline",
-      "round": 2,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003556,
-        "putImageData(): µs/call": 0.000247
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 355.6249998509884,
-        "hostUs": 341.87499806284904,
-        "remainderUs": 13.750001788139343
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c candidate",
-      "round": 2,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003589,
-        "putImageData(): µs/call": 0.0010222
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 358.90625044703484,
-        "hostUs": 342.18749962747097,
-        "remainderUs": 16.718750819563866
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c candidate",
-      "round": 2,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.00034060000000000004,
-        "putImageData(): µs/call": 0.0002388
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 340.62499925494194,
-        "hostUs": 326.40625163912773,
-        "remainderUs": 14.218747615814209
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c baseline",
-      "round": 2,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003227,
-        "putImageData(): µs/call": 0.00083
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 322.65624962747097,
-        "hostUs": 309.9999986588955,
-        "remainderUs": 12.656250968575478
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c baseline",
-      "round": 2,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.000328,
-        "putImageData(): µs/call": 0.00026419999999999997
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 327.9687501490116,
-        "hostUs": 314.53125178813934,
-        "remainderUs": 13.437498360872269
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c candidate",
-      "round": 2,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.00032889999999999997,
-        "putImageData(): µs/call": 0.0002447
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 328.9062511175871,
-        "hostUs": 315.4687434434891,
-        "remainderUs": 13.437507674098015
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c candidate",
-      "round": 2,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.0005459,
-        "putImageData(): µs/call": 0.00036439999999999997
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 545.9375008940697,
-        "hostUs": 523.90624769032,
-        "remainderUs": 22.031253203749657
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c baseline",
-      "round": 2,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.0002376,
-        "putImageData(): µs/call": 0.00018119999999999999
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 237.57812473922968,
-        "hostUs": 229.76562567055225,
-        "remainderUs": 7.812499068677425
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust baseline",
-      "round": 2,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.0002766,
-        "putImageData(): µs/call": 0.0001991
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 276.5624998137355,
-        "hostUs": 265.39062429219484,
-        "remainderUs": 11.171875521540642
+        "totalUs": 889.3749974668026,
+        "hostUs": 872.8124983608723,
+        "remainderUs": 16.56249910593033
       }
     },
     {
       "demo": "canvas-pixels",
       "implementation": "rust candidate",
-      "round": 2,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.00025780000000000003,
-        "putImageData(): µs/call": 0.00022119999999999998
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 257.8125,
-        "hostUs": 248.98437969386578,
-        "remainderUs": 8.828120306134224
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust candidate",
-      "round": 2,
+      "round": 1,
       "pass": 2,
       "seconds": {
-        "getImageData(): µs/call": 0.0003292,
-        "putImageData(): µs/call": 0.000212
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 329.2187498882413,
-        "hostUs": 313.98437544703484,
-        "remainderUs": 15.234374441206455
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust baseline",
-      "round": 2,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.0010859,
-        "putImageData(): µs/call": 0.0003375
-      },
-      "canvas": {
-        "reps": 16,
-        "bytes": 123904,
-        "totalUs": 1085.9375,
-        "hostUs": 1061.8749968707561,
-        "remainderUs": 24.06250312924385
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust baseline",
-      "round": 2,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.00036189999999999996,
-        "putImageData(): µs/call": 0.0002265
+        "getImageData(): µs/call": 0.0003298,
+        "putImageData(): µs/call": 0.0002284
       },
       "canvas": {
         "reps": 32,
         "bytes": 123904,
-        "totalUs": 361.87499947845936,
-        "hostUs": 346.5625047683716,
-        "remainderUs": 15.312494710087776
+        "totalUs": 329.84374836087227,
+        "hostUs": 316.8749902397394,
+        "remainderUs": 12.96875812113285
       }
     },
     {
       "demo": "canvas-pixels",
       "implementation": "rust candidate",
-      "round": 2,
+      "round": 1,
       "pass": 3,
       "seconds": {
-        "getImageData(): µs/call": 0.0002625,
-        "putImageData(): µs/call": 0.0002027
+        "getImageData(): µs/call": 0.0003356,
+        "putImageData(): µs/call": 0.0011719
       },
       "canvas": {
-        "reps": 64,
+        "reps": 32,
         "bytes": 123904,
-        "totalUs": 262.5000001862645,
-        "hostUs": 253.28124966472387,
-        "remainderUs": 9.218750521540642
+        "totalUs": 335.6250002980232,
+        "hostUs": 321.0937473922968,
+        "remainderUs": 14.531252905726433
       }
     },
     {
       "demo": "canvas-pixels",
-      "implementation": "rust candidate",
-      "round": 2,
+      "implementation": "rust baseline",
+      "round": 1,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003495,
+        "putImageData(): µs/call": 0.000257
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 349.5312500745058,
+        "hostUs": 334.68749932944775,
+        "remainderUs": 14.84375074505806
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust baseline",
+      "round": 1,
       "pass": 4,
       "seconds": {
-        "getImageData(): µs/call": 0.0004452,
-        "putImageData(): µs/call": 0.0002186
+        "getImageData(): µs/call": 0.0003567,
+        "putImageData(): µs/call": 0.001
       },
       "canvas": {
-        "reps": 64,
+        "reps": 32,
         "bytes": 123904,
-        "totalUs": 445.2343750745058,
-        "hostUs": 429.4531224295497,
-        "remainderUs": 15.781252644956112
+        "totalUs": 356.71875067055225,
+        "hostUs": 343.74999813735485,
+        "remainderUs": 12.968752533197403
       }
     },
     {
       "demo": "canvas-pixels",
-      "implementation": "rust baseline",
-      "round": 2,
+      "implementation": "rust candidate",
+      "round": 1,
       "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.00028030000000000004,
-        "putImageData(): µs/call": 0.0002116
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 280.3124999627471,
-        "hostUs": 269.9999948963523,
-        "remainderUs": 10.312505066394806
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust candidate",
-      "round": 3,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003159,
-        "putImageData(): µs/call": 0.00022480000000000002
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 315.9374985843897,
-        "hostUs": 301.5624973922968,
-        "remainderUs": 14.375001192092896
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust baseline",
-      "round": 3,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003952,
-        "putImageData(): µs/call": 0.00026260000000000004
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 395.1562503352761,
-        "hostUs": 381.32812175899744,
-        "remainderUs": 13.828128576278687
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust baseline",
-      "round": 3,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.0005108000000000001,
-        "putImageData(): µs/call": 0.0005252000000000001
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 510.7812490314245,
-        "hostUs": 495.9375075995922,
-        "remainderUs": 14.843741431832314
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust candidate",
-      "round": 3,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.00035580000000000003,
-        "putImageData(): µs/call": 0.0002209
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 355.7812497019768,
-        "hostUs": 340.1562497019768,
-        "remainderUs": 15.625
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust candidate",
-      "round": 3,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.0007777999999999999,
-        "putImageData(): µs/call": 0.0002345
-      },
-      "canvas": {
-        "reps": 16,
-        "bytes": 123904,
-        "totalUs": 777.8124995529652,
-        "hostUs": 758.7499991059303,
-        "remainderUs": 19.062500447034836
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust baseline",
-      "round": 3,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.000315,
-        "putImageData(): µs/call": 0.00022019999999999999
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 315.0000013411045,
-        "hostUs": 303.4375011920929,
-        "remainderUs": 11.562500149011612
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust baseline",
-      "round": 3,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.0004054,
-        "putImageData(): µs/call": 0.0006868999999999999
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 405.3906248882413,
-        "hostUs": 389.2187485471368,
-        "remainderUs": 16.171876341104507
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust candidate",
-      "round": 3,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003407,
-        "putImageData(): µs/call": 0.00022569999999999998
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 340.7031251117587,
-        "hostUs": 326.71874947845936,
-        "remainderUs": 13.98437563329935
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c candidate",
-      "round": 3,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.00031580000000000003,
-        "putImageData(): µs/call": 0.000263
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 315.78125059604645,
-        "hostUs": 302.0312525331974,
-        "remainderUs": 13.749998062849045
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c baseline",
-      "round": 3,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.0007291,
-        "putImageData(): µs/call": 0.000253
-      },
-      "canvas": {
-        "reps": 16,
-        "bytes": 123904,
-        "totalUs": 729.0625013411045,
-        "hostUs": 705.0000056624413,
-        "remainderUs": 24.062495678663254
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c baseline",
-      "round": 3,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.0027725,
-        "putImageData(): µs/call": 0.000246
-      },
-      "canvas": {
-        "reps": 4,
-        "bytes": 123904,
-        "totalUs": 2772.499993443489,
-        "hostUs": 2734.9999994039536,
-        "remainderUs": 37.49999403953552
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c candidate",
-      "round": 3,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003328,
-        "putImageData(): µs/call": 0.0002458
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 332.81249925494194,
-        "hostUs": 317.1874973922968,
-        "remainderUs": 15.62500186264515
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c candidate",
-      "round": 3,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.0005122000000000001,
-        "putImageData(): µs/call": 0.00022909999999999999
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 512.1875004842877,
-        "hostUs": 497.9687500745058,
-        "remainderUs": 14.218750409781933
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c baseline",
-      "round": 3,
-      "pass": 3,
       "seconds": {
         "getImageData(): µs/call": 0.00034,
-        "putImageData(): µs/call": 0.0002398
+        "putImageData(): µs/call": 0.0002484
       },
       "canvas": {
         "reps": 32,
         "bytes": 123904,
         "totalUs": 339.9999998509884,
-        "hostUs": 326.0937575250864,
-        "remainderUs": 13.906242325901985
+        "hostUs": 326.0937463492155,
+        "remainderUs": 13.90625350177288
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp baseline",
+      "round": 2,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.00027330000000000003,
+        "putImageData(): µs/call": 0.0002475
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 273.2812501490116,
+        "hostUs": 262.8906248137355,
+        "remainderUs": 10.390625335276127
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp candidate",
+      "round": 2,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.0002883,
+        "putImageData(): µs/call": 0.0002119
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 288.2812498137355,
+        "hostUs": 276.4843748882413,
+        "remainderUs": 11.796874925494194
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp candidate",
+      "round": 2,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.0006452999999999999,
+        "putImageData(): µs/call": 0.0002905
+      },
+      "canvas": {
+        "reps": 16,
+        "bytes": 123904,
+        "totalUs": 645.3124992549419,
+        "hostUs": 624.375008046627,
+        "remainderUs": 20.937491208314896
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp baseline",
+      "round": 2,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.0004184,
+        "putImageData(): µs/call": 0.0004562
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 418.43750048428774,
+        "hostUs": 404.68749962747097,
+        "remainderUs": 13.750000856816769
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp baseline",
+      "round": 2,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003153,
+        "putImageData(): µs/call": 0.000328
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 315.3125001117587,
+        "hostUs": 302.57812701165676,
+        "remainderUs": 12.734373100101948
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp candidate",
+      "round": 2,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003,
+        "putImageData(): µs/call": 0.0002208
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 299.9999998137355,
+        "hostUs": 287.2656239196658,
+        "remainderUs": 12.734375894069672
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp candidate",
+      "round": 2,
+      "pass": 4,
+      "seconds": {
+        "getImageData(): µs/call": 0.0006356,
+        "putImageData(): µs/call": 0.0002516
+      },
+      "canvas": {
+        "reps": 16,
+        "bytes": 123904,
+        "totalUs": 635.6250010430813,
+        "hostUs": 614.3749989569187,
+        "remainderUs": 21.250002086162567
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp baseline",
+      "round": 2,
+      "pass": 4,
+      "seconds": {
+        "getImageData(): µs/call": 0.00028639999999999997,
+        "putImageData(): µs/call": 0.0003931
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 286.4062497392297,
+        "hostUs": 274.76562187075615,
+        "remainderUs": 11.64062786847353
       }
     },
     {
       "demo": "canvas-pixels",
       "implementation": "c baseline",
-      "round": 3,
-      "pass": 4,
+      "round": 2,
+      "pass": 1,
       "seconds": {
-        "getImageData(): µs/call": 0.0003395,
-        "putImageData(): µs/call": 0.0009477999999999999
+        "getImageData(): µs/call": 0.0006337000000000001,
+        "putImageData(): µs/call": 0.0003232
       },
       "canvas": {
-        "reps": 32,
+        "reps": 16,
         "bytes": 123904,
-        "totalUs": 339.5312502980232,
-        "hostUs": 325.93750581145287,
-        "remainderUs": 13.593744486570358
+        "totalUs": 633.7499991059303,
+        "hostUs": 611.8749901652336,
+        "remainderUs": 21.875008940696716
       }
     },
     {
       "demo": "canvas-pixels",
       "implementation": "c candidate",
-      "round": 3,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003477,
-        "putImageData(): µs/call": 0.0002446
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 347.65625,
-        "hostUs": 331.87499828636646,
-        "remainderUs": 15.781251713633537
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp candidate",
-      "round": 3,
+      "round": 2,
       "pass": 1,
       "seconds": {
-        "getImageData(): µs/call": 0.0002566,
-        "putImageData(): µs/call": 0.0002102
+        "getImageData(): µs/call": 0.00028619999999999996,
+        "putImageData(): µs/call": 0.00022869999999999998
       },
       "canvas": {
         "reps": 64,
         "bytes": 123904,
-        "totalUs": 256.64062425494194,
-        "hostUs": 246.71874940395355,
-        "remainderUs": 9.921874850988388
+        "totalUs": 286.1718749627471,
+        "hostUs": 274.7656246647239,
+        "remainderUs": 11.406250298023224
       }
     },
     {
       "demo": "canvas-pixels",
-      "implementation": "cpp baseline",
-      "round": 3,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.0002655,
-        "putImageData(): µs/call": 0.0001952
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 265.54687414318323,
-        "hostUs": 255.62500022351742,
-        "remainderUs": 9.921873919665813
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp baseline",
-      "round": 3,
+      "implementation": "c candidate",
+      "round": 2,
       "pass": 2,
       "seconds": {
-        "getImageData(): µs/call": 0.0011072,
-        "putImageData(): µs/call": 0.0003164
-      },
-      "canvas": {
-        "reps": 16,
-        "bytes": 123904,
-        "totalUs": 1107.1874983608723,
-        "hostUs": 1089.6874964237213,
-        "remainderUs": 17.500001937150955
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp candidate",
-      "round": 3,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.00026839999999999996,
-        "putImageData(): µs/call": 0.0002023
+        "getImageData(): µs/call": 0.0003016,
+        "putImageData(): µs/call": 0.0002321
       },
       "canvas": {
         "reps": 64,
         "bytes": 123904,
-        "totalUs": 268.3593751862645,
-        "hostUs": 257.5781252235174,
-        "remainderUs": 10.781249962747097
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp candidate",
-      "round": 3,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003202,
-        "putImageData(): µs/call": 0.0002041
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 320.1562501490116,
-        "hostUs": 308.43750294297934,
-        "remainderUs": 11.718747206032276
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp baseline",
-      "round": 3,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003175,
-        "putImageData(): µs/call": 0.0003998
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 317.4999998882413,
-        "hostUs": 301.87499802559614,
-        "remainderUs": 15.62500186264515
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp baseline",
-      "round": 3,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.0002564,
-        "putImageData(): µs/call": 0.00026589999999999996
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 256.40624947845936,
-        "hostUs": 247.42187466472387,
-        "remainderUs": 8.984374813735485
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp candidate",
-      "round": 3,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003159,
-        "putImageData(): µs/call": 0.00020419999999999998
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 315.85937459021807,
-        "hostUs": 305.46875298023224,
-        "remainderUs": 10.390621609985828
+        "totalUs": 301.5625001862645,
+        "hostUs": 290.6249975785613,
+        "remainderUs": 10.937502607703209
       }
     },
     {
       "demo": "canvas-pixels",
       "implementation": "c baseline",
-      "round": 4,
-      "pass": 1,
+      "round": 2,
+      "pass": 2,
       "seconds": {
-        "getImageData(): µs/call": 0.0003037,
-        "putImageData(): µs/call": 0.0002459
+        "getImageData(): µs/call": 0.0006906,
+        "putImageData(): µs/call": 0.00026589999999999996
+      },
+      "canvas": {
+        "reps": 16,
+        "bytes": 123904,
+        "totalUs": 690.6249970197678,
+        "hostUs": 665.6250022351742,
+        "remainderUs": 24.999994784593582
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c baseline",
+      "round": 2,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003131,
+        "putImageData(): µs/call": 0.0008512999999999999
       },
       "canvas": {
         "reps": 64,
         "bytes": 123904,
-        "totalUs": 303.6718750372529,
-        "hostUs": 290.78125115484,
+        "totalUs": 313.12499940395355,
+        "hostUs": 300.23437552154064,
         "remainderUs": 12.89062388241291
       }
     },
     {
       "demo": "canvas-pixels",
       "implementation": "c candidate",
-      "round": 4,
-      "pass": 1,
+      "round": 2,
+      "pass": 3,
       "seconds": {
-        "getImageData(): µs/call": 0.0002805,
-        "putImageData(): µs/call": 0.0002075
+        "getImageData(): µs/call": 0.0003269,
+        "putImageData(): µs/call": 0.0002435
       },
       "canvas": {
         "reps": 64,
         "bytes": 123904,
-        "totalUs": 280.5468747392297,
-        "hostUs": 270.1562521979213,
-        "remainderUs": 10.390622541308403
+        "totalUs": 326.8750002607703,
+        "hostUs": 314.0624975785613,
+        "remainderUs": 12.812502682209015
       }
     },
     {
       "demo": "canvas-pixels",
       "implementation": "c candidate",
-      "round": 4,
-      "pass": 2,
+      "round": 2,
+      "pass": 4,
       "seconds": {
-        "getImageData(): µs/call": 0.0011056,
-        "putImageData(): µs/call": 0.0002223
+        "getImageData(): µs/call": 0.0003523,
+        "putImageData(): µs/call": 0.00035569999999999997
       },
       "canvas": {
-        "reps": 16,
+        "reps": 64,
         "bytes": 123904,
-        "totalUs": 1105.6249998509884,
-        "hostUs": 1090.3124958276749,
-        "remainderUs": 15.312504023313522
+        "totalUs": 352.26562432944775,
+        "hostUs": 338.98437209427357,
+        "remainderUs": 13.281252235174179
       }
     },
     {
       "demo": "canvas-pixels",
       "implementation": "c baseline",
-      "round": 4,
-      "pass": 2,
+      "round": 2,
+      "pass": 4,
       "seconds": {
-        "getImageData(): µs/call": 0.0003172,
-        "putImageData(): µs/call": 0.00028869999999999997
+        "getImageData(): µs/call": 0.000338,
+        "putImageData(): µs/call": 0.0002337
       },
       "canvas": {
         "reps": 32,
         "bytes": 123904,
-        "totalUs": 317.18749925494194,
-        "hostUs": 305.0000034272671,
-        "remainderUs": 12.187495827674866
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c baseline",
-      "round": 4,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003525,
-        "putImageData(): µs/call": 0.000562
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 352.5000009685755,
-        "hostUs": 337.8125000745058,
-        "remainderUs": 14.687500894069672
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c candidate",
-      "round": 4,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003391,
-        "putImageData(): µs/call": 0.00025610000000000005
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 339.0624988824129,
-        "hostUs": 326.2499999254942,
+        "totalUs": 337.9687499254942,
+        "hostUs": 325.1562509685755,
         "remainderUs": 12.812498956918716
       }
     },
     {
       "demo": "canvas-pixels",
-      "implementation": "c candidate",
-      "round": 4,
+      "implementation": "rust baseline",
+      "round": 2,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.0002616,
+        "putImageData(): µs/call": 0.0002153
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 261.6406250745058,
+        "hostUs": 250.31250156462193,
+        "remainderUs": 11.32812350988388
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust candidate",
+      "round": 2,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.0002734,
+        "putImageData(): µs/call": 0.00020219999999999998
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 273.4375,
+        "hostUs": 261.4843789488077,
+        "remainderUs": 11.953121051192284
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust candidate",
+      "round": 2,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.0002869,
+        "putImageData(): µs/call": 0.00034460000000000003
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 286.8750002235174,
+        "hostUs": 274.6093738824129,
+        "remainderUs": 12.265626341104507
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust baseline",
+      "round": 2,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.0002582,
+        "putImageData(): µs/call": 0.00019669999999999998
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 258.20312462747097,
+        "hostUs": 249.2968775331974,
+        "remainderUs": 8.906247094273567
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust baseline",
+      "round": 2,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.00032439999999999997,
+        "putImageData(): µs/call": 0.0003165
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 324.37500078231096,
+        "hostUs": 311.56249437481165,
+        "remainderUs": 12.812506407499313
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust candidate",
+      "round": 2,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003045,
+        "putImageData(): µs/call": 0.0007233
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 304.5312501490116,
+        "hostUs": 292.3437478020787,
+        "remainderUs": 12.187502346932888
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust candidate",
+      "round": 2,
       "pass": 4,
       "seconds": {
-        "getImageData(): µs/call": 0.000527,
-        "putImageData(): µs/call": 0.0002812
+        "getImageData(): µs/call": 0.0002784,
+        "putImageData(): µs/call": 0.0002016
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 278.4374998882413,
+        "hostUs": 268.3593751862645,
+        "remainderUs": 10.078124701976776
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust baseline",
+      "round": 2,
+      "pass": 4,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003002,
+        "putImageData(): µs/call": 0.0002838
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 300.23437552154064,
+        "hostUs": 286.7187522351742,
+        "remainderUs": 13.515623286366463
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust candidate",
+      "round": 3,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003273,
+        "putImageData(): µs/call": 0.0002499
       },
       "canvas": {
         "reps": 32,
         "bytes": 123904,
-        "totalUs": 527.0312502980232,
-        "hostUs": 511.4062521606684,
-        "remainderUs": 15.62499813735485
+        "totalUs": 327.34375074505806,
+        "hostUs": 311.7187563329935,
+        "remainderUs": 15.624994412064552
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust baseline",
+      "round": 3,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003608,
+        "putImageData(): µs/call": 0.0003211
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 360.78124959021807,
+        "hostUs": 346.32812812924385,
+        "remainderUs": 14.453121460974216
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust baseline",
+      "round": 3,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003205,
+        "putImageData(): µs/call": 0.0002559
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 320.4687498509884,
+        "hostUs": 307.6562527567148,
+        "remainderUs": 12.812497094273567
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust candidate",
+      "round": 3,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.0020215999999999997,
+        "putImageData(): µs/call": 0.0002341
+      },
+      "canvas": {
+        "reps": 16,
+        "bytes": 123904,
+        "totalUs": 2021.562498062849,
+        "hostUs": 1993.4375025331974,
+        "remainderUs": 28.124995529651642
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust candidate",
+      "round": 3,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003216,
+        "putImageData(): µs/call": 0.0003159
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 321.56250067055225,
+        "hostUs": 307.4999935925007,
+        "remainderUs": 14.062507078051567
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust baseline",
+      "round": 3,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.00031380000000000004,
+        "putImageData(): µs/call": 0.00024619999999999997
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 313.75000067055225,
+        "hostUs": 301.0937497019768,
+        "remainderUs": 12.656250968575478
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust baseline",
+      "round": 3,
+      "pass": 4,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003235,
+        "putImageData(): µs/call": 0.000237
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 323.5156247392297,
+        "hostUs": 310.5468722060323,
+        "remainderUs": 12.968752533197403
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust candidate",
+      "round": 3,
+      "pass": 4,
+      "seconds": {
+        "getImageData(): µs/call": 0.00036439999999999997,
+        "putImageData(): µs/call": 0.00044489999999999997
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 364.3749989569187,
+        "hostUs": 347.03125059604645,
+        "remainderUs": 17.34374836087227
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c candidate",
+      "round": 3,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.0007897000000000001,
+        "putImageData(): µs/call": 0.0002459
+      },
+      "canvas": {
+        "reps": 16,
+        "bytes": 123904,
+        "totalUs": 789.6874994039536,
+        "hostUs": 761.2499929964542,
+        "remainderUs": 28.437506407499313
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c baseline",
+      "round": 3,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003298,
+        "putImageData(): µs/call": 0.0002503
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 329.8437502235174,
+        "hostUs": 317.9687485098839,
+        "remainderUs": 11.875001713633537
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c baseline",
+      "round": 3,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003342,
+        "putImageData(): µs/call": 0.0002385
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 334.2187497764826,
+        "hostUs": 321.0937511175871,
+        "remainderUs": 13.124998658895493
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c candidate",
+      "round": 3,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.000318,
+        "putImageData(): µs/call": 0.00023569999999999998
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 317.96875037252903,
+        "hostUs": 305.31250312924385,
+        "remainderUs": 12.65624724328518
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c candidate",
+      "round": 3,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003167,
+        "putImageData(): µs/call": 0.0002478
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 316.7187515646219,
+        "hostUs": 303.28124202787876,
+        "remainderUs": 13.437509536743164
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c baseline",
+      "round": 3,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003131,
+        "putImageData(): µs/call": 0.00025330000000000003
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 313.12499940395355,
+        "hostUs": 301.7187472432852,
+        "remainderUs": 11.406252160668373
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c baseline",
+      "round": 3,
+      "pass": 4,
+      "seconds": {
+        "getImageData(): µs/call": 0.00039339999999999997,
+        "putImageData(): µs/call": 0.00025780000000000003
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 393.43749918043613,
+        "hostUs": 378.35937924683094,
+        "remainderUs": 15.078119933605194
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c candidate",
+      "round": 3,
+      "pass": 4,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003263,
+        "putImageData(): µs/call": 0.00033380000000000004
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 326.25000178813934,
+        "hostUs": 312.1875002980232,
+        "remainderUs": 14.06250149011612
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp candidate",
+      "round": 3,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.00030639999999999997,
+        "putImageData(): µs/call": 0.000232
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 306.4062502235174,
+        "hostUs": 294.7656251490116,
+        "remainderUs": 11.640625074505806
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp baseline",
+      "round": 3,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.00031360000000000003,
+        "putImageData(): µs/call": 0.0002613
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 313.59375081956387,
+        "hostUs": 301.8750064074993,
+        "remainderUs": 11.718744412064552
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp baseline",
+      "round": 3,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.0004575,
+        "putImageData(): µs/call": 0.00023669999999999998
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 457.49999955296516,
+        "hostUs": 447.50000536441803,
+        "remainderUs": 9.999994188547134
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp candidate",
+      "round": 3,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.00031580000000000003,
+        "putImageData(): µs/call": 0.0002399
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 315.7812487334013,
+        "hostUs": 301.71874538064003,
+        "remainderUs": 14.062503352761269
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp candidate",
+      "round": 3,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.00032219999999999997,
+        "putImageData(): µs/call": 0.0008072
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 322.1875000745058,
+        "hostUs": 308.5937537252903,
+        "remainderUs": 13.593746349215508
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp baseline",
+      "round": 3,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003202,
+        "putImageData(): µs/call": 0.0002351
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 320.1562501490116,
+        "hostUs": 305.9375025331974,
+        "remainderUs": 14.218747615814209
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp baseline",
+      "round": 3,
+      "pass": 4,
+      "seconds": {
+        "getImageData(): µs/call": 0.00040839999999999995,
+        "putImageData(): µs/call": 0.00024359999999999999
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 408.4374997764826,
+        "hostUs": 391.40624832361937,
+        "remainderUs": 17.031251452863216
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp candidate",
+      "round": 3,
+      "pass": 4,
+      "seconds": {
+        "getImageData(): µs/call": 0.00031519999999999996,
+        "putImageData(): µs/call": 0.0002387
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 315.23437425494194,
+        "hostUs": 303.7499934434891,
+        "remainderUs": 11.484380811452866
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c baseline",
+      "round": 4,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.00029410000000000005,
+        "putImageData(): µs/call": 0.0002262
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 294.14062574505806,
+        "hostUs": 283.3593748509884,
+        "remainderUs": 10.781250894069672
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c candidate",
+      "round": 4,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.0007062,
+        "putImageData(): µs/call": 0.0002613
+      },
+      "canvas": {
+        "reps": 16,
+        "bytes": 123904,
+        "totalUs": 706.2499970197678,
+        "hostUs": 682.1875087916851,
+        "remainderUs": 24.062488228082657
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c candidate",
+      "round": 4,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.00034439999999999997,
+        "putImageData(): µs/call": 0.00022730000000000002
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 344.3750012665987,
+        "hostUs": 330.15624806284904,
+        "remainderUs": 14.218753203749657
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c baseline",
+      "round": 4,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003273,
+        "putImageData(): µs/call": 0.0002316
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 327.2656248882413,
+        "hostUs": 315.0000013411045,
+        "remainderUs": 12.265623547136784
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c baseline",
+      "round": 4,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.0008562,
+        "putImageData(): µs/call": 0.0002352
+      },
+      "canvas": {
+        "reps": 16,
+        "bytes": 123904,
+        "totalUs": 856.2499992549419,
+        "hostUs": 830.6250013411045,
+        "remainderUs": 25.624997913837433
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c candidate",
+      "round": 4,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003173,
+        "putImageData(): µs/call": 0.0002316
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 317.2656251117587,
+        "hostUs": 302.49999929219484,
+        "remainderUs": 14.765625819563866
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c candidate",
+      "round": 4,
+      "pass": 4,
+      "seconds": {
+        "getImageData(): µs/call": 0.0007402999999999999,
+        "putImageData(): µs/call": 0.0002853
+      },
+      "canvas": {
+        "reps": 16,
+        "bytes": 123904,
+        "totalUs": 740.3125017881393,
+        "hostUs": 717.1875052154064,
+        "remainderUs": 23.124996572732925
       }
     },
     {
@@ -1374,202 +1369,202 @@
       "round": 4,
       "pass": 4,
       "seconds": {
-        "getImageData(): µs/call": 0.00035769999999999997,
-        "putImageData(): µs/call": 0.0002321
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 357.6562497764826,
-        "hostUs": 344.5312399417162,
-        "remainderUs": 13.125009834766388
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust baseline",
-      "round": 4,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003591,
-        "putImageData(): µs/call": 0.000261
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 359.0625002980232,
-        "hostUs": 345.3124947845936,
-        "remainderUs": 13.750005513429642
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust candidate",
-      "round": 4,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.0005457999999999999,
-        "putImageData(): µs/call": 0.000301
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 545.7812510430813,
-        "hostUs": 524.3749991059303,
-        "remainderUs": 21.406251937150955
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust candidate",
-      "round": 4,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.00044560000000000004,
-        "putImageData(): µs/call": 0.000264
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 445.6249997019768,
-        "hostUs": 427.9687535017729,
-        "remainderUs": 17.656246200203896
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust baseline",
-      "round": 4,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003708,
-        "putImageData(): µs/call": 0.0002483
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 370.7812502980232,
-        "hostUs": 355.4687537252903,
-        "remainderUs": 15.312496572732925
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust baseline",
-      "round": 4,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003344,
-        "putImageData(): µs/call": 0.0011934
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 334.3750014901161,
-        "hostUs": 319.8437485843897,
-        "remainderUs": 14.531252905726433
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust candidate",
-      "round": 4,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.000373,
-        "putImageData(): µs/call": 0.0002637
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 372.96874821186066,
-        "hostUs": 355.1562447100878,
-        "remainderUs": 17.81250350177288
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust candidate",
-      "round": 4,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.0004288,
-        "putImageData(): µs/call": 0.0006787000000000001
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 428.7500008940697,
-        "hostUs": 409.06249918043613,
-        "remainderUs": 19.687501713633537
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust baseline",
-      "round": 4,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003691,
-        "putImageData(): µs/call": 0.0003563
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 369.0625000745058,
-        "hostUs": 353.9062421768904,
-        "remainderUs": 15.156257897615433
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp baseline",
-      "round": 4,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.0002577,
-        "putImageData(): µs/call": 0.0002227
+        "getImageData(): µs/call": 0.00033489999999999995,
+        "putImageData(): µs/call": 0.0002492
       },
       "canvas": {
         "reps": 64,
         "bytes": 123904,
-        "totalUs": 257.7343750745058,
-        "hostUs": 247.73437064141035,
-        "remainderUs": 10.000004433095455
+        "totalUs": 334.9218750372529,
+        "hostUs": 320.46875171363354,
+        "remainderUs": 14.453123323619366
       }
     },
     {
       "demo": "canvas-pixels",
-      "implementation": "cpp candidate",
+      "implementation": "rust baseline",
       "round": 4,
       "pass": 1,
       "seconds": {
-        "getImageData(): µs/call": 0.0002875,
-        "putImageData(): µs/call": 0.00021140000000000002
+        "getImageData(): µs/call": 0.00031969999999999996,
+        "putImageData(): µs/call": 0.00037089999999999996
       },
       "canvas": {
         "reps": 64,
         "bytes": 123904,
-        "totalUs": 287.50000055879354,
-        "hostUs": 275.3125000745058,
-        "remainderUs": 12.187500484287739
+        "totalUs": 319.6874996647239,
+        "hostUs": 307.03124310821295,
+        "remainderUs": 12.656256556510925
       }
     },
     {
       "demo": "canvas-pixels",
-      "implementation": "cpp candidate",
+      "implementation": "rust candidate",
+      "round": 4,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003413,
+        "putImageData(): µs/call": 0.00038469999999999997
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 341.25000052154064,
+        "hostUs": 324.0624964237213,
+        "remainderUs": 17.18750409781933
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust candidate",
       "round": 4,
       "pass": 2,
       "seconds": {
-        "getImageData(): µs/call": 0.0011025,
-        "putImageData(): µs/call": 0.0002143
+        "getImageData(): µs/call": 0.0003183,
+        "putImageData(): µs/call": 0.0002496
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 318.2812500745058,
+        "hostUs": 304.60937693715096,
+        "remainderUs": 13.67187313735485
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust baseline",
+      "round": 4,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.0013428,
+        "putImageData(): µs/call": 0.0003388
       },
       "canvas": {
         "reps": 16,
         "bytes": 123904,
-        "totalUs": 1102.4999991059303,
-        "hostUs": 1084.6874974668026,
-        "remainderUs": 17.81250163912773
+        "totalUs": 1342.8124971687794,
+        "hostUs": 1315.6249970197678,
+        "remainderUs": 27.187500149011612
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust baseline",
+      "round": 4,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.00035939999999999995,
+        "putImageData(): µs/call": 0.0002624
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 359.375,
+        "hostUs": 344.06249038875103,
+        "remainderUs": 15.31250961124897
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust candidate",
+      "round": 4,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003134,
+        "putImageData(): µs/call": 0.0002365
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 313.4375009685755,
+        "hostUs": 300.46875961124897,
+        "remainderUs": 12.968741357326508
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust candidate",
+      "round": 4,
+      "pass": 4,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003145,
+        "putImageData(): µs/call": 0.0014425
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 314.5312499254942,
+        "hostUs": 303.7499971687794,
+        "remainderUs": 10.78125275671482
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust baseline",
+      "round": 4,
+      "pass": 4,
+      "seconds": {
+        "getImageData(): µs/call": 0.00035130000000000003,
+        "putImageData(): µs/call": 0.0002491
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 351.2500002980232,
+        "hostUs": 336.2500034272671,
+        "remainderUs": 14.99999687075615
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp baseline",
+      "round": 4,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.0002882,
+        "putImageData(): µs/call": 0.0003202
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 288.2031248882413,
+        "hostUs": 276.8749939277768,
+        "remainderUs": 11.328130960464478
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp candidate",
+      "round": 4,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003217,
+        "putImageData(): µs/call": 0.0025711999999999996
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 321.71875052154064,
+        "hostUs": 307.96874687075615,
+        "remainderUs": 13.750003650784492
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp candidate",
+      "round": 4,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.0011830999999999999,
+        "putImageData(): µs/call": 0.0002271
+      },
+      "canvas": {
+        "reps": 16,
+        "bytes": 123904,
+        "totalUs": 1183.1249967217445,
+        "hostUs": 1071.8750059604645,
+        "remainderUs": 111.24999076128006
       }
     },
     {
@@ -1578,15 +1573,15 @@
       "round": 4,
       "pass": 2,
       "seconds": {
-        "getImageData(): µs/call": 0.000301,
-        "putImageData(): µs/call": 0.00022459999999999998
+        "getImageData(): µs/call": 0.0002593,
+        "putImageData(): µs/call": 0.0002052
       },
       "canvas": {
         "reps": 64,
         "bytes": 123904,
-        "totalUs": 301.0156247764826,
-        "hostUs": 287.4999959021807,
-        "remainderUs": 13.51562887430191
+        "totalUs": 259.29687544703484,
+        "hostUs": 249.6093763038516,
+        "remainderUs": 9.687499143183231
       }
     },
     {
@@ -1595,15 +1590,15 @@
       "round": 4,
       "pass": 3,
       "seconds": {
-        "getImageData(): µs/call": 0.00031580000000000003,
-        "putImageData(): µs/call": 0.0002123
+        "getImageData(): µs/call": 0.0002821,
+        "putImageData(): µs/call": 0.0002254
       },
       "canvas": {
-        "reps": 32,
+        "reps": 64,
         "bytes": 123904,
-        "totalUs": 315.78125059604645,
-        "hostUs": 303.9062526077032,
-        "remainderUs": 11.874997988343239
+        "totalUs": 282.1093751117587,
+        "hostUs": 271.17187436670065,
+        "remainderUs": 10.93750074505806
       }
     },
     {
@@ -1612,15 +1607,15 @@
       "round": 4,
       "pass": 3,
       "seconds": {
-        "getImageData(): µs/call": 0.0003695,
-        "putImageData(): µs/call": 0.000213
+        "getImageData(): µs/call": 0.00033610000000000004,
+        "putImageData(): µs/call": 0.0002234
       },
       "canvas": {
-        "reps": 64,
+        "reps": 32,
         "bytes": 123904,
-        "totalUs": 369.53124962747097,
-        "hostUs": 355.85938300937414,
-        "remainderUs": 13.671866618096828
+        "totalUs": 336.0937498509884,
+        "hostUs": 320.3124962747097,
+        "remainderUs": 15.781253576278687
       }
     },
     {
@@ -1629,15 +1624,15 @@
       "round": 4,
       "pass": 4,
       "seconds": {
-        "getImageData(): µs/call": 0.0003427,
-        "putImageData(): µs/call": 0.0002324
+        "getImageData(): µs/call": 0.000423,
+        "putImageData(): µs/call": 0.000227
       },
       "canvas": {
-        "reps": 32,
+        "reps": 64,
         "bytes": 123904,
-        "totalUs": 342.65624918043613,
-        "hostUs": 326.56249962747097,
-        "remainderUs": 16.093749552965164
+        "totalUs": 423.0468748137355,
+        "hostUs": 406.48437663912773,
+        "remainderUs": 16.562498174607754
       }
     },
     {
@@ -1646,15 +1641,15 @@
       "round": 4,
       "pass": 4,
       "seconds": {
-        "getImageData(): µs/call": 0.000301,
-        "putImageData(): µs/call": 0.0009825
+        "getImageData(): µs/call": 0.0003311,
+        "putImageData(): µs/call": 0.0002311
       },
       "canvas": {
-        "reps": 64,
+        "reps": 32,
         "bytes": 123904,
-        "totalUs": 301.0156247764826,
-        "hostUs": 290.0000000372529,
-        "remainderUs": 11.015624739229679
+        "totalUs": 331.0937490314245,
+        "hostUs": 319.0624937415123,
+        "remainderUs": 12.031255289912224
       }
     },
     {
@@ -1663,15 +1658,15 @@
       "round": 5,
       "pass": 1,
       "seconds": {
-        "getImageData(): µs/call": 0.00032310000000000005,
-        "putImageData(): µs/call": 0.00027719999999999996
+        "getImageData(): µs/call": 0.0003417,
+        "putImageData(): µs/call": 0.00024440000000000003
       },
       "canvas": {
         "reps": 32,
         "bytes": 123904,
-        "totalUs": 323.12499918043613,
-        "hostUs": 308.75000171363354,
-        "remainderUs": 14.374997466802597
+        "totalUs": 341.7187500745058,
+        "hostUs": 325.1562509685755,
+        "remainderUs": 16.56249910593033
       }
     },
     {
@@ -1680,14 +1675,14 @@
       "round": 5,
       "pass": 1,
       "seconds": {
-        "getImageData(): µs/call": 0.0003652,
-        "putImageData(): µs/call": 0.000192
+        "getImageData(): µs/call": 0.0003498,
+        "putImageData(): µs/call": 0.0002275
       },
       "canvas": {
         "reps": 32,
         "bytes": 123904,
-        "totalUs": 365.1562500745058,
-        "hostUs": 348.90625067055225,
+        "totalUs": 349.8437497764826,
+        "hostUs": 333.59375037252903,
         "remainderUs": 16.249999403953552
       }
     },
@@ -1697,15 +1692,15 @@
       "round": 5,
       "pass": 2,
       "seconds": {
-        "getImageData(): µs/call": 0.00036730000000000004,
-        "putImageData(): µs/call": 0.0004722
+        "getImageData(): µs/call": 0.0010452999999999999,
+        "putImageData(): µs/call": 0.0002386
       },
       "canvas": {
-        "reps": 32,
+        "reps": 16,
         "bytes": 123904,
-        "totalUs": 367.3437498509884,
-        "hostUs": 350.15624202787876,
-        "remainderUs": 17.187507823109627
+        "totalUs": 1045.3125014901161,
+        "hostUs": 1020.9375098347664,
+        "remainderUs": 24.37499165534973
       }
     },
     {
@@ -1714,15 +1709,15 @@
       "round": 5,
       "pass": 2,
       "seconds": {
-        "getImageData(): µs/call": 0.0002548,
-        "putImageData(): µs/call": 0.0001952
+        "getImageData(): µs/call": 0.0003255,
+        "putImageData(): µs/call": 0.0003547
       },
       "canvas": {
-        "reps": 64,
+        "reps": 32,
         "bytes": 123904,
-        "totalUs": 254.7656251117587,
-        "hostUs": 244.53125149011612,
-        "remainderUs": 10.23437362164259
+        "totalUs": 325.46875067055225,
+        "hostUs": 311.87499314546585,
+        "remainderUs": 13.593757525086403
       }
     },
     {
@@ -1731,15 +1726,15 @@
       "round": 5,
       "pass": 3,
       "seconds": {
-        "getImageData(): µs/call": 0.000446,
-        "putImageData(): µs/call": 0.0001973
+        "getImageData(): µs/call": 0.00035660000000000005,
+        "putImageData(): µs/call": 0.0002199
       },
       "canvas": {
-        "reps": 64,
+        "reps": 32,
         "bytes": 123904,
-        "totalUs": 446.01562432944775,
-        "hostUs": 432.1093764156103,
-        "remainderUs": 13.906247913837433
+        "totalUs": 356.56250081956387,
+        "hostUs": 341.4062447845936,
+        "remainderUs": 15.156256034970284
       }
     },
     {
@@ -1748,1827 +1743,892 @@
       "round": 5,
       "pass": 3,
       "seconds": {
-        "getImageData(): µs/call": 0.0002789,
-        "putImageData(): µs/call": 0.0003323
+        "getImageData(): µs/call": 0.0002953,
+        "putImageData(): µs/call": 0.0002245
       },
       "canvas": {
         "reps": 64,
         "bytes": 123904,
-        "totalUs": 278.90625037252903,
-        "hostUs": 264.6093713119626,
-        "remainderUs": 14.296879060566425
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp baseline",
-      "round": 5,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.00025689999999999996,
-        "putImageData(): µs/call": 0.0002155
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 256.8749999627471,
-        "hostUs": 246.95312418043613,
-        "remainderUs": 9.921875782310963
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp candidate",
-      "round": 5,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.0002796,
-        "putImageData(): µs/call": 0.0002045
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 279.6093747019768,
-        "hostUs": 267.9687514901161,
-        "remainderUs": 11.640623211860657
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust candidate",
-      "round": 5,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.000292,
-        "putImageData(): µs/call": 0.00023030000000000001
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 291.9531250372529,
-        "hostUs": 280.6250024586916,
-        "remainderUs": 11.328122578561306
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust baseline",
-      "round": 5,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003238,
-        "putImageData(): µs/call": 0.0002511
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 323.75000044703484,
-        "hostUs": 310.9374977648258,
-        "remainderUs": 12.812502682209015
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust baseline",
-      "round": 5,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.0004663,
-        "putImageData(): µs/call": 0.0002374
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 466.25000052154064,
-        "hostUs": 454.5312486588955,
+        "totalUs": 295.31249962747097,
+        "hostUs": 283.5937477648258,
         "remainderUs": 11.71875186264515
       }
     },
     {
       "demo": "canvas-pixels",
-      "implementation": "rust candidate",
-      "round": 5,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.00030030000000000004,
-        "putImageData(): µs/call": 0.0002455
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 300.31250044703484,
-        "hostUs": 287.89061959832907,
-        "remainderUs": 12.421880848705769
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust candidate",
-      "round": 5,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.0012844,
-        "putImageData(): µs/call": 0.00024119999999999998
-      },
-      "canvas": {
-        "reps": 16,
-        "bytes": 123904,
-        "totalUs": 1284.375000745058,
-        "hostUs": 1261.5625001490116,
-        "remainderUs": 22.812500596046448
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust baseline",
-      "round": 5,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.00031519999999999996,
-        "putImageData(): µs/call": 0.0002264
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 315.15624932944775,
-        "hostUs": 302.3437485098839,
-        "remainderUs": 12.812500819563866
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust baseline",
-      "round": 5,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.00046039999999999997,
-        "putImageData(): µs/call": 0.0002145
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 460.39062459021807,
-        "hostUs": 445.3124990686774,
-        "remainderUs": 15.078125521540642
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust candidate",
-      "round": 5,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003086,
-        "putImageData(): µs/call": 0.000227
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 308.59375,
-        "hostUs": 296.3281273841858,
-        "remainderUs": 12.265622615814209
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c candidate",
-      "round": 5,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.00032910000000000003,
-        "putImageData(): µs/call": 0.00024359999999999999
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 329.0625000372529,
-        "hostUs": 314.7656228393316,
-        "remainderUs": 14.296877197921276
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c baseline",
-      "round": 5,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.0006597,
-        "putImageData(): µs/call": 0.0002852
-      },
-      "canvas": {
-        "reps": 16,
-        "bytes": 123904,
-        "totalUs": 659.6875004470348,
-        "hostUs": 644.0625041723251,
-        "remainderUs": 15.624996274709702
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c baseline",
-      "round": 5,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.00031410000000000005,
-        "putImageData(): µs/call": 0.0002437
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 314.06250037252903,
-        "hostUs": 301.7187472432852,
-        "remainderUs": 12.34375312924385
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c candidate",
-      "round": 5,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003102,
-        "putImageData(): µs/call": 0.000247
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 310.15624944120646,
-        "hostUs": 297.65625204890966,
-        "remainderUs": 12.499997392296791
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c candidate",
-      "round": 5,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.0008478,
-        "putImageData(): µs/call": 0.00023219999999999998
-      },
-      "canvas": {
-        "reps": 16,
-        "bytes": 123904,
-        "totalUs": 847.8124998509884,
-        "hostUs": 833.1249989569187,
-        "remainderUs": 14.687500894069672
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c baseline",
-      "round": 5,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.0002548,
-        "putImageData(): µs/call": 0.0002045
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 254.8437500372529,
-        "hostUs": 244.84375212341547,
-        "remainderUs": 9.999997913837433
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c baseline",
-      "round": 5,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.0002863,
-        "putImageData(): µs/call": 0.000448
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 286.3281248137355,
-        "hostUs": 272.9687476530671,
-        "remainderUs": 13.359377160668373
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c candidate",
-      "round": 5,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.00032889999999999997,
-        "putImageData(): µs/call": 0.0003225
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 328.90624925494194,
-        "hostUs": 314.37499448657036,
-        "remainderUs": 14.531254768371582
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust baseline",
-      "round": 6,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.000337,
-        "putImageData(): µs/call": 0.0002611
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 337.03125081956387,
-        "hostUs": 323.75000044703484,
-        "remainderUs": 13.28125037252903
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust candidate",
-      "round": 6,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.0005223,
-        "putImageData(): µs/call": 0.0002923
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 522.3437491804361,
-        "hostUs": 500.46875327825546,
-        "remainderUs": 21.87499590218067
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust candidate",
-      "round": 6,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.00031580000000000003,
-        "putImageData(): µs/call": 0.000245
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 315.78125059604645,
-        "hostUs": 303.4374937415123,
-        "remainderUs": 12.34375685453415
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust baseline",
-      "round": 6,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.0007616,
-        "putImageData(): µs/call": 0.0004207
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 761.5625001490116,
-        "hostUs": 740.7812438905239,
-        "remainderUs": 20.7812562584877
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust baseline",
-      "round": 6,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.000353,
-        "putImageData(): µs/call": 0.00025309999999999997
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 352.96875052154064,
-        "hostUs": 337.8125037997961,
-        "remainderUs": 15.156246721744537
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust candidate",
-      "round": 6,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.0004978000000000001,
-        "putImageData(): µs/call": 0.0002782
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 497.8125002235174,
-        "hostUs": 479.3750047683716,
-        "remainderUs": 18.437495455145836
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust candidate",
-      "round": 6,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.00034669999999999997,
-        "putImageData(): µs/call": 0.0004723
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 346.7187508940697,
-        "hostUs": 329.8437502235174,
-        "remainderUs": 16.875000670552254
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust baseline",
-      "round": 6,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003153,
-        "putImageData(): µs/call": 0.0002298
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 315.3125001117587,
-        "hostUs": 304.3750012293458,
-        "remainderUs": 10.93749888241291
-      }
-    },
-    {
-      "demo": "canvas-pixels",
       "implementation": "cpp baseline",
-      "round": 6,
-      "pass": 1,
+      "round": 5,
+      "pass": 4,
       "seconds": {
-        "getImageData(): µs/call": 0.0003515,
-        "putImageData(): µs/call": 0.0002407
+        "getImageData(): µs/call": 0.00032480000000000003,
+        "putImageData(): µs/call": 0.0007247
       },
       "canvas": {
         "reps": 64,
         "bytes": 123904,
-        "totalUs": 351.4843750745058,
-        "hostUs": 340.0781285017729,
-        "remainderUs": 11.406246572732925
+        "totalUs": 324.84374940395355,
+        "hostUs": 311.0156310722232,
+        "remainderUs": 13.828118331730366
       }
     },
     {
       "demo": "canvas-pixels",
       "implementation": "cpp candidate",
-      "round": 6,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003592,
-        "putImageData(): µs/call": 0.00022669999999999998
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 359.21874828636646,
-        "hostUs": 346.56250290572643,
-        "remainderUs": 12.65624538064003
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp candidate",
-      "round": 6,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003007,
-        "putImageData(): µs/call": 0.0011025
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 300.7031250745058,
-        "hostUs": 288.3593738079071,
-        "remainderUs": 12.343751266598701
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp baseline",
-      "round": 6,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.0002943,
-        "putImageData(): µs/call": 0.0002231
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 294.2968746647239,
-        "hostUs": 282.8124975785613,
-        "remainderUs": 11.484377086162567
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp baseline",
-      "round": 6,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.0002988,
-        "putImageData(): µs/call": 0.000219
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 298.7500000745058,
-        "hostUs": 288.3593747392297,
-        "remainderUs": 10.390625335276127
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp candidate",
-      "round": 6,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.000303,
-        "putImageData(): µs/call": 0.0004227
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 303.04687563329935,
-        "hostUs": 291.7187502607703,
-        "remainderUs": 11.32812537252903
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp candidate",
-      "round": 6,
+      "round": 5,
       "pass": 4,
       "seconds": {
-        "getImageData(): µs/call": 0.0003277,
-        "putImageData(): µs/call": 0.000218
+        "getImageData(): µs/call": 0.00032839999999999996,
+        "putImageData(): µs/call": 0.000233
       },
       "canvas": {
         "reps": 32,
         "bytes": 123904,
-        "totalUs": 327.65625044703484,
-        "hostUs": 315.4687397181988,
-        "remainderUs": 12.18751072883606
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp baseline",
-      "round": 6,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.00038310000000000004,
-        "putImageData(): µs/call": 0.0002188
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 383.1249997019768,
-        "hostUs": 369.374992325902,
-        "remainderUs": 13.750007376074791
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c baseline",
-      "round": 6,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.000337,
-        "putImageData(): µs/call": 0.0002534
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 337.0312489569187,
-        "hostUs": 324.68749769032,
-        "remainderUs": 12.343751266598701
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c candidate",
-      "round": 6,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003553,
-        "putImageData(): µs/call": 0.0010803
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 355.3125001490116,
-        "hostUs": 337.18750439584255,
-        "remainderUs": 18.12499575316906
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c candidate",
-      "round": 6,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.00033969999999999996,
-        "putImageData(): µs/call": 0.0002586
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 339.6875001490116,
-        "hostUs": 325.3124989569187,
-        "remainderUs": 14.375001192092896
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c baseline",
-      "round": 6,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.00077,
-        "putImageData(): µs/call": 0.0002674
-      },
-      "canvas": {
-        "reps": 16,
-        "bytes": 123904,
-        "totalUs": 769.9999995529652,
-        "hostUs": 748.4375014901161,
-        "remainderUs": 21.562498062849045
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c baseline",
-      "round": 6,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.0002504,
-        "putImageData(): µs/call": 0.000197
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 250.39062462747097,
-        "hostUs": 241.64062179625034,
-        "remainderUs": 8.750002831220627
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c candidate",
-      "round": 6,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.000299,
-        "putImageData(): µs/call": 0.000216
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 298.9843748509884,
-        "hostUs": 287.34375070780516,
-        "remainderUs": 11.640624143183231
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c candidate",
-      "round": 6,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.0002831,
-        "putImageData(): µs/call": 0.00021219999999999998
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 283.1250000745058,
-        "hostUs": 271.24999929219484,
-        "remainderUs": 11.875000782310963
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c baseline",
-      "round": 6,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.000279,
-        "putImageData(): µs/call": 0.00020830000000000002
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 278.9843752980232,
-        "hostUs": 267.89062563329935,
-        "remainderUs": 11.093749664723873
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c candidate",
-      "round": 7,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.000358,
-        "putImageData(): µs/call": 0.0002577
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 357.96874947845936,
-        "hostUs": 339.21874314546585,
-        "remainderUs": 18.750006332993507
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c baseline",
-      "round": 7,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003328,
-        "putImageData(): µs/call": 0.0009838
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 332.8125011175871,
-        "hostUs": 317.9687410593033,
-        "remainderUs": 14.843760058283806
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c baseline",
-      "round": 7,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003623,
-        "putImageData(): µs/call": 0.0002546
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 362.3437490314245,
-        "hostUs": 347.4999964237213,
-        "remainderUs": 14.843752607703209
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c candidate",
-      "round": 7,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003958,
-        "putImageData(): µs/call": 0.0010131
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 395.7812488079071,
-        "hostUs": 377.9687527567148,
-        "remainderUs": 17.812496051192284
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c candidate",
-      "round": 7,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003205,
-        "putImageData(): µs/call": 0.0002648
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 320.4687498509884,
-        "hostUs": 306.4062539488077,
-        "remainderUs": 14.062495902180672
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c baseline",
-      "round": 7,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.00033610000000000004,
-        "putImageData(): µs/call": 0.00032030000000000003
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 336.0937498509884,
-        "hostUs": 321.7187449336052,
-        "remainderUs": 14.375004917383194
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c baseline",
-      "round": 7,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003969,
-        "putImageData(): µs/call": 0.0002365
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 396.87499962747097,
-        "hostUs": 380.4687522351742,
-        "remainderUs": 16.40624739229679
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c candidate",
-      "round": 7,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.00041610000000000003,
-        "putImageData(): µs/call": 0.0002429
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 416.0937499254942,
-        "hostUs": 400.78125428408384,
-        "remainderUs": 15.31249564141035
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp candidate",
-      "round": 7,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003391,
-        "putImageData(): µs/call": 0.00024859999999999997
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 339.06250074505806,
-        "hostUs": 324.5312534272671,
-        "remainderUs": 14.531247317790985
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp baseline",
-      "round": 7,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.00034219999999999997,
-        "putImageData(): µs/call": 0.0006734
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 342.18749962747097,
-        "hostUs": 328.90624552965164,
-        "remainderUs": 13.281254097819328
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp baseline",
-      "round": 7,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.00032910000000000003,
-        "putImageData(): µs/call": 0.0005592
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 329.0624991059303,
-        "hostUs": 315.6249951571226,
-        "remainderUs": 13.437503948807716
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp candidate",
-      "round": 7,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.0020625,
-        "putImageData(): µs/call": 0.000251
-      },
-      "canvas": {
-        "reps": 8,
-        "bytes": 123904,
-        "totalUs": 2062.5,
-        "hostUs": 1797.499991953373,
-        "remainderUs": 265.00000804662704
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp candidate",
-      "round": 7,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.000427,
-        "putImageData(): µs/call": 0.00038480000000000003
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 427.03125067055225,
-        "hostUs": 408.5937514901161,
-        "remainderUs": 18.437499180436134
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp baseline",
-      "round": 7,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003409,
-        "putImageData(): µs/call": 0.000241
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 340.93750081956387,
-        "hostUs": 326.5624959021807,
-        "remainderUs": 14.375004917383194
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp baseline",
-      "round": 7,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003172,
-        "putImageData(): µs/call": 0.0004083
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 317.1875011175871,
-        "hostUs": 304.68750186264515,
-        "remainderUs": 12.49999925494194
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp candidate",
-      "round": 7,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003298,
-        "putImageData(): µs/call": 0.0002407
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 329.8437502235174,
-        "hostUs": 312.96875327825546,
-        "remainderUs": 16.874996945261955
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust candidate",
-      "round": 7,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.000322,
-        "putImageData(): µs/call": 0.0002358
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 322.0312502235174,
-        "hostUs": 307.0312514901161,
-        "remainderUs": 14.999998733401299
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust baseline",
-      "round": 7,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003494,
-        "putImageData(): µs/call": 0.0006834
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 349.3750002235174,
-        "hostUs": 335.9374925494194,
-        "remainderUs": 13.437507674098015
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust baseline",
-      "round": 7,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.00035860000000000004,
-        "putImageData(): µs/call": 0.0005966
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 358.5937488824129,
-        "hostUs": 344.9999950826168,
+        "totalUs": 328.4375015646219,
+        "hostUs": 314.8437477648258,
         "remainderUs": 13.593753799796104
       }
     },
     {
       "demo": "canvas-pixels",
       "implementation": "rust candidate",
-      "round": 7,
-      "pass": 2,
+      "round": 5,
+      "pass": 1,
       "seconds": {
-        "getImageData(): µs/call": 0.00276,
-        "putImageData(): µs/call": 0.0002375
+        "getImageData(): µs/call": 0.00027719999999999996,
+        "putImageData(): µs/call": 0.00019690000000000002
       },
       "canvas": {
-        "reps": 8,
+        "reps": 64,
         "bytes": 123904,
-        "totalUs": 2759.9999979138374,
-        "hostUs": 2533.1250056624413,
-        "remainderUs": 226.87499225139618
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust candidate",
-      "round": 7,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.000345,
-        "putImageData(): µs/call": 0.0003066
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 345.00000067055225,
-        "hostUs": 330.3124886006117,
-        "remainderUs": 14.687512069940567
+        "totalUs": 277.18749921768904,
+        "hostUs": 265.2343763038516,
+        "remainderUs": 11.953122913837433
       }
     },
     {
       "demo": "canvas-pixels",
       "implementation": "rust baseline",
-      "round": 7,
-      "pass": 3,
+      "round": 5,
+      "pass": 1,
       "seconds": {
-        "getImageData(): µs/call": 0.0002427,
-        "putImageData(): µs/call": 0.00017219999999999998
+        "getImageData(): µs/call": 0.0003445,
+        "putImageData(): µs/call": 0.0004145
       },
       "canvas": {
-        "reps": 64,
+        "reps": 32,
         "bytes": 123904,
-        "totalUs": 242.65624955296516,
-        "hostUs": 233.20312332361937,
-        "remainderUs": 9.453126229345798
+        "totalUs": 344.53124925494194,
+        "hostUs": 328.9062585681677,
+        "remainderUs": 15.624990686774254
       }
     },
     {
       "demo": "canvas-pixels",
       "implementation": "rust baseline",
-      "round": 7,
-      "pass": 4,
+      "round": 5,
+      "pass": 2,
       "seconds": {
-        "getImageData(): µs/call": 0.00024890000000000003,
-        "putImageData(): µs/call": 0.00018590000000000002
+        "getImageData(): µs/call": 0.0002973,
+        "putImageData(): µs/call": 0.0002944
       },
       "canvas": {
         "reps": 64,
         "bytes": 123904,
-        "totalUs": 248.90624918043613,
-        "hostUs": 239.53124787658453,
-        "remainderUs": 9.375001303851604
+        "totalUs": 297.26562555879354,
+        "hostUs": 286.7968734353781,
+        "remainderUs": 10.46875212341547
       }
     },
     {
       "demo": "canvas-pixels",
       "implementation": "rust candidate",
+      "round": 5,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.00032839999999999996,
+        "putImageData(): µs/call": 0.00023480000000000002
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 328.43750063329935,
+        "hostUs": 314.2968714237213,
+        "remainderUs": 14.140629209578037
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust candidate",
+      "round": 5,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.00032060000000000004,
+        "putImageData(): µs/call": 0.0002585
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 320.6250015646219,
+        "hostUs": 306.56249821186066,
+        "remainderUs": 14.062503352761269
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust baseline",
+      "round": 5,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003227,
+        "putImageData(): µs/call": 0.00021219999999999998
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 322.65624962747097,
+        "hostUs": 309.06250327825546,
+        "remainderUs": 13.593746349215508
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust baseline",
+      "round": 5,
+      "pass": 4,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003187,
+        "putImageData(): µs/call": 0.0002162
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 318.74999962747097,
+        "hostUs": 305.9374950826168,
+        "remainderUs": 12.812504544854164
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust candidate",
+      "round": 5,
+      "pass": 4,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003604,
+        "putImageData(): µs/call": 0.000229
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 360.3906249627471,
+        "hostUs": 345.15625331550837,
+        "remainderUs": 15.234371647238731
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c candidate",
+      "round": 5,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003461,
+        "putImageData(): µs/call": 0.0002612
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 346.09374962747097,
+        "hostUs": 330.31250536441803,
+        "remainderUs": 15.78124426305294
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c baseline",
+      "round": 5,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003447,
+        "putImageData(): µs/call": 0.0002451
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 344.6874991059303,
+        "hostUs": 332.1874961256981,
+        "remainderUs": 12.500002980232239
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c baseline",
+      "round": 5,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.0008966,
+        "putImageData(): µs/call": 0.0002512
+      },
+      "canvas": {
+        "reps": 16,
+        "bytes": 123904,
+        "totalUs": 896.5625017881393,
+        "hostUs": 879.0625035762787,
+        "remainderUs": 17.499998211860657
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c candidate",
+      "round": 5,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003384,
+        "putImageData(): µs/call": 0.0002416
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 338.4375013411045,
+        "hostUs": 324.8437475413084,
+        "remainderUs": 13.593753799796104
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c candidate",
+      "round": 5,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003311,
+        "putImageData(): µs/call": 0.0012037
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 331.0937508940697,
+        "hostUs": 316.0937577486038,
+        "remainderUs": 14.99999314546585
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c baseline",
+      "round": 5,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003402,
+        "putImageData(): µs/call": 0.00023630000000000002
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 340.1562497019768,
+        "hostUs": 326.8750049173832,
+        "remainderUs": 13.281244784593582
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c baseline",
+      "round": 5,
+      "pass": 4,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003978,
+        "putImageData(): µs/call": 0.0009603
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 397.81250059604645,
+        "hostUs": 385.15624962747097,
+        "remainderUs": 12.656250968575478
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c candidate",
+      "round": 5,
+      "pass": 4,
+      "seconds": {
+        "getImageData(): µs/call": 0.000323,
+        "putImageData(): µs/call": 0.0004122
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 322.9687502607703,
+        "hostUs": 310.31250208616257,
+        "remainderUs": 12.656248174607754
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust baseline",
+      "round": 6,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.0006481,
+        "putImageData(): µs/call": 0.000273
+      },
+      "canvas": {
+        "reps": 16,
+        "bytes": 123904,
+        "totalUs": 648.1250002980232,
+        "hostUs": 628.7500075995922,
+        "remainderUs": 19.374992698431015
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust candidate",
+      "round": 6,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.00035130000000000003,
+        "putImageData(): µs/call": 0.000304
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 351.32812429219484,
+        "hostUs": 335.1562414318323,
+        "remainderUs": 16.17188286036253
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust candidate",
+      "round": 6,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.00033,
+        "putImageData(): µs/call": 0.00023459999999999998
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 330.0000000745058,
+        "hostUs": 316.4062462747097,
+        "remainderUs": 13.593753799796104
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust baseline",
+      "round": 6,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.0007837,
+        "putImageData(): µs/call": 0.0005166
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 783.7499994784594,
+        "hostUs": 766.2500105798244,
+        "remainderUs": 17.49998889863491
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust baseline",
+      "round": 6,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003295,
+        "putImageData(): µs/call": 0.0002362
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 329.5312486588955,
+        "hostUs": 315.31250290572643,
+        "remainderUs": 14.21874575316906
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust candidate",
+      "round": 6,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.00046469999999999997,
+        "putImageData(): µs/call": 0.0002374
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 464.6875001490116,
+        "hostUs": 447.03125208616257,
+        "remainderUs": 17.656248062849045
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust candidate",
+      "round": 6,
+      "pass": 4,
+      "seconds": {
+        "getImageData(): µs/call": 0.00030910000000000003,
+        "putImageData(): µs/call": 0.000233
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 309.06249955296516,
+        "hostUs": 296.71874921768904,
+        "remainderUs": 12.343750335276127
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust baseline",
+      "round": 6,
+      "pass": 4,
+      "seconds": {
+        "getImageData(): µs/call": 0.0006443999999999999,
+        "putImageData(): µs/call": 0.00024430000000000003
+      },
+      "canvas": {
+        "reps": 16,
+        "bytes": 123904,
+        "totalUs": 644.3750001490116,
+        "hostUs": 621.2499998509884,
+        "remainderUs": 23.125000298023224
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp baseline",
+      "round": 6,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.0002993,
+        "putImageData(): µs/call": 0.0004817
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 299.29687548428774,
+        "hostUs": 287.96875290572643,
+        "remainderUs": 11.328122578561306
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp candidate",
+      "round": 6,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003723,
+        "putImageData(): µs/call": 0.0002451
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 372.34375067055225,
+        "hostUs": 351.71874426305294,
+        "remainderUs": 20.625006407499313
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp candidate",
+      "round": 6,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.0005146,
+        "putImageData(): µs/call": 0.00023
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 514.6093750372529,
+        "hostUs": 498.1250027194619,
+        "remainderUs": 16.484372317790985
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp baseline",
+      "round": 6,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.0002892,
+        "putImageData(): µs/call": 0.000297
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 289.2187498509884,
+        "hostUs": 277.1874973550439,
+        "remainderUs": 12.0312524959445
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp baseline",
+      "round": 6,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.00033539999999999997,
+        "putImageData(): µs/call": 0.000239
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 335.39062459021807,
+        "hostUs": 323.04687052965164,
+        "remainderUs": 12.343754060566425
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp candidate",
+      "round": 6,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.0006662,
+        "putImageData(): µs/call": 0.0002632
+      },
+      "canvas": {
+        "reps": 16,
+        "bytes": 123904,
+        "totalUs": 666.2499979138374,
+        "hostUs": 645.9374949336052,
+        "remainderUs": 20.31250298023224
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp candidate",
+      "round": 6,
+      "pass": 4,
+      "seconds": {
+        "getImageData(): µs/call": 0.000349,
+        "putImageData(): µs/call": 0.0004968
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 348.98437559604645,
+        "hostUs": 335.7031252235174,
+        "remainderUs": 13.28125037252903
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp baseline",
+      "round": 6,
+      "pass": 4,
+      "seconds": {
+        "getImageData(): µs/call": 0.0002919,
+        "putImageData(): µs/call": 0.00022459999999999998
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 291.87499918043613,
+        "hostUs": 283.04687421768904,
+        "remainderUs": 8.828124962747097
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c baseline",
+      "round": 6,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.0002813,
+        "putImageData(): µs/call": 0.00025330000000000003
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 281.32812585681677,
+        "hostUs": 271.01562079042196,
+        "remainderUs": 10.312505066394806
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c candidate",
+      "round": 6,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.00028839999999999996,
+        "putImageData(): µs/call": 0.0002216
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 288.4374996647239,
+        "hostUs": 277.1874973550439,
+        "remainderUs": 11.250002309679985
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c candidate",
+      "round": 6,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.0010865999999999998,
+        "putImageData(): µs/call": 0.00023830000000000002
+      },
+      "canvas": {
+        "reps": 16,
+        "bytes": 123904,
+        "totalUs": 1086.5624994039536,
+        "hostUs": 1067.812491208315,
+        "remainderUs": 18.750008195638657
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c baseline",
+      "round": 6,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.0002824,
+        "putImageData(): µs/call": 0.0002263
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 282.4218748137355,
+        "hostUs": 270.39062418043613,
+        "remainderUs": 12.03125063329935
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c baseline",
+      "round": 6,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.0002912,
+        "putImageData(): µs/call": 0.0002123
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 291.1718748509884,
+        "hostUs": 280.78124951571226,
+        "remainderUs": 10.390625335276127
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c candidate",
+      "round": 6,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.0006341000000000001,
+        "putImageData(): µs/call": 0.0002335
+      },
+      "canvas": {
+        "reps": 16,
+        "bytes": 123904,
+        "totalUs": 634.0625025331974,
+        "hostUs": 613.7499921023846,
+        "remainderUs": 20.312510430812836
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c candidate",
+      "round": 6,
+      "pass": 4,
+      "seconds": {
+        "getImageData(): µs/call": 0.00031069999999999996,
+        "putImageData(): µs/call": 0.0002295
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 310.7031248509884,
+        "hostUs": 298.8281259313226,
+        "remainderUs": 11.874998919665813
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c baseline",
+      "round": 6,
+      "pass": 4,
+      "seconds": {
+        "getImageData(): µs/call": 0.00032,
+        "putImageData(): µs/call": 0.0002043
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 320.0000002980232,
+        "hostUs": 308.5937537252903,
+        "remainderUs": 11.406246572732925
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c candidate",
+      "round": 7,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003101,
+        "putImageData(): µs/call": 0.0002072
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 310.07812451571226,
+        "hostUs": 295.4687522724271,
+        "remainderUs": 14.60937224328518
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c baseline",
+      "round": 7,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003323,
+        "putImageData(): µs/call": 0.0002065
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 332.3437497019768,
+        "hostUs": 319.76562924683094,
+        "remainderUs": 12.578120455145836
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c baseline",
+      "round": 7,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.0002612,
+        "putImageData(): µs/call": 0.0010162
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 261.17187459021807,
+        "hostUs": 251.2499988079071,
+        "remainderUs": 9.921875782310963
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c candidate",
+      "round": 7,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.00027719999999999996,
+        "putImageData(): µs/call": 0.0002117
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 277.1875001490116,
+        "hostUs": 263.8281285762787,
+        "remainderUs": 13.359371572732925
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c candidate",
+      "round": 7,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003212,
+        "putImageData(): µs/call": 0.00020930000000000002
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 321.1718751117587,
+        "hostUs": 307.5781278312206,
+        "remainderUs": 13.593747280538082
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c baseline",
+      "round": 7,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.0004555,
+        "putImageData(): µs/call": 0.00024880000000000003
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 455.54687548428774,
+        "hostUs": 419.37500331550837,
+        "remainderUs": 36.17187216877937
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c baseline",
       "round": 7,
       "pass": 4,
       "seconds": {
-        "getImageData(): µs/call": 0.0003147,
-        "putImageData(): µs/call": 0.0002005
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 314.6874997764826,
-        "hostUs": 301.7187509685755,
-        "remainderUs": 12.968748807907104
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp baseline",
-      "round": 8,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.00031860000000000005,
-        "putImageData(): µs/call": 0.0003345
+        "getImageData(): µs/call": 0.00037380000000000003,
+        "putImageData(): µs/call": 0.0002234
       },
       "canvas": {
         "reps": 64,
         "bytes": 123904,
-        "totalUs": 318.5937497764826,
-        "hostUs": 306.71875178813934,
-        "remainderUs": 11.874997988343239
+        "totalUs": 373.82812425494194,
+        "hostUs": 360.5468776077032,
+        "remainderUs": 13.281246647238731
       }
     },
     {
       "demo": "canvas-pixels",
-      "implementation": "cpp candidate",
-      "round": 8,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003469,
-        "putImageData(): µs/call": 0.0003835
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 346.8749988824129,
-        "hostUs": 330.4687459021807,
-        "remainderUs": 16.40625298023224
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp candidate",
-      "round": 8,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003327,
-        "putImageData(): µs/call": 0.0002537
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 332.7343752607703,
-        "hostUs": 318.98437812924385,
-        "remainderUs": 13.74999713152647
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp baseline",
-      "round": 8,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.0006969,
-        "putImageData(): µs/call": 0.0002783
-      },
-      "canvas": {
-        "reps": 16,
-        "bytes": 123904,
-        "totalUs": 696.8749985098839,
-        "hostUs": 679.6875037252903,
-        "remainderUs": 17.187494784593582
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp baseline",
-      "round": 8,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003333,
-        "putImageData(): µs/call": 0.0002245
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 333.28125067055225,
-        "hostUs": 320.93749940395355,
-        "remainderUs": 12.343751266598701
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp candidate",
-      "round": 8,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.000293,
-        "putImageData(): µs/call": 0.00022119999999999998
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 293.0468749254942,
-        "hostUs": 282.6562523841858,
-        "remainderUs": 10.390622541308403
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp candidate",
-      "round": 8,
+      "implementation": "c candidate",
+      "round": 7,
       "pass": 4,
       "seconds": {
-        "getImageData(): µs/call": 0.0006325,
-        "putImageData(): µs/call": 0.0002702
-      },
-      "canvas": {
-        "reps": 16,
-        "bytes": 123904,
-        "totalUs": 632.5000002980232,
-        "hostUs": 615.6249977648258,
-        "remainderUs": 16.875002533197403
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp baseline",
-      "round": 8,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.00031039999999999996,
-        "putImageData(): µs/call": 0.0002457
+        "getImageData(): µs/call": 0.000302,
+        "putImageData(): µs/call": 0.0002064
       },
       "canvas": {
         "reps": 64,
         "bytes": 123904,
-        "totalUs": 310.3906251490116,
-        "hostUs": 298.0468785390258,
-        "remainderUs": 12.343746609985828
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c baseline",
-      "round": 8,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.0006691000000000001,
-        "putImageData(): µs/call": 0.0002663
-      },
-      "canvas": {
-        "reps": 16,
-        "bytes": 123904,
-        "totalUs": 669.062502682209,
-        "hostUs": 651.2500047683716,
-        "remainderUs": 17.812497913837433
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c candidate",
-      "round": 8,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003151,
-        "putImageData(): µs/call": 0.0002045
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 315.07812440395355,
-        "hostUs": 302.2656263783574,
-        "remainderUs": 12.812498025596142
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c candidate",
-      "round": 8,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.0002966,
-        "putImageData(): µs/call": 0.0009731000000000001
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 296.56249936670065,
-        "hostUs": 283.7499976158142,
-        "remainderUs": 12.81250175088644
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c baseline",
-      "round": 8,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.0002698,
-        "putImageData(): µs/call": 0.0002106
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 269.7656247764826,
-        "hostUs": 258.04687384516,
-        "remainderUs": 11.718750931322575
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c baseline",
-      "round": 8,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.00027939999999999996,
-        "putImageData(): µs/call": 0.00020590000000000002
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 279.3749999254942,
-        "hostUs": 268.51562689989805,
-        "remainderUs": 10.859373025596142
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c candidate",
-      "round": 8,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.0002985,
-        "putImageData(): µs/call": 0.0002188
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 298.5156252980232,
-        "hostUs": 285.781254991889,
+        "totalUs": 302.0312497392297,
+        "hostUs": 289.29687943309546,
         "remainderUs": 12.734370306134224
       }
     },
     {
       "demo": "canvas-pixels",
-      "implementation": "c candidate",
-      "round": 8,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.00047410000000000003,
-        "putImageData(): µs/call": 0.0002427
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 474.06250052154064,
-        "hostUs": 458.5937447845936,
-        "remainderUs": 15.46875573694706
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c baseline",
-      "round": 8,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.000273,
-        "putImageData(): µs/call": 0.0005572999999999999
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 273.04687444120646,
-        "hostUs": 261.4062484353781,
-        "remainderUs": 11.64062600582838
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust baseline",
-      "round": 8,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.000308,
-        "putImageData(): µs/call": 0.0003238
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 307.9687496647239,
-        "hostUs": 295.54687440395355,
-        "remainderUs": 12.421875260770321
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust candidate",
-      "round": 8,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003253,
-        "putImageData(): µs/call": 0.000358
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 325.3124989569187,
-        "hostUs": 309.06249769032,
-        "remainderUs": 16.2500012665987
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust candidate",
-      "round": 8,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003281,
-        "putImageData(): µs/call": 0.000247
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 328.125,
-        "hostUs": 314.6875035017729,
-        "remainderUs": 13.43749649822712
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust baseline",
-      "round": 8,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003533,
-        "putImageData(): µs/call": 0.0011447
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 353.28124836087227,
-        "hostUs": 337.6562502235174,
-        "remainderUs": 15.62499813735485
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust baseline",
-      "round": 8,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003213,
-        "putImageData(): µs/call": 0.00023380000000000002
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 321.2500009685755,
-        "hostUs": 309.37499925494194,
-        "remainderUs": 11.875001713633537
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust candidate",
-      "round": 8,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003456,
-        "putImageData(): µs/call": 0.0002575
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 345.6250000745058,
-        "hostUs": 328.5937439650297,
-        "remainderUs": 17.03125610947609
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust candidate",
-      "round": 8,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.00033580000000000003,
-        "putImageData(): µs/call": 0.0004175
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 335.78124828636646,
-        "hostUs": 321.56248949468136,
-        "remainderUs": 14.218758791685104
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust baseline",
-      "round": 8,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003405,
-        "putImageData(): µs/call": 0.0002512
-      },
-      "canvas": {
-        "reps": 32,
-        "bytes": 123904,
-        "totalUs": 340.46874940395355,
-        "hostUs": 326.2499999254942,
-        "remainderUs": 14.218749478459358
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust candidate",
-      "round": 9,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.0002467,
-        "putImageData(): µs/call": 0.0002345
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 246.71874940395355,
-        "hostUs": 236.48437019437551,
-        "remainderUs": 10.234379209578037
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust baseline",
-      "round": 9,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.00026510000000000005,
-        "putImageData(): µs/call": 0.0001968
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 265.07812459021807,
-        "hostUs": 254.84374817460775,
-        "remainderUs": 10.234376415610313
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust baseline",
-      "round": 9,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.0010744,
-        "putImageData(): µs/call": 0.0003286
-      },
-      "canvas": {
-        "reps": 16,
-        "bytes": 123904,
-        "totalUs": 1074.3749998509884,
-        "hostUs": 1058.1250078976154,
-        "remainderUs": 16.249991953372955
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust candidate",
-      "round": 9,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.000291,
-        "putImageData(): µs/call": 0.000202
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 291.015625,
-        "hostUs": 278.28124165534973,
-        "remainderUs": 12.734383344650269
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust candidate",
-      "round": 9,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.0002599,
-        "putImageData(): µs/call": 0.0001975
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 259.9218748509884,
-        "hostUs": 249.0624962374568,
-        "remainderUs": 10.85937861353159
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust baseline",
-      "round": 9,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.0002838,
-        "putImageData(): µs/call": 0.0002133
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 283.75000040978193,
-        "hostUs": 274.2187539115548,
-        "remainderUs": 9.53124649822712
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust baseline",
-      "round": 9,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003029,
-        "putImageData(): µs/call": 0.0002061
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 302.8906248509884,
-        "hostUs": 291.71875305473804,
-        "remainderUs": 11.171871796250343
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "rust candidate",
-      "round": 9,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.0006427999999999999,
-        "putImageData(): µs/call": 0.0003432
-      },
-      "canvas": {
-        "reps": 16,
-        "bytes": 123904,
-        "totalUs": 642.8125016391277,
-        "hostUs": 627.8124935925007,
-        "remainderUs": 15.000008046627045
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c candidate",
-      "round": 9,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.0002787,
-        "putImageData(): µs/call": 0.00021580000000000001
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 278.6718746647239,
-        "hostUs": 266.01562462747097,
-        "remainderUs": 12.656250037252903
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c baseline",
-      "round": 9,
-      "pass": 1,
-      "seconds": {
-        "getImageData(): µs/call": 0.00091,
-        "putImageData(): µs/call": 0.00035489999999999995
-      },
-      "canvas": {
-        "reps": 16,
-        "bytes": 123904,
-        "totalUs": 910.0000001490116,
-        "hostUs": 895.3124992549419,
-        "remainderUs": 14.687500894069672
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c baseline",
-      "round": 9,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.0002945,
-        "putImageData(): µs/call": 0.00030589999999999995
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 294.53125037252903,
-        "hostUs": 284.0625001117587,
-        "remainderUs": 10.468750260770321
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c candidate",
-      "round": 9,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.0002725,
-        "putImageData(): µs/call": 0.0002145
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 272.4999999627471,
-        "hostUs": 262.9687460139394,
-        "remainderUs": 9.531253948807716
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c candidate",
-      "round": 9,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.0002766,
-        "putImageData(): µs/call": 0.0004167
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 276.64062567055225,
-        "hostUs": 264.76562581956387,
-        "remainderUs": 11.874999850988388
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c baseline",
-      "round": 9,
-      "pass": 3,
-      "seconds": {
-        "getImageData(): µs/call": 0.0002677,
-        "putImageData(): µs/call": 0.00037380000000000003
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 267.7343748509884,
-        "hostUs": 257.65625201165676,
-        "remainderUs": 10.078122839331627
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c baseline",
-      "round": 9,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.0005337,
-        "putImageData(): µs/call": 0.000204
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 533.6718745529652,
-        "hostUs": 496.87499832361937,
-        "remainderUs": 36.7968762293458
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "c candidate",
-      "round": 9,
-      "pass": 4,
-      "seconds": {
-        "getImageData(): µs/call": 0.00034930000000000003,
-        "putImageData(): µs/call": 0.0002416
-      },
-      "canvas": {
-        "reps": 64,
-        "bytes": 123904,
-        "totalUs": 349.29687436670065,
-        "hostUs": 335.7031298801303,
-        "remainderUs": 13.593744486570358
-      }
-    },
-    {
-      "demo": "canvas-pixels",
       "implementation": "cpp candidate",
-      "round": 9,
+      "round": 7,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.000318,
+        "putImageData(): µs/call": 0.0002399
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 317.9687485098839,
+        "hostUs": 303.1249921768904,
+        "remainderUs": 14.843756332993507
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp baseline",
+      "round": 7,
       "pass": 1,
       "seconds": {
         "getImageData(): µs/call": 0.0003413,
-        "putImageData(): µs/call": 0.00026430000000000003
+        "putImageData(): µs/call": 0.0009766
       },
       "canvas": {
         "reps": 32,
@@ -3581,86 +2641,1021 @@
     {
       "demo": "canvas-pixels",
       "implementation": "cpp baseline",
-      "round": 9,
+      "round": 7,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.000333,
+        "putImageData(): µs/call": 0.00024319999999999998
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 332.9687491059303,
+        "hostUs": 319.218747317791,
+        "remainderUs": 13.750001788139343
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp candidate",
+      "round": 7,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003402,
+        "putImageData(): µs/call": 0.0010706
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 340.1562497019768,
+        "hostUs": 325.7812578231096,
+        "remainderUs": 14.37499187886715
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp candidate",
+      "round": 7,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003425,
+        "putImageData(): µs/call": 0.0002632
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 342.49999932944775,
+        "hostUs": 326.4062497764826,
+        "remainderUs": 16.093749552965164
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp baseline",
+      "round": 7,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.00036439999999999997,
+        "putImageData(): µs/call": 0.0003191
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 364.37500081956387,
+        "hostUs": 348.90625439584255,
+        "remainderUs": 15.468746423721313
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp baseline",
+      "round": 7,
+      "pass": 4,
+      "seconds": {
+        "getImageData(): µs/call": 0.0002888,
+        "putImageData(): µs/call": 0.0002327
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 288.7500002980232,
+        "hostUs": 278.8281263783574,
+        "remainderUs": 9.921873919665813
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp candidate",
+      "round": 7,
+      "pass": 4,
+      "seconds": {
+        "getImageData(): µs/call": 0.0006569,
+        "putImageData(): µs/call": 0.0002466
+      },
+      "canvas": {
+        "reps": 16,
+        "bytes": 123904,
+        "totalUs": 656.8749994039536,
+        "hostUs": 632.5000040233135,
+        "remainderUs": 24.37499538064003
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust candidate",
+      "round": 7,
       "pass": 1,
       "seconds": {
-        "getImageData(): µs/call": 0.0003645,
+        "getImageData(): µs/call": 0.00032910000000000003,
+        "putImageData(): µs/call": 0.0002482
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 329.0624991059303,
+        "hostUs": 313.7499950826168,
+        "remainderUs": 15.312504023313522
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust baseline",
+      "round": 7,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.00035410000000000004,
+        "putImageData(): µs/call": 0.0002497
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 354.06249947845936,
+        "hostUs": 337.4999985098839,
+        "remainderUs": 16.562500968575478
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust baseline",
+      "round": 7,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.0009144,
+        "putImageData(): µs/call": 0.0002327
+      },
+      "canvas": {
+        "reps": 16,
+        "bytes": 123904,
+        "totalUs": 914.3749997019768,
+        "hostUs": 897.4999897181988,
+        "remainderUs": 16.875009983778
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust candidate",
+      "round": 7,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003323,
+        "putImageData(): µs/call": 0.0002289
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 332.3437497019768,
+        "hostUs": 317.81250424683094,
+        "remainderUs": 14.531245455145836
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust candidate",
+      "round": 7,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003362,
+        "putImageData(): µs/call": 0.0011309
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 336.2499997019768,
+        "hostUs": 320.7812439650297,
+        "remainderUs": 15.46875573694706
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust baseline",
+      "round": 7,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.00607,
+        "putImageData(): µs/call": 0.0002209
+      },
+      "canvas": {
+        "reps": 2,
+        "bytes": 123904,
+        "totalUs": 6069.999992847443,
+        "hostUs": 4912.500023841858,
+        "remainderUs": 1157.4999690055847
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust baseline",
+      "round": 7,
+      "pass": 4,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003069,
+        "putImageData(): µs/call": 0.000217
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 306.87500070780516,
+        "hostUs": 293.43750048428774,
+        "remainderUs": 13.437500223517418
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust candidate",
+      "round": 7,
+      "pass": 4,
+      "seconds": {
+        "getImageData(): µs/call": 0.00033160000000000004,
+        "putImageData(): µs/call": 0.0002441
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 331.56250044703484,
+        "hostUs": 319.06249932944775,
+        "remainderUs": 12.50000111758709
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp baseline",
+      "round": 8,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003742,
+        "putImageData(): µs/call": 0.0002545
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 374.2187488824129,
+        "hostUs": 357.8124977648258,
+        "remainderUs": 16.40625111758709
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp candidate",
+      "round": 8,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.0006223,
+        "putImageData(): µs/call": 0.0002818
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 622.3437488079071,
+        "hostUs": 587.9687499254942,
+        "remainderUs": 34.37499888241291
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp candidate",
+      "round": 8,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003703,
+        "putImageData(): µs/call": 0.0002585
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 370.31250074505806,
+        "hostUs": 353.9062514901161,
+        "remainderUs": 16.40624925494194
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp baseline",
+      "round": 8,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003584,
+        "putImageData(): µs/call": 0.0006437999999999999
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 358.4374990314245,
+        "hostUs": 343.5937501490116,
+        "remainderUs": 14.84374888241291
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp baseline",
+      "round": 8,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003519,
+        "putImageData(): µs/call": 0.0006356
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 351.8749997019768,
+        "hostUs": 335.31250432133675,
+        "remainderUs": 16.56249538064003
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp candidate",
+      "round": 8,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.0007831,
+        "putImageData(): µs/call": 0.00023019999999999998
+      },
+      "canvas": {
+        "reps": 16,
+        "bytes": 123904,
+        "totalUs": 783.1249982118607,
+        "hostUs": 752.8125084936619,
+        "remainderUs": 30.312489718198776
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp candidate",
+      "round": 8,
+      "pass": 4,
+      "seconds": {
+        "getImageData(): µs/call": 0.00031360000000000003,
+        "putImageData(): µs/call": 0.0003401
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 313.5937489569187,
+        "hostUs": 299.99999701976776,
+        "remainderUs": 13.593751937150955
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp baseline",
+      "round": 8,
+      "pass": 4,
+      "seconds": {
+        "getImageData(): µs/call": 0.00035,
+        "putImageData(): µs/call": 0.0002351
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 349.99999962747097,
+        "hostUs": 336.40625327825546,
+        "remainderUs": 13.593746349215508
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c baseline",
+      "round": 8,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003052,
+        "putImageData(): µs/call": 0.0002417
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 305.15625048428774,
+        "hostUs": 294.0624998882413,
+        "remainderUs": 11.093750596046448
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c candidate",
+      "round": 8,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.0010644,
+        "putImageData(): µs/call": 0.00023769999999999998
+      },
+      "canvas": {
+        "reps": 16,
+        "bytes": 123904,
+        "totalUs": 1064.3749982118607,
+        "hostUs": 1036.5624986588955,
+        "remainderUs": 27.812499552965164
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c candidate",
+      "round": 8,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003345,
+        "putImageData(): µs/call": 0.0002376
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 334.53124947845936,
+        "hostUs": 319.8437485843897,
+        "remainderUs": 14.687500894069672
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c baseline",
+      "round": 8,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003198,
+        "putImageData(): µs/call": 0.0007072000000000001
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 319.84375044703484,
+        "hostUs": 307.3437511920929,
+        "remainderUs": 12.49999925494194
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c baseline",
+      "round": 8,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003367,
         "putImageData(): µs/call": 0.0002325
       },
       "canvas": {
         "reps": 32,
         "bytes": 123904,
-        "totalUs": 364.5312488079071,
-        "hostUs": 350.31249560415745,
-        "remainderUs": 14.218753203749657
+        "totalUs": 336.7187511175871,
+        "hostUs": 324.5312385261059,
+        "remainderUs": 12.187512591481209
       }
     },
     {
       "demo": "canvas-pixels",
-      "implementation": "cpp baseline",
-      "round": 9,
-      "pass": 2,
+      "implementation": "c candidate",
+      "round": 8,
+      "pass": 3,
       "seconds": {
-        "getImageData(): µs/call": 0.0009488,
-        "putImageData(): µs/call": 0.0002334
-      },
-      "canvas": {
-        "reps": 16,
-        "bytes": 123904,
-        "totalUs": 948.7500004470348,
-        "hostUs": 928.4375011920929,
-        "remainderUs": 20.31249925494194
-      }
-    },
-    {
-      "demo": "canvas-pixels",
-      "implementation": "cpp candidate",
-      "round": 9,
-      "pass": 2,
-      "seconds": {
-        "getImageData(): µs/call": 0.0003258,
-        "putImageData(): µs/call": 0.000244
+        "getImageData(): µs/call": 0.0003373,
+        "putImageData(): µs/call": 0.0002445
       },
       "canvas": {
         "reps": 32,
         "bytes": 123904,
-        "totalUs": 325.7812485098839,
-        "hostUs": 313.28125298023224,
-        "remainderUs": 12.499995529651642
+        "totalUs": 337.34375052154064,
+        "hostUs": 322.3437499254942,
+        "remainderUs": 15.000000596046448
       }
     },
     {
       "demo": "canvas-pixels",
-      "implementation": "cpp candidate",
-      "round": 9,
-      "pass": 3,
+      "implementation": "c candidate",
+      "round": 8,
+      "pass": 4,
       "seconds": {
-        "getImageData(): µs/call": 0.000322,
-        "putImageData(): µs/call": 0.0012641
+        "getImageData(): µs/call": 0.0003191,
+        "putImageData(): µs/call": 0.0002672
       },
       "canvas": {
         "reps": 32,
         "bytes": 123904,
-        "totalUs": 322.0312502235174,
-        "hostUs": 299.8437490314245,
-        "remainderUs": 22.187501192092896
+        "totalUs": 319.06249932944775,
+        "hostUs": 306.4062390476465,
+        "remainderUs": 12.656260281801224
       }
     },
     {
       "demo": "canvas-pixels",
-      "implementation": "cpp baseline",
-      "round": 9,
-      "pass": 3,
+      "implementation": "c baseline",
+      "round": 8,
+      "pass": 4,
       "seconds": {
-        "getImageData(): µs/call": 0.0002395,
-        "putImageData(): µs/call": 0.0001664
+        "getImageData(): µs/call": 0.0003495,
+        "putImageData(): µs/call": 0.0005822000000000001
       },
       "canvas": {
         "reps": 64,
         "bytes": 123904,
-        "totalUs": 239.45312481373549,
-        "hostUs": 229.3750001117587,
-        "remainderUs": 10.078124701976776
+        "totalUs": 349.5312500745058,
+        "hostUs": 333.20312201976776,
+        "remainderUs": 16.328128054738045
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust baseline",
+      "round": 8,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003411,
+        "putImageData(): µs/call": 0.0002477
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 341.0937488079071,
+        "hostUs": 327.34374329447746,
+        "remainderUs": 13.750005513429642
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust candidate",
+      "round": 8,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.0005425,
+        "putImageData(): µs/call": 0.0002821
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 542.5000004470348,
+        "hostUs": 522.6562395691872,
+        "remainderUs": 19.84376087784767
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust candidate",
+      "round": 8,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.00037,
+        "putImageData(): µs/call": 0.0002553
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 370.0000010430813,
+        "hostUs": 355.46874813735485,
+        "remainderUs": 14.531252905726433
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust baseline",
+      "round": 8,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003314,
+        "putImageData(): µs/call": 0.000241
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 331.40625059604645,
+        "hostUs": 318.4374999254942,
+        "remainderUs": 12.968750670552254
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust baseline",
+      "round": 8,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.000318,
+        "putImageData(): µs/call": 0.0011216
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 317.96875037252903,
+        "hostUs": 304.68750186264515,
+        "remainderUs": 13.28124850988388
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust candidate",
+      "round": 8,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.000318,
+        "putImageData(): µs/call": 0.000234
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 317.96875037252903,
+        "hostUs": 303.4374974668026,
+        "remainderUs": 14.531252905726433
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust candidate",
+      "round": 8,
+      "pass": 4,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003348,
+        "putImageData(): µs/call": 0.0002216
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 334.8437510430813,
+        "hostUs": 318.7499977648258,
+        "remainderUs": 16.093753278255463
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust baseline",
+      "round": 8,
+      "pass": 4,
+      "seconds": {
+        "getImageData(): µs/call": 0.000305,
+        "putImageData(): µs/call": 0.0002485
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 305.00000063329935,
+        "hostUs": 293.4374986216426,
+        "remainderUs": 11.562502011656761
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust candidate",
+      "round": 9,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003155,
+        "putImageData(): µs/call": 0.0002522
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 315.4687508940697,
+        "hostUs": 299.68749918043613,
+        "remainderUs": 15.781251713633537
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust baseline",
+      "round": 9,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003553,
+        "putImageData(): µs/call": 0.0002448
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 355.3125001490116,
+        "hostUs": 339.68749828636646,
+        "remainderUs": 15.62500186264515
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust baseline",
+      "round": 9,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.0009977999999999999,
+        "putImageData(): µs/call": 0.0004891
+      },
+      "canvas": {
+        "reps": 16,
+        "bytes": 123904,
+        "totalUs": 997.8125020861626,
+        "hostUs": 978.750005364418,
+        "remainderUs": 19.062496721744537
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust candidate",
+      "round": 9,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003753,
+        "putImageData(): µs/call": 0.0002506
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 375.3124997019768,
+        "hostUs": 358.12499932944775,
+        "remainderUs": 17.18750037252903
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust candidate",
+      "round": 9,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.0005492,
+        "putImageData(): µs/call": 0.0002416
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 549.2187514901161,
+        "hostUs": 529.3749999254942,
+        "remainderUs": 19.843751564621925
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust baseline",
+      "round": 9,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003278,
+        "putImageData(): µs/call": 0.00025610000000000005
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 327.8125002980232,
+        "hostUs": 315.31249545514584,
+        "remainderUs": 12.500004842877388
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust baseline",
+      "round": 9,
+      "pass": 4,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003573,
+        "putImageData(): µs/call": 0.0002372
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 357.3437500745058,
+        "hostUs": 335.6250021606684,
+        "remainderUs": 21.718747913837433
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "rust candidate",
+      "round": 9,
+      "pass": 4,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003937,
+        "putImageData(): µs/call": 0.00027739999999999997
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 393.7499998137355,
+        "hostUs": 377.73437425494194,
+        "remainderUs": 16.015625558793545
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c candidate",
+      "round": 9,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003155,
+        "putImageData(): µs/call": 0.0002559
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 315.4687508940697,
+        "hostUs": 299.5312437415123,
+        "remainderUs": 15.937507152557373
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c baseline",
+      "round": 9,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003663,
+        "putImageData(): µs/call": 0.0009775
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 366.2500008940697,
+        "hostUs": 351.40624828636646,
+        "remainderUs": 14.843752607703209
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c baseline",
+      "round": 9,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.0002654,
+        "putImageData(): µs/call": 0.0002041
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 265.3906252235174,
+        "hostUs": 254.999996162951,
+        "remainderUs": 10.390629060566425
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c candidate",
+      "round": 9,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.0007308999999999999,
+        "putImageData(): µs/call": 0.00021909999999999999
+      },
+      "canvas": {
+        "reps": 16,
+        "bytes": 123904,
+        "totalUs": 730.9374995529652,
+        "hostUs": 711.2499997019768,
+        "remainderUs": 19.687499850988388
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c candidate",
+      "round": 9,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.0002948,
+        "putImageData(): µs/call": 0.0002454
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 294.7656251490116,
+        "hostUs": 282.8906271606684,
+        "remainderUs": 11.874997988343239
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c baseline",
+      "round": 9,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.0002928,
+        "putImageData(): µs/call": 0.000215
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 292.8125001490116,
+        "hostUs": 282.5781246647239,
+        "remainderUs": 10.234375484287739
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c baseline",
+      "round": 9,
+      "pass": 4,
+      "seconds": {
+        "getImageData(): µs/call": 0.00063,
+        "putImageData(): µs/call": 0.0003342
+      },
+      "canvas": {
+        "reps": 16,
+        "bytes": 123904,
+        "totalUs": 629.9999989569187,
+        "hostUs": 605.6249998509884,
+        "remainderUs": 24.37499910593033
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "c candidate",
+      "round": 9,
+      "pass": 4,
+      "seconds": {
+        "getImageData(): µs/call": 0.0002816,
+        "putImageData(): µs/call": 0.00021380000000000002
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 281.56250063329935,
+        "hostUs": 270.3906297683716,
+        "remainderUs": 11.171870864927769
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp candidate",
+      "round": 9,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.000252,
+        "putImageData(): µs/call": 0.0002166
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 251.953125,
+        "hostUs": 241.71875417232513,
+        "remainderUs": 10.234370827674866
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp baseline",
+      "round": 9,
+      "pass": 1,
+      "seconds": {
+        "getImageData(): µs/call": 0.0002628,
+        "putImageData(): µs/call": 0.000194
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 262.8124998882413,
+        "hostUs": 253.04687675088644,
+        "remainderUs": 9.76562313735485
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp baseline",
+      "round": 9,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.0010678,
+        "putImageData(): µs/call": 0.000327
+      },
+      "canvas": {
+        "reps": 16,
+        "bytes": 123904,
+        "totalUs": 1067.8125023841858,
+        "hostUs": 1046.2500043213367,
+        "remainderUs": 21.562498062849045
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp candidate",
+      "round": 9,
+      "pass": 2,
+      "seconds": {
+        "getImageData(): µs/call": 0.000272,
+        "putImageData(): µs/call": 0.000308
+      },
+      "canvas": {
+        "reps": 64,
+        "bytes": 123904,
+        "totalUs": 272.03125040978193,
+        "hostUs": 261.17187459021807,
+        "remainderUs": 10.859375819563866
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp candidate",
+      "round": 9,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.0004462,
+        "putImageData(): µs/call": 0.0002645
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 446.2499991059303,
+        "hostUs": 425.4687502980232,
+        "remainderUs": 20.781248807907104
+      }
+    },
+    {
+      "demo": "canvas-pixels",
+      "implementation": "cpp baseline",
+      "round": 9,
+      "pass": 3,
+      "seconds": {
+        "getImageData(): µs/call": 0.0003211,
+        "putImageData(): µs/call": 0.00025330000000000003
+      },
+      "canvas": {
+        "reps": 32,
+        "bytes": 123904,
+        "totalUs": 321.0937511175871,
+        "hostUs": 308.2812484353781,
+        "remainderUs": 12.812502682209015
       }
     },
     {
@@ -3669,15 +3664,15 @@
       "round": 9,
       "pass": 4,
       "seconds": {
-        "getImageData(): µs/call": 0.0006412000000000001,
-        "putImageData(): µs/call": 0.0002211
+        "getImageData(): µs/call": 0.0003275,
+        "putImageData(): µs/call": 0.0002305
       },
       "canvas": {
-        "reps": 16,
+        "reps": 32,
         "bytes": 123904,
-        "totalUs": 641.2499994039536,
-        "hostUs": 609.687514603138,
-        "remainderUs": 31.562484800815582
+        "totalUs": 327.50000059604645,
+        "hostUs": 314.9999976158142,
+        "remainderUs": 12.500002980232239
       }
     },
     {
@@ -3686,15 +3681,15 @@
       "round": 9,
       "pass": 4,
       "seconds": {
-        "getImageData(): µs/call": 0.00036,
-        "putImageData(): µs/call": 0.0002261
+        "getImageData(): µs/call": 0.0003126,
+        "putImageData(): µs/call": 0.0004752
       },
       "canvas": {
-        "reps": 32,
+        "reps": 64,
         "bytes": 123904,
-        "totalUs": 359.99999940395355,
-        "hostUs": 344.53124180436134,
-        "remainderUs": 15.468757599592209
+        "totalUs": 312.5781249254942,
+        "hostUs": 298.35937172174454,
+        "remainderUs": 14.218753203749657
       }
     }
   ],

@@ -1,8 +1,8 @@
 {
-  "date": "2026-11-26T01:13:07.585Z",
+  "date": "2026-11-26T01:43:36.931Z",
   "browser": "HeadlessChrome/156.0.8078.47",
   "node": "v26.13.0",
-  "sizesSha256": "49f2e12700bad4199bd9a5c9df01fa22917b267f92caea68e67abda6386549c3",
+  "sizesSha256": "3090c573834cf63694e76e8d561d03da28895bb5c27160cd2655177881223fab",
   "runnerSha256": "b43678cdfc02f3573986abc51ad534e49ae9f80821450ac82d7acb17ec6fec3a",
   "sources": {
     "host/common.js": "4e3f3437d37d8e150708efb3e33551dffa6c83164e165ed1750936f6a10c3c83",
@@ -68,40 +68,40 @@
       "demo": "attribute-churn",
       "version": "main",
       "path": "c/attribute-churn/jco-main/attribute_churn.js",
-      "sha256": "2bbb56f7e45e337443d475072aef81ffb7d3b599d948b649dd34cba869e8740d",
+      "sha256": "6164f871ba785a4bd0b7778bc21f83bb5e1fe6508ab05b0468220265c993999c",
       "phase": "init",
-      "bytes": 178979,
-      "used": 53126
+      "bytes": 179132,
+      "used": 53156
     },
     {
       "lang": "c",
       "demo": "attribute-churn",
       "version": "main",
       "path": "c/attribute-churn/jco-main/attribute_churn.js",
-      "sha256": "2bbb56f7e45e337443d475072aef81ffb7d3b599d948b649dd34cba869e8740d",
+      "sha256": "6164f871ba785a4bd0b7778bc21f83bb5e1fe6508ab05b0468220265c993999c",
       "phase": "firstRun",
-      "bytes": 178979,
-      "used": 90897
+      "bytes": 179132,
+      "used": 91001
     },
     {
       "lang": "c",
       "demo": "attribute-churn",
       "version": "candidate",
       "path": "c/attribute-churn/jco-candidate/attribute_churn.js",
-      "sha256": "8fe34585b8e8f1c8cfa3cabc7d481a4d9d7043921f7c3fc493628bbc92eb0adb",
+      "sha256": "2fd48eb8ba240cf3797b585c671d846d3d42aa3891fc16fd26035d691f629d22",
       "phase": "init",
-      "bytes": 139183,
-      "used": 40343
+      "bytes": 139336,
+      "used": 40373
     },
     {
       "lang": "c",
       "demo": "attribute-churn",
       "version": "candidate",
       "path": "c/attribute-churn/jco-candidate/attribute_churn.js",
-      "sha256": "8fe34585b8e8f1c8cfa3cabc7d481a4d9d7043921f7c3fc493628bbc92eb0adb",
+      "sha256": "2fd48eb8ba240cf3797b585c671d846d3d42aa3891fc16fd26035d691f629d22",
       "phase": "firstRun",
-      "bytes": 139183,
-      "used": 63006
+      "bytes": 139336,
+      "used": 63110
     },
     {
       "lang": "c",
@@ -128,40 +128,40 @@
       "demo": "canvas-draw",
       "version": "main",
       "path": "c/canvas-draw/jco-main/canvas_draw.js",
-      "sha256": "44106b7d4b73522980832f0a33c1fd6d010872f978b8807f0d17cecb5efbdc45",
+      "sha256": "66fb06c626ebd467c9849a4545cb21c89659320cfaf1d5565cb534b86a47c101",
       "phase": "init",
-      "bytes": 193782,
-      "used": 56985
+      "bytes": 193935,
+      "used": 57015
     },
     {
       "lang": "c",
       "demo": "canvas-draw",
       "version": "main",
       "path": "c/canvas-draw/jco-main/canvas_draw.js",
-      "sha256": "44106b7d4b73522980832f0a33c1fd6d010872f978b8807f0d17cecb5efbdc45",
+      "sha256": "66fb06c626ebd467c9849a4545cb21c89659320cfaf1d5565cb534b86a47c101",
       "phase": "firstRun",
-      "bytes": 193782,
-      "used": 101180
+      "bytes": 193935,
+      "used": 101284
     },
     {
       "lang": "c",
       "demo": "canvas-draw",
       "version": "candidate",
       "path": "c/canvas-draw/jco-candidate/canvas_draw.js",
-      "sha256": "2f7a75659d6dbbaa4fc72f650b47aa5f0bf22cab9f876b984e1b164f78a15850",
+      "sha256": "cb6be0e56eb47a68d6c2283c6b04f65c5c5a961f7d25ec733998e0134c9d20f6",
       "phase": "init",
-      "bytes": 147754,
-      "used": 41406
+      "bytes": 147907,
+      "used": 41436
     },
     {
       "lang": "c",
       "demo": "canvas-draw",
       "version": "candidate",
       "path": "c/canvas-draw/jco-candidate/canvas_draw.js",
-      "sha256": "2f7a75659d6dbbaa4fc72f650b47aa5f0bf22cab9f876b984e1b164f78a15850",
+      "sha256": "cb6be0e56eb47a68d6c2283c6b04f65c5c5a961f7d25ec733998e0134c9d20f6",
       "phase": "firstRun",
-      "bytes": 147754,
-      "used": 67381
+      "bytes": 147907,
+      "used": 67485
     },
     {
       "lang": "c",
@@ -188,40 +188,40 @@
       "demo": "canvas-pixels",
       "version": "main",
       "path": "c/canvas-pixels/jco-main/canvas_pixels.js",
-      "sha256": "d7f9a58bb811b65ee1768b3b2f8114041d87fc77bfe62a0e9db4d634f5855479",
+      "sha256": "5d5f0a2637e29bf223160e6d004f9f7c22df5e968a813ba118cdc2d797ad7758",
       "phase": "init",
-      "bytes": 212662,
-      "used": 60560
+      "bytes": 212815,
+      "used": 60590
     },
     {
       "lang": "c",
       "demo": "canvas-pixels",
       "version": "main",
       "path": "c/canvas-pixels/jco-main/canvas_pixels.js",
-      "sha256": "d7f9a58bb811b65ee1768b3b2f8114041d87fc77bfe62a0e9db4d634f5855479",
+      "sha256": "5d5f0a2637e29bf223160e6d004f9f7c22df5e968a813ba118cdc2d797ad7758",
       "phase": "firstRun",
-      "bytes": 212662,
-      "used": 108181
+      "bytes": 212815,
+      "used": 108285
     },
     {
       "lang": "c",
       "demo": "canvas-pixels",
       "version": "candidate",
       "path": "c/canvas-pixels/jco-candidate/canvas_pixels.js",
-      "sha256": "bd182e9bed39a63f29437235df3ba1d41f78a5dcb3c8b89036bbc67f944b2eae",
+      "sha256": "969cd6bff62eb884703fd0d1ec998a5c45eb9c8f81cb71f8ce62931d2755ba52",
       "phase": "init",
-      "bytes": 153728,
-      "used": 42594
+      "bytes": 153881,
+      "used": 42624
     },
     {
       "lang": "c",
       "demo": "canvas-pixels",
       "version": "candidate",
       "path": "c/canvas-pixels/jco-candidate/canvas_pixels.js",
-      "sha256": "bd182e9bed39a63f29437235df3ba1d41f78a5dcb3c8b89036bbc67f944b2eae",
+      "sha256": "969cd6bff62eb884703fd0d1ec998a5c45eb9c8f81cb71f8ce62931d2755ba52",
       "phase": "firstRun",
-      "bytes": 153728,
-      "used": 70642
+      "bytes": 153881,
+      "used": 70746
     },
     {
       "lang": "c",
@@ -248,40 +248,40 @@
       "demo": "dom-query",
       "version": "main",
       "path": "c/dom-query/jco-main/dom_query.js",
-      "sha256": "dd141bc4604dfc59175b43e499f058110cdd12d9dc828a14b760dffd8cad5a8c",
+      "sha256": "b9f2762423c899163c0c0f6cc72ff4110d320649988d6b811415f947d1068620",
       "phase": "init",
-      "bytes": 195602,
-      "used": 56561
+      "bytes": 195755,
+      "used": 56591
     },
     {
       "lang": "c",
       "demo": "dom-query",
       "version": "main",
       "path": "c/dom-query/jco-main/dom_query.js",
-      "sha256": "dd141bc4604dfc59175b43e499f058110cdd12d9dc828a14b760dffd8cad5a8c",
+      "sha256": "b9f2762423c899163c0c0f6cc72ff4110d320649988d6b811415f947d1068620",
       "phase": "firstRun",
-      "bytes": 195602,
-      "used": 100133
+      "bytes": 195755,
+      "used": 100237
     },
     {
       "lang": "c",
       "demo": "dom-query",
       "version": "candidate",
       "path": "c/dom-query/jco-candidate/dom_query.js",
-      "sha256": "57a16154f07d3df5642e0a0137edbfb8e3bf15769872966cd386531873744165",
+      "sha256": "625d59d1359ff3e63f127d02e53ea34aed3e29e8bc895565144c0e6b8d7ae7fc",
       "phase": "init",
-      "bytes": 146159,
-      "used": 41033
+      "bytes": 146312,
+      "used": 41063
     },
     {
       "lang": "c",
       "demo": "dom-query",
       "version": "candidate",
       "path": "c/dom-query/jco-candidate/dom_query.js",
-      "sha256": "57a16154f07d3df5642e0a0137edbfb8e3bf15769872966cd386531873744165",
+      "sha256": "625d59d1359ff3e63f127d02e53ea34aed3e29e8bc895565144c0e6b8d7ae7fc",
       "phase": "firstRun",
-      "bytes": 146159,
-      "used": 67475
+      "bytes": 146312,
+      "used": 67579
     },
     {
       "lang": "c",
@@ -308,40 +308,40 @@
       "demo": "dom-traversal",
       "version": "main",
       "path": "c/dom-traversal/jco-main/dom_traversal.js",
-      "sha256": "35c5835b872a4dfbfa3ace733c4ba633cba4358930c49eeca056eaa42a30a75a",
+      "sha256": "32db04f01b96fe21b173fe4f98ba6dda61e8acc23e84ed13e208e3db752b892d",
       "phase": "init",
-      "bytes": 186582,
-      "used": 55223
+      "bytes": 186735,
+      "used": 55253
     },
     {
       "lang": "c",
       "demo": "dom-traversal",
       "version": "main",
       "path": "c/dom-traversal/jco-main/dom_traversal.js",
-      "sha256": "35c5835b872a4dfbfa3ace733c4ba633cba4358930c49eeca056eaa42a30a75a",
+      "sha256": "32db04f01b96fe21b173fe4f98ba6dda61e8acc23e84ed13e208e3db752b892d",
       "phase": "firstRun",
-      "bytes": 186582,
-      "used": 96337
+      "bytes": 186735,
+      "used": 96441
     },
     {
       "lang": "c",
       "demo": "dom-traversal",
       "version": "candidate",
       "path": "c/dom-traversal/jco-candidate/dom_traversal.js",
-      "sha256": "428ba37f3df46149ba10618e7f9131bda9aa2a95e9fe3261bf60578b8ecab60e",
+      "sha256": "a2caafcd27aa9d33db450bc731004c08724a03abaadc549ef7dd1d647534ce85",
       "phase": "init",
-      "bytes": 143291,
-      "used": 40645
+      "bytes": 143444,
+      "used": 40675
     },
     {
       "lang": "c",
       "demo": "dom-traversal",
       "version": "candidate",
       "path": "c/dom-traversal/jco-candidate/dom_traversal.js",
-      "sha256": "428ba37f3df46149ba10618e7f9131bda9aa2a95e9fe3261bf60578b8ecab60e",
+      "sha256": "a2caafcd27aa9d33db450bc731004c08724a03abaadc549ef7dd1d647534ce85",
       "phase": "firstRun",
-      "bytes": 143291,
-      "used": 65289
+      "bytes": 143444,
+      "used": 65393
     },
     {
       "lang": "c",
@@ -368,40 +368,40 @@
       "demo": "string-marshalling",
       "version": "main",
       "path": "c/string-marshalling/jco-main/string_marshalling.js",
-      "sha256": "b75f121eb590a94924349875b70966139c86463d9f5f4a8c02ad3b5789dad0f5",
+      "sha256": "478ea59978b3f146fd891d637b741778a7f2ede5b9f6f89daa1decdecbe22d4d",
       "phase": "init",
-      "bytes": 186159,
-      "used": 54401
+      "bytes": 186312,
+      "used": 54431
     },
     {
       "lang": "c",
       "demo": "string-marshalling",
       "version": "main",
       "path": "c/string-marshalling/jco-main/string_marshalling.js",
-      "sha256": "b75f121eb590a94924349875b70966139c86463d9f5f4a8c02ad3b5789dad0f5",
+      "sha256": "478ea59978b3f146fd891d637b741778a7f2ede5b9f6f89daa1decdecbe22d4d",
       "phase": "firstRun",
-      "bytes": 186159,
-      "used": 93797
+      "bytes": 186312,
+      "used": 93901
     },
     {
       "lang": "c",
       "demo": "string-marshalling",
       "version": "candidate",
       "path": "c/string-marshalling/jco-candidate/string_marshalling.js",
-      "sha256": "41fd16478887c5d8a72d868a93b6420e6475dddc3aa4217e867b62282fa71411",
+      "sha256": "479a387a1bffffdf18aacf8729b1321d533297fe51c2ff4f110182e37ec4f242",
       "phase": "init",
-      "bytes": 143545,
-      "used": 41001
+      "bytes": 143698,
+      "used": 41031
     },
     {
       "lang": "c",
       "demo": "string-marshalling",
       "version": "candidate",
       "path": "c/string-marshalling/jco-candidate/string_marshalling.js",
-      "sha256": "41fd16478887c5d8a72d868a93b6420e6475dddc3aa4217e867b62282fa71411",
+      "sha256": "479a387a1bffffdf18aacf8729b1321d533297fe51c2ff4f110182e37ec4f242",
       "phase": "firstRun",
-      "bytes": 143545,
-      "used": 65804
+      "bytes": 143698,
+      "used": 65908
     },
     {
       "lang": "c",
@@ -428,40 +428,40 @@
       "demo": "table-update",
       "version": "main",
       "path": "c/table-update/jco-main/table_update.js",
-      "sha256": "3550a61ec1001203157f619558c128b7964571fa637e422f16d2c9c095de35f6",
+      "sha256": "6ca471717c497364100c07af38fa4c0f9e222fa04fae9c5182c24b0396cc47b9",
       "phase": "init",
-      "bytes": 193794,
-      "used": 56614
+      "bytes": 193947,
+      "used": 56644
     },
     {
       "lang": "c",
       "demo": "table-update",
       "version": "main",
       "path": "c/table-update/jco-main/table_update.js",
-      "sha256": "3550a61ec1001203157f619558c128b7964571fa637e422f16d2c9c095de35f6",
+      "sha256": "6ca471717c497364100c07af38fa4c0f9e222fa04fae9c5182c24b0396cc47b9",
       "phase": "firstRun",
-      "bytes": 193794,
-      "used": 99786
+      "bytes": 193947,
+      "used": 99890
     },
     {
       "lang": "c",
       "demo": "table-update",
       "version": "candidate",
       "path": "c/table-update/jco-candidate/table_update.js",
-      "sha256": "2fb267c683f2663d9140793f3ad7b0f3f4117244355f76332e0637830cd8b692",
+      "sha256": "406a7d41ec2640b85ed5983d5dc5d9763c89cfc2e396e8c760a45632ee6007a4",
       "phase": "init",
-      "bytes": 148393,
-      "used": 41634
+      "bytes": 148546,
+      "used": 41664
     },
     {
       "lang": "c",
       "demo": "table-update",
       "version": "candidate",
       "path": "c/table-update/jco-candidate/table_update.js",
-      "sha256": "2fb267c683f2663d9140793f3ad7b0f3f4117244355f76332e0637830cd8b692",
+      "sha256": "406a7d41ec2640b85ed5983d5dc5d9763c89cfc2e396e8c760a45632ee6007a4",
       "phase": "firstRun",
-      "bytes": 148393,
-      "used": 67695
+      "bytes": 148546,
+      "used": 67799
     },
     {
       "lang": "cpp",
@@ -488,40 +488,40 @@
       "demo": "attribute-churn",
       "version": "main",
       "path": "cpp/attribute-churn/jco-main/attribute_churn.js",
-      "sha256": "097995cfa59a64569e6e0e47864a7567db963dc9a3fc21159f134ad0e63650db",
+      "sha256": "2e5cf31decbbcae81367f95262cf641d41e8836bdaad97f897f63fa91a98a412",
       "phase": "init",
-      "bytes": 178974,
-      "used": 53120
+      "bytes": 179127,
+      "used": 53150
     },
     {
       "lang": "cpp",
       "demo": "attribute-churn",
       "version": "main",
       "path": "cpp/attribute-churn/jco-main/attribute_churn.js",
-      "sha256": "097995cfa59a64569e6e0e47864a7567db963dc9a3fc21159f134ad0e63650db",
+      "sha256": "2e5cf31decbbcae81367f95262cf641d41e8836bdaad97f897f63fa91a98a412",
       "phase": "firstRun",
-      "bytes": 178974,
-      "used": 90892
+      "bytes": 179127,
+      "used": 90996
     },
     {
       "lang": "cpp",
       "demo": "attribute-churn",
       "version": "candidate",
       "path": "cpp/attribute-churn/jco-candidate/attribute_churn.js",
-      "sha256": "87abfaeaf06ee673ca6f25f59d78d13e577feb631958eb9071c060cd3c221f8f",
+      "sha256": "a93baae59cf0c8e76a2e0c0bdd4c4b2a2c3ce7d882a1e7bbe61947c87aae0546",
       "phase": "init",
-      "bytes": 139179,
-      "used": 40341
+      "bytes": 139332,
+      "used": 40371
     },
     {
       "lang": "cpp",
       "demo": "attribute-churn",
       "version": "candidate",
       "path": "cpp/attribute-churn/jco-candidate/attribute_churn.js",
-      "sha256": "87abfaeaf06ee673ca6f25f59d78d13e577feb631958eb9071c060cd3c221f8f",
+      "sha256": "a93baae59cf0c8e76a2e0c0bdd4c4b2a2c3ce7d882a1e7bbe61947c87aae0546",
       "phase": "firstRun",
-      "bytes": 139179,
-      "used": 63003
+      "bytes": 139332,
+      "used": 63107
     },
     {
       "lang": "cpp",
@@ -548,40 +548,40 @@
       "demo": "canvas-draw",
       "version": "main",
       "path": "cpp/canvas-draw/jco-main/canvas_draw.js",
-      "sha256": "ceeb02e4eccd54a125e6d08aa2711468d49bcebf487450c9058a92d89a9a7b39",
+      "sha256": "75f9368be01ad2fc0561a308571e1eda8d99a46c36747677ff8421dcc09c828d",
       "phase": "init",
-      "bytes": 193767,
-      "used": 56967
+      "bytes": 193920,
+      "used": 56997
     },
     {
       "lang": "cpp",
       "demo": "canvas-draw",
       "version": "main",
       "path": "cpp/canvas-draw/jco-main/canvas_draw.js",
-      "sha256": "ceeb02e4eccd54a125e6d08aa2711468d49bcebf487450c9058a92d89a9a7b39",
+      "sha256": "75f9368be01ad2fc0561a308571e1eda8d99a46c36747677ff8421dcc09c828d",
       "phase": "firstRun",
-      "bytes": 193767,
-      "used": 101165
+      "bytes": 193920,
+      "used": 101269
     },
     {
       "lang": "cpp",
       "demo": "canvas-draw",
       "version": "candidate",
       "path": "cpp/canvas-draw/jco-candidate/canvas_draw.js",
-      "sha256": "68259acb36598092d89fc244a6949b1716df2ce1bf8923a4994759600226d8a2",
+      "sha256": "b5d917c471f5bd265e35bea7e3a98922802113fe0e5dce210983831c39a14314",
       "phase": "init",
-      "bytes": 147742,
-      "used": 41400
+      "bytes": 147895,
+      "used": 41430
     },
     {
       "lang": "cpp",
       "demo": "canvas-draw",
       "version": "candidate",
       "path": "cpp/canvas-draw/jco-candidate/canvas_draw.js",
-      "sha256": "68259acb36598092d89fc244a6949b1716df2ce1bf8923a4994759600226d8a2",
+      "sha256": "b5d917c471f5bd265e35bea7e3a98922802113fe0e5dce210983831c39a14314",
       "phase": "firstRun",
-      "bytes": 147742,
-      "used": 67372
+      "bytes": 147895,
+      "used": 67476
     },
     {
       "lang": "cpp",
@@ -608,40 +608,40 @@
       "demo": "canvas-pixels",
       "version": "main",
       "path": "cpp/canvas-pixels/jco-main/canvas_pixels.js",
-      "sha256": "2bb22372674c4cad0c2717c928d41271a2a6cbafd0d743140ad5b3b2b7c5117d",
+      "sha256": "ba9f2772ff491955e6826c1397a8c9c8dc4151f6efe95c330c0354e6c6b5abc3",
       "phase": "init",
-      "bytes": 212647,
-      "used": 60542
+      "bytes": 212800,
+      "used": 60572
     },
     {
       "lang": "cpp",
       "demo": "canvas-pixels",
       "version": "main",
       "path": "cpp/canvas-pixels/jco-main/canvas_pixels.js",
-      "sha256": "2bb22372674c4cad0c2717c928d41271a2a6cbafd0d743140ad5b3b2b7c5117d",
+      "sha256": "ba9f2772ff491955e6826c1397a8c9c8dc4151f6efe95c330c0354e6c6b5abc3",
       "phase": "firstRun",
-      "bytes": 212647,
-      "used": 108166
+      "bytes": 212800,
+      "used": 108270
     },
     {
       "lang": "cpp",
       "demo": "canvas-pixels",
       "version": "candidate",
       "path": "cpp/canvas-pixels/jco-candidate/canvas_pixels.js",
-      "sha256": "4e5f6d3659c2c8714c3e315e5711c45464f8de6519c27679e5118f0adef12b94",
+      "sha256": "70c527550d2d35bcbf79e86316728276c2845a18c106f826fcd73c5944571a9a",
       "phase": "init",
-      "bytes": 153716,
-      "used": 42588
+      "bytes": 153869,
+      "used": 42618
     },
     {
       "lang": "cpp",
       "demo": "canvas-pixels",
       "version": "candidate",
       "path": "cpp/canvas-pixels/jco-candidate/canvas_pixels.js",
-      "sha256": "4e5f6d3659c2c8714c3e315e5711c45464f8de6519c27679e5118f0adef12b94",
+      "sha256": "70c527550d2d35bcbf79e86316728276c2845a18c106f826fcd73c5944571a9a",
       "phase": "firstRun",
-      "bytes": 153716,
-      "used": 70633
+      "bytes": 153869,
+      "used": 70737
     },
     {
       "lang": "cpp",
@@ -668,40 +668,40 @@
       "demo": "dom-query",
       "version": "main",
       "path": "cpp/dom-query/jco-main/dom_query.js",
-      "sha256": "76abf166334b1a065b8c242ba33df3b382ce50d839107e6b1c17779979f1a1e6",
+      "sha256": "fcec04921641249d3e93a98d72a83128f7efc038731abe3049ba81c57b693fae",
       "phase": "init",
-      "bytes": 195597,
-      "used": 56555
+      "bytes": 195750,
+      "used": 56585
     },
     {
       "lang": "cpp",
       "demo": "dom-query",
       "version": "main",
       "path": "cpp/dom-query/jco-main/dom_query.js",
-      "sha256": "76abf166334b1a065b8c242ba33df3b382ce50d839107e6b1c17779979f1a1e6",
+      "sha256": "fcec04921641249d3e93a98d72a83128f7efc038731abe3049ba81c57b693fae",
       "phase": "firstRun",
-      "bytes": 195597,
-      "used": 100128
+      "bytes": 195750,
+      "used": 100232
     },
     {
       "lang": "cpp",
       "demo": "dom-query",
       "version": "candidate",
       "path": "cpp/dom-query/jco-candidate/dom_query.js",
-      "sha256": "11881fb41ce6981911e8f957a538a225da2c253d54f217b9e2f5bc5b440032e0",
+      "sha256": "f5ce8253e1c454ef3ba464130be0342d86201d7b3ddbc2092fe9a05ca74668fe",
       "phase": "init",
-      "bytes": 146155,
-      "used": 41031
+      "bytes": 146308,
+      "used": 41061
     },
     {
       "lang": "cpp",
       "demo": "dom-query",
       "version": "candidate",
       "path": "cpp/dom-query/jco-candidate/dom_query.js",
-      "sha256": "11881fb41ce6981911e8f957a538a225da2c253d54f217b9e2f5bc5b440032e0",
+      "sha256": "f5ce8253e1c454ef3ba464130be0342d86201d7b3ddbc2092fe9a05ca74668fe",
       "phase": "firstRun",
-      "bytes": 146155,
-      "used": 67472
+      "bytes": 146308,
+      "used": 67576
     },
     {
       "lang": "cpp",
@@ -728,40 +728,40 @@
       "demo": "dom-traversal",
       "version": "main",
       "path": "cpp/dom-traversal/jco-main/dom_traversal.js",
-      "sha256": "9342a430d3ba536ec4b06335b7c0cb52abd04e9df961a20e0aa199891cfd3057",
+      "sha256": "9db499d34873628262812a5a5c8f401a2294c28679a0964c218f4d7f3b76d9e8",
       "phase": "init",
-      "bytes": 186577,
-      "used": 55217
+      "bytes": 186730,
+      "used": 55247
     },
     {
       "lang": "cpp",
       "demo": "dom-traversal",
       "version": "main",
       "path": "cpp/dom-traversal/jco-main/dom_traversal.js",
-      "sha256": "9342a430d3ba536ec4b06335b7c0cb52abd04e9df961a20e0aa199891cfd3057",
+      "sha256": "9db499d34873628262812a5a5c8f401a2294c28679a0964c218f4d7f3b76d9e8",
       "phase": "firstRun",
-      "bytes": 186577,
-      "used": 96332
+      "bytes": 186730,
+      "used": 96436
     },
     {
       "lang": "cpp",
       "demo": "dom-traversal",
       "version": "candidate",
       "path": "cpp/dom-traversal/jco-candidate/dom_traversal.js",
-      "sha256": "968513ed78581936f72258fccd757df1f5f87e3d62ca8946b838c88a0156a552",
+      "sha256": "08ecab2e0ac3dd45fb4d603c98abefe36c0f531247d10f5f30931153fdb0399d",
       "phase": "init",
-      "bytes": 143287,
-      "used": 40643
+      "bytes": 143440,
+      "used": 40673
     },
     {
       "lang": "cpp",
       "demo": "dom-traversal",
       "version": "candidate",
       "path": "cpp/dom-traversal/jco-candidate/dom_traversal.js",
-      "sha256": "968513ed78581936f72258fccd757df1f5f87e3d62ca8946b838c88a0156a552",
+      "sha256": "08ecab2e0ac3dd45fb4d603c98abefe36c0f531247d10f5f30931153fdb0399d",
       "phase": "firstRun",
-      "bytes": 143287,
-      "used": 65286
+      "bytes": 143440,
+      "used": 65390
     },
     {
       "lang": "cpp",
@@ -788,40 +788,40 @@
       "demo": "string-marshalling",
       "version": "main",
       "path": "cpp/string-marshalling/jco-main/string_marshalling.js",
-      "sha256": "3d9fd147cbf472efedbd655297e5c02483473730bbb2571ad3058f03e59f512c",
+      "sha256": "6f803f19651766053a16880e824c50682dc77e43e3c07273b3381472048d1b7a",
       "phase": "init",
-      "bytes": 186154,
-      "used": 54395
+      "bytes": 186307,
+      "used": 54425
     },
     {
       "lang": "cpp",
       "demo": "string-marshalling",
       "version": "main",
       "path": "cpp/string-marshalling/jco-main/string_marshalling.js",
-      "sha256": "3d9fd147cbf472efedbd655297e5c02483473730bbb2571ad3058f03e59f512c",
+      "sha256": "6f803f19651766053a16880e824c50682dc77e43e3c07273b3381472048d1b7a",
       "phase": "firstRun",
-      "bytes": 186154,
-      "used": 93792
+      "bytes": 186307,
+      "used": 93896
     },
     {
       "lang": "cpp",
       "demo": "string-marshalling",
       "version": "candidate",
       "path": "cpp/string-marshalling/jco-candidate/string_marshalling.js",
-      "sha256": "3ae0334493edc977901fd44f113173f7a5687e6745a4ce52d7020b81148f9ac4",
+      "sha256": "75b125a25eba7a74a7ac6df4587f82a02d64d98829672cc7a44a8d057550efd0",
       "phase": "init",
-      "bytes": 143541,
-      "used": 40999
+      "bytes": 143694,
+      "used": 41029
     },
     {
       "lang": "cpp",
       "demo": "string-marshalling",
       "version": "candidate",
       "path": "cpp/string-marshalling/jco-candidate/string_marshalling.js",
-      "sha256": "3ae0334493edc977901fd44f113173f7a5687e6745a4ce52d7020b81148f9ac4",
+      "sha256": "75b125a25eba7a74a7ac6df4587f82a02d64d98829672cc7a44a8d057550efd0",
       "phase": "firstRun",
-      "bytes": 143541,
-      "used": 65801
+      "bytes": 143694,
+      "used": 65905
     },
     {
       "lang": "cpp",
@@ -848,40 +848,40 @@
       "demo": "table-update",
       "version": "main",
       "path": "cpp/table-update/jco-main/table_update.js",
-      "sha256": "80fa43b413cddf41c096822778a9971cbb0090ef27522d4b7026de89bb8af2cf",
+      "sha256": "8cda4022d6475ebe89a2f1641dae2279becdb01d11d4b2726fcf8189e7cc3776",
       "phase": "init",
-      "bytes": 193789,
-      "used": 56608
+      "bytes": 193942,
+      "used": 56638
     },
     {
       "lang": "cpp",
       "demo": "table-update",
       "version": "main",
       "path": "cpp/table-update/jco-main/table_update.js",
-      "sha256": "80fa43b413cddf41c096822778a9971cbb0090ef27522d4b7026de89bb8af2cf",
+      "sha256": "8cda4022d6475ebe89a2f1641dae2279becdb01d11d4b2726fcf8189e7cc3776",
       "phase": "firstRun",
-      "bytes": 193789,
-      "used": 99781
+      "bytes": 193942,
+      "used": 99885
     },
     {
       "lang": "cpp",
       "demo": "table-update",
       "version": "candidate",
       "path": "cpp/table-update/jco-candidate/table_update.js",
-      "sha256": "1410cc3f88c49a56340fa8c2d2220c441c123cc2829f819f406fd3f481bead7d",
+      "sha256": "0ee54e18dd83479d55aceb6f12853b358c63072edaa95750a461c1139515fd06",
       "phase": "init",
-      "bytes": 148389,
-      "used": 41632
+      "bytes": 148542,
+      "used": 41662
     },
     {
       "lang": "cpp",
       "demo": "table-update",
       "version": "candidate",
       "path": "cpp/table-update/jco-candidate/table_update.js",
-      "sha256": "1410cc3f88c49a56340fa8c2d2220c441c123cc2829f819f406fd3f481bead7d",
+      "sha256": "0ee54e18dd83479d55aceb6f12853b358c63072edaa95750a461c1139515fd06",
       "phase": "firstRun",
-      "bytes": 148389,
-      "used": 67692
+      "bytes": 148542,
+      "used": 67796
     },
     {
       "lang": "rust",
@@ -908,40 +908,40 @@
       "demo": "attribute-churn",
       "version": "main",
       "path": "rust/attribute-churn/jco-main/attribute_churn.js",
-      "sha256": "34a32a0c11888c35099665a7e1e0ac9e3c7ee26c7efee101f4edb875f5d5f62b",
+      "sha256": "610f45e29f3f797431a27c780a8e5ded060ec7aa6306fda4f2bacf6561ba5066",
       "phase": "init",
-      "bytes": 177558,
-      "used": 40000
+      "bytes": 177711,
+      "used": 40006
     },
     {
       "lang": "rust",
       "demo": "attribute-churn",
       "version": "main",
       "path": "rust/attribute-churn/jco-main/attribute_churn.js",
-      "sha256": "34a32a0c11888c35099665a7e1e0ac9e3c7ee26c7efee101f4edb875f5d5f62b",
+      "sha256": "610f45e29f3f797431a27c780a8e5ded060ec7aa6306fda4f2bacf6561ba5066",
       "phase": "firstRun",
-      "bytes": 177558,
-      "used": 88389
+      "bytes": 177711,
+      "used": 88493
     },
     {
       "lang": "rust",
       "demo": "attribute-churn",
       "version": "candidate",
       "path": "rust/attribute-churn/jco-candidate/attribute_churn.js",
-      "sha256": "9bc44ed080fd2aedcb8dbb79354c5b8f6fb6e18363b003411e53e8e6632a05c1",
+      "sha256": "5675ce3f58575de546b66ab5a8b1f62f932835af71ea6ee04424ebe253c9eb73",
       "phase": "init",
-      "bytes": 137804,
-      "used": 27331
+      "bytes": 137957,
+      "used": 27337
     },
     {
       "lang": "rust",
       "demo": "attribute-churn",
       "version": "candidate",
       "path": "rust/attribute-churn/jco-candidate/attribute_churn.js",
-      "sha256": "9bc44ed080fd2aedcb8dbb79354c5b8f6fb6e18363b003411e53e8e6632a05c1",
+      "sha256": "5675ce3f58575de546b66ab5a8b1f62f932835af71ea6ee04424ebe253c9eb73",
       "phase": "firstRun",
-      "bytes": 137804,
-      "used": 60533
+      "bytes": 137957,
+      "used": 60637
     },
     {
       "lang": "rust",
@@ -968,40 +968,40 @@
       "demo": "canvas-draw",
       "version": "main",
       "path": "rust/canvas-draw/jco-main/canvas_draw.js",
-      "sha256": "e2c5dd6b79fed62bb1208405b219b223e34ced95687ddd890beaaf0606462b12",
+      "sha256": "9653036e135427c5f46ad2ba234e0783524e5a23bc7cbd9db55a983cb5fe16b1",
       "phase": "init",
-      "bytes": 192345,
-      "used": 43841
+      "bytes": 192498,
+      "used": 43847
     },
     {
       "lang": "rust",
       "demo": "canvas-draw",
       "version": "main",
       "path": "rust/canvas-draw/jco-main/canvas_draw.js",
-      "sha256": "e2c5dd6b79fed62bb1208405b219b223e34ced95687ddd890beaaf0606462b12",
+      "sha256": "9653036e135427c5f46ad2ba234e0783524e5a23bc7cbd9db55a983cb5fe16b1",
       "phase": "firstRun",
-      "bytes": 192345,
-      "used": 98656
+      "bytes": 192498,
+      "used": 98760
     },
     {
       "lang": "rust",
       "demo": "canvas-draw",
       "version": "candidate",
       "path": "rust/canvas-draw/jco-candidate/canvas_draw.js",
-      "sha256": "00176e0ebc81df4e1713e404fac19a078a712c8336d5f1d82436aa30d9b759c7",
+      "sha256": "5a33e90d0023b1272bb29351a4e8f42d2126bcc2c7a356909f434056e880b067",
       "phase": "init",
-      "bytes": 146361,
-      "used": 28384
+      "bytes": 146514,
+      "used": 28390
     },
     {
       "lang": "rust",
       "demo": "canvas-draw",
       "version": "candidate",
       "path": "rust/canvas-draw/jco-candidate/canvas_draw.js",
-      "sha256": "00176e0ebc81df4e1713e404fac19a078a712c8336d5f1d82436aa30d9b759c7",
+      "sha256": "5a33e90d0023b1272bb29351a4e8f42d2126bcc2c7a356909f434056e880b067",
       "phase": "firstRun",
-      "bytes": 146361,
-      "used": 64896
+      "bytes": 146514,
+      "used": 65000
     },
     {
       "lang": "rust",
@@ -1028,40 +1028,40 @@
       "demo": "canvas-pixels",
       "version": "main",
       "path": "rust/canvas-pixels/jco-main/canvas_pixels.js",
-      "sha256": "058dda7e908a359741078d9333b2005aa999ef7210254bccc75354fa3589daee",
+      "sha256": "2279882c009daba892877319c16f17551c1efcd17e975fd8d2d7e1646cb354ae",
       "phase": "init",
-      "bytes": 211218,
-      "used": 47409
+      "bytes": 211371,
+      "used": 47415
     },
     {
       "lang": "rust",
       "demo": "canvas-pixels",
       "version": "main",
       "path": "rust/canvas-pixels/jco-main/canvas_pixels.js",
-      "sha256": "058dda7e908a359741078d9333b2005aa999ef7210254bccc75354fa3589daee",
+      "sha256": "2279882c009daba892877319c16f17551c1efcd17e975fd8d2d7e1646cb354ae",
       "phase": "firstRun",
-      "bytes": 211218,
-      "used": 105650
+      "bytes": 211371,
+      "used": 105754
     },
     {
       "lang": "rust",
       "demo": "canvas-pixels",
       "version": "candidate",
       "path": "rust/canvas-pixels/jco-candidate/canvas_pixels.js",
-      "sha256": "8060bd7ce5b4ef499be98297fdc3a54a3d5f74f1974c75640152be6f0041e020",
+      "sha256": "854f1301e0e4f11a722970c38c6bf3c363263ef357ffb4f4379a364a17597844",
       "phase": "init",
-      "bytes": 152331,
-      "used": 29568
+      "bytes": 152484,
+      "used": 29574
     },
     {
       "lang": "rust",
       "demo": "canvas-pixels",
       "version": "candidate",
       "path": "rust/canvas-pixels/jco-candidate/canvas_pixels.js",
-      "sha256": "8060bd7ce5b4ef499be98297fdc3a54a3d5f74f1974c75640152be6f0041e020",
+      "sha256": "854f1301e0e4f11a722970c38c6bf3c363263ef357ffb4f4379a364a17597844",
       "phase": "firstRun",
-      "bytes": 152331,
-      "used": 68153
+      "bytes": 152484,
+      "used": 68257
     },
     {
       "lang": "rust",
@@ -1088,40 +1088,40 @@
       "demo": "dom-query",
       "version": "main",
       "path": "rust/dom-query/jco-main/dom_query.js",
-      "sha256": "0aa067ac67e972d57a29503cdae5582b80ae48565782afd4de01ae5ed8eb509d",
+      "sha256": "f67940b092338ce072686b71e788c87255f5d33b26f30317d0c73c62e7f34ad3",
       "phase": "init",
-      "bytes": 194173,
-      "used": 43427
+      "bytes": 194326,
+      "used": 43433
     },
     {
       "lang": "rust",
       "demo": "dom-query",
       "version": "main",
       "path": "rust/dom-query/jco-main/dom_query.js",
-      "sha256": "0aa067ac67e972d57a29503cdae5582b80ae48565782afd4de01ae5ed8eb509d",
+      "sha256": "f67940b092338ce072686b71e788c87255f5d33b26f30317d0c73c62e7f34ad3",
       "phase": "firstRun",
-      "bytes": 194173,
-      "used": 97617
+      "bytes": 194326,
+      "used": 97721
     },
     {
       "lang": "rust",
       "demo": "dom-query",
       "version": "candidate",
       "path": "rust/dom-query/jco-candidate/dom_query.js",
-      "sha256": "9c5ea682f073e1936cf613c994194c34dda561856682ad611361626ffb3dad74",
+      "sha256": "005a9d434ec1073d1a77097262b4b36290c02de33e3e3c48216571fdcfad7f8b",
       "phase": "init",
-      "bytes": 144775,
-      "used": 28016
+      "bytes": 144928,
+      "used": 28022
     },
     {
       "lang": "rust",
       "demo": "dom-query",
       "version": "candidate",
       "path": "rust/dom-query/jco-candidate/dom_query.js",
-      "sha256": "9c5ea682f073e1936cf613c994194c34dda561856682ad611361626ffb3dad74",
+      "sha256": "005a9d434ec1073d1a77097262b4b36290c02de33e3e3c48216571fdcfad7f8b",
       "phase": "firstRun",
-      "bytes": 144775,
-      "used": 64997
+      "bytes": 144928,
+      "used": 65101
     },
     {
       "lang": "rust",
@@ -1148,40 +1148,40 @@
       "demo": "dom-traversal",
       "version": "main",
       "path": "rust/dom-traversal/jco-main/dom_traversal.js",
-      "sha256": "f9a3932761d612d1ed64a40319358e3c84d3ef8a0212054ddbbeb404b086cdc2",
+      "sha256": "ba5efa922abf4587f128bc7d12d859fba41f143420b569befaa5ab7fe06bf8e5",
       "phase": "init",
-      "bytes": 185117,
-      "used": 53769
+      "bytes": 185270,
+      "used": 53799
     },
     {
       "lang": "rust",
       "demo": "dom-traversal",
       "version": "main",
       "path": "rust/dom-traversal/jco-main/dom_traversal.js",
-      "sha256": "f9a3932761d612d1ed64a40319358e3c84d3ef8a0212054ddbbeb404b086cdc2",
+      "sha256": "ba5efa922abf4587f128bc7d12d859fba41f143420b569befaa5ab7fe06bf8e5",
       "phase": "firstRun",
-      "bytes": 185117,
-      "used": 94888
+      "bytes": 185270,
+      "used": 94992
     },
     {
       "lang": "rust",
       "demo": "dom-traversal",
       "version": "candidate",
       "path": "rust/dom-traversal/jco-candidate/dom_traversal.js",
-      "sha256": "47a43e4972448a8ade292b6996ce59ab93212421749498641eec76b6e3045443",
+      "sha256": "d90fceb3f7de6bbe99862a5e206abd65f3388fab327c3848a7651a8bdbfbbc2d",
       "phase": "init",
-      "bytes": 142143,
-      "used": 39523
+      "bytes": 142296,
+      "used": 39553
     },
     {
       "lang": "rust",
       "demo": "dom-traversal",
       "version": "candidate",
       "path": "rust/dom-traversal/jco-candidate/dom_traversal.js",
-      "sha256": "47a43e4972448a8ade292b6996ce59ab93212421749498641eec76b6e3045443",
+      "sha256": "d90fceb3f7de6bbe99862a5e206abd65f3388fab327c3848a7651a8bdbfbbc2d",
       "phase": "firstRun",
-      "bytes": 142143,
-      "used": 64162
+      "bytes": 142296,
+      "used": 64266
     },
     {
       "lang": "rust",
@@ -1208,40 +1208,40 @@
       "demo": "string-marshalling",
       "version": "main",
       "path": "rust/string-marshalling/jco-main/string_marshalling.js",
-      "sha256": "7ba233e2103ae7037949b78262a2e16fd68eb8887dc4280d7b8fc4bf8f0011b3",
+      "sha256": "efa54a7453760aae8c5a165954007d578d9601d0c41b4ed6b16cebb1e6b5e6fb",
       "phase": "init",
-      "bytes": 184734,
-      "used": 41271
+      "bytes": 184887,
+      "used": 41277
     },
     {
       "lang": "rust",
       "demo": "string-marshalling",
       "version": "main",
       "path": "rust/string-marshalling/jco-main/string_marshalling.js",
-      "sha256": "7ba233e2103ae7037949b78262a2e16fd68eb8887dc4280d7b8fc4bf8f0011b3",
+      "sha256": "efa54a7453760aae8c5a165954007d578d9601d0c41b4ed6b16cebb1e6b5e6fb",
       "phase": "firstRun",
-      "bytes": 184734,
-      "used": 91285
+      "bytes": 184887,
+      "used": 91389
     },
     {
       "lang": "rust",
       "demo": "string-marshalling",
       "version": "candidate",
       "path": "rust/string-marshalling/jco-candidate/string_marshalling.js",
-      "sha256": "3783fc7688f4a58651fd3f3e8bf99659dc151f3c6831027f232443a4ccadaf16",
+      "sha256": "20c0eb065e54e171845e652568f9b713ad11aad6ec2ac6b2d42bf759f263b388",
       "phase": "init",
-      "bytes": 142165,
-      "used": 27988
+      "bytes": 142318,
+      "used": 27994
     },
     {
       "lang": "rust",
       "demo": "string-marshalling",
       "version": "candidate",
       "path": "rust/string-marshalling/jco-candidate/string_marshalling.js",
-      "sha256": "3783fc7688f4a58651fd3f3e8bf99659dc151f3c6831027f232443a4ccadaf16",
+      "sha256": "20c0eb065e54e171845e652568f9b713ad11aad6ec2ac6b2d42bf759f263b388",
       "phase": "firstRun",
-      "bytes": 142165,
-      "used": 63330
+      "bytes": 142318,
+      "used": 63434
     },
     {
       "lang": "rust",
@@ -1268,40 +1268,40 @@
       "demo": "table-update",
       "version": "main",
       "path": "rust/table-update/jco-main/table_update.js",
-      "sha256": "bfec3edc5f084a0384ea3006e6058eef2bac2d4ed6713f335cce131db5be2c1f",
+      "sha256": "5176c4f60fab20d4db72143deadea8694ce8cb1f43f4199f134fdbfdceefd5a9",
       "phase": "init",
-      "bytes": 192957,
-      "used": 55780
+      "bytes": 193110,
+      "used": 55810
     },
     {
       "lang": "rust",
       "demo": "table-update",
       "version": "main",
       "path": "rust/table-update/jco-main/table_update.js",
-      "sha256": "bfec3edc5f084a0384ea3006e6058eef2bac2d4ed6713f335cce131db5be2c1f",
+      "sha256": "5176c4f60fab20d4db72143deadea8694ce8cb1f43f4199f134fdbfdceefd5a9",
       "phase": "firstRun",
-      "bytes": 192957,
-      "used": 98957
+      "bytes": 193110,
+      "used": 99061
     },
     {
       "lang": "rust",
       "demo": "table-update",
       "version": "candidate",
       "path": "rust/table-update/jco-candidate/table_update.js",
-      "sha256": "a138fabeb279c5ca63e7909c199f6a975eff5e3ffc9f1bed1f47213dc0d84d60",
+      "sha256": "487980a4696151aa1279ca22a02ac9eea56f6a1669e629cbec110e6f389fd40c",
       "phase": "init",
-      "bytes": 147834,
-      "used": 41093
+      "bytes": 147987,
+      "used": 41123
     },
     {
       "lang": "rust",
       "demo": "table-update",
       "version": "candidate",
       "path": "rust/table-update/jco-candidate/table_update.js",
-      "sha256": "a138fabeb279c5ca63e7909c199f6a975eff5e3ffc9f1bed1f47213dc0d84d60",
+      "sha256": "487980a4696151aa1279ca22a02ac9eea56f6a1669e629cbec110e6f389fd40c",
       "phase": "firstRun",
-      "bytes": 147834,
-      "used": 67149
+      "bytes": 147987,
+      "used": 67253
     }
   ]
 }
