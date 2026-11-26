@@ -1,0 +1,8665 @@
+{
+  "date": "2026-11-26T01:18:49.540Z",
+  "browser": "HeadlessChrome/156.0.8078.47",
+  "cpu": "Intel(R) Xeon(R) Processor @ 2.60GHz",
+  "runnerSha256": "b2658ec66388276da5d97df977bdd37c4221c00daa1dd21cf919dd63f3d68718",
+  "sizesSha256": "49f2e12700bad4199bd9a5c9df01fa22917b267f92caea68e67abda6386549c3",
+  "sources": {
+    "bench/canvas-host.mjs": "158dc06b1b739d9008019391411b7073819fe8963840dad5670eaf45357f6f1b",
+    "bench/dom-core-shim.mjs": "d49a3d64773920f00d3cad20e03341f716f1b7f8ea4090b33f6cdf57544f5f3f",
+    "examples/canvas-pixels/main.js": "c784e11bd8d5a2a89ac5cf2174e5f906c09cda5e6f9b63d8eda25f2bc1250c84",
+    "host/common.js": "4e3f3437d37d8e150708efb3e33551dffa6c83164e165ed1750936f6a10c3c83",
+    "host/web-host.js": "205bef0524eceb2fa4ccfa5e3988ccb9096eb52430e98099dcc4a73f97170492"
+  },
+  "candidate": {
+    "commit": "d7ac58241e950ad78e950663509c3c34cee599bf",
+    "dirty": false,
+    "generatorSha256": "6583197b55cd685c8ba4c3f42ca575dde370c539f1b7c0c36ab05f1de0d004aa"
+  },
+  "rounds": 9,
+  "passes": 4,
+  "size": 256,
+  "minMs": 10,
+  "samples": [
+    {
+      "round": 1,
+      "lang": "c",
+      "host": "original",
+      "pass": 1,
+      "version": "main",
+      "readUs": 282,
+      "writeUs": 205.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "c",
+      "host": "original",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 282.6,
+      "writeUs": 208.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "c",
+      "host": "original",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 278.2,
+      "writeUs": 332,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "c",
+      "host": "original",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 654.4,
+      "writeUs": 249.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "c",
+      "host": "original",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 292.7,
+      "writeUs": 228,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "c",
+      "host": "original",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 295.4,
+      "writeUs": 263.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "c",
+      "host": "original",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 13972.5,
+      "writeUs": 223.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "c",
+      "host": "original",
+      "pass": 2,
+      "version": "main",
+      "readUs": 305.7,
+      "writeUs": 350.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "c",
+      "host": "original",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 280.5,
+      "writeUs": 229.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "c",
+      "host": "original",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 326.6,
+      "writeUs": 233.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "c",
+      "host": "original",
+      "pass": 3,
+      "version": "main",
+      "readUs": 635,
+      "writeUs": 301.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "c",
+      "host": "original",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 319.1,
+      "writeUs": 239.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "c",
+      "host": "original",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 293.7,
+      "writeUs": 228.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "c",
+      "host": "original",
+      "pass": 4,
+      "version": "main",
+      "readUs": 316.4,
+      "writeUs": 265.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "c",
+      "host": "original",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 314.4,
+      "writeUs": 230,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "c",
+      "host": "original",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 296.8,
+      "writeUs": 231.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "c",
+      "host": "view",
+      "pass": 1,
+      "version": "main",
+      "readUs": 178.6,
+      "writeUs": 230.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "c",
+      "host": "view",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 145.7,
+      "writeUs": 82.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "c",
+      "host": "view",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 179.7,
+      "writeUs": 80.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "c",
+      "host": "view",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 699.1,
+      "writeUs": 93,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "c",
+      "host": "view",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 211.6,
+      "writeUs": 88.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "c",
+      "host": "view",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 173.7,
+      "writeUs": 78.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "c",
+      "host": "view",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 373,
+      "writeUs": 81.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "c",
+      "host": "view",
+      "pass": 2,
+      "version": "main",
+      "readUs": 155.9,
+      "writeUs": 294.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "c",
+      "host": "view",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 155.6,
+      "writeUs": 124.10000000000001,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "c",
+      "host": "view",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 190.6,
+      "writeUs": 80.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "c",
+      "host": "view",
+      "pass": 3,
+      "version": "main",
+      "readUs": 485,
+      "writeUs": 101.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "c",
+      "host": "view",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 145.9,
+      "writeUs": 89.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "c",
+      "host": "view",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 167.2,
+      "writeUs": 85.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "c",
+      "host": "view",
+      "pass": 4,
+      "version": "main",
+      "readUs": 147.5,
+      "writeUs": 90.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "c",
+      "host": "view",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 158.6,
+      "writeUs": 126.50000000000001,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "c",
+      "host": "view",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 175.2,
+      "writeUs": 104,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 1,
+      "version": "main",
+      "readUs": 187.6,
+      "writeUs": 286.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 167.9,
+      "writeUs": 95.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 180.5,
+      "writeUs": 95.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 183.7,
+      "writeUs": 211.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 195.9,
+      "writeUs": 92.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 163.9,
+      "writeUs": 1083.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 178.8,
+      "writeUs": 99.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 2,
+      "version": "main",
+      "readUs": 200.9,
+      "writeUs": 365.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 173.9,
+      "writeUs": 93.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 169.6,
+      "writeUs": 105.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 3,
+      "version": "main",
+      "readUs": 191.2,
+      "writeUs": 284.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 168.6,
+      "writeUs": 105,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 779.4,
+      "writeUs": 86.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 4,
+      "version": "main",
+      "readUs": 215.9,
+      "writeUs": 182.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 175.1,
+      "writeUs": 96.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 197.9,
+      "writeUs": 773.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 1,
+      "version": "main",
+      "readUs": 430.2,
+      "writeUs": 518,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 320.6,
+      "writeUs": 236.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 515.9,
+      "writeUs": 239.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 310.1,
+      "writeUs": 250.90000000000003,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 325.6,
+      "writeUs": 230.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 314.2,
+      "writeUs": 1651.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 342.2,
+      "writeUs": 256.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 2,
+      "version": "main",
+      "readUs": 374.7,
+      "writeUs": 299.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 354.8,
+      "writeUs": 263.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 354.2,
+      "writeUs": 249.29999999999998,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 3,
+      "version": "main",
+      "readUs": 483.5,
+      "writeUs": 224.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 394.8,
+      "writeUs": 238.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 292.7,
+      "writeUs": 236.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 4,
+      "version": "main",
+      "readUs": 346.9,
+      "writeUs": 262,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 313.8,
+      "writeUs": 275.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 321.2,
+      "writeUs": 372.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "rust",
+      "host": "original",
+      "pass": 1,
+      "version": "main",
+      "readUs": 355.5,
+      "writeUs": 300.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "rust",
+      "host": "original",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 354.7,
+      "writeUs": 239.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "rust",
+      "host": "original",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 319.5,
+      "writeUs": 232.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "rust",
+      "host": "original",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 331.4,
+      "writeUs": 236.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "rust",
+      "host": "original",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 329.4,
+      "writeUs": 261,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "rust",
+      "host": "original",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 276.6,
+      "writeUs": 219.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "rust",
+      "host": "original",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 316,
+      "writeUs": 486.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "rust",
+      "host": "original",
+      "pass": 2,
+      "version": "main",
+      "readUs": 306.6,
+      "writeUs": 247,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "rust",
+      "host": "original",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 299.8,
+      "writeUs": 216.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "rust",
+      "host": "original",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 751.9,
+      "writeUs": 233.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "rust",
+      "host": "original",
+      "pass": 3,
+      "version": "main",
+      "readUs": 308.6,
+      "writeUs": 262.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "rust",
+      "host": "original",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 335,
+      "writeUs": 230.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "rust",
+      "host": "original",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 385.2,
+      "writeUs": 247.29999999999998,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "rust",
+      "host": "original",
+      "pass": 4,
+      "version": "main",
+      "readUs": 573.4,
+      "writeUs": 244.49999999999997,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "rust",
+      "host": "original",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 409.3,
+      "writeUs": 265.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "rust",
+      "host": "original",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 340,
+      "writeUs": 221.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "rust",
+      "host": "view",
+      "pass": 1,
+      "version": "main",
+      "readUs": 199.5,
+      "writeUs": 229.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "rust",
+      "host": "view",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 160.2,
+      "writeUs": 97.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "rust",
+      "host": "view",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 188.5,
+      "writeUs": 101.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "rust",
+      "host": "view",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 178.8,
+      "writeUs": 102.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "rust",
+      "host": "view",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 181.2,
+      "writeUs": 100.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "rust",
+      "host": "view",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 171.6,
+      "writeUs": 381.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "rust",
+      "host": "view",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 183.9,
+      "writeUs": 99.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "rust",
+      "host": "view",
+      "pass": 2,
+      "version": "main",
+      "readUs": 189.6,
+      "writeUs": 187.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "rust",
+      "host": "view",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 158.4,
+      "writeUs": 92.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "rust",
+      "host": "view",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 163.7,
+      "writeUs": 688.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "rust",
+      "host": "view",
+      "pass": 3,
+      "version": "main",
+      "readUs": 217.5,
+      "writeUs": 104.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "rust",
+      "host": "view",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 207.6,
+      "writeUs": 99.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "rust",
+      "host": "view",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 176.6,
+      "writeUs": 94.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "rust",
+      "host": "view",
+      "pass": 4,
+      "version": "main",
+      "readUs": 165.9,
+      "writeUs": 196.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "rust",
+      "host": "view",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 174.4,
+      "writeUs": 181.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 1,
+      "lang": "rust",
+      "host": "view",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 165.2,
+      "writeUs": 89.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 179.4,
+      "writeUs": 103.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 1,
+      "version": "main",
+      "readUs": 211.7,
+      "writeUs": 213.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 209.8,
+      "writeUs": 105,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 188.7,
+      "writeUs": 180.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 234.8,
+      "writeUs": 98.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 181.7,
+      "writeUs": 105.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 2,
+      "version": "main",
+      "readUs": 234.5,
+      "writeUs": 123.29999999999998,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 204.3,
+      "writeUs": 95.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 193,
+      "writeUs": 97.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 162.3,
+      "writeUs": 97,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 188.9,
+      "writeUs": 95.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 3,
+      "version": "main",
+      "readUs": 178.5,
+      "writeUs": 163.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 4,
+      "version": "main",
+      "readUs": 192.9,
+      "writeUs": 220,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 184.1,
+      "writeUs": 96.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 170.9,
+      "writeUs": 96.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 169.4,
+      "writeUs": 95,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 997.4999999999999,
+      "writeUs": 224.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 1,
+      "version": "main",
+      "readUs": 317.7,
+      "writeUs": 397,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 272.8,
+      "writeUs": 219,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 350.6,
+      "writeUs": 344.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 292.4,
+      "writeUs": 209.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 288.9,
+      "writeUs": 199.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 2,
+      "version": "main",
+      "readUs": 688.4,
+      "writeUs": 227.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 274.5,
+      "writeUs": 208.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 274.8,
+      "writeUs": 213.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 285.7,
+      "writeUs": 218.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 284.9,
+      "writeUs": 220,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 3,
+      "version": "main",
+      "readUs": 864.8,
+      "writeUs": 226.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 4,
+      "version": "main",
+      "readUs": 313.4,
+      "writeUs": 317.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 311.4,
+      "writeUs": 250.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 384.4,
+      "writeUs": 300.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 338,
+      "writeUs": 205.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "rust",
+      "host": "original",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 318.7,
+      "writeUs": 321.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "rust",
+      "host": "original",
+      "pass": 1,
+      "version": "main",
+      "readUs": 509.7,
+      "writeUs": 736.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "rust",
+      "host": "original",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 304.1,
+      "writeUs": 326.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "rust",
+      "host": "original",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 434.3,
+      "writeUs": 189.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "rust",
+      "host": "original",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 256.9,
+      "writeUs": 203.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "rust",
+      "host": "original",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 679.2,
+      "writeUs": 244.30000000000004,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "rust",
+      "host": "original",
+      "pass": 2,
+      "version": "main",
+      "readUs": 378.3,
+      "writeUs": 231.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "rust",
+      "host": "original",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 284.5,
+      "writeUs": 1085.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "rust",
+      "host": "original",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 290.9,
+      "writeUs": 229.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "rust",
+      "host": "original",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 634.1,
+      "writeUs": 186.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "rust",
+      "host": "original",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 242.7,
+      "writeUs": 190.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "rust",
+      "host": "original",
+      "pass": 3,
+      "version": "main",
+      "readUs": 256.8,
+      "writeUs": 195.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "rust",
+      "host": "original",
+      "pass": 4,
+      "version": "main",
+      "readUs": 324.2,
+      "writeUs": 214.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "rust",
+      "host": "original",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 269.1,
+      "writeUs": 203.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "rust",
+      "host": "original",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 305.2,
+      "writeUs": 211.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "rust",
+      "host": "original",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 278.2,
+      "writeUs": 203.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "rust",
+      "host": "view",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 168.2,
+      "writeUs": 88.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "rust",
+      "host": "view",
+      "pass": 1,
+      "version": "main",
+      "readUs": 191.3,
+      "writeUs": 108.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "rust",
+      "host": "view",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 172,
+      "writeUs": 103.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "rust",
+      "host": "view",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 157.3,
+      "writeUs": 92.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "rust",
+      "host": "view",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 152.9,
+      "writeUs": 633.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "rust",
+      "host": "view",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 1385.3,
+      "writeUs": 83.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "rust",
+      "host": "view",
+      "pass": 2,
+      "version": "main",
+      "readUs": 167.9,
+      "writeUs": 122.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "rust",
+      "host": "view",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 167.3,
+      "writeUs": 245.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "rust",
+      "host": "view",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 154.4,
+      "writeUs": 86.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "rust",
+      "host": "view",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 150,
+      "writeUs": 87.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "rust",
+      "host": "view",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 322.2,
+      "writeUs": 87,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "rust",
+      "host": "view",
+      "pass": 3,
+      "version": "main",
+      "readUs": 167.4,
+      "writeUs": 94.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "rust",
+      "host": "view",
+      "pass": 4,
+      "version": "main",
+      "readUs": 266,
+      "writeUs": 92.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "rust",
+      "host": "view",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 177,
+      "writeUs": 173.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "rust",
+      "host": "view",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 184.9,
+      "writeUs": 87.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "rust",
+      "host": "view",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 504.40000000000003,
+      "writeUs": 98,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "c",
+      "host": "view",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 189.6,
+      "writeUs": 100.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "c",
+      "host": "view",
+      "pass": 1,
+      "version": "main",
+      "readUs": 189.8,
+      "writeUs": 114.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "c",
+      "host": "view",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 168.3,
+      "writeUs": 241.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "c",
+      "host": "view",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 340.6,
+      "writeUs": 106.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "c",
+      "host": "view",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 187.9,
+      "writeUs": 97.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "c",
+      "host": "view",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 198.4,
+      "writeUs": 100,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "c",
+      "host": "view",
+      "pass": 2,
+      "version": "main",
+      "readUs": 185.2,
+      "writeUs": 391.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "c",
+      "host": "view",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 175.7,
+      "writeUs": 100,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "c",
+      "host": "view",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 177.3,
+      "writeUs": 98.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "c",
+      "host": "view",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 204.1,
+      "writeUs": 94.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "c",
+      "host": "view",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 169.9,
+      "writeUs": 102.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "c",
+      "host": "view",
+      "pass": 3,
+      "version": "main",
+      "readUs": 193.9,
+      "writeUs": 109.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "c",
+      "host": "view",
+      "pass": 4,
+      "version": "main",
+      "readUs": 146.9,
+      "writeUs": 84.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "c",
+      "host": "view",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 164.8,
+      "writeUs": 81.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "c",
+      "host": "view",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 156.4,
+      "writeUs": 80.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "c",
+      "host": "view",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 141.4,
+      "writeUs": 81.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "c",
+      "host": "original",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 567.7,
+      "writeUs": 213.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "c",
+      "host": "original",
+      "pass": 1,
+      "version": "main",
+      "readUs": 293.4,
+      "writeUs": 255.49999999999997,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "c",
+      "host": "original",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 299.4,
+      "writeUs": 222,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "c",
+      "host": "original",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 364.3,
+      "writeUs": 223.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "c",
+      "host": "original",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 712.8,
+      "writeUs": 219.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "c",
+      "host": "original",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 322,
+      "writeUs": 291.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "c",
+      "host": "original",
+      "pass": 2,
+      "version": "main",
+      "readUs": 292.3,
+      "writeUs": 335.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "c",
+      "host": "original",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 296.8,
+      "writeUs": 456.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "c",
+      "host": "original",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 277.1,
+      "writeUs": 325.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "c",
+      "host": "original",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 692.3,
+      "writeUs": 213.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "c",
+      "host": "original",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 326.2,
+      "writeUs": 318.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "c",
+      "host": "original",
+      "pass": 3,
+      "version": "main",
+      "readUs": 322,
+      "writeUs": 316.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "c",
+      "host": "original",
+      "pass": 4,
+      "version": "main",
+      "readUs": 291,
+      "writeUs": 219.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "c",
+      "host": "original",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 275.6,
+      "writeUs": 214.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "c",
+      "host": "original",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 408.1,
+      "writeUs": 209.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 2,
+      "lang": "c",
+      "host": "original",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 365.1,
+      "writeUs": 374,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "rust",
+      "host": "original",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 328.2,
+      "writeUs": 225.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "rust",
+      "host": "original",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 1486.2,
+      "writeUs": 249.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "rust",
+      "host": "original",
+      "pass": 1,
+      "version": "main",
+      "readUs": 551.2,
+      "writeUs": 298,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "rust",
+      "host": "original",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 336.2,
+      "writeUs": 269.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "rust",
+      "host": "original",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 347.8,
+      "writeUs": 239,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "rust",
+      "host": "original",
+      "pass": 2,
+      "version": "main",
+      "readUs": 304.9,
+      "writeUs": 322.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "rust",
+      "host": "original",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 338.4,
+      "writeUs": 237.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "rust",
+      "host": "original",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 398.1,
+      "writeUs": 265.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "rust",
+      "host": "original",
+      "pass": 3,
+      "version": "main",
+      "readUs": 344.8,
+      "writeUs": 753.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "rust",
+      "host": "original",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 335.8,
+      "writeUs": 233.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "rust",
+      "host": "original",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 314.5,
+      "writeUs": 240.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "rust",
+      "host": "original",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 332.3,
+      "writeUs": 237.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "rust",
+      "host": "original",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 347.7,
+      "writeUs": 241.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "rust",
+      "host": "original",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 349.7,
+      "writeUs": 217.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "rust",
+      "host": "original",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 314.5,
+      "writeUs": 225.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "rust",
+      "host": "original",
+      "pass": 4,
+      "version": "main",
+      "readUs": 312.7,
+      "writeUs": 254,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "rust",
+      "host": "view",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 151.9,
+      "writeUs": 85.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "rust",
+      "host": "view",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 167.3,
+      "writeUs": 89.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "rust",
+      "host": "view",
+      "pass": 1,
+      "version": "main",
+      "readUs": 209.5,
+      "writeUs": 100.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "rust",
+      "host": "view",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 162.6,
+      "writeUs": 88.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "rust",
+      "host": "view",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 152.5,
+      "writeUs": 682.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "rust",
+      "host": "view",
+      "pass": 2,
+      "version": "main",
+      "readUs": 204.6,
+      "writeUs": 89.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "rust",
+      "host": "view",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 163.4,
+      "writeUs": 229.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "rust",
+      "host": "view",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 172.2,
+      "writeUs": 88,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "rust",
+      "host": "view",
+      "pass": 3,
+      "version": "main",
+      "readUs": 1692.5,
+      "writeUs": 114.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "rust",
+      "host": "view",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 160.2,
+      "writeUs": 87.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "rust",
+      "host": "view",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 169.1,
+      "writeUs": 333.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "rust",
+      "host": "view",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 168.9,
+      "writeUs": 92.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "rust",
+      "host": "view",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 157.7,
+      "writeUs": 87.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "rust",
+      "host": "view",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 143.9,
+      "writeUs": 84.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "rust",
+      "host": "view",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 160.5,
+      "writeUs": 91.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "rust",
+      "host": "view",
+      "pass": 4,
+      "version": "main",
+      "readUs": 172.2,
+      "writeUs": 326.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "c",
+      "host": "view",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 181.5,
+      "writeUs": 108.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "c",
+      "host": "view",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 193.7,
+      "writeUs": 103.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "c",
+      "host": "view",
+      "pass": 1,
+      "version": "main",
+      "readUs": 185.9,
+      "writeUs": 112.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "c",
+      "host": "view",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 167.4,
+      "writeUs": 151.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "c",
+      "host": "view",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 164.1,
+      "writeUs": 94.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "c",
+      "host": "view",
+      "pass": 2,
+      "version": "main",
+      "readUs": 346.8,
+      "writeUs": 108.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "c",
+      "host": "view",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 181.5,
+      "writeUs": 176,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "c",
+      "host": "view",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 166.6,
+      "writeUs": 292.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "c",
+      "host": "view",
+      "pass": 3,
+      "version": "main",
+      "readUs": 181.6,
+      "writeUs": 102,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "c",
+      "host": "view",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 171.6,
+      "writeUs": 102,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "c",
+      "host": "view",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 186.3,
+      "writeUs": 97.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "c",
+      "host": "view",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 190.5,
+      "writeUs": 108.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "c",
+      "host": "view",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 199,
+      "writeUs": 104.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "c",
+      "host": "view",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 209.7,
+      "writeUs": 462.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "c",
+      "host": "view",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 163,
+      "writeUs": 95,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "c",
+      "host": "view",
+      "pass": 4,
+      "version": "main",
+      "readUs": 188.3,
+      "writeUs": 653.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "c",
+      "host": "original",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 697.2,
+      "writeUs": 236.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "c",
+      "host": "original",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 306.8,
+      "writeUs": 225.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "c",
+      "host": "original",
+      "pass": 1,
+      "version": "main",
+      "readUs": 734.7,
+      "writeUs": 294.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "c",
+      "host": "original",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 355.9,
+      "writeUs": 223.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "c",
+      "host": "original",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 292.9,
+      "writeUs": 232.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "c",
+      "host": "original",
+      "pass": 2,
+      "version": "main",
+      "readUs": 790.2,
+      "writeUs": 253.79999999999998,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "c",
+      "host": "original",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 329.4,
+      "writeUs": 308.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "c",
+      "host": "original",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 327,
+      "writeUs": 218.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "c",
+      "host": "original",
+      "pass": 3,
+      "version": "main",
+      "readUs": 312.5,
+      "writeUs": 434.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "c",
+      "host": "original",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 331.1,
+      "writeUs": 244.19999999999996,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "c",
+      "host": "original",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 315.9,
+      "writeUs": 841.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "c",
+      "host": "original",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 255.00000000000003,
+      "writeUs": 209.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "c",
+      "host": "original",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 391.7,
+      "writeUs": 595.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "c",
+      "host": "original",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 306.6,
+      "writeUs": 217.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "c",
+      "host": "original",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 282.4,
+      "writeUs": 220.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "c",
+      "host": "original",
+      "pass": 4,
+      "version": "main",
+      "readUs": 290.3,
+      "writeUs": 231.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 284.9,
+      "writeUs": 239.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 325.5,
+      "writeUs": 264.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 1,
+      "version": "main",
+      "readUs": 300.9,
+      "writeUs": 344.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 323.3,
+      "writeUs": 388.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 317.3,
+      "writeUs": 215.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 2,
+      "version": "main",
+      "readUs": 380.7,
+      "writeUs": 267.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 295.5,
+      "writeUs": 563.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 318.4,
+      "writeUs": 215.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 3,
+      "version": "main",
+      "readUs": 324.5,
+      "writeUs": 458.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 316.6,
+      "writeUs": 214.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 296.3,
+      "writeUs": 277.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 283,
+      "writeUs": 214.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 342.5,
+      "writeUs": 260.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 305.5,
+      "writeUs": 473.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 326.7,
+      "writeUs": 217.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 4,
+      "version": "main",
+      "readUs": 662.2,
+      "writeUs": 282.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 202.6,
+      "writeUs": 178.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 187.7,
+      "writeUs": 103,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 1,
+      "version": "main",
+      "readUs": 195.9,
+      "writeUs": 88.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 147.8,
+      "writeUs": 86.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 153.7,
+      "writeUs": 85.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 2,
+      "version": "main",
+      "readUs": 178.2,
+      "writeUs": 101.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 159.4,
+      "writeUs": 98.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 148.1,
+      "writeUs": 195.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 3,
+      "version": "main",
+      "readUs": 170.2,
+      "writeUs": 94.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 648.7,
+      "writeUs": 94.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 158.7,
+      "writeUs": 80.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 170.5,
+      "writeUs": 88.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 178.2,
+      "writeUs": 199.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 162.7,
+      "writeUs": 83.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 149.6,
+      "writeUs": 421.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 3,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 4,
+      "version": "main",
+      "readUs": 165.2,
+      "writeUs": 98.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "c",
+      "host": "view",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 159,
+      "writeUs": 81.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "c",
+      "host": "view",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 151.1,
+      "writeUs": 79.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "c",
+      "host": "view",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 227.9,
+      "writeUs": 95.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "c",
+      "host": "view",
+      "pass": 1,
+      "version": "main",
+      "readUs": 210.9,
+      "writeUs": 92.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "c",
+      "host": "view",
+      "pass": 2,
+      "version": "main",
+      "readUs": 275.2,
+      "writeUs": 90.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "c",
+      "host": "view",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 167,
+      "writeUs": 90.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "c",
+      "host": "view",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 141.9,
+      "writeUs": 80.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "c",
+      "host": "view",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 147.1,
+      "writeUs": 186,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "c",
+      "host": "view",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 159.8,
+      "writeUs": 82.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "c",
+      "host": "view",
+      "pass": 3,
+      "version": "main",
+      "readUs": 148.2,
+      "writeUs": 177.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "c",
+      "host": "view",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 162.3,
+      "writeUs": 210.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "c",
+      "host": "view",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 164.6,
+      "writeUs": 87.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "c",
+      "host": "view",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 167.3,
+      "writeUs": 79.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "c",
+      "host": "view",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 160.4,
+      "writeUs": 86.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "c",
+      "host": "view",
+      "pass": 4,
+      "version": "main",
+      "readUs": 164.7,
+      "writeUs": 88.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "c",
+      "host": "view",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 181.2,
+      "writeUs": 348.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "c",
+      "host": "original",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 272.2,
+      "writeUs": 457.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "c",
+      "host": "original",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 301,
+      "writeUs": 210.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "c",
+      "host": "original",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 286.8,
+      "writeUs": 417.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "c",
+      "host": "original",
+      "pass": 1,
+      "version": "main",
+      "readUs": 319.5,
+      "writeUs": 243.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "c",
+      "host": "original",
+      "pass": 2,
+      "version": "main",
+      "readUs": 294.6,
+      "writeUs": 294.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "c",
+      "host": "original",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 260.7,
+      "writeUs": 199.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "c",
+      "host": "original",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 307.7,
+      "writeUs": 218.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "c",
+      "host": "original",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 334.1,
+      "writeUs": 228.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "c",
+      "host": "original",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 331.3,
+      "writeUs": 221.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "c",
+      "host": "original",
+      "pass": 3,
+      "version": "main",
+      "readUs": 326.4,
+      "writeUs": 235.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "c",
+      "host": "original",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 335.9,
+      "writeUs": 456.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "c",
+      "host": "original",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 260.6,
+      "writeUs": 215.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "c",
+      "host": "original",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 550,
+      "writeUs": 205.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "c",
+      "host": "original",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 289.6,
+      "writeUs": 231,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "c",
+      "host": "original",
+      "pass": 4,
+      "version": "main",
+      "readUs": 325.9,
+      "writeUs": 277.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "c",
+      "host": "original",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 324.8,
+      "writeUs": 345.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 289.8,
+      "writeUs": 222.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 277.3,
+      "writeUs": 671.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 290.5,
+      "writeUs": 333.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 1,
+      "version": "main",
+      "readUs": 330.8,
+      "writeUs": 246.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 2,
+      "version": "main",
+      "readUs": 383.3,
+      "writeUs": 375.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 416.1,
+      "writeUs": 356.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 400.5,
+      "writeUs": 294.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 2336.2,
+      "writeUs": 311.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 391.7,
+      "writeUs": 393.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 3,
+      "version": "main",
+      "readUs": 404.7,
+      "writeUs": 432.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 421.3,
+      "writeUs": 314.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 406.3,
+      "writeUs": 458,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 366.4,
+      "writeUs": 253.30000000000004,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 339.4,
+      "writeUs": 218.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 4,
+      "version": "main",
+      "readUs": 296.7,
+      "writeUs": 252.69999999999996,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 321.6,
+      "writeUs": 252.20000000000002,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 167.6,
+      "writeUs": 138.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 123.9,
+      "writeUs": 89.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 148.9,
+      "writeUs": 79,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 1,
+      "version": "main",
+      "readUs": 299.7,
+      "writeUs": 116.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 2,
+      "version": "main",
+      "readUs": 185.7,
+      "writeUs": 98.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 140,
+      "writeUs": 79.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 153.9,
+      "writeUs": 78.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 269.7,
+      "writeUs": 85.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 149.6,
+      "writeUs": 88.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 3,
+      "version": "main",
+      "readUs": 182.8,
+      "writeUs": 106.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 218.9,
+      "writeUs": 84,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 145.5,
+      "writeUs": 78.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 140.7,
+      "writeUs": 84.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 150.6,
+      "writeUs": 85,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 4,
+      "version": "main",
+      "readUs": 164.4,
+      "writeUs": 93.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 146.9,
+      "writeUs": 83.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "rust",
+      "host": "view",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 227.5,
+      "writeUs": 207,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "rust",
+      "host": "view",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 156.6,
+      "writeUs": 102.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "rust",
+      "host": "view",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 168.3,
+      "writeUs": 90.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "rust",
+      "host": "view",
+      "pass": 1,
+      "version": "main",
+      "readUs": 225.7,
+      "writeUs": 133.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "rust",
+      "host": "view",
+      "pass": 2,
+      "version": "main",
+      "readUs": 1716.9,
+      "writeUs": 112.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "rust",
+      "host": "view",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 167.5,
+      "writeUs": 92.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "rust",
+      "host": "view",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 169.9,
+      "writeUs": 88.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "rust",
+      "host": "view",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 167.7,
+      "writeUs": 101.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "rust",
+      "host": "view",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 181.2,
+      "writeUs": 94.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "rust",
+      "host": "view",
+      "pass": 3,
+      "version": "main",
+      "readUs": 202.1,
+      "writeUs": 169.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "rust",
+      "host": "view",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 157.2,
+      "writeUs": 200.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "rust",
+      "host": "view",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 165,
+      "writeUs": 90.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "rust",
+      "host": "view",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 156.9,
+      "writeUs": 97.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "rust",
+      "host": "view",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 196.6,
+      "writeUs": 410.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "rust",
+      "host": "view",
+      "pass": 4,
+      "version": "main",
+      "readUs": 178.5,
+      "writeUs": 98.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "rust",
+      "host": "view",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 163.7,
+      "writeUs": 92,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "rust",
+      "host": "original",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 325.5,
+      "writeUs": 201.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "rust",
+      "host": "original",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 313.6,
+      "writeUs": 316.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "rust",
+      "host": "original",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 280.6,
+      "writeUs": 284.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "rust",
+      "host": "original",
+      "pass": 1,
+      "version": "main",
+      "readUs": 298.1,
+      "writeUs": 474.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "rust",
+      "host": "original",
+      "pass": 2,
+      "version": "main",
+      "readUs": 299.2,
+      "writeUs": 233.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "rust",
+      "host": "original",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 300.1,
+      "writeUs": 211.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "rust",
+      "host": "original",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 270.9,
+      "writeUs": 197.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "rust",
+      "host": "original",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 387.2,
+      "writeUs": 232.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "rust",
+      "host": "original",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 268.9,
+      "writeUs": 417.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "rust",
+      "host": "original",
+      "pass": 3,
+      "version": "main",
+      "readUs": 330.6,
+      "writeUs": 269.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "rust",
+      "host": "original",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 348.3,
+      "writeUs": 216.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "rust",
+      "host": "original",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 327.8,
+      "writeUs": 241.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "rust",
+      "host": "original",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 352,
+      "writeUs": 219.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "rust",
+      "host": "original",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 258,
+      "writeUs": 198.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "rust",
+      "host": "original",
+      "pass": 4,
+      "version": "main",
+      "readUs": 272.4,
+      "writeUs": 211.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 4,
+      "lang": "rust",
+      "host": "original",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 307.8,
+      "writeUs": 213.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 1,
+      "version": "main",
+      "readUs": 351.7,
+      "writeUs": 315,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 312.7,
+      "writeUs": 227.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 300.5,
+      "writeUs": 244.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 301.4,
+      "writeUs": 238.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 387.7,
+      "writeUs": 308.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 875,
+      "writeUs": 229.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 300.1,
+      "writeUs": 224.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 2,
+      "version": "main",
+      "readUs": 334.5,
+      "writeUs": 300,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 307.3,
+      "writeUs": 643.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 268.4,
+      "writeUs": 178.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 3,
+      "version": "main",
+      "readUs": 267.3,
+      "writeUs": 496.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 280.9,
+      "writeUs": 285.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 294.8,
+      "writeUs": 210,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 4,
+      "version": "main",
+      "readUs": 296.6,
+      "writeUs": 220,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 472,
+      "writeUs": 243.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 318.3,
+      "writeUs": 353.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 1,
+      "version": "main",
+      "readUs": 175.3,
+      "writeUs": 95.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 156.8,
+      "writeUs": 100.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 2768.7,
+      "writeUs": 95,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 166.4,
+      "writeUs": 103,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 162.7,
+      "writeUs": 190.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 170,
+      "writeUs": 106.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 217.9,
+      "writeUs": 113.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 2,
+      "version": "main",
+      "readUs": 429.4,
+      "writeUs": 191.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 172.7,
+      "writeUs": 92.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 165.5,
+      "writeUs": 669.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 3,
+      "version": "main",
+      "readUs": 174.8,
+      "writeUs": 100.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 223.8,
+      "writeUs": 87.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 180.9,
+      "writeUs": 268.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 4,
+      "version": "main",
+      "readUs": 183.9,
+      "writeUs": 127.90000000000002,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 163.3,
+      "writeUs": 93.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 186.5,
+      "writeUs": 666.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "rust",
+      "host": "view",
+      "pass": 1,
+      "version": "main",
+      "readUs": 186.7,
+      "writeUs": 173.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "rust",
+      "host": "view",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 176.1,
+      "writeUs": 108.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "rust",
+      "host": "view",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 188.6,
+      "writeUs": 255.19999999999996,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "rust",
+      "host": "view",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 189.2,
+      "writeUs": 94.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "rust",
+      "host": "view",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 196.1,
+      "writeUs": 110.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "rust",
+      "host": "view",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 211.6,
+      "writeUs": 96.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "rust",
+      "host": "view",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 170.2,
+      "writeUs": 114.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "rust",
+      "host": "view",
+      "pass": 2,
+      "version": "main",
+      "readUs": 205.9,
+      "writeUs": 115.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "rust",
+      "host": "view",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 165.9,
+      "writeUs": 102.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "rust",
+      "host": "view",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 174,
+      "writeUs": 196.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "rust",
+      "host": "view",
+      "pass": 3,
+      "version": "main",
+      "readUs": 200.9,
+      "writeUs": 276.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "rust",
+      "host": "view",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 168.4,
+      "writeUs": 90.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "rust",
+      "host": "view",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 189.9,
+      "writeUs": 101.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "rust",
+      "host": "view",
+      "pass": 4,
+      "version": "main",
+      "readUs": 196.6,
+      "writeUs": 108.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "rust",
+      "host": "view",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 190.3,
+      "writeUs": 436.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "rust",
+      "host": "view",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 193.2,
+      "writeUs": 93.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "rust",
+      "host": "original",
+      "pass": 1,
+      "version": "main",
+      "readUs": 357.9,
+      "writeUs": 249.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "rust",
+      "host": "original",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 272.2,
+      "writeUs": 196.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "rust",
+      "host": "original",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 283.6,
+      "writeUs": 225.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "rust",
+      "host": "original",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 275.8,
+      "writeUs": 372.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "rust",
+      "host": "original",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 266.5,
+      "writeUs": 196.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "rust",
+      "host": "original",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 663.4,
+      "writeUs": 204.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "rust",
+      "host": "original",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 283.4,
+      "writeUs": 219.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "rust",
+      "host": "original",
+      "pass": 2,
+      "version": "main",
+      "readUs": 307.1,
+      "writeUs": 232.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "rust",
+      "host": "original",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 314,
+      "writeUs": 862.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "rust",
+      "host": "original",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 316.6,
+      "writeUs": 226.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "rust",
+      "host": "original",
+      "pass": 3,
+      "version": "main",
+      "readUs": 375.6,
+      "writeUs": 794.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "rust",
+      "host": "original",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 319.8,
+      "writeUs": 201.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "rust",
+      "host": "original",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 337.6,
+      "writeUs": 222.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "rust",
+      "host": "original",
+      "pass": 4,
+      "version": "main",
+      "readUs": 314.2,
+      "writeUs": 218.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "rust",
+      "host": "original",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 320.2,
+      "writeUs": 207,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "rust",
+      "host": "original",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 324.8,
+      "writeUs": 271.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "c",
+      "host": "original",
+      "pass": 1,
+      "version": "main",
+      "readUs": 600.9,
+      "writeUs": 260.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "c",
+      "host": "original",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 318.3,
+      "writeUs": 236.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "c",
+      "host": "original",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 316.4,
+      "writeUs": 246.00000000000003,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "c",
+      "host": "original",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 336.1,
+      "writeUs": 245.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "c",
+      "host": "original",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 381.4,
+      "writeUs": 244.89999999999998,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "c",
+      "host": "original",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 335.2,
+      "writeUs": 336.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "c",
+      "host": "original",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 362.5,
+      "writeUs": 249.39999999999998,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "c",
+      "host": "original",
+      "pass": 2,
+      "version": "main",
+      "readUs": 366.9,
+      "writeUs": 264.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "c",
+      "host": "original",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 339.4,
+      "writeUs": 248.69999999999996,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "c",
+      "host": "original",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 316.9,
+      "writeUs": 234.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "c",
+      "host": "original",
+      "pass": 3,
+      "version": "main",
+      "readUs": 334.8,
+      "writeUs": 251.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "c",
+      "host": "original",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 328.8,
+      "writeUs": 251.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "c",
+      "host": "original",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 313.8,
+      "writeUs": 255.49999999999997,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "c",
+      "host": "original",
+      "pass": 4,
+      "version": "main",
+      "readUs": 379.1,
+      "writeUs": 520.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "c",
+      "host": "original",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 374.5,
+      "writeUs": 255.40000000000003,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "c",
+      "host": "original",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 330.2,
+      "writeUs": 238.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "c",
+      "host": "view",
+      "pass": 1,
+      "version": "main",
+      "readUs": 202.3,
+      "writeUs": 435.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "c",
+      "host": "view",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 163.8,
+      "writeUs": 91.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "c",
+      "host": "view",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 185.1,
+      "writeUs": 1853.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "c",
+      "host": "view",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 157.8,
+      "writeUs": 87,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "c",
+      "host": "view",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 207.9,
+      "writeUs": 91.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "c",
+      "host": "view",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 165.1,
+      "writeUs": 90.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "c",
+      "host": "view",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 160.1,
+      "writeUs": 94.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "c",
+      "host": "view",
+      "pass": 2,
+      "version": "main",
+      "readUs": 232.4,
+      "writeUs": 105.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "c",
+      "host": "view",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 165.5,
+      "writeUs": 92.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "c",
+      "host": "view",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 187.9,
+      "writeUs": 99.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "c",
+      "host": "view",
+      "pass": 3,
+      "version": "main",
+      "readUs": 239.8,
+      "writeUs": 111.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "c",
+      "host": "view",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 169.4,
+      "writeUs": 133.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "c",
+      "host": "view",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 182.1,
+      "writeUs": 91.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "c",
+      "host": "view",
+      "pass": 4,
+      "version": "main",
+      "readUs": 162.4,
+      "writeUs": 145.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "c",
+      "host": "view",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 154.7,
+      "writeUs": 174.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 5,
+      "lang": "c",
+      "host": "view",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 171.2,
+      "writeUs": 97.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "rust",
+      "host": "view",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 174.8,
+      "writeUs": 103.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "rust",
+      "host": "view",
+      "pass": 1,
+      "version": "main",
+      "readUs": 229.4,
+      "writeUs": 116.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "rust",
+      "host": "view",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 182.2,
+      "writeUs": 244.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "rust",
+      "host": "view",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 167.7,
+      "writeUs": 97.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "rust",
+      "host": "view",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 217,
+      "writeUs": 186.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "rust",
+      "host": "view",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 182.2,
+      "writeUs": 99.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "rust",
+      "host": "view",
+      "pass": 2,
+      "version": "main",
+      "readUs": 210,
+      "writeUs": 104.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "rust",
+      "host": "view",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 187.2,
+      "writeUs": 109.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "rust",
+      "host": "view",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 195.3,
+      "writeUs": 99.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "rust",
+      "host": "view",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 204.8,
+      "writeUs": 430.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "rust",
+      "host": "view",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 695.3,
+      "writeUs": 105.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "rust",
+      "host": "view",
+      "pass": 3,
+      "version": "main",
+      "readUs": 211.6,
+      "writeUs": 146.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "rust",
+      "host": "view",
+      "pass": 4,
+      "version": "main",
+      "readUs": 199.5,
+      "writeUs": 194.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "rust",
+      "host": "view",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 178.4,
+      "writeUs": 99.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "rust",
+      "host": "view",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 201.9,
+      "writeUs": 97,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "rust",
+      "host": "view",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 214.7,
+      "writeUs": 393.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "rust",
+      "host": "original",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 281.5,
+      "writeUs": 214.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "rust",
+      "host": "original",
+      "pass": 1,
+      "version": "main",
+      "readUs": 818.9,
+      "writeUs": 227,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "rust",
+      "host": "original",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 374.2,
+      "writeUs": 270,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "rust",
+      "host": "original",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 326.8,
+      "writeUs": 496.20000000000005,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "rust",
+      "host": "original",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 278.6,
+      "writeUs": 214.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "rust",
+      "host": "original",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 280.9,
+      "writeUs": 215.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "rust",
+      "host": "original",
+      "pass": 2,
+      "version": "main",
+      "readUs": 310.6,
+      "writeUs": 295.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "rust",
+      "host": "original",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 285.2,
+      "writeUs": 220,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "rust",
+      "host": "original",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 326.1,
+      "writeUs": 257.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "rust",
+      "host": "original",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 296.6,
+      "writeUs": 524,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "rust",
+      "host": "original",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 287.6,
+      "writeUs": 289.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "rust",
+      "host": "original",
+      "pass": 3,
+      "version": "main",
+      "readUs": 322.4,
+      "writeUs": 514.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "rust",
+      "host": "original",
+      "pass": 4,
+      "version": "main",
+      "readUs": 295.8,
+      "writeUs": 310.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "rust",
+      "host": "original",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 336.1,
+      "writeUs": 282.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "rust",
+      "host": "original",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 340.8,
+      "writeUs": 210.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "rust",
+      "host": "original",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 348.4,
+      "writeUs": 496.09999999999997,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "c",
+      "host": "original",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 570.3,
+      "writeUs": 217.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "c",
+      "host": "original",
+      "pass": 1,
+      "version": "main",
+      "readUs": 312.4,
+      "writeUs": 279.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "c",
+      "host": "original",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 283.4,
+      "writeUs": 222.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "c",
+      "host": "original",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 281.5,
+      "writeUs": 217.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "c",
+      "host": "original",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 362,
+      "writeUs": 219,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "c",
+      "host": "original",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 523,
+      "writeUs": 231.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "c",
+      "host": "original",
+      "pass": 2,
+      "version": "main",
+      "readUs": 324.9,
+      "writeUs": 324.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "c",
+      "host": "original",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 614.5,
+      "writeUs": 226.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "c",
+      "host": "original",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 289.3,
+      "writeUs": 225.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "c",
+      "host": "original",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 865.3,
+      "writeUs": 216.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "c",
+      "host": "original",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 302.2,
+      "writeUs": 216.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "c",
+      "host": "original",
+      "pass": 3,
+      "version": "main",
+      "readUs": 545.5,
+      "writeUs": 264.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "c",
+      "host": "original",
+      "pass": 4,
+      "version": "main",
+      "readUs": 338.9,
+      "writeUs": 862.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "c",
+      "host": "original",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 347.2,
+      "writeUs": 240.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "c",
+      "host": "original",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 321.6,
+      "writeUs": 231.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "c",
+      "host": "original",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 465.1,
+      "writeUs": 233.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "c",
+      "host": "view",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 173,
+      "writeUs": 99.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "c",
+      "host": "view",
+      "pass": 1,
+      "version": "main",
+      "readUs": 241.1,
+      "writeUs": 108,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "c",
+      "host": "view",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 193.9,
+      "writeUs": 161.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "c",
+      "host": "view",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 174,
+      "writeUs": 107.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "c",
+      "host": "view",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 169,
+      "writeUs": 89.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "c",
+      "host": "view",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 180.2,
+      "writeUs": 106.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "c",
+      "host": "view",
+      "pass": 2,
+      "version": "main",
+      "readUs": 165.9,
+      "writeUs": 111,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "c",
+      "host": "view",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 180.1,
+      "writeUs": 397.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "c",
+      "host": "view",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 15930,
+      "writeUs": 100.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "c",
+      "host": "view",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 207.1,
+      "writeUs": 108,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "c",
+      "host": "view",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 155,
+      "writeUs": 88.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "c",
+      "host": "view",
+      "pass": 3,
+      "version": "main",
+      "readUs": 159.8,
+      "writeUs": 101.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "c",
+      "host": "view",
+      "pass": 4,
+      "version": "main",
+      "readUs": 212.7,
+      "writeUs": 122.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "c",
+      "host": "view",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 172.8,
+      "writeUs": 91.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "c",
+      "host": "view",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 171.2,
+      "writeUs": 88.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "c",
+      "host": "view",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 161.4,
+      "writeUs": 86.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 168.4,
+      "writeUs": 84.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 1,
+      "version": "main",
+      "readUs": 250.50000000000003,
+      "writeUs": 741.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 142.2,
+      "writeUs": 79.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 148.1,
+      "writeUs": 3058.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 169.1,
+      "writeUs": 87.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 139.9,
+      "writeUs": 80.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 2,
+      "version": "main",
+      "readUs": 158.7,
+      "writeUs": 97.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 149.7,
+      "writeUs": 91.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 157.6,
+      "writeUs": 87.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 163,
+      "writeUs": 81,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 148.9,
+      "writeUs": 85.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 3,
+      "version": "main",
+      "readUs": 160.9,
+      "writeUs": 315.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 4,
+      "version": "main",
+      "readUs": 181.3,
+      "writeUs": 92.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 174.4,
+      "writeUs": 174.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 169.3,
+      "writeUs": 86.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 163.6,
+      "writeUs": 87.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 553.6,
+      "writeUs": 230.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 1,
+      "version": "main",
+      "readUs": 320.6,
+      "writeUs": 272.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 296.6,
+      "writeUs": 788.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 282.6,
+      "writeUs": 299.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 330.7,
+      "writeUs": 238.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 3062.5,
+      "writeUs": 222.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 2,
+      "version": "main",
+      "readUs": 308.5,
+      "writeUs": 241.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 314.2,
+      "writeUs": 496.40000000000003,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 337,
+      "writeUs": 232.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 787.8,
+      "writeUs": 219.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 13525,
+      "writeUs": 216.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 3,
+      "version": "main",
+      "readUs": 334.1,
+      "writeUs": 307.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 4,
+      "version": "main",
+      "readUs": 323.6,
+      "writeUs": 572.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 303.3,
+      "writeUs": 343.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 368.8,
+      "writeUs": 337.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 6,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 331.8,
+      "writeUs": 225.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "c",
+      "host": "original",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 348.4,
+      "writeUs": 248.40000000000003,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "c",
+      "host": "original",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 326.7,
+      "writeUs": 240.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "c",
+      "host": "original",
+      "pass": 1,
+      "version": "main",
+      "readUs": 344.5,
+      "writeUs": 304.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "c",
+      "host": "original",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 333.9,
+      "writeUs": 495.49999999999994,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "c",
+      "host": "original",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 366.4,
+      "writeUs": 236,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "c",
+      "host": "original",
+      "pass": 2,
+      "version": "main",
+      "readUs": 513.7,
+      "writeUs": 307.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "c",
+      "host": "original",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 326,
+      "writeUs": 237,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "c",
+      "host": "original",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 301.1,
+      "writeUs": 239.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "c",
+      "host": "original",
+      "pass": 3,
+      "version": "main",
+      "readUs": 315.8,
+      "writeUs": 285.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "c",
+      "host": "original",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 295.5,
+      "writeUs": 238.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "c",
+      "host": "original",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 358.9,
+      "writeUs": 224.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "c",
+      "host": "original",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 358.8,
+      "writeUs": 299.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "c",
+      "host": "original",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 12695,
+      "writeUs": 239.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "c",
+      "host": "original",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 328.6,
+      "writeUs": 333.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "c",
+      "host": "original",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 336.5,
+      "writeUs": 216.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "c",
+      "host": "original",
+      "pass": 4,
+      "version": "main",
+      "readUs": 300.5,
+      "writeUs": 260.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "c",
+      "host": "view",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 164.3,
+      "writeUs": 142.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "c",
+      "host": "view",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 162.6,
+      "writeUs": 85.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "c",
+      "host": "view",
+      "pass": 1,
+      "version": "main",
+      "readUs": 204.5,
+      "writeUs": 323.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "c",
+      "host": "view",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 315.8,
+      "writeUs": 89.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "c",
+      "host": "view",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 199.6,
+      "writeUs": 88,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "c",
+      "host": "view",
+      "pass": 2,
+      "version": "main",
+      "readUs": 173.4,
+      "writeUs": 107.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "c",
+      "host": "view",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 164,
+      "writeUs": 93.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "c",
+      "host": "view",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 155.2,
+      "writeUs": 241.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "c",
+      "host": "view",
+      "pass": 3,
+      "version": "main",
+      "readUs": 167.8,
+      "writeUs": 243.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "c",
+      "host": "view",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 166.6,
+      "writeUs": 89.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "c",
+      "host": "view",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 159.9,
+      "writeUs": 85.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "c",
+      "host": "view",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 158.9,
+      "writeUs": 149.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "c",
+      "host": "view",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 172.7,
+      "writeUs": 82.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "c",
+      "host": "view",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 163.5,
+      "writeUs": 85.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "c",
+      "host": "view",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 161.3,
+      "writeUs": 90.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "c",
+      "host": "view",
+      "pass": 4,
+      "version": "main",
+      "readUs": 160.2,
+      "writeUs": 185,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 167.1,
+      "writeUs": 138.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 160.2,
+      "writeUs": 86.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 1,
+      "version": "main",
+      "readUs": 173.7,
+      "writeUs": 340.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 165,
+      "writeUs": 118.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 165.3,
+      "writeUs": 85.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 2,
+      "version": "main",
+      "readUs": 174.9,
+      "writeUs": 104.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 222.4,
+      "writeUs": 88,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 296.9,
+      "writeUs": 85.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 3,
+      "version": "main",
+      "readUs": 160.7,
+      "writeUs": 237.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 190.5,
+      "writeUs": 101,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 172,
+      "writeUs": 87.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 159.5,
+      "writeUs": 90.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 302.3,
+      "writeUs": 87.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 163.2,
+      "writeUs": 90,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 169.8,
+      "writeUs": 95.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 4,
+      "version": "main",
+      "readUs": 165.7,
+      "writeUs": 93.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 347.2,
+      "writeUs": 237.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 336.6,
+      "writeUs": 1075.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 1,
+      "version": "main",
+      "readUs": 364.2,
+      "writeUs": 292.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 471.7,
+      "writeUs": 170.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 227.5,
+      "writeUs": 215.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 2,
+      "version": "main",
+      "readUs": 377.7,
+      "writeUs": 326.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 402.7,
+      "writeUs": 253.79999999999998,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 347.3,
+      "writeUs": 248.40000000000003,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 3,
+      "version": "main",
+      "readUs": 324.4,
+      "writeUs": 276.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 265.6,
+      "writeUs": 605.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 335.8,
+      "writeUs": 215.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 513.9,
+      "writeUs": 233.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 314.3,
+      "writeUs": 247.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 300.1,
+      "writeUs": 242.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 835.3,
+      "writeUs": 229.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 4,
+      "version": "main",
+      "readUs": 326.6,
+      "writeUs": 238.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "rust",
+      "host": "original",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 286.1,
+      "writeUs": 289.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "rust",
+      "host": "original",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 329.3,
+      "writeUs": 245.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "rust",
+      "host": "original",
+      "pass": 1,
+      "version": "main",
+      "readUs": 285.1,
+      "writeUs": 241.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "rust",
+      "host": "original",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 318,
+      "writeUs": 243.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "rust",
+      "host": "original",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 408.7,
+      "writeUs": 223.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "rust",
+      "host": "original",
+      "pass": 2,
+      "version": "main",
+      "readUs": 345.5,
+      "writeUs": 307.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "rust",
+      "host": "original",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 356.7,
+      "writeUs": 251.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "rust",
+      "host": "original",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 2192.5,
+      "writeUs": 233.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "rust",
+      "host": "original",
+      "pass": 3,
+      "version": "main",
+      "readUs": 332.7,
+      "writeUs": 329.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "rust",
+      "host": "original",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 315.6,
+      "writeUs": 652.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "rust",
+      "host": "original",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 318.7,
+      "writeUs": 1221.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "rust",
+      "host": "original",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 320.9,
+      "writeUs": 231.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "rust",
+      "host": "original",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 329.8,
+      "writeUs": 253.79999999999998,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "rust",
+      "host": "original",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 316.4,
+      "writeUs": 235.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "rust",
+      "host": "original",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 332.7,
+      "writeUs": 245,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "rust",
+      "host": "original",
+      "pass": 4,
+      "version": "main",
+      "readUs": 340.8,
+      "writeUs": 244.79999999999998,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "rust",
+      "host": "view",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 172.7,
+      "writeUs": 134.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "rust",
+      "host": "view",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 167.3,
+      "writeUs": 87.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "rust",
+      "host": "view",
+      "pass": 1,
+      "version": "main",
+      "readUs": 184,
+      "writeUs": 193.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "rust",
+      "host": "view",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 171.7,
+      "writeUs": 87.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "rust",
+      "host": "view",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 155.9,
+      "writeUs": 184.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "rust",
+      "host": "view",
+      "pass": 2,
+      "version": "main",
+      "readUs": 181.7,
+      "writeUs": 116.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "rust",
+      "host": "view",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 143.9,
+      "writeUs": 78.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "rust",
+      "host": "view",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 157.4,
+      "writeUs": 81.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "rust",
+      "host": "view",
+      "pass": 3,
+      "version": "main",
+      "readUs": 160.4,
+      "writeUs": 168.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "rust",
+      "host": "view",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 150,
+      "writeUs": 182.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "rust",
+      "host": "view",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 144.3,
+      "writeUs": 92,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "rust",
+      "host": "view",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 171.3,
+      "writeUs": 82.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "rust",
+      "host": "view",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 910.6,
+      "writeUs": 90.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "rust",
+      "host": "view",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 155,
+      "writeUs": 235.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "rust",
+      "host": "view",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 138.5,
+      "writeUs": 115.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 7,
+      "lang": "rust",
+      "host": "view",
+      "pass": 4,
+      "version": "main",
+      "readUs": 171.8,
+      "writeUs": 556.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 213.9,
+      "writeUs": 209.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 160,
+      "writeUs": 82.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 145.3,
+      "writeUs": 136.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 1,
+      "version": "main",
+      "readUs": 319,
+      "writeUs": 115.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 2,
+      "version": "main",
+      "readUs": 164.6,
+      "writeUs": 157,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 144.6,
+      "writeUs": 87.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 146.4,
+      "writeUs": 78.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 147.1,
+      "writeUs": 172.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 141.4,
+      "writeUs": 100.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 3,
+      "version": "main",
+      "readUs": 157.8,
+      "writeUs": 84.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 173.7,
+      "writeUs": 80.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 175.5,
+      "writeUs": 81.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 140.7,
+      "writeUs": 259.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 199.2,
+      "writeUs": 111.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 4,
+      "version": "main",
+      "readUs": 201.2,
+      "writeUs": 100.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 175.1,
+      "writeUs": 400.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 263.1,
+      "writeUs": 365.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 313.9,
+      "writeUs": 367.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 323.6,
+      "writeUs": 221,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 1,
+      "version": "main",
+      "readUs": 359.5,
+      "writeUs": 2805,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 2,
+      "version": "main",
+      "readUs": 350.6,
+      "writeUs": 333.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 339.8,
+      "writeUs": 373.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 278.7,
+      "writeUs": 197.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 861.7,
+      "writeUs": 203.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 336.9,
+      "writeUs": 206.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 3,
+      "version": "main",
+      "readUs": 290.9,
+      "writeUs": 256.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 275.3,
+      "writeUs": 207.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 642.2,
+      "writeUs": 203.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 282.1,
+      "writeUs": 214.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 443.1,
+      "writeUs": 216.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 4,
+      "version": "main",
+      "readUs": 296.3,
+      "writeUs": 573,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 284.5,
+      "writeUs": 211.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "rust",
+      "host": "original",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 280.5,
+      "writeUs": 225.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "rust",
+      "host": "original",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 288.8,
+      "writeUs": 225.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "rust",
+      "host": "original",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 1811.3,
+      "writeUs": 204.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "rust",
+      "host": "original",
+      "pass": 1,
+      "version": "main",
+      "readUs": 313.9,
+      "writeUs": 626.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "rust",
+      "host": "original",
+      "pass": 2,
+      "version": "main",
+      "readUs": 307.1,
+      "writeUs": 249.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "rust",
+      "host": "original",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 318,
+      "writeUs": 268,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "rust",
+      "host": "original",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 337.1,
+      "writeUs": 215.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "rust",
+      "host": "original",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 542.8,
+      "writeUs": 200.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "rust",
+      "host": "original",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 401.3,
+      "writeUs": 200.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "rust",
+      "host": "original",
+      "pass": 3,
+      "version": "main",
+      "readUs": 314.1,
+      "writeUs": 268.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "rust",
+      "host": "original",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 314.1,
+      "writeUs": 404.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "rust",
+      "host": "original",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 305,
+      "writeUs": 210.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "rust",
+      "host": "original",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 316.9,
+      "writeUs": 248.20000000000002,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "rust",
+      "host": "original",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 357.7,
+      "writeUs": 241.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "rust",
+      "host": "original",
+      "pass": 4,
+      "version": "main",
+      "readUs": 350.6,
+      "writeUs": 267.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "rust",
+      "host": "original",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 325.3,
+      "writeUs": 235.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "rust",
+      "host": "view",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 156.2,
+      "writeUs": 85.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "rust",
+      "host": "view",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 165.1,
+      "writeUs": 85.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "rust",
+      "host": "view",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 161.9,
+      "writeUs": 95.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "rust",
+      "host": "view",
+      "pass": 1,
+      "version": "main",
+      "readUs": 190.2,
+      "writeUs": 99.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "rust",
+      "host": "view",
+      "pass": 2,
+      "version": "main",
+      "readUs": 159.6,
+      "writeUs": 120,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "rust",
+      "host": "view",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 168.1,
+      "writeUs": 94.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "rust",
+      "host": "view",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 242.4,
+      "writeUs": 157.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "rust",
+      "host": "view",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 158.7,
+      "writeUs": 82,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "rust",
+      "host": "view",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 156.5,
+      "writeUs": 89.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "rust",
+      "host": "view",
+      "pass": 3,
+      "version": "main",
+      "readUs": 162.9,
+      "writeUs": 91.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "rust",
+      "host": "view",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 143.9,
+      "writeUs": 82.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "rust",
+      "host": "view",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 144.2,
+      "writeUs": 259.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "rust",
+      "host": "view",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 149,
+      "writeUs": 86.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "rust",
+      "host": "view",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 149.8,
+      "writeUs": 79.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "rust",
+      "host": "view",
+      "pass": 4,
+      "version": "main",
+      "readUs": 286.2,
+      "writeUs": 366,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "rust",
+      "host": "view",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 152,
+      "writeUs": 98.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "c",
+      "host": "view",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 176.3,
+      "writeUs": 164.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "c",
+      "host": "view",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 168.8,
+      "writeUs": 93.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "c",
+      "host": "view",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 195.1,
+      "writeUs": 96.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "c",
+      "host": "view",
+      "pass": 1,
+      "version": "main",
+      "readUs": 190.9,
+      "writeUs": 187.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "c",
+      "host": "view",
+      "pass": 2,
+      "version": "main",
+      "readUs": 307.1,
+      "writeUs": 102,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "c",
+      "host": "view",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 205.7,
+      "writeUs": 151.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "c",
+      "host": "view",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 166.6,
+      "writeUs": 92.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "c",
+      "host": "view",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 154.6,
+      "writeUs": 146.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "c",
+      "host": "view",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 156.5,
+      "writeUs": 99.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "c",
+      "host": "view",
+      "pass": 3,
+      "version": "main",
+      "readUs": 167.9,
+      "writeUs": 95.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "c",
+      "host": "view",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 176.8,
+      "writeUs": 394.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "c",
+      "host": "view",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 206.2,
+      "writeUs": 93.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "c",
+      "host": "view",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 171.6,
+      "writeUs": 95.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "c",
+      "host": "view",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 164.5,
+      "writeUs": 90,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "c",
+      "host": "view",
+      "pass": 4,
+      "version": "main",
+      "readUs": 156.6,
+      "writeUs": 175.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "c",
+      "host": "view",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 266.3,
+      "writeUs": 275.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "c",
+      "host": "original",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 309.5,
+      "writeUs": 426.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "c",
+      "host": "original",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 301.6,
+      "writeUs": 327.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "c",
+      "host": "original",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 490.2,
+      "writeUs": 221.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "c",
+      "host": "original",
+      "pass": 1,
+      "version": "main",
+      "readUs": 343.6,
+      "writeUs": 282.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "c",
+      "host": "original",
+      "pass": 2,
+      "version": "main",
+      "readUs": 315.6,
+      "writeUs": 5247.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "c",
+      "host": "original",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 295.3,
+      "writeUs": 224.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "c",
+      "host": "original",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 294.1,
+      "writeUs": 228.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "c",
+      "host": "original",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 347,
+      "writeUs": 247.70000000000002,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "c",
+      "host": "original",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 332.5,
+      "writeUs": 228.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "c",
+      "host": "original",
+      "pass": 3,
+      "version": "main",
+      "readUs": 308.8,
+      "writeUs": 289.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "c",
+      "host": "original",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 574.7,
+      "writeUs": 227.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "c",
+      "host": "original",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 296.3,
+      "writeUs": 217.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "c",
+      "host": "original",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 297,
+      "writeUs": 196.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "c",
+      "host": "original",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 555.2,
+      "writeUs": 207,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "c",
+      "host": "original",
+      "pass": 4,
+      "version": "main",
+      "readUs": 364.1,
+      "writeUs": 282.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 8,
+      "lang": "c",
+      "host": "original",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 373.7,
+      "writeUs": 212.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "rust",
+      "host": "original",
+      "pass": 1,
+      "version": "main",
+      "readUs": 337.3,
+      "writeUs": 257,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "rust",
+      "host": "original",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 319.1,
+      "writeUs": 240,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "rust",
+      "host": "original",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 330.8,
+      "writeUs": 237.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "rust",
+      "host": "original",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 359.1,
+      "writeUs": 294.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "rust",
+      "host": "original",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 325.2,
+      "writeUs": 256.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "rust",
+      "host": "original",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 511.90000000000003,
+      "writeUs": 295.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "rust",
+      "host": "original",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 655.9,
+      "writeUs": 442.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "rust",
+      "host": "original",
+      "pass": 2,
+      "version": "main",
+      "readUs": 262.5,
+      "writeUs": 222.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "rust",
+      "host": "original",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 269.8,
+      "writeUs": 211.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "rust",
+      "host": "original",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 273.5,
+      "writeUs": 211.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "rust",
+      "host": "original",
+      "pass": 3,
+      "version": "main",
+      "readUs": 275.4,
+      "writeUs": 242.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "rust",
+      "host": "original",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 280.2,
+      "writeUs": 218.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "rust",
+      "host": "original",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 307.4,
+      "writeUs": 233.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "rust",
+      "host": "original",
+      "pass": 4,
+      "version": "main",
+      "readUs": 361.4,
+      "writeUs": 225.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "rust",
+      "host": "original",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 356.3,
+      "writeUs": 240.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "rust",
+      "host": "original",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 289.3,
+      "writeUs": 441.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "rust",
+      "host": "view",
+      "pass": 1,
+      "version": "main",
+      "readUs": 202.4,
+      "writeUs": 104.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "rust",
+      "host": "view",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 164.1,
+      "writeUs": 81.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "rust",
+      "host": "view",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 147.2,
+      "writeUs": 128,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "rust",
+      "host": "view",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 185.1,
+      "writeUs": 87.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "rust",
+      "host": "view",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 184.8,
+      "writeUs": 97.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "rust",
+      "host": "view",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 160.6,
+      "writeUs": 105.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "rust",
+      "host": "view",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 135.9,
+      "writeUs": 78.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "rust",
+      "host": "view",
+      "pass": 2,
+      "version": "main",
+      "readUs": 171,
+      "writeUs": 191.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "rust",
+      "host": "view",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 150.7,
+      "writeUs": 296.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "rust",
+      "host": "view",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 157.2,
+      "writeUs": 85.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "rust",
+      "host": "view",
+      "pass": 3,
+      "version": "main",
+      "readUs": 183,
+      "writeUs": 5232.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "rust",
+      "host": "view",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 165,
+      "writeUs": 84.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "rust",
+      "host": "view",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 170.4,
+      "writeUs": 478,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "rust",
+      "host": "view",
+      "pass": 4,
+      "version": "main",
+      "readUs": 176.5,
+      "writeUs": 104.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "rust",
+      "host": "view",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 173.4,
+      "writeUs": 99.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "rust",
+      "host": "view",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 188.8,
+      "writeUs": 97.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "c",
+      "host": "view",
+      "pass": 1,
+      "version": "main",
+      "readUs": 265.2,
+      "writeUs": 109.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "c",
+      "host": "view",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 192.1,
+      "writeUs": 182,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "c",
+      "host": "view",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 375.9,
+      "writeUs": 99.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "c",
+      "host": "view",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 202.1,
+      "writeUs": 111.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "c",
+      "host": "view",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 200.9,
+      "writeUs": 96.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "c",
+      "host": "view",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 168,
+      "writeUs": 95.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "c",
+      "host": "view",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 246.19999999999996,
+      "writeUs": 97,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "c",
+      "host": "view",
+      "pass": 2,
+      "version": "main",
+      "readUs": 180.3,
+      "writeUs": 346.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "c",
+      "host": "view",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 200.7,
+      "writeUs": 103.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "c",
+      "host": "view",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 179.8,
+      "writeUs": 198.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "c",
+      "host": "view",
+      "pass": 3,
+      "version": "main",
+      "readUs": 212.6,
+      "writeUs": 103.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "c",
+      "host": "view",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 178,
+      "writeUs": 95.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "c",
+      "host": "view",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 186.2,
+      "writeUs": 190.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "c",
+      "host": "view",
+      "pass": 4,
+      "version": "main",
+      "readUs": 200.6,
+      "writeUs": 251.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "c",
+      "host": "view",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 211.2,
+      "writeUs": 95,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "c",
+      "host": "view",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 179.1,
+      "writeUs": 690.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "c",
+      "host": "original",
+      "pass": 1,
+      "version": "main",
+      "readUs": 297.5,
+      "writeUs": 359.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "c",
+      "host": "original",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 280.9,
+      "writeUs": 268.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "c",
+      "host": "original",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 492.6,
+      "writeUs": 197.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "c",
+      "host": "original",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 332.3,
+      "writeUs": 209.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "c",
+      "host": "original",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 291,
+      "writeUs": 222.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "c",
+      "host": "original",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 269.5,
+      "writeUs": 406.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "c",
+      "host": "original",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 319.2,
+      "writeUs": 215.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "c",
+      "host": "original",
+      "pass": 2,
+      "version": "main",
+      "readUs": 439.7,
+      "writeUs": 233,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "c",
+      "host": "original",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 275.7,
+      "writeUs": 214.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "c",
+      "host": "original",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 341,
+      "writeUs": 210.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "c",
+      "host": "original",
+      "pass": 3,
+      "version": "main",
+      "readUs": 304.4,
+      "writeUs": 220.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "c",
+      "host": "original",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 292.3,
+      "writeUs": 214.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "c",
+      "host": "original",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 326.4,
+      "writeUs": 203.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "c",
+      "host": "original",
+      "pass": 4,
+      "version": "main",
+      "readUs": 384.1,
+      "writeUs": 248,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "c",
+      "host": "original",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 263,
+      "writeUs": 430.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "c",
+      "host": "original",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 265.2,
+      "writeUs": 266.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 1,
+      "version": "main",
+      "readUs": 360.3,
+      "writeUs": 269,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 318.4,
+      "writeUs": 344.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 321.6,
+      "writeUs": 226.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 274,
+      "writeUs": 359.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 321.1,
+      "writeUs": 210.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 347.5,
+      "writeUs": 340.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 276.6,
+      "writeUs": 384.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 2,
+      "version": "main",
+      "readUs": 296.7,
+      "writeUs": 350.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 294,
+      "writeUs": 217.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 300.9,
+      "writeUs": 215.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 3,
+      "version": "main",
+      "readUs": 305.8,
+      "writeUs": 229.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 324.1,
+      "writeUs": 216.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 365.8,
+      "writeUs": 239.7,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 4,
+      "version": "main",
+      "readUs": 565.8,
+      "writeUs": 215,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 363.2,
+      "writeUs": 243.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "cpp",
+      "host": "original",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 324.2,
+      "writeUs": 211.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 1,
+      "version": "main",
+      "readUs": 165.5,
+      "writeUs": 382.3,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 1,
+      "version": "candidate",
+      "readUs": 157.7,
+      "writeUs": 83.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 1,
+      "version": "direct",
+      "readUs": 145.6,
+      "writeUs": 86.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 1,
+      "version": "baseline",
+      "readUs": 163,
+      "writeUs": 86.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 2,
+      "version": "candidate",
+      "readUs": 157.6,
+      "writeUs": 89.5,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 2,
+      "version": "direct",
+      "readUs": 165.1,
+      "writeUs": 85.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 2,
+      "version": "baseline",
+      "readUs": 147.8,
+      "writeUs": 86.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 2,
+      "version": "main",
+      "readUs": 160.6,
+      "writeUs": 334.9,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 3,
+      "version": "direct",
+      "readUs": 165.7,
+      "writeUs": 88.1,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 3,
+      "version": "baseline",
+      "readUs": 170.8,
+      "writeUs": 89.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 3,
+      "version": "main",
+      "readUs": 158.9,
+      "writeUs": 338,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 3,
+      "version": "candidate",
+      "readUs": 160.6,
+      "writeUs": 104.2,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 4,
+      "version": "baseline",
+      "readUs": 156.2,
+      "writeUs": 87.8,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 4,
+      "version": "main",
+      "readUs": 165.5,
+      "writeUs": 99.4,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 4,
+      "version": "candidate",
+      "readUs": 146.9,
+      "writeUs": 132.6,
+      "pixelsChecked": 131072
+    },
+    {
+      "round": 9,
+      "lang": "cpp",
+      "host": "view",
+      "pass": 4,
+      "version": "direct",
+      "readUs": 179.1,
+      "writeUs": 177.1,
+      "pixelsChecked": 131072
+    }
+  ]
+}

@@ -2,6 +2,7 @@
 from collections import defaultdict
 from hashlib import sha256
 import json
+from math import isfinite
 from pathlib import Path
 from statistics import median
 
@@ -150,6 +151,7 @@ commit = run["candidate"]["commit"]
 para("## Optimized browser bindings")
 para(f"The branch uses js-component-bindgen’s internal Oxc bundler and the checked jco-cm-runtime. "
      f"[Measured Jco commit `{commit[:9]}`](https://github.com/vados-cosmonic/jco/commit/{commit}) · "
+     "[Canvas host comparison](#canvas-pixel-transfers-with-the-same-guest-binary) · "
      "[Payload and startup](#payload-and-startup) · [Reproduction commands](#reproduce-the-candidate-run)")
 para(f"All Jco builds used the same guest binaries. Each value is the median of "
      f"{run['rounds']} fresh-page samples with one warm-up per page. The run collected {len(run['samples'])} "
@@ -516,6 +518,82 @@ para(f"The host accounted for {min(canvas_host_share):.1f}–{max(canvas_host_sh
      f"The candidate spent {min(canvas_remainders['candidate']):.1f}–{max(canvas_remainders['candidate']):.1f} µs per read outside the host, "
      f"compared with {min(canvas_remainders['baseline']):.1f}–{max(canvas_remainders['baseline']):.1f} µs for 1.13.0.")
 
+host_run = json.loads((results / "canvas-host.json").read_text())
+if any(host_run[key] != run[key] for key in ("candidate", "cpu", "browser", "sizesSha256")):
+    raise ValueError("Canvas host comparison used different builds or hardware")
+for path, digest in {**host_run["sources"], "bench/canvas-host-bench.mjs": host_run["runnerSha256"]}.items():
+    if sha256((bench.parent / path).read_bytes()).hexdigest() != digest:
+        raise ValueError(f"Canvas host source has changed: {path}")
+host_rounds = range(1, host_run["rounds"] + 1)
+host_passes = range(1, host_run["passes"] + 1)
+build_names = {"direct": "Direct shim", "baseline": "1.13.0", "main": "Stock main", "candidate": "Candidate"}
+host_names = ("original", "view")
+canvas_times = {}
+for row in host_run["samples"]:
+    key = tuple(row[field] for field in ("lang", "host", "version", "round", "pass"))
+    values = (row["readUs"], row["writeUs"])
+    if (key in canvas_times or row["pixelsChecked"] != 2 * host_run["size"]**2
+            or not all(isfinite(v) and v > 0 for v in values)):
+        raise ValueError(f"Invalid canvas host sample for {key}")
+    canvas_times[key] = values
+if len(canvas_times) != len(languages) * len(host_names) * len(build_names) * len(host_rounds) * len(host_passes):
+    raise ValueError("Unexpected number of canvas host samples")
+
+host_medians, host_rows = {}, []
+for lang, guest in languages.items():
+    for version, label in build_names.items():
+        cells = []
+        for phase in range(2):
+            for host in host_names:
+                value = median(median(canvas_times[lang, host, version, n, p][phase] for p in host_passes)
+                               for n in host_rounds)
+                host_medians[lang, host, version, phase] = value
+                cells.append(f"{value:.1f}")
+        host_rows.append([guest, label, *cells])
+
+para("### Canvas pixel transfers with the same guest binary")
+region_size = host_run["size"] - 80
+para(f"Each call transfers a {region_size} × {region_size} RGBA region ({region_size**2 * 4:,} bytes). "
+     "The original browser host copies the pixel array on both read and write. The alternate host creates a "
+     "typed-array view over the browser’s readback or the binding’s write snapshot, preserving its offset and length. "
+     "All four implementations still copy the bytes across the Wasm boundary. "
+     "[View adapter](web/bench/canvas-host.mjs) · [Direct shim](web/bench/dom-core-shim.mjs)")
+para(f"For each guest, all four bindings use identical core Wasm. Each table cell is the median of "
+     f"{len(host_rounds)} page medians, with one warm-up and {len(host_passes)} measured passes per page. "
+     "The runner rotates the four bindings on each page, alternates the host order and checks every pixel on "
+     f"both canvases after each invocation. [Raw timings and pixel checks](web/bench/results/canvas-host.json)")
+direct_ratios, savings = [], defaultdict(list)
+for lang in languages:
+    for phase in range(2):
+        view = host_medians[lang, "view", "candidate", phase]
+        direct_ratios.append(view / host_medians[lang, "view", "direct", phase])
+        savings[phase].append(100 * (1 - view / host_medians[lang, "original", "candidate", phase]))
+para(f"Changing the host reduced the candidate’s read time by **{min(savings[0]):.0f}–{max(savings[0]):.0f}%** "
+     f"and write time by **{min(savings[1]):.0f}–{max(savings[1]):.0f}%**. With the view adapter, its six "
+     f"timings were **{min(direct_ratios):.2f}–{max(direct_ratios):.2f}×** the corresponding direct shim times. "
+     "The headline benchmarks use the original host.")
+fig, axes = plt.subplots(1, 2, figsize=(9, 3.25), layout="constrained")
+for phase, ax in enumerate(axes):
+    for offset, (host, version, label, color) in enumerate([
+        ("original", "candidate", "Candidate, original host", "#535d86"),
+        ("view", "candidate", "Candidate, view host", "#067c77"),
+        ("view", "direct", "Direct shim, view host", "#d08b38"),
+    ]):
+        ax.barh([i + (offset - 1) * .24 for i in range(len(languages))],
+                [host_medians[lang, host, version, phase] for lang in languages],
+                height=.22, label=label, color=color)
+    ax.set_yticks(range(len(languages)), languages.values())
+    ax.invert_yaxis()
+    ax.set_title(["Canvas read", "Canvas write"][phase], fontsize=11)
+    ax.grid(axis="x", alpha=.2)
+fig.supxlabel("Microseconds per call (lower is faster)", fontsize=10)
+fig.legend(*axes[0].get_legend_handles_labels(), loc="outside upper center", ncols=3, fontsize=9)
+fig.savefig(results / "canvas-host-runtime.png", dpi=155)
+plt.close(fig)
+para("![Canvas read and write times for the candidate with both hosts and the direct shim with pixel views]"
+     "(web/bench/results/canvas-host-runtime.png)")
+table(["Guest", "Bindings", "Original read (µs)", "View read (µs)", "Original write (µs)", "View write (µs)"], host_rows)
+
 para("<details><summary>All timed phases and string lengths</summary>")
 table(["Demo", "Phase", "Guest", "Candidate time", "Fresh-page / 1.13.0", "Same-page / 1.13.0", "Candidate / main", "Fastest shim", "Candidate / shim"], phase_rows)
 para("</details>")
@@ -681,6 +759,7 @@ node web/bench/candidate.mjs ../jco-candidate
 CHROME_BIN=/path/to/chrome BENCH_DOM_CONTROL=1 ROUNDS={control["rounds"] if control_path.exists() else 9} node web/bench/browser.mjs
 CHROME_BIN=/path/to/chrome BENCH_PAIRED=1 ROUNDS={paired_run["rounds"]} node web/bench/browser.mjs
 CHROME_BIN=/path/to/chrome BENCH_CANVAS_CONTROL=1 ROUNDS={canvas["rounds"]} node web/bench/browser.mjs
+CHROME_BIN=/path/to/chrome ROUNDS={host_run["rounds"]} node web/bench/canvas-host-bench.mjs
 CHROME_BIN=/path/to/chrome ROUNDS={loop["rounds"]} node web/bench/import-loop.mjs ../jco-candidate
 CHROME_BIN=/path/to/chrome node web/bench/coverage.mjs
 pnpm -C ../jco-candidate install --frozen-lockfile

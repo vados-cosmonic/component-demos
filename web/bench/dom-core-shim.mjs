@@ -1,4 +1,4 @@
-// A direct host for the two DOM benchmarks' core modules. These trusted guests
+// A direct host for the DOM and canvas benchmarks’ core modules. These trusted guests
 // use synchronous imports, owned DOM references and UTF-8 strings.
 import { getWindow, getPerformance } from "../host/web-host.js";
 
@@ -62,6 +62,22 @@ export async function instantiateDomGuest(corePath, importedPages) {
     "[method]html-element.append-child": append,
     "[method]element.set-attribute": (h, p, n, q, m) => handles[h].setAttribute(string(p, n), string(q, m)),
     "[method]element.set-text-content": (h, ptr, len) => handles[h].setTextContent(string(ptr, len)),
+    "[method]element.get-context2d": h => own(handles[h].getContext2d()),
+    "[method]canvas-rendering-context2d.set-fill-style": (h, p, n) => handles[h].setFillStyle(string(p, n)),
+    "[method]canvas-rendering-context2d.fill-rect": (h, x, y, w, height) => handles[h].fillRect(x, y, w, height),
+    "[method]canvas-rendering-context2d.get-image-data-array-buffer": (h, x, y, w, height, out) => {
+      const bytes = handles[h].getImageDataArrayBuffer(x, y, w, height);
+      const ptr = realloc(0, 0, 1, bytes.byteLength) >>> 0;
+      new Uint8Array(memory.buffer, ptr, bytes.byteLength).set(bytes);
+      const dv = dataView();
+      dv.setUint32(out >>> 0, ptr, true);
+      dv.setUint32((out >>> 0) + 4, bytes.byteLength, true);
+    },
+    "[method]canvas-rendering-context2d.put-image-data-array-buffer": (h, ptr, len, x, y, w, height) => {
+      const start = ptr >>> 0;
+      const snapshot = new Uint8Array(memory.buffer.slice(start, start + (len >>> 0)));
+      handles[h].putImageDataArrayBuffer(snapshot, x, y, w, height);
+    },
     "[method]element.get-first-child": (h, out) => option(handles[h].getFirstChild(), out),
     "[method]element.get-next-sibling": (h, out) => option(handles[h].getNextSibling(), out),
     "[method]element.remove": h => handles[h].remove(),
@@ -71,7 +87,7 @@ export async function instantiateDomGuest(corePath, importedPages) {
     "[method]performance-measure.get-duration": h => handles[h].getDuration(),
   };
   for (const resource of ["document", "element", "html-element", "window", "performance",
-                          "performance-mark", "performance-measure"]) {
+                          "performance-mark", "performance-measure", "canvas-rendering-context2d"]) {
     root["[resource-drop]" + resource] = drop;
   }
 

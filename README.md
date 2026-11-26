@@ -10,7 +10,7 @@ For longer host-returned strings, the runtime can encode into a reusable buffer 
 
 ## Optimized browser bindings
 
-The branch uses js-component-bindgen’s internal Oxc bundler and the checked jco-cm-runtime. [Measured Jco commit `d7ac58241`](https://github.com/vados-cosmonic/jco/commit/d7ac58241e950ad78e950663509c3c34cee599bf) · [Payload and startup](#payload-and-startup) · [Reproduction commands](#reproduce-the-candidate-run)
+The branch uses js-component-bindgen’s internal Oxc bundler and the checked jco-cm-runtime. [Measured Jco commit `d7ac58241`](https://github.com/vados-cosmonic/jco/commit/d7ac58241e950ad78e950663509c3c34cee599bf) · [Canvas host comparison](#canvas-pixel-transfers-with-the-same-guest-binary) · [Payload and startup](#payload-and-startup) · [Reproduction commands](#reproduce-the-candidate-run)
 
 All Jco builds used the same guest binaries. Each value is the median of 7 fresh-page samples with one warm-up per page. The run collected 728 samples on 2026-11-26 with HeadlessChrome/156.0.8078.47 on Intel(R) Xeon(R) Processor @ 2.60GHz.
 
@@ -140,24 +140,24 @@ These 216 fresh-page samples compare each language’s exact core Wasm binary wi
 
 The bulk query copies 2,000 handles per call, 10 times. Each traversal visits 19,531 nodes. The runner checks the rendered fixture or node count for each guest and verifies list counts and handle release for the direct shim after warm-up and measurement.
 
-With list materialization on both sides, the candidate took **1.61–1.71×** the direct shim’s bulk-query time across the three guests. Times below are per measured workload, after warm-up.
+With list materialization on both sides, the candidate took **1.30–1.47×** the direct shim’s bulk-query time across the three guests. Times below are per measured workload, after warm-up.
 
 ![DOM phase times for Jco 1.13.0 and the candidate relative to the same-guest direct shim](web/bench/results/dom-control-runtime.png)
 
 | Phase | Guest | Direct (ms) | 1.13.0 (ms) | Candidate (ms) | Candidate / direct | Candidate / 1.13.0 | Rounds at or below 1.13.0 | Candidate / previous | Rounds at or below previous |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| DOM ID lookup | C | 14.26 | 24.30 | 17.75 | 1.25× | 0.73× | 9/9 | 1.03× | 4/9 |
-| DOM ID lookup | C++ | 15.96 | 24.39 | 21.30 | 1.33× | 0.87× | 7/9 | 1.09× | 4/9 |
-| DOM ID lookup | Rust | 13.32 | 23.11 | 16.89 | 1.27× | 0.73× | 8/9 | 1.06× | 4/9 |
-| Bulk DOM query | C | 5.96 | 12.03 | 10.22 | 1.71× | 0.85× | 8/9 | 1.10× | 3/9 |
-| Bulk DOM query | C++ | 7.41 | 10.71 | 12.62 | 1.70× | 1.18× | 3/9 | 1.16× | 2/9 |
-| Bulk DOM query | Rust | 6.09 | 11.39 | 9.79 | 1.61× | 0.86× | 7/9 | 1.07× | 5/9 |
-| Tree construction | C | 24.90 | 44.85 | 48.34 | 1.94× | 1.08× | 3/9 | 1.16× | 3/9 |
-| Tree construction | C++ | 20.75 | 47.29 | 46.77 | 2.25× | 0.99× | 6/9 | 1.01× | 4/9 |
-| Tree construction | Rust | 25.69 | 44.92 | 39.37 | 1.53× | 0.88× | 4/9 | 0.91× | 5/9 |
-| Tree traversal | C | 5.93 | 12.45 | 14.53 | 2.45× | 1.17× | 2/9 | 1.18× | 2/9 |
-| Tree traversal | C++ | 5.30 | 12.15 | 15.29 | 2.88× | 1.26× | 1/9 | 1.07× | 3/9 |
-| Tree traversal | Rust | 7.29 | 15.03 | 15.36 | 2.11× | 1.02× | 3/9 | 0.92× | 7/9 |
+| DOM ID lookup | C | 15.63 | 24.91 | 17.51 | 1.12× | 0.70× | 8/9 | 0.97× | 6/9 |
+| DOM ID lookup | C++ | 16.52 | 24.55 | 19.56 | 1.18× | 0.80× | 7/9 | 0.92× | 6/9 |
+| DOM ID lookup | Rust | 13.70 | 22.09 | 16.99 | 1.24× | 0.77× | 7/9 | 1.19× | 3/9 |
+| Bulk DOM query | C | 6.50 | 10.81 | 9.56 | 1.47× | 0.88× | 6/9 | 0.88× | 7/9 |
+| Bulk DOM query | C++ | 7.58 | 10.94 | 9.86 | 1.30× | 0.90× | 4/9 | 0.80× | 6/9 |
+| Bulk DOM query | Rust | 6.68 | 10.48 | 9.69 | 1.45× | 0.92× | 6/9 | 1.10× | 4/9 |
+| Tree construction | C | 25.63 | 49.13 | 47.28 | 1.84× | 0.96× | 5/9 | 1.00× | 4/9 |
+| Tree construction | C++ | 25.29 | 46.23 | 46.66 | 1.84× | 1.01× | 4/9 | 1.02× | 5/9 |
+| Tree construction | Rust | 22.21 | 46.59 | 43.08 | 1.94× | 0.92× | 5/9 | 1.06× | 5/9 |
+| Tree traversal | C | 6.67 | 14.27 | 14.12 | 2.12× | 0.99× | 5/9 | 0.99× | 4/9 |
+| Tree traversal | C++ | 6.50 | 12.37 | 14.35 | 2.21× | 1.16× | 2/9 | 0.81× | 6/9 |
+| Tree traversal | Rust | 7.44 | 15.87 | 18.41 | 2.47× | 1.16× | 4/9 | 1.04× | 4/9 |
 
 ### Cost of a synchronous host import
 
@@ -200,6 +200,31 @@ The same-page comparison was repeated with a clock around the demo’s host meth
 | Rust | Candidate | 332.0 | 318.1 | 14.8 | 95.8% |
 
 The host accounted for 95.8–96.2% of the full read across these builds. The candidate spent 14.4–15.1 µs per read outside the host, compared with 12.8–13.3 µs for 1.13.0.
+
+### Canvas pixel transfers with the same guest binary
+
+Each call transfers a 176 × 176 RGBA region (123,904 bytes). The original browser host copies the pixel array on both read and write. The alternate host creates a typed-array view over the browser’s readback or the binding’s write snapshot, preserving its offset and length. All four implementations still copy the bytes across the Wasm boundary. [View adapter](web/bench/canvas-host.mjs) · [Direct shim](web/bench/dom-core-shim.mjs)
+
+For each guest, all four bindings use identical core Wasm. Each table cell is the median of 9 page medians, with one warm-up and 4 measured passes per page. The runner rotates the four bindings on each page, alternates the host order and checks every pixel on both canvases after each invocation. [Raw timings and pixel checks](web/bench/results/canvas-host.json)
+
+Changing the host reduced the candidate’s read time by **46–53%** and write time by **59–62%**. With the view adapter, its six timings were **0.91–1.09×** the corresponding direct shim times. The headline benchmarks use the original host.
+
+![Canvas read and write times for the candidate with both hosts and the direct shim with pixel views](web/bench/results/canvas-host-runtime.png)
+
+| Guest | Bindings | Original read (µs) | View read (µs) | Original write (µs) | View write (µs) |
+| --- | --- | --- | --- | --- | --- |
+| C | Direct shim | 321.4 | 172.6 | 227.4 | 96.2 |
+| C | 1.13.0 | 326.5 | 177.3 | 230.9 | 99.5 |
+| C | Stock main | 330.1 | 187.5 | 283.5 | 128.4 |
+| C | Candidate | 343.5 | 167.2 | 238.9 | 95.9 |
+| C++ | Direct shim | 322.9 | 166.1 | 259.6 | 88.7 |
+| C++ | 1.13.0 | 308.8 | 162.8 | 250.1 | 95.8 |
+| C++ | Stock main | 345.4 | 179.6 | 289.8 | 171.2 |
+| C++ | Candidate | 350.2 | 163.0 | 237.4 | 96.8 |
+| Rust | Direct shim | 317.5 | 160.5 | 232.8 | 99.7 |
+| Rust | 1.13.0 | 331.0 | 165.6 | 241.9 | 101.4 |
+| Rust | Stock main | 328.8 | 194.6 | 254.8 | 131.2 |
+| Rust | Candidate | 322.1 | 174.8 | 240.3 | 91.1 |
 
 <details><summary>All timed phases and string lengths</summary>
 
@@ -399,6 +424,7 @@ CHROME_BIN=/path/to/chrome BENCH_CANDIDATE=1 ROUNDS=7 node web/bench/browser.mjs
 CHROME_BIN=/path/to/chrome BENCH_DOM_CONTROL=1 ROUNDS=9 node web/bench/browser.mjs
 CHROME_BIN=/path/to/chrome BENCH_PAIRED=1 ROUNDS=9 node web/bench/browser.mjs
 CHROME_BIN=/path/to/chrome BENCH_CANVAS_CONTROL=1 ROUNDS=9 node web/bench/browser.mjs
+CHROME_BIN=/path/to/chrome ROUNDS=9 node web/bench/canvas-host-bench.mjs
 CHROME_BIN=/path/to/chrome ROUNDS=7 node web/bench/import-loop.mjs ../jco-candidate
 CHROME_BIN=/path/to/chrome node web/bench/coverage.mjs
 pnpm -C ../jco-candidate install --frozen-lockfile
