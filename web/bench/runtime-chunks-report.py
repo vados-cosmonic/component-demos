@@ -26,6 +26,8 @@ runner_hash = sha256(Path(__file__).with_name("runtime-chunks.mjs").read_bytes()
 archived = {"976c95bd7fdf03cb25f46deb6ef2b87a4ca825cd8fd3b0cd0d6a5e661ddbb8df": "e17ab34cfd9e83216d789a96ee38e599a208c6360a5e4727d7478b6f0b907555"}
 # The Brotli control ran before the preload treatment was added.
 archived["819808b8fabdb74bd34aa85c138eaeaa03c8ce03bfadbf79d8dc63baea8e844d"] = "1d7f89b9f849e407a1d457456c80d03661bd926c82cf8de57c9273f01d54bad2"
+# The preload run predates the compact helper grouping.
+archived["6ca821aebda496bd78959086b2f9468d980a301ec695662192c5f65649479716"] = "2620a5793ba7ce816265fb34207f09affae47b0a042928fba2cbb1ba068f97b7"
 assert run["runnerSha256"] == archived.get(sha256(args.samples.read_bytes()).hexdigest(), runner_hash)
 if not shaped:
     assert matrix["candidate"] == run["revision"]

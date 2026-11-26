@@ -16,8 +16,9 @@ import { bundleApp } from "./app-bundle.mjs";
 const [checkout, matrixFile, output, study, ...extra] = process.argv.slice(2);
 const appPreload = study === "--shaped-preload";
 const shaped = study === "--shaped" || appPreload;
-assert(!extra.length && (!study || shaped));
-assert(output, "Usage: runtime-chunks.mjs <built Jco checkout> <matrix.json.gz> <output.json.gz> [--shaped|--shaped-preload]");
+const compactHelpers = study === "--compact-helpers";
+assert(!extra.length && (!study || shaped || compactHelpers));
+assert(output, "Usage: runtime-chunks.mjs <built Jco checkout> <matrix.json.gz> <output.json.gz> [--shaped|--shaped-preload|--compact-helpers]");
 const digest = (x) => createHash("sha256").update(x).digest("hex");
 const matrixBytes = await readFile(matrixFile);
 const matrix = JSON.parse(gunzipSync(matrixBytes));
@@ -85,7 +86,9 @@ for (const layout of shaped ? ["external"] : ["external", "grouped"]) {
       entryFileNames: "[name].js",
       chunkFileNames: "chunks/[name]-[hash].js",
       ...(layout === "grouped"
-        ? { codeSplitting: { groups: [{ name: "common", minShareCount: 4 }] } }
+        ? { codeSplitting: { groups: [compactHelpers
+          ? { name: "shared", test: /\/intrinsics\/(?:decode-utf8|sync-waiter|js-helper)\.js$/ }
+          : { name: "common", minShareCount: 4 }] } }
         : {}),
     });
     const chunks = output.filter((x) => x.type === "chunk");
@@ -427,6 +430,7 @@ await writeFile(
       rounds,
       chromium,
       protocols,
+      ...(compactHelpers ? { study } : {}),
       ...(shaped ? { study, profiles, emulation, contentEncoding: "br", brotliQuality: 11 } : {}),
       builds,
       cases,
