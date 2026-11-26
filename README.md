@@ -2,6 +2,59 @@
 
 This fork benchmarks the browser examples from [eqrion/component-demos at d0b9dd1](https://github.com/eqrion/component-demos/tree/d0b9dd1390a300978193adc623838fef4e4b632b). It runs the same compiled C, C++, and Rust WebAssembly components through jco 1.13.0, pinned upstream main, and a branch that optimizes synchronous host imports and numeric guest exports. The comparison also includes the demos’ JavaScript, Emscripten (Embind and EM_JS), and Rust wasm-bindgen implementations where available.
 
+## Browser bindings at 89d7306a9
+
+A task normally records its scope ID in a map so that dropping a borrowed handle can find the owning task. For a synchronous component that cannot create a borrowed handle, the checked compiler can prove that this lookup has no reader. The internal Oxc bundle and external runtime both skip the map insertion and deletion. They still assign a distinct scope ID to each task. Borrowed export arguments, cross-instance transfers and custom providers retain registration. [Runtime implementation and tests](https://github.com/vados-cosmonic/jco/commit/4b02f2fc1) · [Custom-provider compatibility](https://github.com/vados-cosmonic/jco/commit/8e64ebfdf)
+
+For one JS call into Wasm that calls a scalar host function once and returns, elapsed time decreased by **15.8% (95% interval 10.6–16.9%) internally** and **16.7% (95% interval 14.6–19.0%) externally** relative to the previous compiler. At one host call per export the two renderers took 26.90× and 26.25× the direct Wasm time. With 16 host calls sharing one export they took 4.62× and 4.86×. The checked external entry differs from the control by a single property in the task context. The runner verifies this and checks identical guest Wasm across all six builds. [Paired timings, compiler and asset hashes](web/bench/results/export-host-batch-89d7306a9.json.gz)
+
+| Host calls per export | Internal after / before | External after / before | Internal / direct Wasm | External / direct Wasm |
+| ---: | ---: | ---: | ---: | ---: |
+| 1 | 0.842× (0.831–0.894) | 0.833× (0.810–0.854) | 26.900× (25.226–27.653) | 26.248× (25.377–27.427) |
+| 4 | 0.871× (0.857–0.900) | 0.856× (0.834–0.870) | 12.797× (12.244–13.473) | 12.791× (11.884–13.302) |
+| 16 | 0.895× (0.878–0.953) | 0.901× (0.878–0.928) | 4.620× (4.586–4.801) | 4.855× (4.667–5.017) |
+| 64 | 0.936× (0.910–0.966) | 0.925× (0.908–0.970) | 2.002× (1.932–2.177) | 2.272× (2.146–2.373) |
+| 256 | 0.955× (0.936–1.009) | 0.971× (0.942–1.013) | 1.327× (1.293–1.403) | 1.533× (1.459–1.627) |
+
+![Cost of the export round trip relative to direct Wasm and Jco 1.13.0, with individual 95% intervals.](web/bench/results/export-host-batch-89d7306a9.png)
+
+Across seven browser workloads in C, C++ and Rust, 12 rounds compared the same guest binaries against Jco 1.13.0, upstream main at `326f52ab4`, and the reference shims. All 21 checked external entries contained the new hint. Removing that property reproduced the previous entry byte for byte in each case. Each asset and time column is the median across 21 cases. The browser fetched uncompressed files over loopback. [Full demo measurements](web/bench/results/review-matrix-minified-89d7306a9.json.gz)
+
+| Build | Minified JS entry (KiB) | Total JS (KiB) | Total gzipped JS¹ (KiB) | JS requests | Import (ms) | First result including import (ms) |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Jco 1.13.0 | 9.58 | 9.58 | 3.01 | 1 | 5.10 | 61.90 |
+| Upstream main | 111.34 | 111.34 | 25.42 | 1 | 12.37 | 204.88 |
+| Internal Oxc | 71.55 | 71.55 | 18.96 | 1 | 9.55 | 63.03 |
+| External checked | 25.08 | 124.13 | 40.59 | 19 | 22.61 | 80.45 |
+
+¹ Sum of the compressed JS asset sizes for each workload.
+
+| Warm demo measurements | Internal Oxc | External checked |
+| --- | ---: | ---: |
+| Within 10× of the fastest compiled shim | 21/21 | 21/21 |
+| Matching or beating upstream main | 20/21 | 21/21 |
+| Matching or beating Jco 1.13.0 | 16/21 | 13/21 |
+| Comparable subphases within 10× of the fastest shim | 81/84 | 81/84 |
+| Worst warm headline ratio to the fastest shim | 4.52× | 4.72× |
+
+For the warm operation, external Rust table creation took 1.25× the release time (individual 95% interval 1.05–1.31×). The other warm intervals included parity or favored the PR. For first result, 6 internal and 14 external intervals were entirely slower than release.
+
+![Warm time relative to the compiled shim and Jco 1.13.0, and time to first result relative to release.](web/bench/results/review-matrix-minified-89d7306a9.png)
+
+<details><summary>Reproduce both comparisons</summary>
+
+Use the built Jco checkouts at `0309ec2a7` (before) and `89d7306a9` (after) and the upstream build at `326f52ab4`. The paired runner rotates all six builds through each timing position on 18 fresh pages per batch size. Its intervals use one paired observation per page. The full matrix runs each guest twice on a fresh document and reports the second invocation as warm.
+
+```sh
+export CHROME_BIN=/path/to/chrome
+node web/bench/export-host-batch.mjs "$before/packages/jco-transpile" "$before/packages/jco-cm-runtime/dist" "$after/packages/jco-transpile" "$after/packages/jco-cm-runtime/dist" /tmp/batch.json.gz --borrow-scope-hint
+python3 web/bench/export-host-batch-report.py /tmp/batch.json.gz --plot /tmp/batch.png
+ROUNDS=12 node web/bench/review-matrix.mjs "$after" "$stage" /tmp/matrix.json.gz --minify-checked
+python3 web/bench/review-matrix-report.py /tmp/matrix.json.gz --release-intervals --plot /tmp/matrix.png
+```
+
+</details>
+
 ## Browser bindings at 0c3d12ad0
 
 The PR shares the synchronous host adapter between the internal Oxc bundle and the external runtime package. Twelve Chromium rounds compared the same C, C++ and Rust guests across seven browser workloads. The comparison uses the compiler from upstream main at `326f52ab4`. [Fork PR](https://github.com/vados-cosmonic/jco/pull/62) · [Upstream CI build](https://github.com/bytecodealliance/jco/actions/runs/45795485943) · [Measurements, asset sizes and compiler hashes](web/bench/results/review-matrix-minified-0c3d12ad0.json.gz)

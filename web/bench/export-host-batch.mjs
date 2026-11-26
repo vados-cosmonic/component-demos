@@ -9,10 +9,10 @@ import { gzipSync } from "node:zlib";
 import puppeteer from "puppeteer-core";
 import { parse, transpile } from "@bytecodealliance/jco";
 
-const [oldCompiler, oldRuntime, compiler, runtime, output] = process.argv.slice(2);
+const [oldCompiler, oldRuntime, compiler, runtime, output, flag, ...extra] = process.argv.slice(2);
 assert(
-  output,
-  "Usage: export-host-batch.mjs <previous transpiler> <previous runtime dist> <new transpiler> <new runtime dist> <output.json.gz>",
+  output && !extra.length && [undefined, "--borrow-scope-hint"].includes(flag),
+  "Usage: export-host-batch.mjs <previous transpiler> <previous runtime dist> <new transpiler> <new runtime dist> <output.json.gz> [--borrow-scope-hint]",
 );
 const hash = (bytes) => createHash("sha256").update(bytes).digest("hex");
 const provider = "@bytecodealliance/jco-cm-runtime";
@@ -66,7 +66,18 @@ for (const [revision, transpiler, dir] of [
     }
   }
 }
-assert.deepEqual(assets.get("/before-external/batch.js"), assets.get("/after-external/batch.js"));
+const beforeEntry = assets.get("/before-external/batch.js");
+const afterEntry = assets.get("/after-external/batch.js");
+if (flag === "--borrow-scope-hint") {
+  // The compiler supplies one extra property to the checked runtime. Everything
+  // else in the component entry must match the control, including import names.
+  const entry = new TextDecoder().decode(afterEntry);
+  const hint = /canCreateBorrowHandles:(?:false|!1),/g;
+  assert.equal([...entry.matchAll(hint)].length, 1);
+  assert.equal(entry.replace(hint, ""), new TextDecoder().decode(beforeEntry));
+} else {
+  assert.deepEqual(beforeEntry, afterEntry);
+}
 assert.notDeepEqual(
   assets.get("/before-internal/batch.js"),
   assets.get("/after-internal/batch.js"),
@@ -170,6 +181,7 @@ try {
         componentSha256: hash(component),
         runnerSha256: hash(await readFile(import.meta.filename)),
         compilerHashes,
+        entryChange: flag ?? null,
         releaseVersion: JSON.parse(
           await readFile(
             new URL("../node_modules/@bytecodealliance/jco/package.json", import.meta.url),

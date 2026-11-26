@@ -16,9 +16,16 @@ with gzip.open(args.archive) as source:
     data = json.load(source)
 
 rounds, sizes, modes = data["rounds"], data["sizes"], data["modes"]
-assert data["runnerSha256"] == hashlib.sha256(Path(__file__).with_name("export-host-batch.mjs").read_bytes()).hexdigest()
+# The scheduler archive predates the optional bindgen-hint comparison.
+current_runner = hashlib.sha256(Path(__file__).with_name("export-host-batch.mjs").read_bytes()).hexdigest()
+scheduler_runner = "17e2fcb284f91d9bf330e15dbe400313db8a5ee45879f1833e24976386c59080"
+assert data["runnerSha256"] in {current_runner, scheduler_runner}
 assert data["compilerHashes"]["before"] != data["compilerHashes"]["after"]
-assert data["manifest"]["/before-external/batch.js"] == data["manifest"]["/after-external/batch.js"]
+same_entry = data["manifest"]["/before-external/batch.js"] == data["manifest"]["/after-external/batch.js"]
+if data.get("entryChange") == "--borrow-scope-hint":
+    assert data["runnerSha256"] == current_runner and not same_entry
+else:
+    assert data.get("entryChange") is None and same_entry
 assert modes == ["direct", "release", "before-internal", "after-internal", "before-external", "after-external"]
 passes = range(len(modes), 2 * len(modes))
 rows = defaultdict(dict)
