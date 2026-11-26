@@ -75,7 +75,7 @@ for (const [name, group] of treatments) {
     else assert.deepEqual(names, api);
     const files = {};
     for (const [path, chunk] of chunks) {
-      files[path] = { bytes: Buffer.byteLength(chunk.code), gzip: gzipSync(chunk.code).length,
+      files[path] = { bytes: Buffer.byteLength(chunk.code), gzip: gzipSync(chunk.code, { level: 9 }).length,
         imports: chunk.imports.filter(dep => chunks.has(dep)), sha256: hash(chunk.code) };
       if (name === "shipped") assert.equal(files[path].sha256, matrix.manifest["/runtime/" + path].sha256);
     }

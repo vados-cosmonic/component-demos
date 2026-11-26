@@ -28,6 +28,8 @@ archived = {"976c95bd7fdf03cb25f46deb6ef2b87a4ca825cd8fd3b0cd0d6a5e661ddbb8df": 
 archived["819808b8fabdb74bd34aa85c138eaeaa03c8ce03bfadbf79d8dc63baea8e844d"] = "1d7f89b9f849e407a1d457456c80d03661bd926c82cf8de57c9273f01d54bad2"
 # The preload run predates the compact helper grouping.
 archived["6ca821aebda496bd78959086b2f9468d980a301ec695662192c5f65649479716"] = "2620a5793ba7ce816265fb34207f09affae47b0a042928fba2cbb1ba068f97b7"
+# The compact helper trial used conversion as its standalone caller.
+archived["f8bc0a73a0eef861abe07a01500d60f0d564bcdb6e92a6101cd8910e403d39bf"] = "2128c49f615f4df96366ad6e7a24ecd0f174704e47eb56b24b0bc08d34d2bd6d"
 assert run["runnerSha256"] == archived.get(sha256(args.samples.read_bytes()).hexdigest(), runner_hash)
 if not shaped:
     assert matrix["candidate"] == run["revision"]
@@ -168,7 +170,7 @@ for mode, prefix in [("external", "/runtime/"), ("grouped", "/grouped/")]:
         demos.add(footprint(paths))
     assert len(demos) == 1
     print(mode, "demo runtime", next(iter(demos)))
-    print(mode, "conversion only", footprint(run["footprints"][mode]["intrinsics/conversion"]))
+    print(mode, probe + " only", footprint(run["footprints"][mode]["intrinsics/" + probe]))
 
 for protocol in protocols:
     print(protocol, "median first result (ms)")
@@ -188,7 +190,7 @@ if args.plot:
 
     fig, axes = plt.subplots(1, 2, sharey=True, figsize=(8.4, 3.6), layout="constrained")
     labels = [w.replace("cpp/", "C++/").replace("rust/", "Rust/").replace("c/", "C/").replace("/", " · ")
-              for w in cases] + ["Conversion only"]
+              for w in cases] + [probe.capitalize() + " only"]
     for ax, protocol in zip(axes, protocols, strict=True):
         for i, w in enumerate([*cases, probe]):
             mid, lo, hi = paired(w, protocol, "grouped", "external")

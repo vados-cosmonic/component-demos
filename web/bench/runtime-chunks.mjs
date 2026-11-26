@@ -16,9 +16,9 @@ import { bundleApp } from "./app-bundle.mjs";
 const [checkout, matrixFile, output, study, ...extra] = process.argv.slice(2);
 const appPreload = study === "--shaped-preload";
 const shaped = study === "--shaped" || appPreload;
-const compactHelpers = study === "--compact-helpers";
+const compactHelpers = study === "--compact-helpers" || study === "--compact-component";
 assert(!extra.length && (!study || shaped || compactHelpers));
-assert(output, "Usage: runtime-chunks.mjs <built Jco checkout> <matrix.json.gz> <output.json.gz> [--shaped|--shaped-preload|--compact-helpers]");
+assert(output, "Usage: runtime-chunks.mjs <built Jco checkout> <matrix.json.gz> <output.json.gz> [--shaped|--shaped-preload|--compact-helpers|--compact-component]");
 const digest = (x) => createHash("sha256").update(x).digest("hex");
 const matrixBytes = await readFile(matrixFile);
 const matrix = JSON.parse(gunzipSync(matrixBytes));
@@ -212,12 +212,12 @@ for (const { base, name } of appCases) {
     expected[base.slice(1)]["application-preload"] = { ...appEntry, hint: graph[entry][0] };
   }
 }
-const probe = "conversion";
+const probe = study === "--compact-component" ? "component" : "conversion";
 expected[probe] = {};
 for (const layout of shaped ? ["external"] : ["external", "grouped"])
   expected[probe][layout] = {
-    entry: imports[layout][matrix.checkedPackage + "/intrinsics/conversion"],
-    requests: footprints[layout]["intrinsics/conversion"],
+    entry: imports[layout][matrix.checkedPackage + "/intrinsics/" + probe],
+    requests: footprints[layout]["intrinsics/" + probe],
   };
 
 async function measure({ demo, entry, args, probe, hint }) {
@@ -237,7 +237,10 @@ async function measure({ demo, entry, args, probe, hint }) {
   const mod = await import(entry);
   const ready = performance.now();
   if (probe) {
-    if (mod.toUint32({ strict: false }, -1) !== 4294967295) throw Error("invalid conversion");
+    if (probe === "component") {
+      const flags = mod.initializeInstanceFlags();
+      if (!(flags instanceof Map) || flags.size !== 0) throw Error("invalid component state");
+    } else if (mod.toUint32({ strict: false }, -1) !== 4294967295) throw Error("invalid conversion");
   } else mod.run(...args);
   const end = performance.now();
   if (!probe) {
@@ -386,7 +389,7 @@ try {
               demo,
               entry,
               args: inputs[demo],
-              probe: isProbe,
+              probe: isProbe ? probe : null,
               hint,
             });
             assert(data.importMs > 0 && data.firstMs >= data.importMs);
