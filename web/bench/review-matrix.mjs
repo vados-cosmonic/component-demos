@@ -11,10 +11,11 @@ import { gzipSync } from "node:zlib";
 import puppeteer from "puppeteer-core";
 
 const [checkout, upstreamBuild, output, flag, previousBuild, ...extra] = process.argv.slice(2);
-assert(checkout && upstreamBuild && output && !extra.length && (flag === undefined || flag === "--minify"),
-  "Usage: review-matrix.mjs <built PR checkout> <upstream dist+vendor directory with commit file> <output.json.gz> [--minify [previous-transpiler-directory]]");
-const minify = flag === "--minify";
-assert(!previousBuild || minify, "The checked-package comparison uses minified output");
+assert(checkout && upstreamBuild && output && !extra.length && [undefined, "--minify", "--minify-checked"].includes(flag),
+  "Usage: review-matrix.mjs <built PR checkout> <upstream dist+vendor directory with commit file> <output.json.gz> [--minify [previous-transpiler-directory] | --minify-checked]");
+const minify = flag !== undefined;
+const useCheckedPackage = Boolean(previousBuild) || flag === "--minify-checked";
+assert(!previousBuild || flag === "--minify", "The checked-package comparison uses minified output");
 const versions = ["release", "main", "bundled", "external"];
 if (previousBuild) versions.push("previous");
 const checkedPackage = "@bytecodealliance/jco-cm-runtime";
@@ -27,7 +28,9 @@ assert.equal(git("status", "--porcelain", "--untracked-files=no"), "");
 const candidate = git("rev-parse", "HEAD");
 const upstream = (await readFile(join(upstreamBuild, "commit"), "utf8")).trim();
 assert.match(upstream, /^[a-f0-9]{40}$/);
-git("merge-base", "--is-ancestor", upstream, candidate);
+// Upstream main can advance after the PR branches. Record the common revision
+// so results distinguish the tested compiler from the PR's base.
+const commonBase = git("merge-base", upstream, candidate);
 const inventoryBytes = await readFile(join(web, "bench/results/candidate-sizes.json"));
 const inventory = JSON.parse(inventoryBytes);
 const minifiedSizes = minify ? await readFile(join(web, "bench/results/minified-sizes.json")) : undefined;
@@ -91,7 +94,7 @@ for (const { input, variants } of inventory.components) {
     const options = { name, nodejsCompat: false, minify, base64Cutoff: 5000, namespacedExports: true,
       emitTypescriptDeclarations: false, map: Object.fromEntries(maps) };
     if (version === "external" || version === "previous") {
-      Object.assign(options, previousBuild ? { cmRuntimeEsModule: checkedPackage } : { cmRuntimeEsModule: "/runtime", cmRuntimeSyncImports: true });
+      Object.assign(options, useCheckedPackage ? { cmRuntimeEsModule: checkedPackage } : { cmRuntimeEsModule: "/runtime", cmRuntimeSyncImports: true });
     }
     let files;
     if (version === "release" && minify) {
@@ -172,7 +175,7 @@ function shuffle(items) {
   return result;
 }
 const packageImports = {};
-if (previousBuild) {
+if (useCheckedPackage) {
   for (const path of assets.keys()) {
     if (path.startsWith("/runtime/")) packageImports[checkedPackage + path.slice("/runtime".length,-3)] = path;
   }
@@ -220,7 +223,7 @@ for (let round = 0; round < rounds; round++) {
       const build = queue[position];
       if (path === "/trial/" + position) {
         res.setHeader("Content-Type", "text/html");
-        const map = previousBuild ? '<script type="importmap">' + JSON.stringify({ imports: packageImports }) + '</script>' : "";
+        const map = useCheckedPackage ? '<script type="importmap">' + JSON.stringify({ imports: packageImports }) + '</script>' : "";
         return res.end(`<!doctype html><head>${map}</head><body><script type="module">
           let data;
           try { data = await (${measure})(${JSON.stringify(build)}, ${JSON.stringify(Object.values(workloads[build.demo]))}) }
@@ -240,7 +243,7 @@ for (let round = 0; round < rounds; round++) {
           assert.equal(request.bytes, manifest[request.path].bytes, request.path);
           assert(request.transferred > 0);
         }
-        if (previousBuild && ["previous", "external"].includes(build.version)) {
+        if (useCheckedPackage && ["previous", "external"].includes(build.version)) {
           assert(data.requests.some(r => r.path === "/runtime/intrinsics/sync.js"));
         }
         samples.push({ round, position, ...build, ...data });
@@ -277,7 +280,7 @@ for (let round = 0; round < rounds; round++) {
   }
   console.log("Completed full matrix round", round + 1, "of", rounds);
 }
-await writeFile(output, gzipSync(JSON.stringify({ release: inventory.baseline, upstream, candidate, compilers, rounds, chromium,
-  minify, checkedPackage: previousBuild ? checkedPackage : undefined, minifiedInventorySha256: minify ? hash(minifiedSizes) : undefined,
+await writeFile(output, gzipSync(JSON.stringify({ release: inventory.baseline, upstream, commonBase, candidate, compilers, rounds, chromium,
+  minify, checkedPackage: useCheckedPackage ? checkedPackage : undefined, minifiedInventorySha256: minify ? hash(minifiedSizes) : undefined,
   node: process.version, cpu: cpus()[0].model, inventorySha256: hash(inventoryBytes), runnerSha256: hash(await readFile(import.meta.filename)),
   workloads, manifest, samples }), { level: 9 }));

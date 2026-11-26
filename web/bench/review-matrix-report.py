@@ -53,7 +53,8 @@ assert focus.keys() == result["workloads"].keys()
 rounds = result["rounds"]
 languages = {"c": "C", "cpp": "C++", "rust": "Rust"}
 versions = ["release", "main", "bundled", "external"]
-timed_versions = versions + (["previous"] if result.get("checkedPackage") else [])
+has_previous = "previous" in result["compilers"]
+timed_versions = versions + (["previous"] if has_previous else [])
 samples = defaultdict(dict)
 positions = defaultdict(list)
 for row in result["samples"]:
@@ -134,7 +135,7 @@ for v in versions:
             x = stats[v, k]
             threshold = 10 if "shim" in k.lower() else 1
             print(k, sum(y <= threshold for y in x), "/", len(x), "maximum", round(max(x), 3))
-if args.release_intervals or result.get("checkedPackage"):
+if args.release_intervals or has_previous:
     # Order-statistic bounds for a two-sided sign test, with at least 95%
     # individual coverage. Pairs share one timing round within each case.
     if rounds < 6:
@@ -166,7 +167,7 @@ if args.release_intervals:
     for (phase,version), counter in counts.items():
         print(f"| {phase} {version} | {counter['faster']} | {counter['includes parity']} | {counter['slower']} |")
 
-if result.get("checkedPackage"):
+if has_previous:
     assert result["checkedPackage"] == "@bytecodealliance/jco-cm-runtime"
     changes = defaultdict(list)
     print("\n| Guest and operation | Entry bytes saved | Gzip bytes saved | Paired import | Paired first result | Paired warm operation |")
