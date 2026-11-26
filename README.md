@@ -90,6 +90,54 @@ done
 python3 web/bench/scalar-export-report.py --plot "$results/numeric-export.png"
 ```
 
+### Returning a byte list from JavaScript to Wasm
+
+After calling the guest allocator, bindgen reads the current memory limit once and checks that the list fits. For one-byte elements the remaining byte count is also the element limit, and every address meets the alignment requirement. This change applies to both renderers. In Chromium, paired median time for 16-byte to 4-KiB returns fell by **8–9% bundled and 8–12% external**. At the canvas readback size of 123,904 bytes the paired medians were 0.99× and 1.00× the preceding PR head. Jco 1.13.0 still had the lowest Jco median at all four sizes. [Jco implementation](https://github.com/vados-cosmonic/jco/commit/3fdabd849e833bd878e9bf3abc6358d45735a152)
+
+Each cell is nanoseconds per guest iteration, including the host call, guest allocation, copy, and endpoint checks. The two Wasm cores were byte-identical across all seven configurations. The host alternated two preallocated views with nonzero byte offsets. The guest checked the full payload digest outside each timer. The table summarizes 12 page medians after two warm-ups and five timed passes per size and build. [Fixture](web/bench/byte-transfer.wat) · [Runner](web/bench/byte-transfer.mjs) · [Raw samples and generated sizes (gzip)](web/bench/results/list-allocation-transfer.json.gz)
+
+| Result bytes | Direct Wasm | 1.13.0 | Main | Bundled before | Bundled after | External before | External after |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 16 | 174 | 363 | 3,748 | 459 | 443 | 516 | 426 |
+| 256 | 175 | 346 | 3,867 | 494 | 470 | 540 | 438 |
+| 4,096 | 354 | 482 | 4,639 | 714 | 641 | 659 | 653 |
+| 123,904 | 9,473 | 9,277 | 16,699 | 9,668 | 9,668 | 9,668 | 9,863 |
+
+![Paired time to return a byte list, with separate points for the bundled and external runtime.](web/bench/results/list-allocation-transfer.png)
+
+The chart divides times on each page before taking a median. Each error bar is a two-sided sign-test interval with at least 95% coverage for that comparison. For this fixture the bundled JS entry shrank by 90 bytes (26 gzip bytes) and the external entry by 116 bytes (30 gzip bytes).
+
+#### Does this improve C canvas readback?
+
+The original 9-round, same-page comparison measured a 14% slowdown. Two further same-page comparisons ran the old code twice under separate module URLs and rotated all three builds. Both put the new code at 1.00× the previous head. In the instrumented run, the old code spent a median 805 µs inside the canvas host method out of 844 µs per read. These measurements establish the gain for small byte lists and leave the C canvas headline unresolved. Each timed workload checked every RGBA channel on the source and destination canvases. [Canvas runner](web/bench/canvas-host-bench.mjs) · [Host observer](web/bench/canvas-readback.mjs)
+
+| C canvas readback | Rounds | After / before | 95% interval | Duplicate / before |
+| --- | ---: | ---: | --- | ---: |
+| Original host, 10 ms | 9 | 1.14× | 1.06–1.78× | — |
+| Pixel-view host, 10 ms | 9 | 1.01× | 0.92–1.06× | — |
+| Original host, isolated pages, 10 ms | 24 | 1.11× | 0.81–1.29× | 0.99× |
+| Original host, duplicate control, 10 ms | 30 | 1.00× | 0.95–1.04× | 0.99× |
+| Original host, timed host method, 50 ms | 18 | 0.99× | 0.95–1.01× | 1.00× |
+| ↳ Inside host read | 18 | 0.98× | 0.95–1.02× | 0.99× |
+| ↳ Outside host read | 18 | 0.99× | 0.91–1.09× | 1.08× |
+| Original host, 50 ms | 30 | 1.00× | 0.98–1.03× | 0.99× |
+
+The durations name the guest’s minimum timing window. Each guest doubles its iteration count until it reaches that window. Each interval applies to the paired median for that row. The isolated comparison loaded one binding per page, with all three page positions balanced across six-round blocks. [9-round comparison](web/bench/results/list-allocation-canvas.json.gz) · [Isolated pages](web/bench/results/list-allocation-isolated.json.gz) · [Short duplicate control](web/bench/results/list-allocation-short-control.json.gz) · [Host timing](web/bench/results/list-allocation-observed.json.gz) · [Long duplicate control](web/bench/results/list-allocation-long.json.gz)
+
+Use the compiler setup above with the byte-list change and its parent `af9f314c7`. These commands run the transfer benchmark and the original-host control, then regenerate the tables and chart from the archived samples.
+
+```bash
+export CHROME_BIN=/path/to/chrome
+jco=/path/to/jco-with-list-change
+before=/path/to/previous-jco
+bin="$jco/target/debug/examples/transpile"
+previous=(af9f314c7 "$before/target/debug/examples/transpile")
+node web/bench/byte-transfer.mjs "$jco" "$bin" /tmp/byte-transfer.json "${previous[@]}"
+ROUNDS=30 MIN_MS=10 node web/bench/canvas-host-bench.mjs --control \
+  "$jco" "$bin" "${previous[@]}" /tmp/canvas-control.json
+python3 web/bench/byte-transfer-report.py --plot web/bench/results/list-allocation-transfer.png
+```
+
 <!-- candidate:start -->
 
 ## Optimized browser bindings

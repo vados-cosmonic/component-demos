@@ -14,13 +14,13 @@ const hash = bytes => createHash("sha256").update(bytes).digest("hex");
 const inventoryBytes = await readFile(join(bench, "results/candidate-sizes.json"));
 const inventory = JSON.parse(inventoryBytes);
 const args = process.argv.slice(2);
-const isolated = args[0] === "--isolated";
-const observed = args[0] === "--observe-host";
-if (isolated || observed) args.shift();
+const layout = args[0]?.startsWith("--") ? args.shift() : "standard";
+assert(["standard", "--control", "--isolated", "--observe-host"].includes(layout), "Unknown canvas comparison mode");
+const controlled = layout !== "standard", isolated = layout === "--isolated", observed = layout === "--observe-host";
 const [checkout, generator, previousRef, previousGenerator, output] = args;
-assert((!isolated && !observed && args.length === 0) || args.length === 5,
-  "Use no arguments for the inventory run, or [--isolated|--observe-host] <jco-checkout> <generator> <previous-ref> <previous-generator> <output.json> for paired C canvas timings");
-const versions = isolated || observed ? ["before", "after", "control"] : checkout ? ["direct", "baseline", "main", "before", "after"] : ["direct", "baseline", "main", "candidate"];
+assert((!controlled && args.length === 0) || args.length === 5,
+  "Use no arguments for the inventory run, or [--control|--isolated|--observe-host] <jco-checkout> <generator> <previous-ref> <previous-generator> <output.json> for paired C canvas timings");
+const versions = controlled ? ["before", "after", "control"] : checkout ? ["direct", "baseline", "main", "before", "after"] : ["direct", "baseline", "main", "candidate"];
 const langs = checkout ? ["c"] : ["c", "cpp", "rust"];
 const rounds = Number(process.env.ROUNDS ?? (isolated ? 24 : 9));
 assert(Number.isInteger(rounds) && rounds > 0);
@@ -89,7 +89,7 @@ for (const lang of langs) {
       }
     } finally { await rm(staging, { recursive: true, force: true }); }
   }
-  if (isolated || observed) paths[lang].control = paths[lang].before + "?control";
+  if (controlled) paths[lang].control = paths[lang].before + "?control";
   assert.deepEqual(Object.keys(paths[lang]).sort(), [...versions].sort());
 }
 
@@ -149,7 +149,7 @@ try {
       const order = isolated
         ? versions.map((_, j) => versions[((round - 1) + (round % 2 ? j : -j) + versions.length) % versions.length])
         : [undefined];
-      const hosts = isolated || observed ? ["original"] : (i + round) % 2 ? ["original", "view"] : ["view", "original"];
+      const hosts = controlled ? ["original"] : (i + round) % 2 ? ["original", "view"] : ["view", "original"];
       for (const host of hosts) for (const version of order) {
         const page = await browser.newPage();
         try {
@@ -165,7 +165,7 @@ try {
   await writeFile(output ?? join(bench, "results/canvas-host.json"), JSON.stringify({
     date: new Date().toISOString(), browser: await browser.version(), cpu: cpus()[0].model,
     runnerSha256: hash(await readFile(import.meta.filename)), sizesSha256: hash(inventoryBytes),
-    sources, isolated, observed, candidate: comparison ?? inventory.candidate, rounds, passes: 4, size, minMs, samples,
+    sources, layout, isolated, observed, candidate: comparison ?? inventory.candidate, rounds, passes: 4, size, minMs, samples,
   }, null, 2) + "\n");
 } finally {
   server.close();
