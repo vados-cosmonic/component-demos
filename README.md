@@ -55,6 +55,44 @@ python3 web/bench/review-matrix-report.py /tmp/matrix.json.gz --release-interval
 
 </details>
 
+### Rust table creation over repeated calls
+
+Creating 2,000 Rust table rows takes about 9 ms on most later calls. Both PR renderers slow down on guest calls 6, 11 and 22. Four prior runs of the equivalent JavaScript demo leave the spikes on those same guest calls. Four prior runs through the Rust guest move them to measured calls 2, 7 and 18. Each build created the same rows and made the same 10,000 host calls during creation. [Timings from 18 Chromium rounds](web/bench/results/table-warmup-89d7306a9.json.gz)
+
+| Guest call with no prior work | Jco 1.13.0 (ms) | Internal Oxc (ms) | External checked (ms) | Internal / release | External / release |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 2 | 11.07 | 10.07 | 10.60 | 0.90× | 0.91× |
+| 6 | 9.71 | 12.73 | 11.73 | 1.34× | 1.23× |
+| 11 | 9.50 | 13.39 | 14.42 | 1.34× | 1.45× |
+| 21 | 8.60 | 8.55 | 9.39 | 1.01× | 1.13× |
+| 22 | 8.75 | 16.05 | 16.37 | 1.84× | 1.95× |
+| 23 | 9.10 | 8.98 | 8.63 | 1.02× | 0.93× |
+
+Times are medians. Ratios are the medians of 18 within-round pairs. On call 22 the individual 95% intervals were 1.43–2.27× internally and 1.71–2.19× externally. Both second-call intervals included parity in this isolated run. The broader demo matrix above measured a second-call slowdown for the external renderer.
+
+![Table creation time divided by Jco 1.13.0 time on each guest call. Shading shows individual 95% intervals.](web/bench/results/table-warmup-89d7306a9.png)
+
+In a separate run that timed each `WeakSet.add`, each PR renderer called it 4,001 times per creation phase. Jco 1.13.0 made zero calls. On guest call 22, with no prior work, the median **longest single insertion** took 7.92 ms internally and 5.89 ms externally. On calls 21 and 23 it took under 0.02 ms for both. The resource-drop trampoline records each dropped host object so that stopping the instance can skip an alias that the guest already dropped. Reading the disposal hook can itself call back into shutdown. This ordering matters to implementations of both renderers. [Insertion timings](web/bench/results/table-warmup-weak-adds-89d7306a9.json.gz)
+
+A third run traced foreground garbage collection and compiler activity. On call 22 the median recorded overlap of each category with creation was zero in both renderers. The trace report matches each start and end mark to the guest's own time and counts nested intervals once. [Traced timings](web/bench/results/table-warmup-traced-89d7306a9.json.gz) · [Foreground event intervals](web/bench/results/table-warmup-spans-89d7306a9.json.gz)
+
+<details><summary>Reproduce the 24-call comparison and probes</summary>
+
+Each command runs 18 fresh Chromium processes. Each process visits nine fresh documents, rotating the three builds and three prior workloads through every timing position. The runner checks served assets against the published matrix and verifies the created DOM and host call counts in separate untimed documents. The first command runs without tracing or patched built-ins. Set `CHROME_BIN` to a Chromium executable and use the built Jco checkout at `89d7306a9`.
+
+```sh
+matrix=web/bench/results/review-matrix-minified-89d7306a9.json.gz
+node web/bench/table-warmup.mjs "$after" "$matrix" /tmp/table.json.gz
+python3 web/bench/table-warmup-report.py /tmp/table.json.gz "$matrix" --plot /tmp/table.png
+node web/bench/table-warmup.mjs "$after" "$matrix" /tmp/weak.json.gz --time-weak-adds
+python3 web/bench/table-warmup-report.py /tmp/weak.json.gz "$matrix"
+node web/bench/table-warmup.mjs "$after" "$matrix" /tmp/traced.json.gz /tmp/table-traces
+python3 web/bench/table-warmup-trace.py /tmp/traced.json.gz /tmp/table-traces /tmp/spans.json.gz
+python3 web/bench/table-warmup-report.py /tmp/traced.json.gz "$matrix" --spans /tmp/spans.json.gz
+```
+
+</details>
+
 ## Browser bindings at 0c3d12ad0
 
 The PR shares the synchronous host adapter between the internal Oxc bundle and the external runtime package. Twelve Chromium rounds compared the same C, C++ and Rust guests across seven browser workloads. The comparison uses the compiler from upstream main at `326f52ab4`. [Fork PR](https://github.com/vados-cosmonic/jco/pull/62) · [Upstream CI build](https://github.com/bytecodealliance/jco/actions/runs/45795485943) · [Measurements, asset sizes and compiler hashes](web/bench/results/review-matrix-minified-0c3d12ad0.json.gz)
