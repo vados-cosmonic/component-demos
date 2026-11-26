@@ -27,6 +27,36 @@ Both modes stayed within 10× of the fastest compiled shim on all 21 warm headli
 
 ![Timing ratios across 21 demos for the checked internal and external bindings.](web/bench/results/review-matrix-history-4b9682bfe.png)
 
+### Which runtime methods do the demos call?
+
+Chromium recorded calls in four runtime classes while each component loaded, ran its full demo workload and shut down via `whenIdle()` and `stop()`. Each of the 42 documents loaded the same minified JS and Wasm as the timing matrix. Internal Oxc and external bindgen reached the same set of 36 named methods. A method can run in several phases. Constructors and named accessors count as methods. [Per-document V8 counts and method ranges](web/bench/results/runtime-class-methods-4b9682bfe.json.gz)
+
+| Runtime class | Declared | During import | During workload | During shutdown | Distinct called | Zero calls across all 21 demos |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| ComponentAsyncState | 69 | 3 | 7 | 4 | 11 | 58 |
+| AsyncTask | 88 | 14 | 18 | 0 | 18 | 70 |
+| AsyncThread | 18 | 4 | 4 | 0 | 4 | 14 |
+| RepTable | 8 | 3 | 3 | 0 | 3 | 5 |
+
+All four ComponentAsyncState shutdown methods ran only at shutdown. They stop the component, record the trap and abandon waiters for entry slots and locks. Other components, traps or reentrant host calls can exercise paths these successful demos never took.
+
+To estimate their contribution to download size, we replaced the bodies of the 147 zero-call methods with `{}` in offline copies and recompressed each JS module separately. The median difference per workload was 14,875 raw bytes and **3,007 Brotli bytes** internally, or 14,182 raw bytes and **2,999 Brotli bytes** externally. Any production change to omit such methods needs a compiler guarantee covering every legal use of the binding. These figures measure bytes only.
+
+We also tried moving the repeated synchronous host call, exception handler and interruption check into one helper. Oxc minified each control to the exact entry hash in the timing matrix. Across 297 call sites per mode, the helper saved a median of 1,416 raw bytes internally and 1,412 externally. Median gzip savings were just 3 and 1 bytes, and median Brotli size **grew by 20 and 8 bytes**. The PR retains the existing call sites. [Per-entry sizes and hashes](web/bench/results/host-call-shape-4b9682bfe.json.gz)
+
+<details><summary>Reproduce the coverage and size experiments</summary>
+
+Run from the repository root with the built Jco checkout at `4b9682bfe` in `$after` and set `CHROME_BIN` to the Chromium binary used in the matrix.
+
+```sh
+matrix=web/bench/results/review-matrix-history-4b9682bfe.json.gz
+node web/bench/runtime-class-methods.mjs "$after" "$matrix" /tmp/classes.json.gz
+node web/bench/host-call-shape.mjs "$after" "$matrix" /tmp/host-calls.json.gz
+python3 web/bench/runtime-method-report.py "$matrix" /tmp/classes.json.gz /tmp/host-calls.json.gz
+```
+
+</details>
+
 ### Returning the bulk DOM query results on both sides
 
 The three original subphases outside 10× are bulk DOM queries. The Embind demo discards the live collection. The WIT host materializes it as an array, passes all the handles to the guest and lets the guest drop them. The table below runs the same guest Wasm with a direct shim that performs those operations too. It uses the exact minified release, internal and external assets from the full matrix. Every pass made ten host queries and returned 20,000 elements. The direct shim ended every checked sequence with zero live handles. [Original Embind call](cpp/dom-query/emscripten/main.cpp#L72) · [Direct shim](web/bench/dom-core-shim.mjs) · [Paired timings and counts](web/bench/results/bulk-dom-history-4b9682bfe.json.gz)
