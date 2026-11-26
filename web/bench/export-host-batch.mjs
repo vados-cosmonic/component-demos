@@ -11,8 +11,8 @@ import { parse, transpile } from "@bytecodealliance/jco";
 
 const [oldCompiler, oldRuntime, compiler, runtime, output, flag, ...extra] = process.argv.slice(2);
 assert(
-  output && !extra.length && [undefined, "--borrow-scope-hint", "--sync-task-fields"].includes(flag),
-  "Usage: export-host-batch.mjs <previous transpiler> <previous runtime dist> <new transpiler> <new runtime dist> <output.json.gz> [--borrow-scope-hint|--sync-task-fields]",
+  output && !extra.length && [undefined, "--borrow-scope-hint", "--sync-task-fields", "--heap"].includes(flag),
+  "Usage: export-host-batch.mjs <previous transpiler> <previous runtime dist> <new transpiler> <new runtime dist> <output.json.gz> [--borrow-scope-hint|--sync-task-fields|--heap]",
 );
 const hash = (bytes) => createHash("sha256").update(bytes).digest("hex");
 const provider = "@bytecodealliance/jco-cm-runtime";
@@ -90,7 +90,9 @@ assert.notDeepEqual(
   assets.get("/before-internal/batch.js"),
   assets.get("/after-internal/batch.js"),
 );
-const rounds = 18,
+const heap = flag === "--heap";
+const intervalBytes = 32768, callsPerProfile = 262144;
+const rounds = heap ? 12 : 18,
   sizes = [1, 4, 16, 64, 256];
 const modes = [
   "direct",
@@ -129,7 +131,7 @@ try {
       });
       await page.goto("https://bench.test/");
       const rows = await page.evaluate(
-        async ({ core, round, modes, sizes }) => {
+        async ({ core, round, modes, sizes, heap }) => {
           const mod = await WebAssembly.compile(Uint8Array.fromBase64(core));
           const step = (n) => n + 1,
             functions = {};
@@ -142,6 +144,16 @@ try {
                   await import("/" + mode + "/batch.js")
                 ).instantiate(() => mod, { step: { default: step } })
               ).run;
+          }
+          if (heap) {
+            globalThis.runGuestCalls = (mode, calls) => {
+              const run = functions[mode];
+              let sum = 0;
+              for (let n = 0; n < calls; n++) sum += run(n, 1);
+              if (sum !== calls * (calls + 1) / 2) throw Error("wrong guest result");
+            };
+            for (const mode of modes) globalThis.runGuestCalls(mode, 32768);
+            return [];
           }
           const rows = [];
           // Rotate both axes. Each mode occupies each timing position once per
@@ -167,9 +179,27 @@ try {
           }
           return rows;
         },
-        { core: core.toString("base64"), round, modes, sizes },
+        { core: core.toString("base64"), round, modes, sizes, heap },
       );
-      samples.push(...rows);
+      if (heap) {
+        const client = await page.createCDPSession();
+        await client.send("HeapProfiler.enable");
+        const sequence = [0, 1, 5, 2, 4, 3];
+        for (const [position, i] of sequence.entries()) {
+          const mode = modes[(round + i) % modes.length];
+          await client.send("HeapProfiler.startSampling", {
+            samplingInterval: intervalBytes,
+            includeObjectsCollectedByMinorGC: true,
+            includeObjectsCollectedByMajorGC: true,
+          });
+          await page.evaluate((mode, calls) => globalThis.runGuestCalls(mode, calls), mode, callsPerProfile);
+          const { profile } = await client.send("HeapProfiler.stopSampling");
+          // The allocation stack tree contains the per-frame byte estimates.
+          // The individual sample ordinals are unnecessary for these totals.
+          samples.push({ round, position, mode, head: profile.head });
+        }
+        await client.detach();
+      } else samples.push(...rows);
     } finally {
       await page.close();
     }
@@ -189,7 +219,8 @@ try {
         componentSha256: hash(component),
         runnerSha256: hash(await readFile(import.meta.filename)),
         compilerHashes,
-        entryChange: flag ?? null,
+        entryChange: heap ? null : flag ?? null,
+        ...(heap ? { callsPerProfile, intervalBytes } : {}),
         releaseVersion: JSON.parse(
           await readFile(
             new URL("../node_modules/@bytecodealliance/jco/package.json", import.meta.url),

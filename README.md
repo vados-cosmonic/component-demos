@@ -2,6 +2,78 @@
 
 This fork benchmarks the browser examples from [eqrion/component-demos at d0b9dd1](https://github.com/eqrion/component-demos/tree/d0b9dd1390a300978193adc623838fef4e4b632b). It runs the same compiled C, C++, and Rust WebAssembly components through jco 1.13.0, pinned upstream main, and a branch that optimizes synchronous host imports and numeric guest exports. The comparison also includes the demos’ JavaScript, Emscripten (Embind and EM_JS), and Rust wasm-bindgen implementations where available.
 
+## Browser bindings at 47f6dc0c1
+
+Across the branch, reusing the active export task for eligible synchronous host calls produced the largest measured gain. These controlled guest-loop measurements come from the earlier implementation at `ad2aacc9b` and its upstream base at `83e25bb19`. Each guest enters once and repeats the measured operation. [Host-loop experiment and raw data](#pr-head-against-upstream-main)
+
+| Warm guest-loop operation (ns per iteration) | Upstream base | Jco 1.13.0 | Internal Oxc | External checked |
+| --- | ---: | ---: | ---: | ---: |
+| Scalar host call | 2,378.8 | 16.8 | 21.4 | 24.4 |
+| Acquire, borrow and drop a resource | 5,218.5 | 329.6 | 152.6 | 148.0 |
+| Return a 16-byte ASCII string | 5,369.6 | 2,307.1 | 762.9 | 843.8 |
+
+### Demo performance and module size
+
+The demo matrix used 12 rounds and 1,164 fresh Chromium documents. Each column below summarizes seven demos in C, C++ and Rust. Sizes and times are medians of the 21 workload medians. First result includes loading the JavaScript and completing the first guest call. [Per-workload results and asset manifest](web/bench/results/review-matrix-minified-47f6dc0c1.json.gz)
+
+| Demo matrix | Jco 1.13.0 | Upstream main at `326f52ab4` | Internal Oxc | External checked |
+| --- | ---: | ---: | ---: | ---: |
+| Minified entry (KiB) | 9.58 | 111.34 | 71.54 | 24.99 |
+| Total JS (KiB) | 9.58 | 111.34 | 71.54 | 124.13 |
+| Total gzipped JS (KiB) | 3.01 | 25.42 | 18.96 | 40.58 |
+| JS requests | 1 | 1 | 1 | 19 |
+| Import (ms) | 5.03 | 12.05 | 9.43 | 21.97 |
+| First result (ms) | 59.91 | 198.72 | 63.25 | 76.15 |
+| Warm workloads matching or beating 1.13.0 | — | — | 15/21 | 16/21 |
+| Warm workloads matching or beating main | — | — | 20/21 | 21/21 |
+| Worst warm time / fastest compiled shim | — | — | 5.29× | 5.28× |
+
+Both builds met the 10× target in 21/21 warm headline workloads and 81/84 individual phases. Against Jco 1.13.0, individual 95% paired intervals were entirely slower for 0 internal and 2 external warm workloads, and for 4 internal and 15 external first results. The two external warm regressions in this run were C++ tree traversal (1.332× release, interval 1.147–1.595×) and C table creation (1.145×, interval 1.062–1.466×). The original bulk-query shim discards its result collection. The equal-work fixture returns and drops every handle. [Equal-work bulk queries](#browser-bindings-at-6a00c9e7d)
+
+Compared with the previous matrix, the median total JS size changed by +97 bytes internally (+37 gzip) and +97 bytes externally (+40 gzip). Every external entry, separately served Wasm module, release asset, upstream asset and shim matched its previous hash.
+
+![Warm and first-result ratios across all 21 workloads.](web/bench/results/review-matrix-minified-47f6dc0c1.png)
+
+### Allocation and timing of a single export
+
+An export task stores its first implicit thread directly. It allocates an ordered array when a second thread joins. The runtime comment explains why the oldest live thread must remain the default, and the regression test removes siblings out of order. The external checked package and internal Oxc bundle share this implementation. [Runtime change and test](https://github.com/vados-cosmonic/jco/commit/3ffabc739b72a4a8afdcfdd3051d50d5dd1d379f)
+
+| One host call per guest entry | Internal Oxc | External checked |
+| --- | ---: | ---: |
+| Sampled JS bytes per entry, before → after | 740.0 → 651.5 | 739.7 → 654.2 |
+| Paired allocation reduction (individual 95% interval) | 12.3% (10.6–13.2%) | 11.9% (11.1–12.7%) |
+| Elapsed time before → after (ns) | 828.9 → 780.7 | 833.4 → 808.4 |
+| Paired elapsed time after / before (individual 95% interval) | 0.956× (0.928–0.972) | 0.984× (0.954–1.003) |
+| Paired elapsed time after / Jco 1.13.0 | 26.39× | 26.33× |
+
+Each of 12 fresh Chromium pages ran six builds with identical Wasm. The allocation sampler included objects collected by minor or major GC and estimated JS bytes allocated over 262,144 checksum-verified entries per build. The figures measure allocation traffic. The direct Wasm and 1.13.0 controls both registered 0.0 sampled bytes per entry at the 32 KiB sampling interval. [Allocation profiles, compiler hashes and browser version](web/bench/results/export-host-heap-47f6dc0c1.json.gz)
+
+![Paired before-and-after JS allocation estimates on all twelve pages.](web/bench/results/export-host-heap-47f6dc0c1.png)
+
+Elapsed time was measured separately with profiling off. At 16 host calls per entry, internal Oxc took 1,042 ns and the external runtime took 1,121 ns. The paired improvements were 4.5% and 4.1%, respectively. With one host call per entry, Jco 1.13.0 took 29.7 ns and direct Wasm took 31.5 ns. Larger batches spread the cost of entering the guest across multiple host calls. At 256 calls per entry, the paired ratios to Jco 1.13.0 were 1.43× and 1.65×. [18-page timing samples](web/bench/results/export-host-batch-47f6dc0c1.json.gz)
+
+![Timings and individual intervals by host calls per guest entry.](web/bench/results/export-host-batch-47f6dc0c1.png)
+
+<details><summary>Reproduce the allocation, timing and demo comparisons</summary>
+
+Build Jco at `f2c5ef195` (before) and `47f6dc0c1` (after). Use the compiler and checked package from the same checkout for each pair. The upstream compiler was built from `326f52ab4`. Use the demo guest assets from the benchmark setup below.
+
+```sh
+export CHROME_BIN=/path/to/chrome
+node web/bench/export-host-batch.mjs \
+  "$before/packages/jco-transpile" "$before/packages/jco-cm-runtime/dist" \
+  "$after/packages/jco-transpile" "$after/packages/jco-cm-runtime/dist" /tmp/heap.json.gz --heap
+python3 web/bench/export-host-batch-report.py /tmp/heap.json.gz --plot /tmp/heap.png
+node web/bench/export-host-batch.mjs \
+  "$before/packages/jco-transpile" "$before/packages/jco-cm-runtime/dist" \
+  "$after/packages/jco-transpile" "$after/packages/jco-cm-runtime/dist" /tmp/timing.json.gz
+python3 web/bench/export-host-batch-report.py /tmp/timing.json.gz --plot /tmp/timing.png
+ROUNDS=12 node web/bench/review-matrix.mjs "$after" "$stage" /tmp/matrix.json.gz --minify-checked
+python3 web/bench/review-matrix-report.py /tmp/matrix.json.gz --release-intervals --plot /tmp/matrix.png
+```
+
+</details>
+
 ## Browser bindings at f2c5ef195
 
 A checked synchronous export now enters its task without writing the async flags, the canonical result type, or the return and lift memories. The task uses its synchronous defaults. The compiler checks that the component has no `task.return`, cross-component callee, or other trampoline that could read the omitted metadata. Ordinary canonical lowering still uses the guest memory. Source-generation tests cover the internal Oxc bundle, the external checked package, opt-in custom providers, debug and tracked exports. [Compiler change, runtime rationale and test](https://github.com/vados-cosmonic/jco/commit/83bfa2d4c)

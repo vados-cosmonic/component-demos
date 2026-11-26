@@ -1,4 +1,4 @@
-"""Compare same-page export timings as more host calls share one guest entry."""
+"""Compare paired guest-export timings or sampled JS allocations on the same page."""
 import argparse
 from collections import Counter, defaultdict
 import gzip
@@ -20,13 +20,14 @@ rounds, sizes, modes = data["rounds"], data["sizes"], data["modes"]
 current_runner = hashlib.sha256(Path(__file__).with_name("export-host-batch.mjs").read_bytes()).hexdigest()
 scheduler_runner = "17e2fcb284f91d9bf330e15dbe400313db8a5ee45879f1833e24976386c59080"
 scope_runner = "d97ab233a766644a758c70416b2f8e03d7981c436df283bd887aa66819e5345b"
-assert data["runnerSha256"] in {current_runner, scheduler_runner, scope_runner}
+fields_runner = "bc175f3d0707dfc12173525450638d23e8918e49d44adef80ab1a52a2e56cc81"
+assert data["runnerSha256"] in {current_runner, scheduler_runner, scope_runner, fields_runner}
 assert data["compilerHashes"]["before"] != data["compilerHashes"]["after"]
 same_entry = data["manifest"]["/before-external/batch.js"] == data["manifest"]["/after-external/batch.js"]
 if data.get("entryChange") == "--borrow-scope-hint":
-    assert data["runnerSha256"] in {current_runner, scope_runner} and not same_entry
+    assert data["runnerSha256"] in {current_runner, scope_runner, fields_runner} and not same_entry
 elif data.get("entryChange") == "--sync-task-fields":
-    assert data["runnerSha256"] == current_runner and not same_entry
+    assert data["runnerSha256"] in {current_runner, fields_runner} and not same_entry
     # Only the generated adapter changes. Check both complete provider inventories.
     def runtime_hashes(prefix):
         return {k.removeprefix(prefix): v for k, v in data["manifest"].items() if k.startswith(prefix)}
@@ -35,6 +36,61 @@ elif data.get("entryChange") == "--sync-task-fields":
 else:
     assert data.get("entryChange") is None and same_entry
 assert modes == ["direct", "release", "before-internal", "after-internal", "before-external", "after-external"]
+# Each fresh page contributes one independent pair to the median interval.
+rank = max(i for i in range(rounds)
+           if 2 * sum(comb(rounds, k) for k in range(i+1)) / 2**rounds <= .05)
+
+if "callsPerProfile" in data:
+    assert rounds == 12 and data["callsPerProfile"] == 262144 and data["intervalBytes"] == 32768
+    assert len(data["samples"]) == rounds * len(modes)
+    by_mode = defaultdict(dict)
+    positions = Counter()
+    order_by_round = defaultdict(dict)
+    for row in data["samples"]:
+        mode, page, position = row["mode"], row["round"], row["position"]
+        assert mode in modes and page in range(rounds) and position in range(len(modes))
+        assert position not in order_by_round[page]
+        order_by_round[page][position] = mode
+        stack = [row["head"]]
+        total = 0
+        while stack:
+            node = stack.pop()
+            assert node["selfSize"] >= 0
+            total += node["selfSize"]
+            stack.extend(node.get("children", []))
+        assert page not in by_mode[mode]
+        by_mode[mode][page] = total / data["callsPerProfile"]
+        positions[mode, position] += 1
+    predecessors = Counter()
+    for order in order_by_round.values():
+        for pos in range(1, len(modes)):
+            predecessors[order[pos - 1], order[pos]] += 1
+    assert len(predecessors) == len(modes) * (len(modes) - 1)
+    assert set(predecessors.values()) == {rounds // len(modes)}
+    for mode in modes:
+        assert set(by_mode[mode]) == set(range(rounds))
+        assert all(positions[mode, pos] == rounds // len(modes) for pos in range(len(modes)))
+        print(mode, "sampled JS bytes per guest entry", round(median(by_mode[mode].values()), 1))
+    for renderer in ["internal", "external"]:
+        before, after = by_mode["before-" + renderer], by_mode["after-" + renderer]
+        ratios = sorted(after[page] / before[page] for page in range(rounds))
+        bounds = median(ratios), ratios[rank], ratios[-1 - rank]
+        print(renderer, "paired after / before allocation", *(round(v, 3) for v in bounds))
+    if args.plot:
+        import matplotlib.pyplot as plt
+        fig, axes = plt.subplots(1, 2, sharey=True, figsize=(7.1, 3.4), layout="constrained")
+        for ax, renderer, color in zip(axes, ["internal", "external"], ["#08796b", "#ab4c26"], strict=True):
+            old, new = by_mode["before-" + renderer], by_mode["after-" + renderer]
+            for r in range(rounds):
+                ax.plot([0, 1], [old[r], new[r]], color=color, alpha=.28, lw=1)
+            ax.plot([0, 1], [median(old.values()), median(new.values())], "o-", color=color, lw=2.5)
+            ax.set_xticks([0, 1], ["Before", "After"])
+            ax.set_xlim(-.2, 1.2)
+            ax.set_title("Internal Oxc" if renderer == "internal" else "External checked")
+            ax.grid(axis="y", alpha=.2)
+        axes[0].set_ylabel("Sampled JS allocation (bytes per guest entry)")
+        fig.savefig(args.plot, dpi=160)
+    raise SystemExit(0)
 passes = range(len(modes), 2 * len(modes))
 rows = defaultdict(dict)
 for row in data["samples"]:
@@ -56,10 +112,6 @@ for r in range(rounds):
             predecessors.update((left[1], right[1]) for left, right in zip(order, order[1:]))
         assert len(predecessors) == len(modes) * (len(modes) - 1)
         assert set(predecessors.values()) == {1}
-
-rank = max(i for i in range(rounds)
-           if 2 * sum(comb(rounds, k) for k in range(i+1)) / 2**rounds <= .05)
-
 
 def page_time(batch, mode):
     return median(median(s["ns"] for s in rows[r, batch, mode].values()) for r in range(rounds))
