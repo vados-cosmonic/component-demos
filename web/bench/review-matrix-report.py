@@ -25,7 +25,9 @@ assert result["inventorySha256"] == hashlib.sha256((bench / "results/candidate-s
 if args.compare_entries:
     with gzip.open(args.compare_entries) as source:
         previous = json.load(source)
-    old = previous["manifest"]
+    # A previous matrix can carry its own paired compiler controls. Compare
+    # the new run with the entries that were current in that matrix.
+    old = {k: v for k, v in previous["manifest"].items() if "/previous-" not in k}
     new = {k: v for k, v in result["manifest"].items() if "/previous-" not in k}
     if result.get("compareCompilers"):
         assert result["compilers"]["previous"] == previous["compilers"]["bundled"]

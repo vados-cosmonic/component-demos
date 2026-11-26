@@ -12,14 +12,31 @@ bench = Path(__file__).resolve().parent
 parser = argparse.ArgumentParser()
 parser.add_argument("input", type=Path, nargs="?", default=bench / "results/bulk-dom.json.gz")
 parser.add_argument("--plot", type=Path)
+parser.add_argument("--matrix", type=Path, help="Full matrix used by --checked-matrix")
 args = parser.parse_args()
 with gzip.open(args.input) as f:
     run = json.load(f)
 # The original four-build archive predates the optional paired compiler comparison.
 runner_hash = sha256((bench / "bulk-dom.mjs").read_bytes()).hexdigest()
+if "matrixSha256" not in run and run["runnerSha256"] == "d1c3ef604d6f97cc5700cb5023754f9e1001b714aa1432fb0c623707f0906ea9":
+    runner_hash = run["runnerSha256"]
 if "compilers" not in run:
     runner_hash = "f180c0495e95515828cc87cabb2d176ec2945b71d1bd75d0588164efc5a48736"
 assert run["runnerSha256"] == runner_hash
+if "matrixSha256" in run:
+    if not args.matrix:
+        parser.error("--matrix is required for a checked-matrix run")
+    data = args.matrix.read_bytes()
+    assert sha256(data).hexdigest() == run["matrixSha256"]
+    matrix = json.loads(gzip.decompress(data))
+    assert run["revision"] == matrix["candidate"] and run["chromium"] == matrix["chromium"]
+    assert run["compilers"]["candidate"] == matrix["compilers"]["bundled"]["js-component-bindgen-component.core.wasm"]
+    assert run["sizes"] == [2000] and run["modes"] == ["direct", "release", "bundled", "external"]
+    for row in matrix["samples"]:
+        if row["round"] == 0 and row["demo"] == "dom-query" and row["version"] in run["modes"]:
+            for req in row["requests"]:
+                path = req["path"]
+                assert run["manifest"][path] == matrix["manifest"][path]["sha256"], path
 for file in ("host/web-host.js", "host/common.js", "examples/dom-query/main.js", "bench/dom-core-shim.mjs"):
     assert sha256((bench.parent / file).read_bytes()).hexdigest() == run["manifest"]["/" + file]
 for lang in run["languages"]:

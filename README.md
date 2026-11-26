@@ -2,6 +2,58 @@
 
 This fork benchmarks the browser examples from [eqrion/component-demos at d0b9dd1](https://github.com/eqrion/component-demos/tree/d0b9dd1390a300978193adc623838fef4e4b632b). It runs the same compiled C, C++, and Rust WebAssembly components through jco 1.13.0, pinned upstream main, and a branch that optimizes synchronous host imports and numeric guest exports. The comparison also includes the demos’ JavaScript, Emscripten (Embind and EM_JS), and Rust wasm-bindgen implementations where available.
 
+## Empty resource sets at 4b9682bfe
+
+Jco allocated a JavaScript `Set` per resource table to remember which representations a component had created. Only a transfer between instances queries that history. Bindgen already knew that a checked synchronous component with one instance would never insert a representation or look one up. It now skips allocating those sets in both the internal Oxc bundle and the external checked runtime. The same regression test covers these modes and custom providers that can inspect the table. [Compiler change and runtime explanation](https://github.com/vados-cosmonic/jco/commit/4b9682bfe81ca115bc498ca2ce1d1f3696f19d21)
+
+Across 21 demo entries the compiler removed **156 empty sets per binding mode**, seven or eight per component. Every minified entry got smaller. The previous and new compilers emitted identical guest Wasm. The size check also compares the generated initialization statements with specialization disabled, call tracking enabled, and a custom provider selected. [Per-entry bytes, compiler and module hashes](web/bench/results/resource-history-sets-4b9682bfe.json.gz)
+
+| Compared with the previous compiler at `eda794c50` | Internal Oxc | External runtime |
+| --- | ---: | ---: |
+| Median entry bytes saved, raw / gzip | 169 / 35 | 166 / 42 |
+| Paired import time, new / previous | 1.025× (0.966–1.063) | 0.984× (0.924–1.027) |
+| Paired time to first result | 0.988× (0.971–1.019) | 0.989× (0.976–0.998) |
+| Paired warm execution | 1.005× (0.972–1.039) | 0.974× (0.936–1.011) |
+
+External time to first result improved 1.1% in this run. The other timing intervals include parity. The 12-round matrix ran 1,668 fresh Chromium documents. Each round contributes the median of the 21 within-workload ratios to each suite-wide estimate. Parentheses show individual 95% sign intervals. [Raw browser matrix](web/bench/results/review-matrix-history-4b9682bfe.json.gz)
+
+| Browser metric | Jco 1.13.0 | Upstream main at `326f52ab4` | Internal Oxc | External runtime |
+| --- | ---: | ---: | ---: | ---: |
+| Median import time (ms) | 5.13 | 11.76 | 9.43 | 19.62 |
+| Median time to first result (ms) | 62.27 | 200.63 | 63.35 | 74.17 |
+| Total gzipped JS (KiB) | 3.01 | 25.42 | 18.60 | 39.27 |
+
+Both modes stayed within 10× of the fastest compiled shim on all 21 warm headline operations. The worst medians were 4.77× internal and 4.97× external. Warm medians matched or beat Jco 1.13.0 on 13/21 internal and 14/21 external workloads. No individual warm interval was wholly slower than release. For first result, five internal and thirteen external intervals were wholly slower.
+
+![Timing ratios across 21 demos for the checked internal and external bindings.](web/bench/results/review-matrix-history-4b9682bfe.png)
+
+### Returning the bulk DOM query results on both sides
+
+The three original subphases outside 10× are bulk DOM queries. The Embind demo discards the live collection. The WIT host materializes it as an array, passes all the handles to the guest and lets the guest drop them. The table below runs the same guest Wasm with a direct shim that performs those operations too. It uses the exact minified release, internal and external assets from the full matrix. Every pass made ten host queries and returned 20,000 elements. The direct shim ended every checked sequence with zero live handles. [Original Embind call](cpp/dom-query/emscripten/main.cpp#L72) · [Direct shim](web/bench/dom-core-shim.mjs) · [Paired timings and counts](web/bench/results/bulk-dom-history-4b9682bfe.json.gz)
+
+| Guest | Handles per query | Direct (ms) | 1.13.0 / direct | Bundled / direct | External / direct | Bundled / 1.13.0 | External / 1.13.0 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| C | 2000 | 5.86 | 2.15× (1.99–2.27) | 1.51× (1.39–1.56) | 1.51× (1.45–1.61) | 0.70× (0.68–0.72) | 0.71× (0.66–0.74) |
+| C++ | 2000 | 5.44 | 2.25× (2.21–2.30) | 1.62× (1.51–1.71) | 1.62× (1.55–1.70) | 0.73× (0.68–0.77) | 0.74× (0.72–0.80) |
+| Rust | 2000 | 5.69 | 2.27× (2.04–2.30) | 1.55× (1.44–1.60) | 1.52× (1.42–1.68) | 0.71× (0.68–0.73) | 0.72× (0.70–0.74) |
+
+<details><summary>Reproduce the size and Chromium comparisons</summary>
+
+Build Jco commits `eda794c50` and `4b9682bfe` in `$before` and `$after`, stage upstream main using the full matrix instructions below, and set `CHROME_BIN` to the Chromium executable. Run these commands from the benchmark checkout.
+
+```sh
+set -e
+test "$(cat "$stage/commit")" = 326f52ab4403466b21b989c995f9bb97b2b9e038
+previous=web/bench/results/review-matrix-registry-eda794c50.json.gz
+node web/bench/resource-table-registry.mjs "$before/packages/jco-transpile" "$after/packages/jco-transpile" "$previous" /tmp/sets.json.gz --history-sets
+ROUNDS=12 node web/bench/review-matrix.mjs "$after" "$stage" /tmp/matrix.json.gz --compare-compilers "$before/packages/jco-transpile"
+python3 web/bench/review-matrix-report.py /tmp/matrix.json.gz --release-intervals --compare-entries "$previous" --plot /tmp/matrix.png
+ROUNDS=12 node web/bench/bulk-dom.mjs "$after" /tmp/bulk.json.gz --checked-matrix /tmp/matrix.json.gz
+python3 web/bench/bulk-dom-report.py /tmp/bulk.json.gz --matrix /tmp/matrix.json.gz
+```
+
+</details>
+
 ## Resource table initialization at eda794c50
 
 A resource transfer between component instances needs to find the destination table by ID. A synchronous component with one instance can use its table directly. The checked compiler now omits the array that indexed these tables and the assignments that populated it. Shutdown still uses its separate list of live tables and captures. Custom runtime providers continue to receive the registry. [Compiler change, runtime explanation and regression test](https://github.com/vados-cosmonic/jco/commit/eda794c504bb0a53ac50bf41ee1b240d3e714aab)

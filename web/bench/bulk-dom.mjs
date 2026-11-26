@@ -6,16 +6,22 @@ import { readFile, readdir, writeFile } from "node:fs/promises";
 import { createServer } from "node:http";
 import { basename, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
-import { gzipSync } from "node:zlib";
+import { gunzipSync, gzipSync } from "node:zlib";
 import puppeteer from "puppeteer-core";
 
-const [checkout, output, before, ...extra] = process.argv.slice(2);
-assert(checkout && output && !extra.length, "Usage: bulk-dom.mjs <built Jco checkout> <output.json.gz> [prior built checkout]");
+const [checkout, output, option, matrixFile, ...extra] = process.argv.slice(2);
+const checked = option === "--checked-matrix";
+assert(checkout && output && !extra.length && checked === Boolean(matrixFile),
+  "Usage: bulk-dom.mjs <built Jco> <output.gz> [prior built checkout | --checked-matrix matrix.gz]");
+const before = checked ? undefined : option;
 const bench = import.meta.dirname, web = join(bench, "..");
 const hash = bytes => createHash("sha256").update(bytes).digest("hex");
 const git = (...args) => execFileSync("git", args, { cwd: checkout, encoding: "utf8" }).trim();
 assert.equal(git("status", "--porcelain", "--untracked-files=no"), "");
 const revision = git("rev-parse", "HEAD");
+const matrixBytes = checked && await readFile(matrixFile);
+const matrix = checked && JSON.parse(gunzipSync(matrixBytes));
+if (checked) assert.equal(matrix.candidate, revision);
 const inventory = JSON.parse(await readFile(join(bench, "results/candidate-sizes.json")));
 const {transpileBytes} = await import(pathToFileURL(resolve(checkout, "packages/jco-transpile/dist/transpile.js")));
 const prior = before && await import(pathToFileURL(resolve(before, "packages/jco-transpile/dist/transpile.js")));
@@ -49,7 +55,11 @@ for (const lang of languages) {
   assert.equal(hash(guest), c.input.sha256);
   manifest[path] = c.input.sha256;
   const coreHashes = {};
-  for (const f of c.variants.baseline) {
+  const releaseFiles = checked
+    ? matrix.samples.find(s => s.lang === lang && s.demo === "dom-query" && s.version === "release").requests
+        .map(({path}) => ({path: join(lang, "dom-query/jco-baseline-minified", basename(path)), sha256: matrix.manifest[path].sha256}))
+    : c.variants.baseline;
+  for (const f of releaseFiles) {
     const bytes = await readFile(join(web, f.path));
     assert.equal(hash(bytes), f.sha256);
     if (f.path.endsWith(".wasm")) coreHashes[basename(f.path)] = f.sha256;
@@ -57,8 +67,9 @@ for (const lang of languages) {
   }
   for (const mode of ["bundled", "external"]) {
     const opts = {name: "dom_query", nodejsCompat: false, base64Cutoff: 5000, namespacedExports: true,
-      emitTypescriptDeclarations: false, map: {...imports}};
-    if (mode === "external") Object.assign(opts, {cmRuntimeEsModule: "/runtime", cmRuntimeSyncImports: true});
+      emitTypescriptDeclarations: false, minify: checked, map: {...imports}};
+    if (mode === "external") Object.assign(opts, checked
+      ? {cmRuntimeEsModule: matrix.checkedPackage} : {cmRuntimeEsModule: "/runtime", cmRuntimeSyncImports: true});
     const {files} = await transpileBytes(guest, opts);
     const cores = {};
     for (const [f, bytes] of Object.entries(files)) {
@@ -82,16 +93,29 @@ for (const lang of languages) {
     }
   }
 }
+let documentHtml = "<!doctype html><body>";
+if (checked) {
+  const runtimeImports = {};
+  for (const s of matrix.samples.filter(s => s.round === 0 && s.demo === "dom-query" && modes.includes(s.version))) {
+    for (const {path} of s.requests) {
+      assert.equal(manifest[path], matrix.manifest[path].sha256, path);
+      if (path.startsWith("/runtime/") && !path.startsWith("/runtime/chunks/")) {
+        runtimeImports[matrix.checkedPackage + "/" + path.slice("/runtime/".length, -3)] = path;
+      }
+    }
+  }
+  documentHtml = '<!doctype html><script type="importmap">' + JSON.stringify({imports: runtimeImports}) + '</script><body>';
+}
 const server = createServer((req, res) => {
   const path = new URL(req.url, "http://localhost").pathname;
   res.setHeader("Cache-Control", "no-store");
   res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
   res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
-  if (path === "/") return res.writeHead(200, {"Content-Type": "text/html"}).end("<!doctype html><body>");
+  if (path === "/") return res.writeHead(200, {"Content-Type": "text/html"}).end(documentHtml);
   if (!assets.has(path)) return res.writeHead(404).end();
   res.writeHead(200, {"Content-Type": path.endsWith(".wasm") ? "application/wasm" : "text/javascript"}).end(assets.get(path));
 });
-const sizes = [25, 250, 2000], total = 20000;
+const sizes = checked ? [2000] : [25, 250, 2000], total = 20000;
 const rounds = Number(process.env.ROUNDS ?? 12);
 assert(Number.isInteger(rounds) && rounds >= 8 && rounds % modes.length === 0);
 // Each build occupies every timing position and follows every other build once.
@@ -165,7 +189,7 @@ try {
     console.log("Completed bulk DOM round", round + 1, "of", rounds);
   }
   await writeFile(output, gzipSync(JSON.stringify({revision, release:inventory.baseline, chromium:await browser.version(), rounds, sizes,
-    languages, total, modes, manifest, compilers, runnerSha256:hash(await readFile(import.meta.filename)), samples, checks})));
+    languages, total, modes, manifest, compilers, ...(checked ? {matrixSha256: hash(matrixBytes)} : {}), runnerSha256:hash(await readFile(import.meta.filename)), samples, checks})));
 } finally {
   await browser?.close();
   server.closeAllConnections(); server.close();

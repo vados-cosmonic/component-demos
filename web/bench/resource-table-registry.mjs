@@ -6,8 +6,10 @@ import { basename, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { gunzipSync, gzipSync } from "node:zlib";
 
-const [oldDir, newDir, matrixPath, output] = process.argv.slice(2);
-assert(output, "Usage: resource-table-registry.mjs <before jco-transpile> <after jco-transpile> <old matrix.gz> <results.gz>");
+const [oldDir, newDir, matrixPath, output, study, ...extra] = process.argv.slice(2);
+const historySets = study === "--history-sets";
+assert(!extra.length && (!study || historySets));
+assert(output, "Usage: resource-table-registry.mjs <before jco-transpile> <after jco-transpile> <old matrix.gz> <results.gz> [--history-sets]");
 const hash = bytes => createHash("sha256").update(bytes).digest("hex");
 const matrixBytes = await readFile(matrixPath);
 const matrix = JSON.parse(gunzipSync(matrixBytes));
@@ -22,7 +24,7 @@ const compilerHashes = await Promise.all(dirs.map(async dir => hash(await readFi
 assert.notEqual(...compilerHashes);
 const widths = bytes => ({ bytes: bytes.length, gzip: gzipSync(bytes).length, sha256: hash(bytes) });
 const registryInitializer = /^\s*const HANDLE_TABLES = _jcoInitializeHandleTables\(\);\n/gm;
-const registryWrite = /^\s*HANDLE_TABLES\[(\d+)\] = handleTable\1;\n/gm;
+const registryWrite = historySets ? /^\s*handleTable(\d+)\._createdReps = new Set\(\);\n/gm : /^\s*HANDLE_TABLES\[(\d+)\] = handleTable\1;\n/gm;
 const registryImport = /initializeHandleTables as _jcoInitializeHandleTables, /g;
 const entries = [], instantiationEntries = [];
 for (const row of matrix.samples.filter(s => s.round === 0 && s.version === "external")) {
@@ -41,9 +43,12 @@ for (const row of matrix.samples.filter(s => s.round === 0 && s.version === "ext
   const [before, after] = (await pair(external)).map(bytes => bytes.toString());
   const writes = [...before.matchAll(registryWrite)].map(m => Number(m[1]));
   assert(writes.length > 0 && new Set(writes).size === writes.length);
-  assert.equal([...before.matchAll(registryInitializer)].length, 1);
-  assert.equal([...before.matchAll(registryImport)].length, 1);
-  const stripped = before.replace(registryWrite, "").replace(registryInitializer, "").replace(registryImport, "");
+  let stripped = before.replace(registryWrite, "");
+  if (!historySets) {
+    assert.equal([...before.matchAll(registryInitializer)].length, 1);
+    assert.equal([...before.matchAll(registryImport)].length, 1);
+    stripped = stripped.replace(registryInitializer, "").replace(registryImport, "");
+  }
   assert.equal(stripped.replace(/^\s*\n/gm, ""), after.replace(/^\s*\n/gm, ""), row.entry);
   const sizes = {};
   for (const [mode, options] of [["bundled", {}], ["external", external]]) {
@@ -63,7 +68,10 @@ for (const row of matrix.samples.filter(s => s.round === 0 && s.version === "ext
     for (const opts of [{ ...external, cmRuntimeSyncImports: false }, { ...external, callTracking: true },
                         { cmRuntimeEsModule: "./custom-provider", cmRuntimeSyncImports: true }]) {
       const [a,b] = await pair(opts);
-      assert.deepEqual(a,b);
+      // Grouping the table declaration and its initialization can change blank
+      // lines in an unminified adapter. Preserve every executable statement.
+      if (historySets) assert.equal(a.toString().replace(/^\s*\n/gm, ""), b.toString().replace(/^\s*\n/gm, ""));
+      else assert.deepEqual(a,b);
       assert(registryWrite.test(a.toString()));
       registryWrite.lastIndex = 0;
     }
@@ -71,7 +79,7 @@ for (const row of matrix.samples.filter(s => s.round === 0 && s.version === "ext
   entries.push({ lang, demo, writes, ...sizes });
 }
 assert.equal(entries.length, 21);
-await writeFile(output, gzipSync(JSON.stringify({ compilerHashes, matrix: hash(matrixBytes),
+await writeFile(output, gzipSync(JSON.stringify({ ...(historySets ? {study} : {}), compilerHashes, matrix: hash(matrixBytes),
   runner: hash(await readFile(import.meta.filename)), entries, instantiationEntries })));
 for (const mode of ["bundled", "external"]) {
   for (const unit of ["bytes", "gzip"]) {
@@ -79,4 +87,4 @@ for (const mode of ["bundled", "external"]) {
     console.log(mode, unit, "min/median/max saved", delta[0], delta[10], delta[20]);
   }
 }
-console.log("Registry writes across external entries:", entries.reduce((n,e) => n + e.writes.length, 0));
+console.log(historySets ? "Unused Sets removed across external entries:" : "Registry writes across external entries:", entries.reduce((n,e) => n + e.writes.length, 0));
