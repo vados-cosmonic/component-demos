@@ -14,9 +14,10 @@ import { parse } from "acorn";
 const [checkout, output, study, ...extra] = process.argv.slice(2);
 const preload = study === "--modulepreload";
 const compression = study === "--gzip";
-const checkedPackage = preload || compression;
+const application = study === "--app-bundle";
+const checkedPackage = preload || compression || application;
 assert(!extra.length && (study === undefined || checkedPackage));
-assert(checkout && output, "Usage: core-startup.mjs <built Jco checkout> <output.json.gz> [--modulepreload|--gzip]");
+assert(checkout && output, "Usage: core-startup.mjs <built Jco checkout> <output.json.gz> [--modulepreload|--gzip|--app-bundle]");
 const rounds = Number(process.env.ROUNDS ?? 18);
 assert(Number.isInteger(rounds) && rounds >= 6 && rounds % 6 === 0);
 const bench = import.meta.dirname, web = join(bench, "..");
@@ -86,6 +87,18 @@ for (const build of ["release","bundled","external"]) for (const inline of (chec
   }
 }
 
+const appGraph = {};
+let bundlerVersion;
+if (application) {
+  const {bundleApp} = await import("./app-bundle.mjs");
+  for (const build of [...modes]) {
+    const packaged = await bundleApp(resolve(checkout), cases, build, assets);
+    bundlerVersion = packaged.version;
+    Object.assign(appGraph, packaged.graph);
+    for (const [path, bytes] of packaged.files) add(path, bytes);
+    modes.push(build + "-app");
+  }
+}
 if (compression) modes.push(...modes.map(build => build + "-gzip"));
 
 // Derive hints from the static module graph so the list travels with the deployed
@@ -185,7 +198,13 @@ for (let round = 0; round < rounds; round++) {
         }
         assert(seen.has(entry));
         assert.equal([...seen].filter(p => p.endsWith(".wasm")).length,Number(!mode.endsWith("-inline")));
-        assert.equal([...seen].some(p => p.startsWith("/runtime/")),build.startsWith("external"));
+        assert.equal([...seen].some(p => p.startsWith("/runtime/")),build.startsWith("external") && !mode.endsWith("-app"));
+        if (mode.endsWith("-app")) {
+          const expected = new Set([entry]);
+          for (const path of expected) for (const child of appGraph[path]) expected.add(child);
+          expected.add(base+"/"+build+"/"+name+".core.wasm");
+          assert.deepEqual(seen,expected);
+        }
         if (preload) {
           const expected = [entry,base+"/"+build+"/"+name+".core.wasm"];
           if (build === "external") expected.push(...hintLists[base].all);
@@ -229,4 +248,4 @@ for (let round = 0; round < rounds; round++) {
   console.log("Completed browser startup round",round+1,"of",rounds);
 }
 await writeFile(output,gzipSync(JSON.stringify({revision,release,browserVersion,rounds,inputs,modes,cases,manifest,samples,
-  runnerSha256:hash(await readFile(import.meta.filename)),matrixSha256:hash(matrixBytes), ...(study ? {study} : {}), ...(preload ? {hintLists} : {})})));
+  runnerSha256:hash(await readFile(import.meta.filename)),matrixSha256:hash(matrixBytes), ...(study ? {study} : {}), ...(preload ? {hintLists} : {}), ...(application ? {appGraph,bundlerVersion,appBundlerSha256:hash(await readFile(join(bench,"app-bundle.mjs")))} : {})})));

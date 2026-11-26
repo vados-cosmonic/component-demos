@@ -1,0 +1,426 @@
+{
+  "before": "5e5b156066a4eb3a793404ee85a64b6a6e3fe9bd",
+  "after": "e088182a963a0fef03a5831a4409df60feeeae11",
+  "rows": [
+    {
+      "lang": "c",
+      "demo": "attribute-churn",
+      "slashBefore": {
+        "bytes": 40580,
+        "hashes": {
+          "attribute_churn.core.wasm": "1a2784fe914f00594f4b2571d1d048c43b503345a46d3de9c02456da13ba97da",
+          "attribute_churn.js": "fb162364bd39092a26cd29982449755632f828754ee0987abf8e11855dad4773"
+        },
+        "sync": false
+      },
+      "bareBeforeAndBothAfter": {
+        "bytes": 23603,
+        "hashes": {
+          "attribute_churn.core.wasm": "1a2784fe914f00594f4b2571d1d048c43b503345a46d3de9c02456da13ba97da",
+          "attribute_churn.js": "915580493f7a3ea9b370182774d15efaed06a6d79a0e4e9cffc9bc7a6de599dd"
+        },
+        "sync": true
+      }
+    },
+    {
+      "lang": "c",
+      "demo": "canvas-draw",
+      "slashBefore": {
+        "bytes": 49830,
+        "hashes": {
+          "canvas_draw.core.wasm": "bf2dd3bd129a69dad4c3185d2821d55770e1c8530f6355277e27b433aee4ca04",
+          "canvas_draw.js": "0b5fd1d95fd75d2fa6699c562ceba1ce76a54e0480ac015af44d8dda5966cc2b"
+        },
+        "sync": false
+      },
+      "bareBeforeAndBothAfter": {
+        "bytes": 27587,
+        "hashes": {
+          "canvas_draw.core.wasm": "bf2dd3bd129a69dad4c3185d2821d55770e1c8530f6355277e27b433aee4ca04",
+          "canvas_draw.js": "52f5a5edebc591f64e526739bc1b3ee31bdc10f806305a1332c640e359066d12"
+        },
+        "sync": true
+      }
+    },
+    {
+      "lang": "c",
+      "demo": "canvas-pixels",
+      "slashBefore": {
+        "bytes": 53912,
+        "hashes": {
+          "canvas_pixels.core.wasm": "dc5c244ccabee52fcc8f750aa772081652b503f18e2e9cedd4dde4294e3e2bf7",
+          "canvas_pixels.js": "1243aa40acff172ffc52f1e10e9969bd9f7d870bc9d3da3521878ece861a1e56"
+        },
+        "sync": false
+      },
+      "bareBeforeAndBothAfter": {
+        "bytes": 29600,
+        "hashes": {
+          "canvas_pixels.core.wasm": "dc5c244ccabee52fcc8f750aa772081652b503f18e2e9cedd4dde4294e3e2bf7",
+          "canvas_pixels.js": "4cbc55f9187d0c1fdf11820381db6d81af69464c179471ba25b763af28869cab"
+        },
+        "sync": true
+      }
+    },
+    {
+      "lang": "c",
+      "demo": "dom-query",
+      "slashBefore": {
+        "bytes": 47108,
+        "hashes": {
+          "dom_query.core.wasm": "aaf5fab64c469017aaa049d09b13bcfa24b14be3754c7cddab010cffdf1da381",
+          "dom_query.js": "05e10ed5ba0cf11f2c69b38bacbf98aac2b092830bbc163d17cf35eb24009b72"
+        },
+        "sync": false
+      },
+      "bareBeforeAndBothAfter": {
+        "bytes": 26773,
+        "hashes": {
+          "dom_query.core.wasm": "aaf5fab64c469017aaa049d09b13bcfa24b14be3754c7cddab010cffdf1da381",
+          "dom_query.js": "d435e6e9fa2e1524dd94ae469f791e22cffa6d4238b9d79f6a892e5646379353"
+        },
+        "sync": true
+      }
+    },
+    {
+      "lang": "c",
+      "demo": "dom-traversal",
+      "slashBefore": {
+        "bytes": 45476,
+        "hashes": {
+          "dom_traversal.core.wasm": "19a7cbcf733cdc5bfccf875cf27dab31ff3b4ee6fe9efc75c7e49e9f050eb8c3",
+          "dom_traversal.js": "18c62c6502a4c285991f309253cfb6218d7c69257bea8f828ec37397ea2bbc0b"
+        },
+        "sync": false
+      },
+      "bareBeforeAndBothAfter": {
+        "bytes": 25444,
+        "hashes": {
+          "dom_traversal.core.wasm": "19a7cbcf733cdc5bfccf875cf27dab31ff3b4ee6fe9efc75c7e49e9f050eb8c3",
+          "dom_traversal.js": "4cf6145306b017e0859afbbb8cbdcff00f48fccf35dbe59f774f3d6718c77f2f"
+        },
+        "sync": true
+      }
+    },
+    {
+      "lang": "c",
+      "demo": "string-marshalling",
+      "slashBefore": {
+        "bytes": 40628,
+        "hashes": {
+          "string_marshalling.core.wasm": "4d69142dd7ae155cef9b3cdec1a2914f2475bde00c681050b1373e0351649ede",
+          "string_marshalling.js": "6464d17a719ef333f59af774386871643b050089588b803112afad884076f33a"
+        },
+        "sync": false
+      },
+      "bareBeforeAndBothAfter": {
+        "bytes": 23502,
+        "hashes": {
+          "string_marshalling.core.wasm": "4d69142dd7ae155cef9b3cdec1a2914f2475bde00c681050b1373e0351649ede",
+          "string_marshalling.js": "43a3d1b6d6e5ebc13a25e51df9398507a8fa3a818506784d9f1421f43e5763d1"
+        },
+        "sync": true
+      }
+    },
+    {
+      "lang": "c",
+      "demo": "table-update",
+      "slashBefore": {
+        "bytes": 45547,
+        "hashes": {
+          "table_update.core.wasm": "dc2fc3462a0a2b2a3cffbc06c0c718d5f1b6c86ff76a7504a839c79c752b5b4a",
+          "table_update.js": "ec02d0862f18ed008f198a2a080c2792701356c3a7f1305c7c69318696661798"
+        },
+        "sync": false
+      },
+      "bareBeforeAndBothAfter": {
+        "bytes": 25785,
+        "hashes": {
+          "table_update.core.wasm": "dc2fc3462a0a2b2a3cffbc06c0c718d5f1b6c86ff76a7504a839c79c752b5b4a",
+          "table_update.js": "cfcba4573fee1682585a6eef2d01e8d9847fc6b24bd9b22ec65f7580dd9649a4"
+        },
+        "sync": true
+      }
+    },
+    {
+      "lang": "cpp",
+      "demo": "attribute-churn",
+      "slashBefore": {
+        "bytes": 40593,
+        "hashes": {
+          "attribute_churn.core.wasm": "97cb526a3b1eef01c3e1104dbc43974ce930a40ba5797aace830a2215e6f093a",
+          "attribute_churn.js": "c41fcadd53b20ee078ec62f7646cf27dc969f7f09a0cd64b74d9b3d28656d425"
+        },
+        "sync": false
+      },
+      "bareBeforeAndBothAfter": {
+        "bytes": 23599,
+        "hashes": {
+          "attribute_churn.core.wasm": "97cb526a3b1eef01c3e1104dbc43974ce930a40ba5797aace830a2215e6f093a",
+          "attribute_churn.js": "e5d82a5d3230d90913f232a902f6eeacac7255d6fbc7a7b526e1ca12e9c5d3f7"
+        },
+        "sync": true
+      }
+    },
+    {
+      "lang": "cpp",
+      "demo": "canvas-draw",
+      "slashBefore": {
+        "bytes": 49841,
+        "hashes": {
+          "canvas_draw.core.wasm": "afaa5b6281bdd6cf4d33ff9904ad6e5ab8d96ff14cca6ec37dbcd0aa65c10c7a",
+          "canvas_draw.js": "1486c5718f4d8905504ccb897018b4654f12c6adb54f153967dcc313db3d2b1b"
+        },
+        "sync": false
+      },
+      "bareBeforeAndBothAfter": {
+        "bytes": 27575,
+        "hashes": {
+          "canvas_draw.core.wasm": "afaa5b6281bdd6cf4d33ff9904ad6e5ab8d96ff14cca6ec37dbcd0aa65c10c7a",
+          "canvas_draw.js": "7aad961ad5c65dd176cb39225bcf038b6b20bf10d4ea6d0e6787ce9f24ffc894"
+        },
+        "sync": true
+      }
+    },
+    {
+      "lang": "cpp",
+      "demo": "canvas-pixels",
+      "slashBefore": {
+        "bytes": 53923,
+        "hashes": {
+          "canvas_pixels.core.wasm": "6f825890677d5a575634dca799565c9c7b2957ddc30094b7d5ff077c1d29db89",
+          "canvas_pixels.js": "fde978a0ead2597789286f86ddc532b591a17ef0f6cdcb4a612b1dc40c746674"
+        },
+        "sync": false
+      },
+      "bareBeforeAndBothAfter": {
+        "bytes": 29588,
+        "hashes": {
+          "canvas_pixels.core.wasm": "6f825890677d5a575634dca799565c9c7b2957ddc30094b7d5ff077c1d29db89",
+          "canvas_pixels.js": "bc55113538ee2ff5d91e003d7d05394161b1b329df4d1b55d9d8950fe3483fe4"
+        },
+        "sync": true
+      }
+    },
+    {
+      "lang": "cpp",
+      "demo": "dom-query",
+      "slashBefore": {
+        "bytes": 47121,
+        "hashes": {
+          "dom_query.core.wasm": "65bad7a4a8f3c1608f2fe3f4efbe9be706c420c44dd69c119e84aee29657340f",
+          "dom_query.js": "9bc435d571b339a9d8e8960fb42e453f4dd9edc3f1bf9e97c652cf57d0814366"
+        },
+        "sync": false
+      },
+      "bareBeforeAndBothAfter": {
+        "bytes": 26769,
+        "hashes": {
+          "dom_query.core.wasm": "65bad7a4a8f3c1608f2fe3f4efbe9be706c420c44dd69c119e84aee29657340f",
+          "dom_query.js": "72c75d2f3d57a39c7a5c324b1bdd188e00daff75d1c452980c3930e9138a8d7a"
+        },
+        "sync": true
+      }
+    },
+    {
+      "lang": "cpp",
+      "demo": "dom-traversal",
+      "slashBefore": {
+        "bytes": 45489,
+        "hashes": {
+          "dom_traversal.core.wasm": "0dee1c7c6c955fb6610df1ec0124002fca296f10148078d164319b0e2924b04a",
+          "dom_traversal.js": "8f6143c70d7b7d6a22e311a78b161f5a53c1802c8f5c5d36e171981519b4b5c9"
+        },
+        "sync": false
+      },
+      "bareBeforeAndBothAfter": {
+        "bytes": 25440,
+        "hashes": {
+          "dom_traversal.core.wasm": "0dee1c7c6c955fb6610df1ec0124002fca296f10148078d164319b0e2924b04a",
+          "dom_traversal.js": "6658994fc3205c2a8b753e24a703d0ae689e281cc680d622b66e8f1708d62b73"
+        },
+        "sync": true
+      }
+    },
+    {
+      "lang": "cpp",
+      "demo": "string-marshalling",
+      "slashBefore": {
+        "bytes": 40641,
+        "hashes": {
+          "string_marshalling.core.wasm": "cd52291c02cb65000946f9a9343399c829ee3f201e14682110484691197c4bc3",
+          "string_marshalling.js": "3d36d4d79541b7faea15b5633db44e85f8bbbe10d1378f395e468c9d2099529a"
+        },
+        "sync": false
+      },
+      "bareBeforeAndBothAfter": {
+        "bytes": 23498,
+        "hashes": {
+          "string_marshalling.core.wasm": "cd52291c02cb65000946f9a9343399c829ee3f201e14682110484691197c4bc3",
+          "string_marshalling.js": "b70a0d16862656e2a42598312e89f2ac8782bfcc8b5c837937830146f7784afa"
+        },
+        "sync": true
+      }
+    },
+    {
+      "lang": "cpp",
+      "demo": "table-update",
+      "slashBefore": {
+        "bytes": 45560,
+        "hashes": {
+          "table_update.core.wasm": "29d0a70d144ecbf8c9e094c762b79ebeabf6ed7da057ddecd327701bc0491339",
+          "table_update.js": "d0b410b107a93dfa28df071c17b66d2b79edc330c7e7035fb1e5fcaeaa846035"
+        },
+        "sync": false
+      },
+      "bareBeforeAndBothAfter": {
+        "bytes": 25781,
+        "hashes": {
+          "table_update.core.wasm": "29d0a70d144ecbf8c9e094c762b79ebeabf6ed7da057ddecd327701bc0491339",
+          "table_update.js": "ce5d95be7ab60e0c809452da5df56eaf4243668830b219a773752dd5272891bb"
+        },
+        "sync": true
+      }
+    },
+    {
+      "lang": "rust",
+      "demo": "attribute-churn",
+      "slashBefore": {
+        "bytes": 39986,
+        "hashes": {
+          "attribute_churn.core.wasm": "4caf77895217e1e6f48f0a4ee72e5833697f048245c9b6a5fd9757490ddefee7",
+          "attribute_churn.js": "a43af0216209fec0d746b6c6ea3e76b37f2e3e757680586a8a9131633bf6e326"
+        },
+        "sync": false
+      },
+      "bareBeforeAndBothAfter": {
+        "bytes": 23018,
+        "hashes": {
+          "attribute_churn.core.wasm": "4caf77895217e1e6f48f0a4ee72e5833697f048245c9b6a5fd9757490ddefee7",
+          "attribute_churn.js": "5a73416c9bdc0d1fe4f5953716e9abf1fc9a3ea2b67b66cca8ccba722f27f362"
+        },
+        "sync": true
+      }
+    },
+    {
+      "lang": "rust",
+      "demo": "canvas-draw",
+      "slashBefore": {
+        "bytes": 49230,
+        "hashes": {
+          "canvas_draw.core.wasm": "90a3cf1e82b75e75b711bc1e51ada1c5aa41118b72399486bc5a3121d14f961c",
+          "canvas_draw.js": "30cfc820e0dd7aa9003c17f2a46ac7e08c5031b346c8252eceea80a2aff9e884"
+        },
+        "sync": false
+      },
+      "bareBeforeAndBothAfter": {
+        "bytes": 26993,
+        "hashes": {
+          "canvas_draw.core.wasm": "90a3cf1e82b75e75b711bc1e51ada1c5aa41118b72399486bc5a3121d14f961c",
+          "canvas_draw.js": "820a24e5b8e2ee482efaafc09f70ea1c0522e636dc52cc064d880de942f6f9f7"
+        },
+        "sync": true
+      }
+    },
+    {
+      "lang": "rust",
+      "demo": "canvas-pixels",
+      "slashBefore": {
+        "bytes": 53309,
+        "hashes": {
+          "canvas_pixels.core.wasm": "f427f76b7d366add1b27588aa2ee5ef966f8c32d40edfae6fc73863fcc9db59a",
+          "canvas_pixels.js": "7afa4dfaedbda82fb3921b40166217e5433e4fc2a7c7caa078e279de2dacebb3"
+        },
+        "sync": false
+      },
+      "bareBeforeAndBothAfter": {
+        "bytes": 29007,
+        "hashes": {
+          "canvas_pixels.core.wasm": "f427f76b7d366add1b27588aa2ee5ef966f8c32d40edfae6fc73863fcc9db59a",
+          "canvas_pixels.js": "e65b78b0d518547f79c03ab36ebbe46a2e82741014c7f15e1e6e55977c7e0838"
+        },
+        "sync": true
+      }
+    },
+    {
+      "lang": "rust",
+      "demo": "dom-query",
+      "slashBefore": {
+        "bytes": 46510,
+        "hashes": {
+          "dom_query.core.wasm": "a27a0a4f740bfe2788482913820b371da42f55a144e74ab67610de4f5b1b517e",
+          "dom_query.js": "569ddcf9aa7e694c74a32a5f81af6e594e9d7604a5cfd965ae0643406d285855"
+        },
+        "sync": false
+      },
+      "bareBeforeAndBothAfter": {
+        "bytes": 26187,
+        "hashes": {
+          "dom_query.core.wasm": "a27a0a4f740bfe2788482913820b371da42f55a144e74ab67610de4f5b1b517e",
+          "dom_query.js": "d7105fa1fe3cc0c47944034dceb0956c393800259b7d449ce5750d14f032c8f9"
+        },
+        "sync": true
+      }
+    },
+    {
+      "lang": "rust",
+      "demo": "dom-traversal",
+      "slashBefore": {
+        "bytes": 44413,
+        "hashes": {
+          "dom_traversal.core.wasm": "1f5789019de3722f0ef8283c432b44d4226f3824f53ee4dda04a3e6c4c981735",
+          "dom_traversal.js": "dfedc624441a43eca4d6b06a66c70ee8e62e4b9ec0b04923c9004372c95c1fa2"
+        },
+        "sync": false
+      },
+      "bareBeforeAndBothAfter": {
+        "bytes": 24641,
+        "hashes": {
+          "dom_traversal.core.wasm": "1f5789019de3722f0ef8283c432b44d4226f3824f53ee4dda04a3e6c4c981735",
+          "dom_traversal.js": "c6e6fa2fdfbd995de8538495add598d00e91890d8209ddf83605c5495747ab36"
+        },
+        "sync": true
+      }
+    },
+    {
+      "lang": "rust",
+      "demo": "string-marshalling",
+      "slashBefore": {
+        "bytes": 40034,
+        "hashes": {
+          "string_marshalling.core.wasm": "ca99ee91981daebb2253f16bca5ac85d21ba45c28531d69641007bfefe31084f",
+          "string_marshalling.js": "ef568a18ad4199d7741206d51372e4be7b468cc36aa3ab51ab5a0944f0891a15"
+        },
+        "sync": false
+      },
+      "bareBeforeAndBothAfter": {
+        "bytes": 22918,
+        "hashes": {
+          "string_marshalling.core.wasm": "ca99ee91981daebb2253f16bca5ac85d21ba45c28531d69641007bfefe31084f",
+          "string_marshalling.js": "cf84d96c4f33cc5848e4b5cc0667423cc3608cd43d7a61e8c85d2a8bb2f69629"
+        },
+        "sync": true
+      }
+    },
+    {
+      "lang": "rust",
+      "demo": "table-update",
+      "slashBefore": {
+        "bytes": 44870,
+        "hashes": {
+          "table_update.core.wasm": "780122d26fa2f30f89df42eb8b49907a5e2b511eb71ee65c33a66c36302d5b27",
+          "table_update.js": "89504922c5fadcbd354445520f7fa680f4a597713f934443d1d04a7b3e304e37"
+        },
+        "sync": false
+      },
+      "bareBeforeAndBothAfter": {
+        "bytes": 25329,
+        "hashes": {
+          "table_update.core.wasm": "780122d26fa2f30f89df42eb8b49907a5e2b511eb71ee65c33a66c36302d5b27",
+          "table_update.js": "c45925e645d3e88404612ea01a02aea2ec163c9a49e34508912c3325683dc297"
+        },
+        "sync": true
+      }
+    }
+  ]
+}

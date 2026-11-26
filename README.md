@@ -14,7 +14,7 @@ At `db4a3aca0`, the external JavaScript entry shrank **15.0–17.9% on every wor
 | Import (ms) | 5.27 | 11.94 | 10.00 | 22.77 |
 | First full result including import (ms) | 61.83 | 203.50 | 62.76 | 78.30 |
 
-Both PR renderers were within 10× of the fastest compiled shim in **21/21 warm headline cases**. The largest ratios were **4.92× internal and 4.50× external**. Each renderer matched or beat 1.13.0 on 18/21 warm headlines in this run. Each met the shim target in 81/84 comparable subphases. The three exceptions return a materialized list of DOM handles, while the original shim discards a live collection. [Equal-work DOM queries](#materializing-bulk-dom-query-results) · [Warmed tables and traversal](#warm-table-creation-and-tree-traversal) · [Canvas readback](#canvas-readback-at-the-pr-head) · [Wasm packaging](#fetching-or-embedding-the-primary-wasm-core) · [Preloading external runtime modules](#preloading-external-runtime-modules) · [HTTP gzip](#serving-the-browser-bindings-with-http-gzip)
+Both PR renderers were within 10× of the fastest compiled shim in **21/21 warm headline cases**. The largest ratios were **4.92× internal and 4.50× external**. Each renderer matched or beat 1.13.0 on 18/21 warm headlines in this run. Each met the shim target in 81/84 comparable subphases. The three exceptions return a materialized list of DOM handles, while the original shim discards a live collection. [Equal-work DOM queries](#materializing-bulk-dom-query-results) · [Warmed tables and traversal](#warm-table-creation-and-tree-traversal) · [Canvas readback](#canvas-readback-at-the-pr-head) · [Wasm packaging](#fetching-or-embedding-the-primary-wasm-core) · [Preloading external runtime modules](#preloading-external-runtime-modules) · [HTTP gzip](#serving-the-browser-bindings-with-http-gzip) · [Multi-entry application build](#bundling-the-component-entries-as-one-browser-application) · [Trailing-slash fix](#checked-runtime-package-spelling)
 
 ![Warm operation time versus the fastest shim and 1.13.0, and first-result time versus 1.13.0, for both PR renderers.](web/bench/results/review-matrix-minified-db4a3aca0.png)
 
@@ -55,6 +55,28 @@ CHROME_BIN=/path/to/chrome ROUNDS=10 node web/bench/review-matrix.mjs \
   "$jco" "$stage" /tmp/checked-provider.json.gz --minify "$previous/packages/jco-transpile"
 python3 web/bench/review-matrix-report.py /tmp/checked-provider.json.gz --plot /tmp/checked-provider.png
 ```
+
+</details>
+
+## Checked runtime package spelling
+
+A trailing slash on `@bytecodealliance/jco-cm-runtime/` used to resolve the right JavaScript modules while selecting the general host-call adapter. On the scalar host-call loop, fixing package recognition brought the slash spelling from **2,091 ns to 15.6 ns per call**. The bare spelling took 15.8 ns and Jco 1.13.0 took 11.6 ns in the same pages. All four configurations ran identical guest cores. [Jco fix and regression tests](https://github.com/vados-cosmonic/jco/commit/e088182a963a0fef03a5831a4409df60feeeae11) · [Timing samples and asset hashes](web/bench/results/provider-spelling-loop.json.gz)
+
+Across all 21 browser workload and language pairs, the fix reduced the minified JS entry for the slash spelling by **41.8–45.6%**, saving 16,968–24,335 bytes per entry. Every emitted JS and Wasm file for both spellings now matches the published bare-package run byte for byte. Custom providers still select their own adapters. [Per-workload size and hash comparison](web/bench/results/provider-spelling.json)
+
+<details><summary>Reproduce the package spelling comparison</summary>
+
+Build the Jco checkouts at `5e5b15606` and `e088182a9` using the [benchmark setup](#reproduce-the-comparison). From this fork, verify the 21 workloads, then generate the pre-fix loop fixture with the older CLI and pass it to the browser runner.
+
+```sh
+node web/bench/provider-spelling.mjs /path/to/before /tmp/before-spellings.json --before
+node web/bench/provider-spelling.mjs /path/to/after /tmp/after-spellings.json
+wasm-tools parse web/bench/import-loop.wat -o /tmp/loop.wasm
+node /path/to/before/packages/jco/dist/jco.js transpile /tmp/loop.wasm -o /tmp/old-loop --minify --no-nodejs-compat --instantiation async --base64-cutoff 0 --cm-runtime-es-module @bytecodealliance/jco-cm-runtime/
+CHROME_BIN=/path/to/chrome node web/bench/provider-spelling-loop.mjs /path/to/after /tmp/old-loop /tmp/spelling-loop.json.gz
+```
+
+Each of 16 isolated Chromium documents ran four warmups and four timed passes per configuration. Each pass made 65,536 guest-to-host calls and checked the guest's checksum. The reported times are medians of page medians. [Size verifier](web/bench/provider-spelling.mjs) · [Browser runner](web/bench/provider-spelling-loop.mjs)
 
 </details>
 
@@ -323,6 +345,40 @@ Use the [benchmark setup](#reproduce-the-comparison) with Jco at [the measured r
 ```sh
 CHROME_BIN=/path/to/chrome ROUNDS=18 node web/bench/core-startup.mjs /path/to/built/jco /tmp/http-gzip.json.gz --gzip
 python3 web/bench/core-startup-report.py /tmp/http-gzip.json.gz --plot /tmp/http-gzip.png
+```
+
+</details>
+
+## Bundling the component entries as one browser application
+
+Building the six external component entries together with Rolldown reduced cold first-result time from **30.88 to 16.91 ms** across small C, C++ and Rust DOM workloads. Each fresh page fetched the component entry and one shared JS chunk, down from 19 JS requests. Median JS bodies fell from **124.30 to 71.16 KiB**. All six individual 95% intervals favored the application build. The internal Oxc and release builds already delivered a single JS file per component. Passing those through the same application build added a shared chunk and increased median first-result time. [Sizes, chunk graph, request traces and timings](web/bench/results/app-bundle.json.gz)
+
+| Build | Import ms, original → app | First result ms, original → app | Paired first result | JS requests, original → app | JS KiB, original → app |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Jco 1.13.0 | 5.66 → 7.41 | 8.83 → 10.64 | 1.171× | 1.00 → 2.00 | 9.71 → 9.91 |
+| Internal Oxc | 11.14 → 12.88 | 17.76 → 18.91 | 1.063× | 1.00 → 2.00 | 72.03 → 72.54 |
+| External runtime | 25.11 → 11.62 | 30.88 → 16.91 | 0.545× | 19.00 → 2.00 | 124.30 → 71.16 |
+
+![Paired time to first result with all six component entries built together, relative to original files, for three bindings configurations.](web/bench/results/app-bundle.png)
+
+<details><summary>Per-workload intervals and reproduction</summary>
+
+| Guest and workload | 1.13.0 | Internal Oxc | External runtime |
+| --- | ---: | ---: | ---: |
+| C DOM query | 1.16× (1.06–1.32) | 1.06× (1.01–1.15) | 0.54× (0.52–0.59) |
+| C++ DOM query | 1.17× (1.10–1.32) | 1.05× (0.96–1.16) | 0.53× (0.49–0.60) |
+| Rust DOM query | 1.15× (1.02–1.23) | 1.07× (0.98–1.17) | 0.58× (0.50–0.64) |
+| C table update | 1.25× (1.16–1.37) | 1.12× (0.96–1.17) | 0.55× (0.49–0.59) |
+| C++ table update | 1.26× (1.07–1.45) | 1.14× (1.09–1.21) | 0.55× (0.50–0.61) |
+| Rust table update | 1.17× (1.14–1.25) | 1.05× (0.99–1.17) | 0.54× (0.51–0.59) |
+
+Each binding configuration supplied six minified entry points to Rolldown 1.2.13. The application build preserved entry paths and published the original Wasm cores alongside them. The demo host stayed external and loaded before timing in both treatments. The runner checked every requested file against the emitted chunk graph and validated the guest report on each page. Each of the 648 fresh documents loaded one component on uncompressed HTTP/1.1 loopback. The first table summarizes six workload medians. Paired ratios compare the two treatments within the same round and workload. [Application build](web/bench/app-bundle.mjs) · [Timing runner](web/bench/core-startup.mjs)
+
+Use the [benchmark setup](#reproduce-the-comparison) with the Jco checkout at `5e5b15606` and run from this fork.
+
+```sh
+CHROME_BIN=/path/to/chrome ROUNDS=18 node web/bench/core-startup.mjs /path/to/built/jco /tmp/app-bundle.json.gz --app-bundle
+python3 web/bench/core-startup-report.py /tmp/app-bundle.json.gz --plot /tmp/app-bundle.png
 ```
 
 </details>

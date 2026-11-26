@@ -20,15 +20,20 @@ def digest(path):
     return sha256(path.read_bytes()).hexdigest()
 
 compression = data.get("study") == "--gzip"
-assert compression or "study" not in data
-suffix = "-gzip" if compression else "-inline"
-filename = "review-matrix-minified-db4a3aca0.json.gz" if compression else "review-matrix-minified-eaca992c8.json.gz"
+application = data.get("study") == "--app-bundle"
+assert compression or application or "study" not in data
+suffix = {"--gzip":"-gzip", "--app-bundle":"-app", None:"-inline"}[data.get("study")]
+filename = "review-matrix-minified-db4a3aca0.json.gz" if compression or application else "review-matrix-minified-eaca992c8.json.gz"
 matrix = bench / "results" / filename
 assert digest(matrix) == data["matrixSha256"]
 # The initial core-packaging study used the runner before it also supported preload hints.
 runner_hash = digest(bench / "core-startup.mjs")
-if compression:
+if application:
     assert data["runnerSha256"] == runner_hash
+    assert data["appBundlerSha256"] == digest(bench / "app-bundle.mjs")
+elif compression:
+    expected = "1b7c6595f83094cf251228c11a9ba75c9231f6d8e073379d0f19536add75a640" if digest(args.input) == "935e5c7ae1d3e6fbe4777daaeef51de545e62e3a91e497d69312c381180fa73d" else runner_hash
+    assert data["runnerSha256"] == expected
 else:
     assert data["runnerSha256"] in (runner_hash, "f6d3f8fd18b1909c41291ce2c72a2c70d5a05f17738c341d68f4e41f9e81e6ef")
 with gzip.open(matrix) as f:
@@ -36,6 +41,11 @@ with gzip.open(matrix) as f:
 reference = reference_run["manifest"]
 manifest = data["manifest"]
 for path, meta in manifest.items():
+    if path in data.get("appGraph", {}):
+        continue
+    if "-app/" in path:
+        assert path.endswith(".core.wasm")
+        path = path.replace("-app/", "/")
     if "-inline/" not in path:
         assert meta["sha256"] == reference[path]["sha256"] and meta["bytes"] == reference[path]["bytes"]
 
@@ -45,7 +55,7 @@ rounds = data["rounds"]
 assert len(cases) == len(set(cases)) == 6 and len(set(modes)) == len(modes) == 6
 assert rounds % 6 == 0 and rounds >= 6
 expected_paths = {}
-if compression:
+if compression or application:
     for sample in reference_run["samples"]:
         if sample["version"] in ("release", "bundled", "external") and sample["round"] == 0:
             key = (f"/{sample['lang']}/{sample['demo']}", sample["version"])
@@ -57,7 +67,7 @@ for row in data["samples"]:
     assert row["firstMs"] > row["loadMs"] > 0
     paths = {req["path"] for req in row["requests"]}
     assert len(paths) == len(row["requests"])
-    if compression:
+    if compression or (application and not mode.endswith(suffix)):
         assert paths == expected_paths[case,mode.removesuffix(suffix)]
     size_key = "gzip" if compression and mode.endswith(suffix) else "bytes"
     for req in row["requests"]:
@@ -66,7 +76,7 @@ for row in data["samples"]:
         if compression:
             assert req["decoded"] == asset["bytes"]
     assert sum(path.endswith(".wasm") for path in paths) == int(not mode.endswith("-inline"))
-    assert any(path.startswith("/runtime/") for path in paths) == mode.startswith("external")
+    assert any(path.startswith("/runtime/") for path in paths) == (mode.startswith("external") and not mode.endswith("-app"))
     rows[key] = row
 assert len(rows) == rounds * len(cases) * len(modes)
 for case in data["cases"]:
@@ -79,7 +89,16 @@ for case in data["cases"]:
             base_paths = {req["path"] for req in rows[r,case["base"],build]["requests"]}
             trial_paths = {req["path"].replace("-inline/", "/") for req in rows[r,case["base"],build+suffix]["requests"]}
             assert key in base_paths
-            if compression:
+            if application:
+                entry = key.removesuffix(".core.wasm").replace("/"+build+"/","/"+build+suffix+"/")+".js"
+                reachable, queue = set(), [entry]
+                while queue:
+                    path = queue.pop()
+                    if path not in reachable:
+                        reachable.add(path)
+                        queue.extend(data["appGraph"][path])
+                assert trial_paths == reachable | {entry.removesuffix(".js")+".core.wasm"}
+            elif compression:
                 assert trial_paths == base_paths
             else:
                 assert trial_paths == base_paths - {key}
@@ -96,6 +115,10 @@ for start in range(0, rounds, 6):
 
 def values(case, mode, field):
     def value(row):
+        if field == "jsRequests":
+            return sum(p["path"].endswith(".js") for p in row["requests"])
+        if field == "jsBytes":
+            return sum(p["bytes"] for p in row["requests"] if p["path"].endswith(".js"))
         if field == "bodyBytes":
             return sum(p["bytes"] for p in row["requests"])
         if field in ("bytes","gzip"):
@@ -112,7 +135,10 @@ def summarize(mode, field):
 def typical_ratio(mode, field):
     return median(median(paired(case, mode, field)) for case in cases)
 
-if compression:
+if application:
+    print("| Build | Import ms, original → app | First result ms, original → app | Paired first result | JS requests, original → app | JS KiB, original → app |")
+    print("| --- | ---: | ---: | ---: | ---: | ---: |")
+elif compression:
     print("| Build | Import ms, plain → gzip | First result ms, plain → gzip | Paired first result | JS + Wasm body KiB, plain → gzip |")
     print("| --- | ---: | ---: | ---: | ---: |")
 else:
@@ -123,6 +149,8 @@ for mode, name in labels.items():
     def both(key, scale=1):
         return " → ".join(f"{summarize(m,key)/scale:.2f}" for m in (mode,mode+suffix))
     sizes = both("bodyBytes",1024) if compression else f"{both('bytes',1024)} | {both('gzip',1024)}"
+    if application:
+        sizes = f"{both('jsRequests')} | {both('jsBytes',1024)}"
     print(f"| {name} | {both('loadMs')} | {both('firstMs')} | {typical_ratio(mode,'firstMs'):.3f}× | {sizes} |")
 
 rank = max(i for i in range(rounds) if 2*sum(comb(rounds,j) for j in range(i+1))/2**rounds <= .05)
@@ -150,6 +178,7 @@ if args.plot:
     ax.set_yticks(range(len(cases)), [label(c) for c in cases])
     ax.invert_yaxis()
     ax.grid(axis="x",alpha=.2)
-    ax.set_xlabel("Time to first result, gzip / uncompressed" if compression else "Time to first result, embedded / fetched")
+    comparison = {"--gzip":"gzip / uncompressed", "--app-bundle":"application build / original", None:"embedded / fetched"}[data.get("study")]
+    ax.set_xlabel("Time to first result, "+comparison)
     fig.legend(*ax.get_legend_handles_labels(),loc="outside lower center",ncol=3)
     fig.savefig(args.plot,dpi=150)
