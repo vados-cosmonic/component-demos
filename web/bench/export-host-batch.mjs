@@ -9,10 +9,14 @@ import { gzipSync } from "node:zlib";
 import puppeteer from "puppeteer-core";
 import { parse, transpile } from "@bytecodealliance/jco";
 
-const [oldCompiler, oldRuntime, compiler, runtime, output, flag, ...extra] = process.argv.slice(2);
+const [oldCompiler, oldRuntime, compiler, runtime, output, ...flags] = process.argv.slice(2);
+const heap = flags.includes("--heap");
+const entryFlags = flags.filter((flag) => flag !== "--heap");
+const [flag] = entryFlags;
 assert(
-  output && !extra.length && [undefined, "--borrow-scope-hint", "--sync-task-fields", "--heap"].includes(flag),
-  "Usage: export-host-batch.mjs <previous transpiler> <previous runtime dist> <new transpiler> <new runtime dist> <output.json.gz> [--borrow-scope-hint|--sync-task-fields|--heap]",
+  output && new Set(flags).size === flags.length && entryFlags.length <= 1 &&
+    [undefined, "--borrow-scope-hint", "--sync-task-fields", "--share-task-options"].includes(flag),
+  "Usage: export-host-batch.mjs <previous transpiler> <previous runtime dist> <new transpiler> <new runtime dist> <output.json.gz> [--borrow-scope-hint|--sync-task-fields|--share-task-options] [--heap]",
 );
 const hash = (bytes) => createHash("sha256").update(bytes).digest("hex");
 const provider = "@bytecodealliance/jco-cm-runtime";
@@ -68,7 +72,26 @@ for (const [revision, transpiler, dir] of [
 }
 const beforeEntry = assets.get("/before-external/batch.js");
 const afterEntry = assets.get("/after-external/batch.js");
-if (flag === "--borrow-scope-hint") {
+if (flag === "--share-task-options") {
+  assert.equal(compilerHashes.before, compilerHashes.after);
+  // This counterfactual moves only the literal in this fixture. Reject a
+  // changed adapter rather than accidentally moving an expression that reads
+  // a parameter, calls a callback, or otherwise depends on this invocation.
+  const literal = '{componentIdx:0,isAsync:!1,isManualAsync:!1,preserveFutureResult:!1,entryFnName:`exports0Run`,callbackFnName:null,errHandling:`none`,callingWasmExport:!0,stringEncoding:`utf8`,indexOnEntry:!0}';
+  const declaration = 'function run(';
+  const shared = 'benchmarkTaskOptions';
+  for (const renderer of ["internal", "external"]) {
+    const path = "/after-" + renderer + "/batch.js";
+    assert.deepEqual(assets.get(path), assets.get("/before-" + renderer + "/batch.js"));
+    const entry = new TextDecoder().decode(assets.get(path));
+    assert.equal(entry.split(declaration).length, 2);
+    assert.equal(entry.split(literal).length, 2);
+    assert(!entry.includes(shared));
+    const treatment = entry.replace(literal, shared)
+      .replace(declaration, "const " + shared + "=" + literal + ";" + declaration);
+    assets.set(path, Buffer.from(treatment));
+  }
+} else if (flag === "--borrow-scope-hint") {
   // The compiler supplies one extra property to the checked runtime. Everything
   // else in the component entry must match the control, including import names.
   const entry = new TextDecoder().decode(afterEntry);
@@ -90,7 +113,6 @@ assert.notDeepEqual(
   assets.get("/before-internal/batch.js"),
   assets.get("/after-internal/batch.js"),
 );
-const heap = flag === "--heap";
 const intervalBytes = 32768, callsPerProfile = 262144;
 const rounds = heap ? 12 : 18,
   sizes = [1, 4, 16, 64, 256];
@@ -219,7 +241,7 @@ try {
         componentSha256: hash(component),
         runnerSha256: hash(await readFile(import.meta.filename)),
         compilerHashes,
-        entryChange: heap ? null : flag ?? null,
+        entryChange: flag ?? null,
         ...(heap ? { callsPerProfile, intervalBytes } : {}),
         releaseVersion: JSON.parse(
           await readFile(

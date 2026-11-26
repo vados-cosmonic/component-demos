@@ -21,13 +21,15 @@ current_runner = hashlib.sha256(Path(__file__).with_name("export-host-batch.mjs"
 scheduler_runner = "17e2fcb284f91d9bf330e15dbe400313db8a5ee45879f1833e24976386c59080"
 scope_runner = "d97ab233a766644a758c70416b2f8e03d7981c436df283bd887aa66819e5345b"
 fields_runner = "bc175f3d0707dfc12173525450638d23e8918e49d44adef80ab1a52a2e56cc81"
-assert data["runnerSha256"] in {current_runner, scheduler_runner, scope_runner, fields_runner}
-assert data["compilerHashes"]["before"] != data["compilerHashes"]["after"]
+allocation_runner = "405b85e378598b6007407a45d147e799136a77556fe5169620418709e411b618"
+assert data["runnerSha256"] in {current_runner, scheduler_runner, scope_runner, fields_runner, allocation_runner}
+shares_options = data.get("entryChange") == "--share-task-options"
+assert (data["compilerHashes"]["before"] == data["compilerHashes"]["after"]) == shares_options
 same_entry = data["manifest"]["/before-external/batch.js"] == data["manifest"]["/after-external/batch.js"]
 if data.get("entryChange") == "--borrow-scope-hint":
-    assert data["runnerSha256"] in {current_runner, scope_runner, fields_runner} and not same_entry
-elif data.get("entryChange") == "--sync-task-fields":
-    assert data["runnerSha256"] in {current_runner, fields_runner} and not same_entry
+    assert data["runnerSha256"] in {current_runner, scope_runner, fields_runner, allocation_runner} and not same_entry
+elif data.get("entryChange") == "--sync-task-fields" or shares_options:
+    assert data["runnerSha256"] in {current_runner, fields_runner, allocation_runner} and not same_entry
     # Only the generated adapter changes. Check both complete provider inventories.
     def runtime_hashes(prefix):
         return {k.removeprefix(prefix): v for k, v in data["manifest"].items() if k.startswith(prefix)}

@@ -74,6 +74,39 @@ python3 web/bench/review-matrix-report.py /tmp/matrix.json.gz --release-interval
 
 </details>
 
+### Sharing constant task options across guest entries
+
+The one-host-call fixture constructs a task-options object on each entry. All ten properties are constants for that export. This experiment moves the literal just before the exported function declaration, so the object lives for the lifetime of the component instance. Each invocation still creates its own task and thread. Both treatments use compiler `47f6dc0c1`. The runner checks for byte-identical entries before moving the literal, verifies identical core Wasm, and records both runtime inventories. This is a benchmark-only edit to the generated adapters.
+
+| One host call per guest entry | Internal Oxc | External checked |
+| --- | ---: | ---: |
+| Sampled JS bytes per entry, current → shared | 661.2 → 595.6 | 650.0 → 604.3 |
+| Paired bytes, shared / current | 0.907× (0.899–0.924) | 0.925× (0.910–0.945) |
+| Paired elapsed time, first run | 0.996× (0.973–1.004) | 0.974× (0.943–0.992) |
+| Paired elapsed time, second run | 0.988× (0.976–1.012) | 1.001× (0.977–1.016) |
+
+The allocation trial sampled 12 pages. Each timing run used 18 fresh pages in a separate browser process with allocation profiling off. Parentheses give individual 95% intervals across paired pages. The external single-call timing improvement in the first run did not reproduce in the second. At 16 host calls per guest entry the internal intervals favored sharing in both runs, by 2.6% and 1.3%. With the shared literal, one host call per entry still took 26–28× the time of Jco 1.13.0 across both runs and renderers. The allocation saving is measurable, but these timings give little reason to broaden the compiler change for latency. [Allocation profiles](web/bench/results/shared-task-options-heap-47f6dc0c1.json.gz) · [First timing run](web/bench/results/shared-task-options-timing-47f6dc0c1.json.gz) · [Independent timing run](web/bench/results/shared-task-options-repeat-47f6dc0c1.json.gz)
+
+![Sampled JS allocations with the emitted options literal and with one shared object per export.](web/bench/results/shared-task-options-heap-47f6dc0c1.png)
+
+<details><summary>Reproduce the task-options experiment</summary>
+
+Use the same built compiler and checked runtime for both inputs. Each timing command launches a fresh Chromium process.
+
+```sh
+export CHROME_BIN=/path/to/chrome
+compiler="$after/packages/jco-transpile"
+runtime="$after/packages/jco-cm-runtime/dist"
+for trial in first second; do
+  node web/bench/export-host-batch.mjs "$compiler" "$runtime" "$compiler" "$runtime" "/tmp/$trial.json.gz" --share-task-options
+  python3 web/bench/export-host-batch-report.py "/tmp/$trial.json.gz"
+done
+node web/bench/export-host-batch.mjs "$compiler" "$runtime" "$compiler" "$runtime" /tmp/shared-heap.json.gz --share-task-options --heap
+python3 web/bench/export-host-batch-report.py /tmp/shared-heap.json.gz --plot /tmp/shared-heap.png
+```
+
+</details>
+
 ## Browser bindings at f2c5ef195
 
 A checked synchronous export now enters its task without writing the async flags, the canonical result type, or the return and lift memories. The task uses its synchronous defaults. The compiler checks that the component has no `task.return`, cross-component callee, or other trampoline that could read the omitted metadata. Ordinary canonical lowering still uses the guest memory. Source-generation tests cover the internal Oxc bundle, the external checked package, opt-in custom providers, debug and tracked exports. [Compiler change, runtime rationale and test](https://github.com/vados-cosmonic/jco/commit/83bfa2d4c)
