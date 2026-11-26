@@ -2,6 +2,47 @@
 
 This fork benchmarks the browser examples from [eqrion/component-demos at d0b9dd1](https://github.com/eqrion/component-demos/tree/d0b9dd1390a300978193adc623838fef4e4b632b). It runs the same compiled C, C++, and Rust WebAssembly components through jco 1.13.0, pinned upstream main, and a branch that optimizes synchronous host imports and numeric guest exports. The comparison also includes the demos’ JavaScript, Emscripten (Embind and EM_JS), and Rust wasm-bindgen implementations where available.
 
+## Browser bindings at f2c5ef195
+
+A checked synchronous export now enters its task without writing the async flags, the canonical result type, or the return and lift memories. The task uses its synchronous defaults. The compiler checks that the component has no `task.return`, cross-component callee, or other trampoline that could read the omitted metadata. Ordinary canonical lowering still uses the guest memory. Source-generation tests cover the internal Oxc bundle, the external checked package, opt-in custom providers, debug and tracked exports. [Compiler change, runtime rationale and test](https://github.com/vados-cosmonic/jco/commit/83bfa2d4c)
+
+Across all 21 demos, each generated export dropped four calls and both minified renderers saved exactly **98 bytes per entry**. Gzip savings were **25–40 bytes internally** and **42–46 bytes externally**. All other served asset hashes matched the preceding matrix, including the guest Wasm, checked runtime modules, release, upstream and shim controls. [Full inventory and fresh-document samples](web/bench/results/review-matrix-minified-f2c5ef195.json.gz)
+
+The paired host-call experiment used one JS-to-Wasm entry per guest batch. At one host call per entry, internal Oxc took 817.1 ns and the external runtime took 844.5 ns, compared with 817.5 and 835.9 ns before the change. All ten individual 95% before/after intervals included parity across batches of 1, 4, 16, 64 and 256 host calls. The isolated one-call case still cost 26.5× direct Wasm internally and 27.2× externally. [Paired samples and compiler hashes](web/bench/results/export-host-batch-f2c5ef195.json.gz)
+
+![Same-page host call timings by batch size, with intervals against direct Wasm and Jco 1.13.0.](web/bench/results/export-host-batch-f2c5ef195.png)
+
+| Twelve-round Chromium matrix | Jco 1.13.0 | Upstream main at `326f52ab4` | Internal Oxc | External checked |
+| --- | ---: | ---: | ---: | ---: |
+| Median first result (ms) | 62.30 | 208.26 | 65.45 | 78.91 |
+| Total JS (KiB) | 9.58 | 111.34 | 71.45 | 124.03 |
+| Gzipped JS (KiB) | 3.01 | 25.42 | 18.92 | 40.54 |
+| JS requests | 1 | 1 | 1 | 19 |
+| Warm workloads matching or beating 1.13.0 | baseline | — | 15/21 | 15/21 |
+| Worst warm ratio to the fastest compiled shim | — | — | 5.12× | 5.49× |
+
+Both modes beat upstream main on 21/21 warm headline workloads and fell within 10× on 81/84 original subphases. The three exceptions are the bulk queries whose shim discards the result collection. No individual 95% warm interval was wholly slower than 1.13.0 in this run. First result was measurably slower on eight internal and fourteen external workloads. The preceding matrix found an internal Rust canvas readback regression. Its median here was 1.071× release with an interval of 0.995–1.179×. The two runs do not establish that removing these setters speeds up canvas readback. [Equal-work bulk comparisons and preceding matrix](#browser-bindings-at-6a00c9e7d)
+
+![Ratios to the fastest shim and Jco 1.13.0 across all seven demos in C, C++ and Rust.](web/bench/results/review-matrix-minified-f2c5ef195.png)
+
+<details><summary>Reproduce the export-task and full browser measurements</summary>
+
+Build the transpiler and checked runtime at `9e90e10f7` (before) and `f2c5ef195` (after). Use the benchmark setup below and the upstream compiler at `326f52ab4`. The host-call fixture runs all six builds on each of 18 fresh Chromium pages with identical guest Wasm. Each build occupies each timing position once at every batch size. The runner checks the checksum from each call. The full matrix uses 12 rounds and fresh documents. The inventory comparison checks that every asset outside the 42 candidate JS entries matches the previous matrix.
+
+```sh
+export CHROME_BIN=/path/to/chrome
+node web/bench/export-host-batch.mjs \
+  "$before/packages/jco-transpile" "$before/packages/jco-cm-runtime/dist" \
+  "$after/packages/jco-transpile" "$after/packages/jco-cm-runtime/dist" \
+  /tmp/batch.json.gz --sync-task-fields
+python3 web/bench/export-host-batch-report.py /tmp/batch.json.gz --plot /tmp/batch.png
+ROUNDS=12 node web/bench/review-matrix.mjs "$after" "$stage" /tmp/matrix.json.gz --minify-checked
+python3 web/bench/review-matrix-report.py /tmp/matrix.json.gz --release-intervals \
+  --compare-entries web/bench/results/review-matrix-minified-6a00c9e7d.json.gz --plot /tmp/matrix.png
+```
+
+</details>
+
 ## Browser bindings at 6a00c9e7d
 
 Bindgen now reads the length of a compound list once. The internal Oxc bundle and external runtime use that length to allocate guest memory, lower the elements and report the count to the guest. A host list with 2,000 elements previously received 2,002 length reads. The runner checks that the loop bound is the only generated JS difference in all six DOM-query adapters and verifies identical guest Wasm. [Compiler change and regression test](https://github.com/vados-cosmonic/jco/commit/6a00c9e7d7e0364f6de5eb819e0b944128575ad9)

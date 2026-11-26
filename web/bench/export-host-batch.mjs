@@ -11,8 +11,8 @@ import { parse, transpile } from "@bytecodealliance/jco";
 
 const [oldCompiler, oldRuntime, compiler, runtime, output, flag, ...extra] = process.argv.slice(2);
 assert(
-  output && !extra.length && [undefined, "--borrow-scope-hint"].includes(flag),
-  "Usage: export-host-batch.mjs <previous transpiler> <previous runtime dist> <new transpiler> <new runtime dist> <output.json.gz> [--borrow-scope-hint]",
+  output && !extra.length && [undefined, "--borrow-scope-hint", "--sync-task-fields"].includes(flag),
+  "Usage: export-host-batch.mjs <previous transpiler> <previous runtime dist> <new transpiler> <new runtime dist> <output.json.gz> [--borrow-scope-hint|--sync-task-fields]",
 );
 const hash = (bytes) => createHash("sha256").update(bytes).digest("hex");
 const provider = "@bytecodealliance/jco-cm-runtime";
@@ -75,6 +75,14 @@ if (flag === "--borrow-scope-hint") {
   const hint = /canCreateBorrowHandles:(?:false|!1),/g;
   assert.equal([...entry.matchAll(hint)].length, 1);
   assert.equal(entry.replace(hint, ""), new TextDecoder().decode(beforeEntry));
+} else if (flag === "--sync-task-fields") {
+  // Only the export adapter contains these calls. A differently named local
+  // can receive the task in each minified build.
+  for (const method of ["setCalleeIsAsync", "setFuncTypeIsAsync", "setReturnResultTypeIdx", "setLiftMemory"]) {
+    const call = "." + method + "(";
+    assert.equal(new TextDecoder().decode(beforeEntry).split(call).length, 2, method);
+    assert(!new TextDecoder().decode(afterEntry).includes(call), method);
+  }
 } else {
   assert.deepEqual(beforeEntry, afterEntry);
 }

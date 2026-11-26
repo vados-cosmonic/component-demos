@@ -12,12 +12,29 @@ bench = Path(__file__).resolve().parent
 parser = argparse.ArgumentParser()
 parser.add_argument("input", type=Path, nargs="?", default=bench / "results/review-matrix.json.gz")
 parser.add_argument("--plot", type=Path)
+parser.add_argument("--compare-entries", type=Path,
+                    help="compare generated JS sizes to a matrix with the same controls, Wasm and runtime assets")
 parser.add_argument("--release-intervals", action="store_true",
                     help="show individual paired median intervals against Jco 1.13.0")
 args = parser.parse_args()
 with gzip.open(args.input) as source:
     result = json.load(source)
 assert result["inventorySha256"] == hashlib.sha256((bench / "results/candidate-sizes.json").read_bytes()).hexdigest()
+if args.compare_entries:
+    with gzip.open(args.compare_entries) as source:
+        previous = json.load(source)
+    old, new = previous["manifest"], result["manifest"]
+    assert old.keys() == new.keys()
+    entries = {s["entry"]: s["version"] for s in result["samples"] if s["version"] in ("bundled", "external")}
+    for path in new.keys() - entries.keys():
+        assert old[path] == new[path], path
+    for version in ("bundled", "external"):
+        paths = [p for p, v in entries.items() if v == version]
+        assert len(paths) == 21
+        for metric in ("bytes", "gzip"):
+            saved = [old[p][metric] - new[p][metric] for p in paths]
+            print(version, metric, "entries smaller", sum(n > 0 for n in saved),
+                  "of", len(paths), "bytes saved (min / median / max)", min(saved), median(saved), max(saved))
 runner_hash = hashlib.sha256((bench / "review-matrix.mjs").read_bytes()).hexdigest()
 if "minify" not in result:
     # Original eight-round archives predate the minification switch.

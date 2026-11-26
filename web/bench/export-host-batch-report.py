@@ -19,11 +19,19 @@ rounds, sizes, modes = data["rounds"], data["sizes"], data["modes"]
 # The scheduler archive predates the optional bindgen-hint comparison.
 current_runner = hashlib.sha256(Path(__file__).with_name("export-host-batch.mjs").read_bytes()).hexdigest()
 scheduler_runner = "17e2fcb284f91d9bf330e15dbe400313db8a5ee45879f1833e24976386c59080"
-assert data["runnerSha256"] in {current_runner, scheduler_runner}
+scope_runner = "d97ab233a766644a758c70416b2f8e03d7981c436df283bd887aa66819e5345b"
+assert data["runnerSha256"] in {current_runner, scheduler_runner, scope_runner}
 assert data["compilerHashes"]["before"] != data["compilerHashes"]["after"]
 same_entry = data["manifest"]["/before-external/batch.js"] == data["manifest"]["/after-external/batch.js"]
 if data.get("entryChange") == "--borrow-scope-hint":
+    assert data["runnerSha256"] in {current_runner, scope_runner} and not same_entry
+elif data.get("entryChange") == "--sync-task-fields":
     assert data["runnerSha256"] == current_runner and not same_entry
+    # Only the generated adapter changes. Check both complete provider inventories.
+    def runtime_hashes(prefix):
+        return {k.removeprefix(prefix): v for k, v in data["manifest"].items() if k.startswith(prefix)}
+    before_runtime = runtime_hashes("/before-external/runtime/")
+    assert before_runtime and before_runtime == runtime_hashes("/after-external/runtime/")
 else:
     assert data.get("entryChange") is None and same_entry
 assert modes == ["direct", "release", "before-internal", "after-internal", "before-external", "after-external"]
