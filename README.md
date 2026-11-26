@@ -14,7 +14,7 @@ At `db4a3aca0`, the external JavaScript entry shrank **15.0–17.9% on every wor
 | Import (ms) | 5.27 | 11.94 | 10.00 | 22.77 |
 | First full result including import (ms) | 61.83 | 203.50 | 62.76 | 78.30 |
 
-Both PR renderers were within 10× of the fastest compiled shim in **21/21 warm headline cases**. The largest ratios were **4.92× internal and 4.50× external**. Each renderer matched or beat 1.13.0 on 18/21 warm headlines in this run. Each met the shim target in 81/84 comparable subphases. The three exceptions return a materialized list of DOM handles, while the original shim discards a live collection. [Equal-work DOM queries](#materializing-bulk-dom-query-results) · [Warmed tables and traversal](#warm-table-creation-and-tree-traversal) · [Canvas readback](#canvas-readback-at-the-pr-head) · [Wasm packaging](#fetching-or-embedding-the-primary-wasm-core)
+Both PR renderers were within 10× of the fastest compiled shim in **21/21 warm headline cases**. The largest ratios were **4.92× internal and 4.50× external**. Each renderer matched or beat 1.13.0 on 18/21 warm headlines in this run. Each met the shim target in 81/84 comparable subphases. The three exceptions return a materialized list of DOM handles, while the original shim discards a live collection. [Equal-work DOM queries](#materializing-bulk-dom-query-results) · [Warmed tables and traversal](#warm-table-creation-and-tree-traversal) · [Canvas readback](#canvas-readback-at-the-pr-head) · [Wasm packaging](#fetching-or-embedding-the-primary-wasm-core) · [Preloading external runtime modules](#preloading-external-runtime-modules)
 
 ![Warm operation time versus the fastest shim and 1.13.0, and first-result time versus 1.13.0, for both PR renderers.](web/bench/results/review-matrix-minified-db4a3aca0.png)
 
@@ -233,6 +233,60 @@ Build the PR at `95e8ae0d8` and install the demo’s pinned web dependencies, th
 CHROME_BIN=/path/to/chrome ROUNDS=18 node web/bench/core-startup.mjs \
   /path/to/built/jco /tmp/core-startup.json.gz
 python3 web/bench/core-startup-report.py /tmp/core-startup.json.gz --plot /tmp/core-startup.png
+```
+
+</details>
+
+## Preloading external runtime modules
+
+When the browser loaded the checked runtime as separate ES modules, starting all 18 runtime fetches alongside the component import reduced median first-result time from **28.80 to 25.29 ms** on loopback. With the server delaying each JS and Wasm response by 10 ms, first result fell from **76.34 to 62.41 ms**. The last runtime fetch began at **1.55 ms**, down from **49.17 ms** in the delayed run. Each page still fetched the same entry, 18 runtime modules and one Wasm core exactly once. [Request timings, sizes and asset hashes](web/bench/results/modulepreload.json.gz)
+
+| Asset delay | Build and hints | Import (ms) | First result (ms) | Last runtime fetch initiated (ms) | Paired first result / ordinary external |
+| --- | --- | ---: | ---: | ---: | ---: |
+| 0 ms | Jco 1.13.0 | 5.63 | 8.01 | — | 0.289× |
+| 0 ms | Internal Oxc | 9.91 | 14.65 | — | 0.508× |
+| 0 ms | External, ordinary import | 26.33 | 28.80 | 19.34 | 1.000× |
+| 0 ms | External, direct imports hinted | 24.81 | 26.85 | 19.12 | 0.962× |
+| 0 ms | External, indirect imports hinted | 24.00 | 25.70 | 11.82 | 0.904× |
+| 0 ms | External, all runtime modules hinted | 23.16 | 25.29 | 1.92 | 0.910× |
+| 10 ms | Jco 1.13.0 | 25.57 | 27.34 | — | 0.359× |
+| 10 ms | Internal Oxc | 29.53 | 32.73 | — | 0.425× |
+| 10 ms | External, ordinary import | 74.63 | 76.34 | 49.17 | 1.000× |
+| 10 ms | External, direct imports hinted | 67.92 | 69.66 | 42.95 | 0.912× |
+| 10 ms | External, indirect imports hinted | 66.27 | 68.04 | 27.97 | 0.879× |
+| 10 ms | External, all runtime modules hinted | 60.78 | 62.41 | 1.55 | 0.822× |
+
+Each guest's generated adapter directly imports nine runtime modules. Those import another nine modules. The runner derives both sets from the installed files, then adds `<link rel="modulepreload">` elements for one or both sets immediately before importing the adapter. The clock starts before the first link is created. This measures the deployable startup improvement, including the time Chromium spends scheduling and processing the requests. [HTML modulepreload processing](https://html.spec.whatwg.org/multipage/links.html#link-type-modulepreload) · [Runner](web/bench/core-startup.mjs)
+
+![Paired first-result times for hints covering the direct imports, indirect imports or all runtime modules, on loopback and with a controlled per-asset server delay.](web/bench/results/modulepreload.png)
+
+<details><summary>Paired intervals and reproduction</summary>
+
+| Case | Delay | Direct hints / external | Indirect hints / external | All hints / external |
+| --- | ---: | ---: | ---: | ---: |
+| /c/dom-query | 0 ms | 0.873× (0.802–0.949) | 0.807× (0.751–0.949) | 0.864× (0.746–1.026) |
+| /c/dom-query | 10 ms | 0.919× (0.875–0.943) | 0.875× (0.853–0.914) | 0.806× (0.799–0.852) |
+| /cpp/dom-query | 0 ms | 0.923× (0.807–1.046) | 0.893× (0.770–1.036) | 0.868× (0.780–0.944) |
+| /cpp/dom-query | 10 ms | 0.910× (0.893–0.952) | 0.879× (0.860–0.918) | 0.823× (0.788–0.880) |
+| /rust/dom-query | 0 ms | 0.977× (0.871–1.038) | 0.860× (0.782–0.952) | 0.945× (0.831–1.063) |
+| /rust/dom-query | 10 ms | 0.913× (0.899–0.951) | 0.890× (0.875–0.923) | 0.822× (0.803–0.835) |
+| /c/table-update | 0 ms | 0.992× (0.870–1.248) | 0.915× (0.850–1.109) | 0.926× (0.791–1.052) |
+| /c/table-update | 10 ms | 0.904× (0.884–0.939) | 0.880× (0.864–0.903) | 0.806× (0.780–0.860) |
+| /cpp/table-update | 0 ms | 0.947× (0.813–1.111) | 0.934× (0.882–1.023) | 0.968× (0.768–1.072) |
+| /cpp/table-update | 10 ms | 0.929× (0.906–0.942) | 0.887× (0.866–0.915) | 0.822× (0.809–0.843) |
+| /rust/table-update | 0 ms | 1.032× (0.905–1.125) | 0.942× (0.870–1.110) | 0.894× (0.843–1.005) |
+| /rust/table-update | 10 ms | 0.892× (0.870–0.939) | 0.875× (0.859–0.893) | 0.825× (0.805–0.848) |
+
+The study ran two small workloads in C, C++ and Rust across 18 balanced rounds and 1,296 fresh Chromium 156 documents with DevTools disconnected. Every guest produced its expected result table. Timed responses were uncompressed over HTTP/1.1 with caching disabled. The fixed 10 ms server wait models a cost at each request and excludes the common demo host, which loads before timing. Network protocols, caching and bandwidth can change these results.
+
+Each duration summarizes six workload medians. Ratios pair first-result times within workload, round and delay before taking the medians. The intervals are individual two-sided median intervals with at least 95% coverage. All six intervals favored hinting every runtime module under the added delay. Five of the six loopback intervals included parity. [Verifier and chart](web/bench/modulepreload-report.py)
+
+Build Jco at `db4a3aca0`, install the fork's pinned web dependencies and prepare the [full-matrix demo inputs](#full-demo-matrix-on-the-merged-pr). The runner verifies the generated bindings, Wasm cores and runtime modules against the published minified matrix.
+
+```sh
+CHROME_BIN=/path/to/chrome ROUNDS=18 node web/bench/core-startup.mjs \
+  /path/to/built/jco /tmp/modulepreload.json.gz --modulepreload
+python3 web/bench/modulepreload-report.py /tmp/modulepreload.json.gz --plot /tmp/modulepreload.png
 ```
 
 </details>

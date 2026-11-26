@@ -9,14 +9,18 @@ import {pathToFileURL} from "node:url";
 import {gunzipSync, gzipSync} from "node:zlib";
 import {transpile} from "@bytecodealliance/jco";
 import puppeteer from "puppeteer-core";
+import { parse } from "acorn";
 
-const [checkout, output] = process.argv.slice(2);
-assert(checkout && output, "Usage: core-startup.mjs <built Jco checkout> <output.json.gz>");
+const [checkout, output, study, ...extra] = process.argv.slice(2);
+const preload = study === "--modulepreload";
+assert(!extra.length && (study === undefined || preload));
+assert(checkout && output, "Usage: core-startup.mjs <built Jco checkout> <output.json.gz> [--modulepreload]");
 const rounds = Number(process.env.ROUNDS ?? 18);
 assert(Number.isInteger(rounds) && rounds >= 6 && rounds % 6 === 0);
 const bench = import.meta.dirname, web = join(bench, "..");
 const hash = b => createHash("sha256").update(b).digest("hex");
-const matrixBytes = await readFile(join(bench, "results/review-matrix-minified-eaca992c8.json.gz"));
+const matrixFile = preload ? "review-matrix-minified-db4a3aca0.json.gz" : "review-matrix-minified-eaca992c8.json.gz";
+const matrixBytes = await readFile(join(bench, "results", matrixFile));
 const reference = JSON.parse(gunzipSync(matrixBytes)).manifest;
 const git = (...args) => execFileSync("git", args, {cwd:checkout, encoding:"utf8"}).trim();
 assert.equal(git("status", "--porcelain", "--untracked-files=no"), "");
@@ -45,7 +49,10 @@ for (const f of await readdir(runtime, {recursive:true})) {
   if (f.endsWith(".js") && !f.startsWith("debug/")) add("/runtime/"+f, await readFile(join(runtime,f)), "/runtime/"+f);
 }
 const modes = [];
-for (const build of ["release","bundled","external"]) for (const inline of [false,true]) {
+const provider = "@bytecodealliance/jco-cm-runtime";
+const imports = Object.fromEntries([...assets.keys()].filter(p => p.startsWith("/runtime/")).map(p =>
+  [provider + p.slice("/runtime".length, -3), p]));
+for (const build of ["release","bundled","external"]) for (const inline of (preload ? [false] : [false,true])) {
   const mode = build + (inline ? "-inline" : "");
   modes.push(mode);
   for (const demo of Object.keys(inputs)) for (const lang of ["c","cpp","rust"]) {
@@ -55,7 +62,7 @@ for (const build of ["release","bundled","external"]) for (const inline of [fals
     const ref = base+"/"+build+"/";
     const options = {name, minify:true, nodejsCompat:false, map:{...map}};
     if (build !== "release") Object.assign(options, {namespacedExports:true, emitTypescriptDeclarations:false});
-    if (build === "external") Object.assign(options, {cmRuntimeEsModule:"/runtime",cmRuntimeSyncImports:true});
+    if (build === "external") Object.assign(options, preload ? {cmRuntimeEsModule:provider} : {cmRuntimeEsModule:"/runtime",cmRuntimeSyncImports:true});
     options.base64Cutoff = inline ? 256*1024 : 5000;
     const {files} = await (build === "release" ? transpile : transpileBytes)(guest, options);
     const emitted = Object.keys(files).filter(f => /\.(js|wasm)$/.test(f));
@@ -74,11 +81,38 @@ for (const build of ["release","bundled","external"]) for (const inline of [fals
   }
 }
 
-async function measure({demo,entry,args}) {
+// Derive hints from the static module graph so the list travels with the deployed
+// runtime. A new package build can change private chunk names and boundaries.
+function dependencies(path) {
+  const ast = parse(assets.get(path).toString(), {ecmaVersion:"latest", sourceType:"module"});
+  return ast.body.filter(stmt => stmt.source && ["ImportDeclaration","ExportNamedDeclaration","ExportAllDeclaration"].includes(stmt.type))
+    .map(stmt => imports[stmt.source.value] ?? new URL(stmt.source.value,"http://localhost"+path).pathname)
+    .filter(target => target.startsWith("/runtime/"));
+}
+const hintLists = {};
+if (preload) {
+  modes.push("direct", "transitive", "all");
+  for (const {base,name} of cases) {
+    const direct = [...new Set(dependencies(base+"/external/"+name+".js"))];
+    const all = new Set(direct);
+    for (const path of all) for (const dependency of dependencies(path)) all.add(dependency);
+    const transitive = [...all].filter(path => !direct.includes(path));
+    assert(direct.length && transitive.length);
+    hintLists[base] = {direct, transitive, all:[...all]};
+  }
+}
+
+async function measure({demo,entry,args,hints}) {
   const {getMeasurements} = await import("/examples/"+demo+"/main.js");
   await import("/host/web-host.js");
   performance.clearResourceTimings();
   const start = performance.now();
+  for (const path of hints ?? []) {
+    const link = document.createElement("link");
+    link.rel = "modulepreload";
+    link.href = path;
+    document.head.append(link);
+  }
   const {run} = await import(entry);
   const ready = performance.now();
   run(...args);
@@ -88,6 +122,7 @@ async function measure({demo,entry,args}) {
       !Object.values(reports[0]).every(v => Number.isFinite(v) && v >= 0)) throw Error("Invalid guest report");
   return {loadMs:ready-start, firstMs:first-start, requests:performance.getEntriesByType("resource").map(e => ({
     path:new URL(e.name).pathname, bytes:e.encodedBodySize, transferred:e.transferSize,
+    ...(hints ? {startMs:e.startTime-start, endMs:e.responseEnd-start, initiator:e.initiatorType} : {}),
   }))};
 }
 
@@ -98,7 +133,10 @@ for (let round = 0; round < rounds; round++) {
   const queue = [];
   for (let i = 0; i < cases.length; i++) {
     const item = cases[(i+round)%cases.length];
-    for (const slot of sequence) queue.push({...item, mode:modes[(slot+round)%6]});
+    const delays = preload ? ((round+i)%2 === 0 ? [0,10] : [10,0]) : [0];
+    for (const delay of delays) {
+      for (const slot of sequence) queue.push({...item, mode:modes[(slot+round)%6], delay});
+    }
   }
   let cursor = 0;
   const gate = Promise.withResolvers(), done = Promise.withResolvers();
@@ -113,11 +151,14 @@ for (let round = 0; round < rounds; round++) {
       if (path === "/") return res.writeHead(200, {"Content-Type":"text/html"}).end('<script>fetch("/gate").then(()=>location.replace("/trial/0"))</script>');
       if (path === "/gate") { await gate.promise; return res.end(); }
       if (path === "/favicon.ico") return res.writeHead(204).end();
-      const {base,mode,name,demo} = queue[cursor];
-      const entry = base+"/"+mode+"/"+name+".js";
+      const {base,mode,name,demo,delay} = queue[cursor];
+      const hints = preload ? hintLists[base][mode] ?? [] : undefined;
+      const build = hints?.length ? "external" : mode;
+      const entry = base+"/"+build+"/"+name+".js";
       if (path === "/trial/"+cursor) {
-        const args = {demo,entry,args:inputs[demo]};
-        return res.writeHead(200,{"Content-Type":"text/html"}).end(`<!doctype html><body><script type="module">
+        const args = {demo,entry,args:inputs[demo],hints};
+        const importMap = preload ? '<script type="importmap">'+JSON.stringify({imports})+'</script>' : "";
+        return res.writeHead(200,{"Content-Type":"text/html"}).end(`<!doctype html><head>${importMap}</head><body><script type="module">
           let result; try { result=await (${measure})(${JSON.stringify(args)}); } catch(e) { result={error:String(e.stack||e)}; }
           const next=await(await fetch("/result/${cursor}",{method:"POST",body:JSON.stringify(result)})).text();
           if(next)location.replace(next);</script>`);
@@ -134,7 +175,16 @@ for (let round = 0; round < rounds; round++) {
         }
         assert(seen.has(entry));
         assert.equal([...seen].filter(p => p.endsWith(".wasm")).length,Number(!mode.endsWith("-inline")));
-        assert.equal([...seen].some(p => p.startsWith("/runtime/")),mode.startsWith("external"));
+        assert.equal([...seen].some(p => p.startsWith("/runtime/")),build.startsWith("external"));
+        if (preload) {
+          const expected = [entry,base+"/"+build+"/"+name+".core.wasm"];
+          if (build === "external") expected.push(...hintLists[base].all);
+          assert.deepEqual([...seen].sort(), expected.sort());
+          for (const r of row.requests) {
+            assert(r.startMs >= -0.02 && r.endMs >= r.startMs && r.endMs <= row.firstMs+0.02);
+          }
+          row.delay = delay;
+        }
         samples.push({round,cursor,base,mode,...row});
         watchdog.refresh();
         if (++cursor === queue.length) { res.end(); done.resolve(); }
@@ -142,6 +192,9 @@ for (let round = 0; round < rounds; round++) {
         return;
       }
       assert(assets.has(path),path);
+      if (delay && !path.startsWith("/host/") && !path.startsWith("/examples/")) {
+        await new Promise(resolve => setTimeout(resolve,delay));
+      }
       res.writeHead(200,{"Content-Type":path.endsWith(".wasm")?"application/wasm":"text/javascript"}).end(assets.get(path));
     } catch(e) { res.writeHead(500).end(); done.reject(e); }
   });
@@ -159,7 +212,7 @@ for (let round = 0; round < rounds; round++) {
     try { if(endpoint) browser=await puppeteer.connect({browserWSEndpoint:endpoint}); await browser?.close(); }
     finally { server.closeAllConnections(); server.close(); }
   }
-  console.log("Completed core packaging round",round+1,"of",rounds);
+  console.log("Completed browser startup round",round+1,"of",rounds);
 }
 await writeFile(output,gzipSync(JSON.stringify({revision,release,browserVersion,rounds,inputs,modes,cases,manifest,samples,
-  runnerSha256:hash(await readFile(import.meta.filename)),matrixSha256:hash(matrixBytes)})));
+  runnerSha256:hash(await readFile(import.meta.filename)),matrixSha256:hash(matrixBytes), ...(preload ? {study,hintLists} : {})})));
