@@ -961,6 +961,44 @@ python3 web/bench/canvas-bindings-report.py /tmp/canvas-bindings.json.gz --plot 
 
 </details>
 
+### Sharing one memory view for a returned pointer and length
+
+A host that returns a string or a byte list writes its length and pointer into the guest’s return area. Each write asks the runtime for the current memory view because growing Wasm memory can invalidate a view. This trial looks it up once for two adjacent stores when the return address and length are numbers. Other inputs retain both lookups so numeric conversion can run JavaScript between writes. The change was applied to generated adapters for measurement. [Compiler stores](https://github.com/vados-cosmonic/jco/blob/578b213ef/crates/js-component-bindgen/src/function_bindgen.rs#L689) · [Runtime view cache](https://github.com/vados-cosmonic/jco/blob/578b213ef/packages/jco-cm-runtime/src/intrinsics/js-helper.ts#L12)
+
+The trial cut median time for 16-byte to 4-KiB byte-list returns by 9–12% in both modes. At the 123,904-byte canvas payload, both intervals included parity. All six real canvas readback intervals also included parity. The 8-byte string return improved for all three internal guests and for external C++ (9.7% internally and 12.7% externally for C++). Among the 24 comparisons at larger string sizes, only the internal Rust 1-KiB interval favored the trial. Eight-byte string returns are a candidate for a separate change. The current Jco PR keeps its existing stores.
+
+| Workload | Internal PR → trial (µs) | Internal trial / PR | External PR → trial (µs) | External trial / PR |
+| --- | ---: | ---: | ---: | ---: |
+| Return 16 bytes | 0.273 → 0.241 | 0.897× (0.867–0.917) | 0.272 → 0.248 | 0.892× (0.860–0.910) |
+| Return 256 bytes | 0.275 → 0.234 | 0.877× (0.833–0.921) | 0.276 → 0.243 | 0.900× (0.883–0.955) |
+| Return 4,096 bytes | 0.330 → 0.298 | 0.910× (0.863–0.941) | 0.329 → 0.299 | 0.894× (0.857–0.924) |
+| Return 123,904 bytes | 5.232 → 5.312 | 0.993× (0.976–1.024) | 5.364 → 5.173 | 0.969× (0.949–1.009) |
+| C canvas readback | 310.275 → 322.575 | 0.969× (0.930–1.038) | 326.625 → 325.425 | 1.013× (0.878–1.239) |
+| C get 8 B string | 0.537 → 0.442 | 0.840× (0.593–0.951) | 0.425 → 0.447 | 0.982× (0.790–1.146) |
+| C get 1,024 B string | 1.827 → 1.899 | 1.012× (0.936–1.148) | 1.872 → 1.784 | 0.958× (0.873–1.052) |
+| C++ canvas readback | 321.925 → 322.050 | 0.981× (0.886–1.180) | 312.850 → 311.400 | 1.000× (0.946–1.128) |
+| C++ get 8 B string | 0.495 → 0.443 | 0.903× (0.738–0.969) | 0.503 → 0.428 | 0.873× (0.716–0.946) |
+| C++ get 1,024 B string | 1.947 → 1.772 | 0.937× (0.872–1.047) | 1.873 → 1.943 | 1.013× (0.954–1.126) |
+| Rust canvas readback | 317.075 → 331.325 | 1.000× (0.949–1.185) | 338.325 → 323.325 | 0.961× (0.776–1.027) |
+| Rust get 8 B string | 0.475 → 0.416 | 0.809× (0.704–0.964) | 0.460 → 0.412 | 0.882× (0.727–1.244) |
+| Rust get 1,024 B string | 1.966 → 1.800 | 0.905× (0.850–0.959) | 1.944 → 1.847 | 0.944× (0.886–1.050) |
+
+![Paired timings and individual 95% intervals for byte lists, canvas readbacks and string returns in the three guest languages.](web/bench/results/list-and-string-view-578b213ef.png)
+
+<details><summary>Method and reproduction</summary>
+
+Sixteen fresh documents per case ran both builds in both binding modes, in a single Chromium process. A fixture returned a nonzero-offset byte array and checked its contents after each batch. The canvas demo ran its original host method and checked every channel on both canvases. The string demo ran its original 10 ms autoranging workload at all five lengths. The benchmark checks every minified demo control against the full matrix and uses identical core Wasm within each comparison. The table shows median times and within-page trial/control ratios with individual 95% intervals. The standalone times are summarized independently of the paired ratios. [Raw samples, hashes and browser version](web/bench/results/list-and-string-view-578b213ef.json.gz)
+
+Build Jco at `578b213ef`, stage the demo assets as in the [full matrix setup](#full-demo-matrix-on-the-merged-pr), and set `CHROME_BIN` to the Chromium executable. Run these commands from the benchmark fork.
+
+```sh
+node web/bench/list-result-view.mjs "$checkout/packages/jco-transpile" \
+  "$checkout/packages/jco-cm-runtime/dist" /tmp/list-and-string-view.json.gz
+python3 web/bench/list-result-view-report.py /tmp/list-and-string-view.json.gz --plot /tmp/list-and-string-view.png
+```
+
+</details>
+
 ## Warm table creation and tree traversal
 
 In the full minified matrix, external Rust table creation and tree traversal took **1.22×** and **1.16×** the time of Jco 1.13.0 on the second guest call. This follow-up ran the same generated assets side by side and timed eight guest calls per build. Over calls five through eight, median table creation took **0.95–1.02×** the release time across C, C++ and Rust on the two PR renderers. Tree traversal took **0.77–0.84×**. [Full matrix](#minified-browser-bindings) · [Timings for all eight calls](web/bench/results/paired-dom-minified.json.gz)
