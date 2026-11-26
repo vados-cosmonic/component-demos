@@ -1,0 +1,211 @@
+--- runtime-chunks.mjs
++++ packed-loader-trial.mjs
+@@ -12,13 +12,15 @@
+ import { brotliCompressSync, constants, gunzipSync, gzipSync } from "node:zlib";
+ import puppeteer from "puppeteer-core";
+ import { parse } from "acorn";
++import { transpile as releaseTranspile } from "@bytecodealliance/jco";
+ import { bundleApp } from "./app-bundle.mjs";
+
+ const [checkout, matrixFile, output, study, ...extra] = process.argv.slice(2);
+ const appPreload = study === "--shaped-preload";
+ const automaticControl = study === "--automatic-control";
+ const coreHints = study === "--core-hints";
+-const shaped = coreHints || study === "--shaped" || appPreload || automaticControl;
++assert.equal(study, "--packed-loader");
++const shaped = true;
+ const alternative = automaticControl ? "automatic" : "grouped";
+ const compactHelpers = study === "--compact-helpers" || study === "--compact-component";
+ assert(!extra.length && (!study || shaped || compactHelpers));
+@@ -52,14 +54,7 @@
+   graph = {},
+   api = {},
+   footprints = {};
+-const builds = coreHints
+-  ? ["release", "release-core", "bundled", "bundled-core", "external", "external-core",
+-     "application", "application-core", "application-preload", "application-both"]
+-  : appPreload
+-  ? ["release", "bundled", "application", "application-preload"]
+-  : shaped
+-  ? ["release", "bundled", "external", automaticControl ? "automatic" : "application"]
+-  : ["release", "bundled", "external", "grouped", "application"];
++const builds = ["release", "release-parallel", "bundled-parallel", "external-parallel", "packed-parallel", "preloaded-parallel"];
+ const protocols = shaped ? ["h2"] : ["http/1.1", "h2"];
+ const profiles = appPreload ? ["limited"] : shaped ? ["loopback", "limited"] : [null];
+ const emulation = { latency: 40, download: 1250000, upload: 1250000 };
+@@ -127,9 +122,7 @@
+     }
+   } finally { await bundle.close(); }
+ }
+-const inputs = automaticControl || coreHints
+-  ? Object.fromEntries(["dom-query", "table-update"].map(name => [name, Object.values(matrix.workloads[name])]))
+-  : { "dom-query": [8, 2], "table-update": [8] };
++const inputs = Object.fromEntries(["dom-query", "table-update"].map(name => [name, Object.values(matrix.workloads[name])]));
+ for (const file of [
+   "host/web-host.js",
+   "host/common.js",
+@@ -188,6 +181,31 @@
+         );
+       }
+       expected[key][version] = { entry: ref.entry, requests: requests.sort() };
++      {
++        const options = { name, map: mapping, minify: true, instantiation: "async", nodejsCompat: false,
++          base64Cutoff: 5000, namespacedExports: true, emitTypescriptDeclarations: false,
++          ...(version === "external" ? { cmRuntimeEsModule: matrix.checkedPackage } : {}) };
++        const explicit = await (version === "release" ? releaseTranspile : transpileBytes)(guest, options);
++        assert.deepEqual(explicit.imports, ["../../../host/web-host.js"]);
++        const entry = ref.entry.replace("/" + version + "/", "/" + version + "-instantiate/");
++        const base = posix.dirname(entry);
++        for (const [f, bytes] of Object.entries(explicit.files)) add(base + "/" + f, bytes);
++        const cores = Object.keys(explicit.files).filter(f => f.endsWith(".wasm")).sort();
++        assert(cores.length >= 2);
++        const directCore = requests.filter(p => p.endsWith(".wasm"));
++        assert.equal(directCore.length, 1);
++        const inline = [...assets.get(ref.entry).toString().matchAll(/["'`](AGFzbQ[A-Za-z0-9+/=]+)["'`]/g)]
++          .map(m => digest(Buffer.from(m[1], "base64")));
++        assert.deepEqual(cores.map(f => files[base + "/" + f].sha256).sort(),
++          [...inline, files[directCore[0]].sha256].sort());
++        const ast = parse(assets.get(entry).toString(), {ecmaVersion: "latest", sourceType: "module"});
++        const deps = ast.body.filter(n => n.type === "ImportDeclaration").map(n => imports.external[n.source.value]);
++        assert(deps.every(Boolean));
++        const explicitRequests = [entry, ...closure(deps), ...cores.map(f => base + "/" + f)].sort();
++        expected[key][version + "-parallel"] = {
++          entry, requests: explicitRequests, cores, timing: "parallel",
++        };
++      }
+       if (version === "external") {
+         // Public paths are the adapter's static imports. Compare both complete transitive closures.
+         const publicFiles = requests.filter((p) => Object.values(imports.external).includes(p));
+@@ -210,32 +228,30 @@
+   base: "/" + key,
+   name: basename(key).replaceAll("-", "_"),
+ }));
+-const app = await bundleApp(resolve(checkout), appCases, "external", assets);
++// Pack all six external binding entries in one build, so every URL below
++// uses the same shared runtime code across independent component imports.
++const app = await bundleApp(resolve(checkout), appCases, "external-instantiate", assets);
+ assert.equal(app.version, VERSION);
+ Object.assign(graph, app.graph);
+-for (const [path, bytes] of app.files)
+-  add(path, bytes, path.endsWith(".wasm") ? path.replace("/external-app/", "/external/") : null);
+-for (const { base, name } of appCases) {
+-  const entry = base + "/external-app/" + name + ".js";
+-  const appEntry = {
+-    entry,
+-    requests: [...closure([entry]), entry.replace(/\.js$/, ".core.wasm")].sort(),
+-  };
+-  expected[base.slice(1)].application = appEntry;
+-  if (appPreload || coreHints) {
+-    assert.equal(graph[entry].length, 1, "expected one shared JS chunk");
+-    expected[base.slice(1)]["application-preload"] = { ...appEntry, hint: graph[entry][0] };
+-  }
+-  if (coreHints) {
+-    const layouts = expected[base.slice(1)];
+-    for (const mode of ["release", "bundled", "external", "application"]) {
+-      const cores = layouts[mode].requests.filter(path => path.endsWith(".wasm"));
+-      assert.equal(cores.length, 1);
+-      layouts[mode + "-core"] = { ...layouts[mode], coreHint: cores[0] };
+-    }
+-    layouts["application-both"] = { ...layouts["application-core"], hint: graph[entry][0] };
+-  }
++for (const [path, bytes] of app.files) add(path, bytes);
++for (const {base, name} of appCases) {
++  const layouts = expected[base.slice(1)];
++  const original = layouts["external-parallel"];
++  const entry = base + "/external-instantiate-app/" + name + ".js";
++  const dir = posix.dirname(entry);
++  const cores = original.cores;
++  for (const core of cores) {
++    const source = posix.dirname(original.entry) + "/" + core;
++    add(dir + "/" + core, assets.get(source));
++    assert.deepEqual(files[dir + "/" + core], files[source]);
++  }
++  const js = closure([entry]);
++  assert.equal(js.length, 2);
++  const layout = {entry, cores, timing: "parallel", requests: [...js, ...cores.map(f => dir + "/" + f)].sort()};
++  layouts["packed-parallel"] = layout;
++  layouts["preloaded-parallel"] = { ...layout, hint: graph[entry][0] };
+ }
++assert.equal(new Set(cases.map(key => expected[key]["preloaded-parallel"].hint)).size, 1);
+ const probe = study === "--compact-component" ? "component" : "conversion";
+ expected[probe] = {};
+ for (const layout of shaped ? ["external"] : ["external", "grouped"])
+@@ -244,11 +260,11 @@
+     requests: footprints[layout]["intrinsics/" + probe],
+   };
+
+-async function measure({ demo, entry, args, probe, hint, coreHint }) {
+-  let getMeasurements;
++async function measure({ demo, entry, args, probe, hint, coreHint, cores, timing }) {
++  let getMeasurements, host;
+   if (!probe) {
+     ({ getMeasurements } = await import("/examples/" + demo + "/main.js"));
+-    await import("/host/web-host.js");
++    host = await import("/host/web-host.js");
+   }
+   performance.clearResourceTimings();
+   const t = performance.now();
+@@ -267,7 +283,18 @@
+     link.href = coreHint;
+     document.head.append(link);
+   }
+-  const mod = await import(entry);
++  let mod;
++  if (timing) {
++    const compile = () => Promise.all(cores.map(async name => [name,
++      await WebAssembly.compileStreaming(fetch(new URL(name, new URL(entry, location.href))))]));
++    const [bindings, modules] = timing === "parallel"
++      ? await Promise.all([import(entry), compile()]) : [await import(entry), await compile()];
++    const byName = new Map(modules);
++    mod = await bindings.instantiate(name => {
++      if (!byName.has(name)) throw Error("unexpected core: " + name);
++      return byName.get(name);
++    }, { "../../../host/web-host.js": host });
++  } else mod = await import(entry);
+   const ready = performance.now();
+   if (probe) {
+     if (probe === "component") {
+@@ -340,7 +367,7 @@
+     files[path].brotli = body.length;
+   }
+ }
+-const rounds = shaped && !coreHints ? 16 : 20,
++const rounds = 12,
+   samples = [],
+   servers = [];
+ let chromium;
+@@ -364,7 +391,7 @@
+     return res.end();
+   }
+   res.setHeader("content-type", path.endsWith(".wasm") ? "application/wasm" : "text/javascript");
+-  if (coreHints) served.push(path);
++  served.push(path);
+   if (shaped) {
+     if (!/\bbr\b/.test(req.headers["accept-encoding"] ?? "")) return res.writeHead(406).end();
+     res.setHeader("content-encoding", "br");
+@@ -410,7 +437,7 @@
+               "https://127.0.0.1:" + server.address().port + "/page/" + mode,
+             );
+             assert.equal(doc.status(), 200);
+-            const { entry, requests, hint, coreHint } = expected[workload][mode],
++            const { entry, requests, hint, coreHint, cores, timing } = expected[workload][mode],
+               demo = workload.split("/")[1];
+             if (shaped) {
+               // Finish common page setup before throttling the timed import. Both
+@@ -427,14 +454,14 @@
+             const data = await page.evaluate(measure, {
+               demo,
+               entry,
+-              args: inputs[demo],
++              args: inputs[demo], cores, timing,
+               probe: isProbe ? probe : null,
+               hint,
+               coreHint,
+             });
+             assert(data.importMs > 0 && data.firstMs >= data.importMs);
+             assert.deepEqual(data.requests.map((r) => r.path).sort(), requests);
+-            if (coreHints) {
++            {
+               assert.deepEqual(served.toSorted(), requests, "duplicate or missing request at the server");
+               data.served = served.slice();
+             }

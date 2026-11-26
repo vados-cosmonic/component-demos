@@ -105,6 +105,42 @@ python3 web/bench/parallel-loader-report.py /tmp/parallel-loader.json.gz "$matri
 
 </details>
 
+#### Sharing runtime code with the concurrent loader
+
+We bundled the six external explicit-instantiation entries as one application and started core compilation together with each JS import. Each component retained its own entry and guest cores. Rolldown emitted one shared JS chunk. The preloaded treatment also requested that chunk when the page selected the component. A separate same-document check instantiated all six components before running any of them. Each returned its expected guest report and the server received exactly one request for the shared chunk. [Loader and package experiment](web/bench/experiments/packed-loader.patch) · [Same-document check](web/bench/experiments/packed-loader-reuse.patch)
+
+| First result across six workloads | HTTP/2 loopback (ms) | HTTP/2, 40 ms, 10 Mbit/s (ms) | Median JS requests | Unique Brotli JS across six (bytes) |
+| --- | ---: | ---: | ---: | ---: |
+| Jco 1.13.0, ordinary import | 56.85 | 161.38 | 1 | 15,483 |
+| Jco 1.13.0, concurrent loader | 59.27 | 116.22 | 1 | 12,508 |
+| Internal Oxc, concurrent loader | 60.75 | 130.07 | 1 | 103,033 |
+| External package, concurrent loader | 82.24 | 210.55 | 16 | 60,691 |
+| External application bundle, concurrent loader | 65.47 | 151.74 | 2 | 41,022 |
+| Same application bundle with shared chunk preloaded | 62.71 | 135.48 | 2 | 41,022 |
+
+On the limited connection, bundling and preloading reduced first-result time by **37.1%** versus the external package (paired ratio 0.629×, individual 95% interval 0.618–0.636). Preloading alone saved 13.7% versus the same bundle (0.851–0.890×). The resulting time was **1.020× internal Oxc** (1.007–1.032), **0.831× ordinary 1.13.0** (0.830–0.843), and **1.154× 1.13.0 using the same concurrent loader** (1.151–1.179). On loopback, preloading the application chunk had no clear additional effect. [Raw browser results and asset inventory](web/bench/results/packed-loader-4b9682bfe.json.gz)
+
+Most of the remaining difference against concurrent 1.13.0 occurred before the final network response. On the limited connection the last response finished 13.13 ms later for the preloaded external bundle (12.61–13.30). From that point to guest readiness, the difference was another 2.82 ms (2.68–2.84). For internal Oxc those differences were 11.40 ms and 2.71 ms. Across the 864 fresh documents, the server log and Chromium agreed on every transferred file and the checked guest Wasm matched the matrix. Each of 12 browser rounds supplied one paired median across the six workloads. The absolute times above summarize workload medians independently. [Browser deployment guide](https://github.com/vados-cosmonic/jco/blob/b7edbf6bf/packages/jco-cm-runtime/docs/runtime.md#loading-explicit-instantiation-bindings-in-a-browser)
+
+![Time to first result on loopback and a limited connection for the six loader configurations.](web/bench/results/packed-loader-4b9682bfe.png)
+
+<details><summary>Reproduce the shared application loader and six live instances</summary>
+
+Use the built compiler from `4b9682bfe` and the normal Chromium executable from the preceding study. The timing data records the documentation-only checkout at `c7b54f851`. The harness checks ordinary entry bytes against the matrix, each explicit entry's cores against the direct module, and the application bundle's cores against the standalone external build.
+
+```sh
+matrix=web/bench/results/review-matrix-history-4b9682bfe.json.gz
+runner=web/bench/packed-loader-trial.mjs
+patch -o "$runner" web/bench/runtime-chunks.mjs web/bench/experiments/packed-loader.patch
+node "$runner" "$after" "$matrix" /tmp/packed-loader.json.gz --packed-loader
+python3 web/bench/packed-loader-report.py /tmp/packed-loader.json.gz "$matrix" "$runner" --plot /tmp/packed-loader.png
+check=web/bench/packed-reuse-trial.mjs
+patch -o "$check" "$runner" web/bench/experiments/packed-loader-reuse.patch
+JCO_VERIFY_REUSE=/tmp/packed-loader.json.gz node "$check" "$after" "$matrix" /tmp/unused --packed-loader
+```
+
+</details>
+
 ## Resource table initialization at eda794c50
 
 A resource transfer between component instances needs to find the destination table by ID. A synchronous component with one instance can use its table directly. The checked compiler now omits the array that indexed these tables and the assignments that populated it. Shutdown still uses its separate list of live tables and captures. Custom runtime providers continue to receive the registry. [Compiler change, runtime explanation and regression test](https://github.com/vados-cosmonic/jco/commit/eda794c504bb0a53ac50bf41ee1b240d3e714aab)

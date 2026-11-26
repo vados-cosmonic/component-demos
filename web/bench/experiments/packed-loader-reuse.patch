@@ -1,0 +1,63 @@
+--- packed-loader-trial.mjs
++++ packed-reuse-trial.mjs
+@@ -327,6 +327,60 @@
+     })),
+   };
+ }
++// The setup above already produced the exact assets used in the cold trial.
++// Exercise all six components in one document and count fetches at the server.
++if (process.env.JCO_VERIFY_REUSE) {
++  const {createServer: httpServer} = await import("node:http");
++  const record = JSON.parse(gunzipSync(await readFile(process.env.JCO_VERIFY_REUSE)));
++  for (const path of new Set(cases.flatMap(k=>expected[k]["packed-parallel"].requests)))
++    assert.equal(files[path].sha256, record.files[path].sha256, path);
++  const seen = [];
++  const server = httpServer((req,res) => {
++    const path = new URL(req.url, "http://localhost").pathname;
++    if (path === "/") return res.writeHead(200, {"content-type":"text/html"}).end("<!doctype html><body>");
++    if (!assets.has(path)) return res.writeHead(404).end();
++    seen.push(path);
++    res.writeHead(200, {"cache-control":"no-store", "content-type":path.endsWith(".wasm") ? "application/wasm" : "text/javascript"}).end(assets.get(path));
++  });
++  let browser;
++  try {
++    await new Promise(ok => server.listen(0, "127.0.0.1", ok));
++    browser = await puppeteer.launch({executablePath:process.env.CHROME_BIN, pipe:true,
++      args: process.env.CHROME_NO_SANDBOX === "1" ? ["--no-sandbox"] : []});
++    const page = await browser.newPage();
++    await page.goto("http://127.0.0.1:" + server.address().port);
++    const results = await page.evaluate(async ({cases,inputs,expected}) => {
++      const host = await import("/host/web-host.js");
++      const loaded = [];
++      for (const key of cases) {
++        const {entry, cores} = expected[key]["packed-parallel"];
++        const [bindings, pairs] = await Promise.all([import(entry),Promise.all(cores.map(async name =>
++          [name, await WebAssembly.compileStreaming(fetch(new URL(name,new URL(entry,location.href))))]))]);
++        const byName = new Map(pairs);
++        loaded.push(await bindings.instantiate(name => byName.get(name), {"../../../host/web-host.js":host}));
++      }
++      // Clear only the previous demo's DOM output so the measurement reader
++      // sees the result of the current call. All six instances remain live.
++      const checks = [];
++      for (const [i,key] of cases.entries()) {
++        const demo = key.split("/")[1];
++        const {getMeasurements} = await import("/examples/" + demo + "/main.js");
++        document.body.replaceChildren();
++        loaded[i].run(...inputs[demo]);
++        const report = Object.values(getMeasurements());
++        if (report.length !== 1 || Object.keys(report[0]).length !== (demo==="dom-query"?3:6)
++            || !Object.values(report[0]).every(v => Number.isFinite(v) && v>=0)) throw Error(key);
++        checks.push(key);
++      }
++      return checks;
++    }, {cases,inputs,expected});
++    assert.deepEqual(results,cases);
++    const paths = new Set(cases.flatMap(c=>expected[c]["packed-parallel"].requests));
++    assert.deepEqual(seen.filter(p=>paths.has(p)).sort(),[...paths].sort());
++    console.log(results.length, "live components ran; every binding, core and the shared JS chunk was requested once");
++  } finally { await browser?.close(); await new Promise(ok=>server.close(ok)); }
++  process.exit(0);
++}
+ const dir = await mkdtemp(join(tmpdir(), "jco-chunk-tls-"));
+ let cert, key;
+ try {
