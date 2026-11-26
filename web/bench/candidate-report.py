@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 from statistics import median
 
-from startup_report import distributions
+from startup_report import distributions, startup_intervals
 
 import matplotlib
 matplotlib.use("Agg")
@@ -169,7 +169,7 @@ table(["Operation", "Guest", "Unit", "1.13.0", "Stock main", "Candidate", "Candi
 para("<details><summary>How the synchronous bindings work</summary>")
 para("Eligible single-instance, synchronous components reuse the caller’s task for host imports. "
      "The adapter keeps direct references to its task stack and instance flags and checks for store interruptions. "
-     "Oxc removes the asynchronous import fallback. The generator skips asynchronous wrappers for synchronous allocators "
+     "Oxc removes the asynchronous import fallback and the subtask constructor, which these imports never use. The generator skips asynchronous wrappers for synchronous allocators "
      "and post-return hooks. Standalone modules also omit suspension markers on core imports.")
 para("During a guest allocation, the checked runtime clears the instance’s may-leave flag and restores it on return or throw. "
      "Allocators in components with context-slot operations use the general guard to supply fresh slots for each call. "
@@ -210,6 +210,34 @@ if reference:
          f"The median per-input change was {median(js_deltas):+,.0f} bytes of JavaScript and {median(gzip_deltas):+,.0f} bytes "
          f"of total gzip payload. Across the {len(cold_ratios)} timed guest and workload combinations, the median ratio of "
          f"candidate to previous startup time was {median(cold_ratios):.2f}×.")
+    assets = {asset["path"]: asset["bytes"] for component in sizes["components"]
+              for version in ("reference", "candidate") for asset in component["variants"][version]}
+    measured = defaultdict(dict)
+    for sample in run["samples"]:
+        label = sample["implementation"].split()
+        if label[-1] not in ("candidate", "reference"):
+            continue
+        lang, version = label
+        case = sample["demo"], lang
+        path = Path(lang) / sample["demo"] / ("jco-" + version)
+        page = measured[case, version]
+        if sample["round"] in page:
+            raise ValueError("Duplicate startup measurement for " + str(path))
+        page[sample["round"]] = (sample["loadMs"], *startup_intervals(sample, assets, path))
+    if any(set(measured[case, version]) != rounds for case in unchanged for version in ("candidate", "reference")):
+        raise ValueError("Missing current or previous startup measurements")
+    stage_changes = []
+    for column, stage in enumerate(("Import to ready", "Import to JS response end", "JS end to first Wasm request",
+                                    "First Wasm request to last Wasm response", "Last Wasm response to ready")):
+        pairs = [(median(row[column] for row in measured[case, "reference"].values()),
+                  median(row[column] for row in measured[case, "candidate"].values())) for case in unchanged]
+        before, after = zip(*pairs)
+        stage_changes.append([stage, f"{median(before):.2f}", f"{median(after):.2f}",
+                              f"{median(new - old for old, new in pairs):+.2f}",
+                              f"{sum(new < old for old, new in pairs)}/{len(pairs)}"])
+    para("Both branch revisions also ran with their default output and caching disabled. The change column "
+         "takes the difference for each guest and workload first, then the median of those differences.")
+    table(["Startup interval", "Previous (ms)", "Candidate (ms)", "Median change (ms)", "Faster workloads"], stage_changes)
     controls = [time(demo, lang + " candidate", focus[demo][0]) / time(demo, lang + " reference", focus[demo][0])
                 for (demo, lang), identical in unchanged.items() if identical]
     if controls:

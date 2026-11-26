@@ -6,6 +6,25 @@ from pathlib import Path
 from statistics import median
 
 
+def startup_intervals(sample, assets, expected_dir):
+    requests = sample["requests"]
+    for request in requests:
+        path = request["path"]
+        if (Path(path).parent != expected_dir or request["bytes"] != assets[path]
+                or not 0 <= request["startMs"] <= request["endMs"] <= sample["loadMs"] + 0.01):
+            raise ValueError(f"Unexpected response for {path}")
+    scripts = [r for r in requests if r["path"].endswith(".js")]
+    cores = [r for r in requests if r["path"].endswith(".wasm")]
+    if len(scripts) != 1 or not cores or len(cores) + 1 != len(requests):
+        raise ValueError(f"Expected a JS entry module followed by external Wasm for {expected_dir}")
+    first_core = min(r["startMs"] for r in cores)
+    last_core = max(r["endMs"] for r in cores)
+    js_end = scripts[0]["endMs"]
+    if first_core < js_end - 0.01:
+        raise ValueError(f"Overlapping JS download and first Wasm fetch for {expected_dir}")
+    return js_end, first_core - js_end, last_core - first_core, sample["loadMs"] - last_core
+
+
 def distributions(bench, inventory, original, focus, languages):
     results = bench / "results"
     encoded = (results / "minified-sizes.json").read_bytes()
@@ -35,27 +54,11 @@ def distributions(bench, inventory, original, focus, languages):
         lang, version = sample["implementation"].split()
         demo = sample["demo"]
         phase = focus[demo][0]
-        requests = sample["requests"]
-        expected_dir = Path(lang) / demo / ("jco-" + version)
-        for request in requests:
-            path = request["path"]
-            if (Path(path).parent != expected_dir or request["bytes"] != assets[path]
-                    or not 0 <= request["startMs"] <= request["endMs"] <= sample["loadMs"] + 0.01):
-                raise ValueError(f"Unexpected response for {path}")
-        scripts = [r for r in requests if r["path"].endswith(".js")]
-        cores = [r for r in requests if r["path"].endswith(".wasm")]
-        if len(scripts) != 1 or not cores or len(cores) + 1 != len(requests):
-            raise ValueError(f"Expected a JS entry module followed by external Wasm for {demo}/{lang}")
-        first_core = min(r["startMs"] for r in cores)
-        last_core = max(r["endMs"] for r in cores)
-        js_end = scripts[0]["endMs"]
-        if first_core < js_end - 0.01:
-            raise ValueError(f"Overlapping JS download and first Wasm fetch for {demo}/{lang}")
+        stages = startup_intervals(sample, assets, Path(lang) / demo / ("jco-" + version))
         group = groups[demo, lang, version]
         if sample["round"] in group:
             raise ValueError(f"Repeated startup sample for {demo}/{lang}/{version}")
-        group[sample["round"]] = (sample["loadMs"], sample["seconds"][phase], js_end,
-                                  first_core - js_end, last_core - first_core, sample["loadMs"] - last_core)
+        group[sample["round"]] = (sample["loadMs"], sample["seconds"][phase], *stages)
 
     versions = ["baseline", "baseline-minified", "main", "main-minified", "candidate", "candidate-minified"]
     if set(groups) != {(demo, lang, ver) for demo in focus for lang in languages for ver in versions}:
