@@ -12,7 +12,7 @@ The PR incorporates upstream main at `83e25bb19`. In the same seven Chromium pag
 | Acquire, borrow and drop a resource | 329.6 | 5,218.5 | 152.6 | 148.0 |
 | Return a 16-byte ASCII string | 2,307.1 | 5,369.6 | 762.9 | 843.8 |
 
-The generated JavaScript entry for this fixture was 9.6 KiB with 1.13.0, 182.4 KiB with upstream main and 118.5 KiB with the PR’s internal bundle. The external entry was 55.5 KiB plus its separately loaded runtime. Every mode ran identical Wasm cores. Each cell is the median of seven page medians, with two warmups, five measured passes and a checksum on every pass. The full demo and cold-start tables below retain their original pinned revisions. [Runner](web/bench/provider-loop.mjs) · [All 420 timed passes, generator hashes and entry sizes](web/bench/results/provider-loop-83e25bb19.json)
+The generated JavaScript entry for this fixture was 9.6 KiB with 1.13.0, 182.4 KiB with upstream main and 118.5 KiB with the PR’s internal bundle. The external entry was 55.5 KiB plus its separately loaded runtime. Every mode ran identical Wasm cores. Each cell is the median of seven page medians, with two warmups, five measured passes and a checksum on every pass. The next section measures the complete demo suite on these revisions. [Runner](web/bench/provider-loop.mjs) · [All 420 timed passes, generator hashes and entry sizes](web/bench/results/provider-loop-83e25bb19.json)
 
 Build the native `transpile` example with `--features embedded-cm-runtime` in each checkout, using separate Cargo target directories. Build the PR runtime with `pnpm --filter @bytecodealliance/jco-cm-runtime build` and install this fork’s web dependencies with `npm ci --prefix web`.
 
@@ -21,6 +21,78 @@ CHROME_BIN=/path/to/chrome node web/bench/provider-loop.mjs \
   /path/to/pr /path/to/pr/target/debug/examples/transpile /tmp/upstream-comparison.json \
   /path/to/upstream /path/to/upstream/target/debug/examples/transpile
 ```
+
+## Full demo matrix on the merged PR
+
+Both PR renderers beat upstream main and stayed within 10× of the fastest compiled shim in **all 21 warmed headline comparisons**. Rust tree traversal had the largest shim ratio for each renderer. The internal bundle took **7.58×** the fastest shim’s time and the external runtime took **6.95×**. Among the ten workload and guest pairs with a same-language shim, the largest ratios to the fastest such shim were **4.52×** and **4.63×**. [PR head `ad2aacc9b`](https://github.com/vados-cosmonic/jco/commit/ad2aacc9be6fe35c02ae91d9c8c5cde3693e722d) · [Upstream build at `83e25bb19`](https://github.com/bytecodealliance/jco/actions/runs/45785466713)
+
+| Across 21 workload and language pairs | Jco 1.13.0 | Upstream main | PR, internal Oxc | PR, external |
+| --- | ---: | ---: | ---: | ---: |
+| Warm headline at or faster than 1.13.0 | — | — | 16/21 | 14/21 |
+| First full result at or faster than 1.13.0 | — | — | 7/21 | 6/21 |
+| Median import (ms) | 9.43 | 20.17 | 15.16 | 43.65 |
+| Median time from import to first full result (ms) | 76.12 | 268.91 | 84.68 | 113.45 |
+| Median generated JS entry (KiB) | 21.23 | 191.50 | 126.43 | 67.05 |
+| Median total JS transferred during import and execution (KiB) | 21.23 | 191.50 | 126.43 | 193.20 |
+| Median JS requests during import and execution | 1 | 1 | 1 | 23 |
+
+Each of eight Chromium 156 processes ran 97 fresh documents with DevTools disconnected. Every document preloaded the shared benchmark host, imported one implementation, and ran the same full workload twice. The first call supplied the time to first result and the second supplied the warmed phase timings. Both calls had to produce a complete, finite guest report. Each four-round block balanced the order of the four Jco configurations within each guest and workload. Every Jco configuration used byte-identical external Wasm cores for that guest. Responses were uncompressed and served on loopback with caching disabled. The external column uses the checked package as individual ES modules. [Runner](web/bench/review-matrix.mjs) · [Raw timings, asset sizes, compiler hashes and requests](web/bench/results/review-matrix.json.gz)
+
+The release comparisons divide times within each round before taking the median. Shim ratios compare the median warmed phase time with the lowest compiled-shim median for that phase. Import time, first result, bytes and request counts summarize the 21 workload medians. In the external renderer, C table creation was slower than 1.13.0 in all eight rounds (median paired ratio **1.14×**). For the internal bundle, every warm case had at least one round at or faster than 1.13.0. Both renderers exceeded 10× in three of the 84 comparable subphases. All three were bulk DOM queries, where the WIT interface materializes a list of handles and Embind discards a live collection. [Equal-work bulk query comparison](#dom-bindings-with-identical-guest-code)
+
+![Warm operation and first-result time ratios for the merged PR, grouped by workload. Points in each row correspond to C, C++ and Rust from top to bottom.](web/bench/results/review-matrix.png)
+
+<details><summary>All 21 headline comparisons</summary>
+
+| Operation | Guest | Bundled / shim | External / shim | Bundled / 1.13 warm | External / 1.13 warm | Bundled / 1.13 first result | External / 1.13 first result |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Attribute write | C | 0.59× | 0.45× | 0.55× | 0.53× | 0.67× | 0.88× |
+| Attribute write | C++ | 0.38× | 0.36× | 0.55× | 0.51× | 0.64× | 0.86× |
+| Attribute write | Rust | 1.01× | 1.00× | 0.61× | 0.62× | 0.76× | 0.88× |
+| Canvas fillRect | C | 0.59× | 0.61× | 0.89× | 0.84× | 1.08× | 1.51× |
+| Canvas fillRect | C++ | 0.90× | 0.92× | 0.95× | 0.95× | 1.12× | 1.44× |
+| Canvas fillRect | Rust | 0.66× | 0.70× | 0.89× | 1.02× | 1.05× | 1.45× |
+| Canvas pixel read | C | 2.22× | 1.70× | 0.98× | 1.06× | 1.38× | 1.68× |
+| Canvas pixel read | C++ | 2.58× | 2.96× | 0.94× | 0.98× | 1.20× | 1.61× |
+| Canvas pixel read | Rust | 1.90× | 1.99× | 1.07× | 1.04× | 1.14× | 1.81× |
+| DOM ID lookup | C | 0.90× | 0.73× | 0.69× | 0.73× | 0.95× | 1.29× |
+| DOM ID lookup | C++ | 0.76× | 0.69× | 0.74× | 0.73× | 1.03× | 1.35× |
+| DOM ID lookup | Rust | 0.64× | 0.63× | 0.71× | 0.72× | 1.13× | 1.49× |
+| Tree traversal | C | 4.77× | 4.42× | 1.10× | 0.95× | 1.17× | 1.46× |
+| Tree traversal | C++ | 4.39× | 4.63× | 1.04× | 1.04× | 1.18× | 1.46× |
+| Tree traversal | Rust | 7.58× | 6.95× | 1.19× | 0.99× | 1.12× | 1.44× |
+| Read 1 KiB string | C | 0.72× | 0.73× | 0.50× | 0.49× | 0.89× | 0.98× |
+| Read 1 KiB string | C++ | 0.44× | 0.46× | 0.34× | 0.30× | 0.88× | 0.97× |
+| Read 1 KiB string | Rust | 0.50× | 0.52× | 0.48× | 0.51× | 0.88× | 0.96× |
+| Table creation | C | 3.22× | 3.96× | 1.04× | 1.14× | 1.28× | 1.78× |
+| Table creation | C++ | 2.12× | 2.69× | 0.84× | 1.07× | 1.14× | 1.87× |
+| Table creation | Rust | 2.78× | 3.83× | 0.98× | 1.06× | 1.14× | 1.85× |
+
+</details>
+
+<details><summary>Reproduce the merged-head comparison</summary>
+
+Prepare the 1.13.0 demo files using the setup and size commands in [Reproduce the comparison](#reproduce-the-comparison). In a Jco checkout at `ad2aacc9b`, install dependencies and build both `@bytecodealliance/jco-cm-runtime` and `@bytecodealliance/jco-transpile` with their package build scripts. The commands below run from the benchmark fork. The upstream compiler uses the pinned dependencies in `web/bench/main`.
+
+```bash
+jco=/path/to/built/jco-pr
+stage=$(mktemp -d web/bench/main/build.XXXXXX)
+run=45785466713
+commit=$(gh run view "$run" --repo bytecodealliance/jco --json headSha --jq .headSha)
+test "$commit" = 83e25bb19bc45c8a346e4ecdd19b4a1541700fe7
+gh run download "$run" --repo bytecodealliance/jco \
+  --name jco-transpile-dist --name jco-transpile-vendor --dir "$stage"
+mv "$stage/jco-transpile-dist" "$stage/dist"
+mv "$stage/jco-transpile-vendor" "$stage/vendor"
+echo "$commit" > "$stage/commit"
+CHROME_BIN=/path/to/chrome ROUNDS=8 node web/bench/review-matrix.mjs \
+  "$jco" "$stage" /tmp/review-matrix.json.gz
+python3 web/bench/review-matrix-report.py /tmp/review-matrix.json.gz
+```
+
+The report can regenerate the figure with `--plot /tmp/review-matrix.png` and Matplotlib installed.
+
+</details>
 
 ## Bundled and external runtime on the review branch
 
