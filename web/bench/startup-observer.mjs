@@ -48,7 +48,7 @@ for (const { input, variants } of inventory.components) {
   const [lang, demo] = input.path.split("/");
   if (!Object.hasOwn(workloads, demo) || basename(input.path) !== demo.replaceAll("-", "_") + ".wasm") continue;
   for (const [version, files] of Object.entries({ ...variants, ...minified[input.path] })) {
-    if (compareHint && !["baseline", "main", "candidate"].includes(version)) continue;
+    if (compareHint && version.endsWith("-minified")) continue;
     const paths = {};
     for (const file of files) {
       const path = "/" + file.path;
@@ -59,7 +59,7 @@ for (const { input, variants } of inventory.components) {
     const scripts = Object.keys(paths).filter(path => path.endsWith(".js"));
     assert.equal(scripts.length, 1);
     builds.push({ lang, demo, version, path: scripts[0], paths });
-    if (compareHint) {
+    if (compareHint && version !== "reference") {
       const path = scripts[0];
       const source = await readFile(join(web, path));
       hintedSources[path] = hash(Buffer.concat([hint, source]));
@@ -68,7 +68,7 @@ for (const { input, variants } of inventory.components) {
     }
   }
 }
-assert.equal(builds.length, Object.keys(workloads).length * 3 * (!compareHint && inventory.reference ? 7 : 6));
+assert.equal(builds.length, Object.keys(workloads).length * 3 * (inventory.reference ? 7 : 6));
 
 // Stringified into a module script in the trial document.
 async function measure({ demo, path, args }) {
@@ -218,5 +218,5 @@ const filename = small ? "compile-hint-small.json" : compareHint ? "compile-hint
 await writeFile(join(results, filename), JSON.stringify({
   date: new Date().toISOString(), browser: browserVersion, cpu: cpus()[0].model, node: process.version, rounds,
   originalSha256: hash(original), runnerSha256: hash(await readFile(import.meta.filename)),
-  ...(compareHint ? { hint: hint.toString(), hintedSources, workloads } : {}), samples,
+  ...(compareHint ? { hint: hint.toString(), hintedSources, workloads, reference: inventory.reference } : {}), samples,
 }, null, 2) + "\n");

@@ -176,6 +176,7 @@ para(f"The branch uses js-component-bindgen’s internal Oxc bundler and the che
      f"[Measured Jco commit `{commit[:9]}`](https://github.com/vados-cosmonic/jco/commit/{commit}) · "
      "[Canvas host comparison](#canvas-pixel-transfers-with-the-same-guest-binary) · "
      "[Payload and startup](#payload-and-startup) · [First guest result](#time-to-the-first-guest-result) · "
+     "[Module initialization](#direct-module-initialization) · "
      "[Eager compilation](#eager-javascript-compilation) · [Reproduction commands](#reproduce-the-candidate-run)")
 para(f"All Jco builds used the same guest binaries. Each value is the median of "
      f"{run['rounds']} fresh-page samples with one warm-up per page. The run collected {len(run['samples'])} "
@@ -218,6 +219,10 @@ para("Eligible single-instance, synchronous components reuse the caller’s task
      "Oxc removes the asynchronous import fallback and the subtask, waitable, and future constructors. "
      "The shutdown path skips creating the two empty stream and future tables. The generator skips asynchronous wrappers for synchronous allocators "
      "and post-return hooks. Standalone modules also omit suspension markers on core imports.")
+para("In checked standalone bindings, the Oxc linker can put a runtime initializer’s value directly where the "
+     "module first declares its state. Each declaration still allocates its own maps, arrays or objects in the "
+     "original order. Calls with arguments, calls inside functions and factories with more complex bodies keep "
+     "their original implementation.")
 para("During a guest allocation, the checked runtime clears the instance’s may-leave flag and restores it on return or throw. "
      "Allocators in components with context-slot operations use the general guard to supply fresh slots for each call. "
      "The adapter lifts short ASCII strings four bytes at a time. Synchronous UTF-8 results of 256 to 262,144 code units "
@@ -227,8 +232,9 @@ para("Resource drops check the instance flag and record traps. When lifting a bo
      "the adapter validates the handle and reads its 32-bit representation directly. Imported host resources with automatically "
      "assigned representations use their guest handle as an array index. Explicit host representations and shared tables use a "
      "representation map. Components with async operations, cross-component resource transfers or call tracking use the general adapter.")
-para("An earlier run measures the change from removing the subtask constructor from synchronous components. "
-     "[Archived report](https://github.com/vados-cosmonic/component-demos/blob/255eca61b14b5ab63567da558b5f561149cc5163/README.md#change-from-the-previous-branch-revision)")
+para("Earlier runs measured the removal of asynchronous runtime code from synchronous components. "
+     "[Subtask constructors](https://github.com/vados-cosmonic/component-demos/blob/255eca61b14b5ab63567da558b5f561149cc5163/README.md#change-from-the-previous-branch-revision) · "
+     "[Future and waitable constructors](https://github.com/vados-cosmonic/component-demos/blob/c25f90d93af43e9261dff31b186d5b01115e8a0f/README.md#change-from-the-previous-branch-revision)")
 para("</details>")
 if reference:
     ref = reference["commit"]
@@ -239,6 +245,7 @@ if reference:
     unchanged = {}
     js_deltas = []
     gzip_deltas = []
+    brotli_deltas = []
     matching_cores = 0
     inputs_with_cores = 0
     for component in sizes["components"]:
@@ -246,6 +253,7 @@ if reference:
         js_deltas.append(sum(a["bytes"] for a in current if a["path"].endswith(".js"))
                          - sum(a["bytes"] for a in previous if a["path"].endswith(".js")))
         gzip_deltas.append(sum(a["gzip"] for a in current) - sum(a["gzip"] for a in previous))
+        brotli_deltas.append(sum(a["brotli"] for a in current) - sum(a["brotli"] for a in previous))
         outputs = [{Path(a["path"]).name: a["sha256"] for a in files} for files in (current, previous)]
         cores = [{name: digest for name, digest in output.items() if name.endswith(".wasm")} for output in outputs]
         if any(cores):
@@ -260,11 +268,12 @@ if reference:
         raise ValueError("No corresponding generated files for a headline workload")
     cold_ratios = [median(loads[demo, f"{lang} candidate"].values()) / median(loads[demo, f"{lang} reference"].values())
                    for demo, lang in unchanged]
-    para(f"Generated JavaScript was smaller for {sum(v < 0 for v in js_deltas)}/{len(js_deltas)} inputs. "
-         f"External core Wasm files matched byte for byte for {matching_cores}/{inputs_with_cores} inputs that emitted them. "
-         f"The median per-input change was {median(js_deltas):+,.0f} bytes of JavaScript and {median(gzip_deltas):+,.0f} bytes "
-         f"of total gzip payload. Across the {len(cold_ratios)} timed guest and workload combinations, the median ratio of "
+    para(f"External core Wasm files matched byte for byte for {matching_cores}/{inputs_with_cores} inputs that emitted them. "
+         f"Across the {len(cold_ratios)} timed guest and workload combinations, the median ratio of "
          f"candidate to previous startup time was {median(cold_ratios):.2f}×.")
+    table(["Payload", "Smallest saving (bytes)", "Median saving (bytes)", "Largest saving (bytes)", "Smaller outputs"], [
+        [name, f"{-max(d):,.0f}", f"{-median(d):,.0f}", f"{-min(d):,.0f}", f"{sum(v < 0 for v in d)}/{len(d)}"]
+        for name, d in [("JavaScript", js_deltas), ("Total gzip", gzip_deltas), ("Total Brotli", brotli_deltas)]])
     assets = {asset["path"]: asset["bytes"] for component in sizes["components"]
               for version in ("reference", "candidate") for asset in component["variants"][version]}
     measured = defaultdict(dict)
@@ -836,7 +845,8 @@ para("![Time to the first guest result for each workload and language relative t
 
 para("### Eager JavaScript compilation")
 hint_verification = json.loads((results / "compile-hint-verification.json").read_bytes())
-if (hint_verification["runnerSha256"] != sha256((bench / "verify-compile-hint.mjs").read_bytes()).hexdigest()
+if (hint_verification["commit"] != commit
+        or hint_verification["runnerSha256"] != sha256((bench / "verify-compile-hint.mjs").read_bytes()).hexdigest()
         or hint_verification["trialSha256"] != sha256((results / "compile-hint.json").read_bytes()).hexdigest()
         or hint_verification["modules"] != 2 * len(sizes["components"])
         or hint_verification["wasm"] != 2 * sum(f["path"].endswith(".wasm") for c in sizes["components"]
@@ -866,6 +876,7 @@ hint_release = []
 hint_confidence = []
 hint_rounds = {}
 hint_summaries = {}
+revision_trials = {}
 for size, filename in [("Full", "compile-hint.json"), ("Small", "compile-hint-small.json")]:
     experiment = json.loads((results / filename).read_bytes())
     expected_workloads = minified_run["workloads"] if size == "Full" else {
@@ -876,7 +887,8 @@ for size, filename in [("Full", "compile-hint.json"), ("Small", "compile-hint-sm
     if experiment["workloads"] != expected_workloads:
         raise ValueError(f"Unexpected {size.lower()} workload arguments")
     hint_rounds[size] = experiment["rounds"]
-    summaries, absolute, counts, first_pairs = compile_hints(bench, experiment, observer, sizes, languages, distribution_names)
+    summaries, absolute, counts, first_pairs, comparisons = compile_hints(bench, experiment, observer, sizes, languages, distribution_names)
+    revision_trials[size] = comparisons
     hint_summaries[size] = summaries
     for v, stage_times in absolute.items():
         hint_absolute.append([size, "Eager" if v.endswith("-eager") else "Ordinary",
@@ -929,6 +941,22 @@ fig.savefig(results / "compile-hint.png", dpi=155)
 plt.close(fig)
 para("![Time to the first result with eager compilation relative to ordinary candidate bindings. "
      "Each marker shows the median of three languages and the line spans their range.](web/bench/results/compile-hint.png)")
+
+if reference:
+    para("### Direct module initialization")
+    para(f"The same detached runs included ordinary output from the previous generator `{reference['commit'][:9]}`. "
+         "The table compares the two default builds, using the same component binaries and workload arguments in each round. "
+         "For each language/workload pair, it divides candidate time by previous time and takes the median across rounds. "
+         "Each timing column summarizes those pair medians. The last columns count the two-sided 95% sign-test intervals "
+         "for time to first result that lie wholly below or above parity.")
+    revision_rows = []
+    for size, group in revision_trials.items():
+        bounds = [median_interval(series[2]) for series in group.values()]
+        revision_rows.append([size, str(hint_rounds[size]), *[f"{median(median(v[i]) for v in group.values()):.2f}×" for i in range(3)],
+                              f"{sum(median(v[2]) < 1 for v in group.values())}/{len(group)}",
+                              str(sum(hi < 1 for lo, hi in bounds)), str(sum(lo > 1 for lo, hi in bounds))])
+    table(["Workload", "Rounds", "Import", "First call", "Time to first result", "Pairs with earlier first result",
+           "Interval favors candidate", "Interval favors previous"], revision_rows)
 
 coverage = json.loads((results / "js-coverage.json").read_text())
 if (coverage["sizesSha256"] != run["sizesSha256"] or coverage["workloads"] != run["workloads"] or
@@ -1032,9 +1060,6 @@ CHROME_BIN=/path/to/chrome BENCH_MINIFIED=1 ROUNDS={minified_run['rounds']} node
 CHROME_BIN=/path/to/chrome ROUNDS={observer['rounds']} node web/bench/startup-observer.mjs
 CHROME_BIN=/path/to/chrome ROUNDS={hint_rounds['Full']} node web/bench/startup-observer.mjs --compile-hint
 CHROME_BIN=/path/to/chrome ROUNDS={hint_rounds['Small']} node web/bench/startup-observer.mjs --compile-hint --small
-git -C ../jco-candidate switch --detach {eager_commit}
-pnpm -C ../jco-candidate install --frozen-lockfile
-pnpm -C ../jco-candidate --filter @bytecodealliance/jco-transpile run build:ts
 node web/bench/verify-compile-hint.mjs ../jco-candidate
 python3 web/bench/report.py --from-candidate
 python3 web/bench/candidate-report.py

@@ -35,7 +35,12 @@ def compile_hints(bench, run, observer, inventory, languages, versions):
                 or abs(row["loadMs"] + row["firstCallMs"] - row["firstResultMs"]) > .001):
             raise ValueError(f"Invalid compile hint record for {key}")
         groups[key][row["round"]] = row
-    if (set(groups) != {(v + suffix, *case) for v in versions for suffix in ("", "-eager") for case in cases}
+    if run.get("reference") != inventory.get("reference"):
+        raise ValueError("Startup comparison names a different reference generator")
+    expected = {(v + suffix, *case) for v in versions for suffix in ("", "-eager") for case in cases}
+    if run.get("reference"):
+        expected.update(("reference", *case) for case in cases)
+    if (set(groups) != expected
             or any(set(rows) != set(range(1, run["rounds"] + 1)) for rows in groups.values())):
         raise ValueError("Missing compile hint samples")
     summary = {}
@@ -57,7 +62,12 @@ def compile_hints(bench, run, observer, inventory, languages, versions):
     for case in cases:
         ordinary, eager = [groups[v, *case] for v in ("candidate", "candidate-eager")]
         first_result_pairs[case] = [eager[n]["firstResultMs"] / ordinary[n]["firstResultMs"] for n in ordinary]
-    return summary, absolute, release_counts, first_result_pairs
+    revision_pairs = {}
+    if run.get("reference"):
+        for case in cases:
+            current, previous = [groups[v, *case] for v in ("candidate", "reference")]
+            revision_pairs[case] = [[current[n][field] / previous[n][field] for n in current] for field in fields]
+    return summary, absolute, release_counts, first_result_pairs, revision_pairs
 
 
 def startup_intervals(sample, assets, expected_dir):

@@ -1,8 +1,8 @@
 {
-  "commit": "be9385cff68b740dee77167ec62df0f258e54f37",
+  "commit": "165324dda277eef1407d43b80c19401c2d7de37c",
   "modules": 68,
   "wasm": 64,
   "browserModules": 21,
   "runnerSha256": "ca66a58b16dd14662b959422f227d1447359bee3d034613aef37968541f3129b",
-  "trialSha256": "140f2f8a2bca4cfcd4ad1b33cf808a4242e3c09aff2ab8e3781a20e4e1495df7"
+  "trialSha256": "ef8aa96df3377c2a82a33fc4e73d8e4f6b22e3164c16b015ed1e24402381ee0d"
 }

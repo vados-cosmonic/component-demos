@@ -1,8 +1,8 @@
 {
-  "date": "2026-11-26T02:39:01.692Z",
+  "date": "2026-11-26T04:13:24.891Z",
   "browser": "HeadlessChrome/156.0.8078.47",
   "node": "v26.13.0",
-  "sizesSha256": "a9dd4fbb28d9daca530b1a33a595011ca81cbcb831f2ae8bc100c3a7ecd29187",
+  "sizesSha256": "022ea6d1fb3e2bf0095cc0b0801d99f9c3db640e77ab9e39835246df1302466c",
   "runnerSha256": "3432c227ed847a80a35838446a0de724bf8432dbf4fd6be8689926a0b83fda2f",
   "sources": {
     "host/common.js": "4e3f3437d37d8e150708efb3e33551dffa6c83164e165ed1750936f6a10c3c83",
@@ -88,10 +88,10 @@
       "demo": "attribute-churn",
       "version": "candidate",
       "path": "c/attribute-churn/jco-candidate/attribute_churn.js",
-      "sha256": "bfdb127e8df43da4aafb0037a6bec4ac5ab90287bfd02de88d4e09f56532e722",
+      "sha256": "db4282f291dcd7ea6278ca6171f8b02f4e9e804fc56ed81e1494f3a0d8f3ac0b",
       "phase": "init",
-      "bytes": 136197,
-      "used": 39250,
+      "bytes": 132634,
+      "used": 35687,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -120,10 +120,10 @@
       "demo": "attribute-churn",
       "version": "candidate",
       "path": "c/attribute-churn/jco-candidate/attribute_churn.js",
-      "sha256": "bfdb127e8df43da4aafb0037a6bec4ac5ab90287bfd02de88d4e09f56532e722",
+      "sha256": "db4282f291dcd7ea6278ca6171f8b02f4e9e804fc56ed81e1494f3a0d8f3ac0b",
       "phase": "firstRun",
-      "bytes": 136197,
-      "used": 62001,
+      "bytes": 132634,
+      "used": 58438,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -192,10 +192,10 @@
       "demo": "canvas-draw",
       "version": "candidate",
       "path": "c/canvas-draw/jco-candidate/canvas_draw.js",
-      "sha256": "d1807132591ebd1e0ea7410b31de02771e26cc74c83f51765d3b7e9274e25b32",
+      "sha256": "dac793ea90567bd94a3a41035c7bb437a7f5f1196a211842b5db38d1520fdf24",
       "phase": "init",
-      "bytes": 144768,
-      "used": 40313,
+      "bytes": 141172,
+      "used": 36717,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -224,10 +224,10 @@
       "demo": "canvas-draw",
       "version": "candidate",
       "path": "c/canvas-draw/jco-candidate/canvas_draw.js",
-      "sha256": "d1807132591ebd1e0ea7410b31de02771e26cc74c83f51765d3b7e9274e25b32",
+      "sha256": "dac793ea90567bd94a3a41035c7bb437a7f5f1196a211842b5db38d1520fdf24",
       "phase": "firstRun",
-      "bytes": 144768,
-      "used": 66376,
+      "bytes": 141172,
+      "used": 62780,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -296,10 +296,10 @@
       "demo": "canvas-pixels",
       "version": "candidate",
       "path": "c/canvas-pixels/jco-candidate/canvas_pixels.js",
-      "sha256": "51e539b37cb017837b01c44b6c29d2442eae2a10040b301d5e71c1b0d405a27c",
+      "sha256": "70875c0806ff495f3caa571522e71850ace412552df707199377631b4b5a6372",
       "phase": "init",
-      "bytes": 150742,
-      "used": 41501,
+      "bytes": 147146,
+      "used": 37905,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -328,10 +328,10 @@
       "demo": "canvas-pixels",
       "version": "candidate",
       "path": "c/canvas-pixels/jco-candidate/canvas_pixels.js",
-      "sha256": "51e539b37cb017837b01c44b6c29d2442eae2a10040b301d5e71c1b0d405a27c",
+      "sha256": "70875c0806ff495f3caa571522e71850ace412552df707199377631b4b5a6372",
       "phase": "firstRun",
-      "bytes": 150742,
-      "used": 69637,
+      "bytes": 147146,
+      "used": 66041,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -400,10 +400,10 @@
       "demo": "dom-query",
       "version": "candidate",
       "path": "c/dom-query/jco-candidate/dom_query.js",
-      "sha256": "c60b8bfc750fe650757c09dd6f3ea069fd324e24daa5347f0047e35b58b837ff",
+      "sha256": "e69d3c50beb5a757adb727553df7fc37733f96a64fa15acda89e60dbdb158719",
       "phase": "init",
-      "bytes": 143173,
-      "used": 39940,
+      "bytes": 139610,
+      "used": 36377,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -432,10 +432,10 @@
       "demo": "dom-query",
       "version": "candidate",
       "path": "c/dom-query/jco-candidate/dom_query.js",
-      "sha256": "c60b8bfc750fe650757c09dd6f3ea069fd324e24daa5347f0047e35b58b837ff",
+      "sha256": "e69d3c50beb5a757adb727553df7fc37733f96a64fa15acda89e60dbdb158719",
       "phase": "firstRun",
-      "bytes": 143173,
-      "used": 66470,
+      "bytes": 139610,
+      "used": 62907,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -504,10 +504,10 @@
       "demo": "dom-traversal",
       "version": "candidate",
       "path": "c/dom-traversal/jco-candidate/dom_traversal.js",
-      "sha256": "778618845ccc10ff35495d400b21d4b100d4b3f0b8bd16abfa7c022c0587d6ed",
+      "sha256": "d9880b39f0de838606c2fbd6db90fd5a3244660641785a54785d33cdb480d1b1",
       "phase": "init",
-      "bytes": 140305,
-      "used": 39552,
+      "bytes": 136742,
+      "used": 35989,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -536,10 +536,10 @@
       "demo": "dom-traversal",
       "version": "candidate",
       "path": "c/dom-traversal/jco-candidate/dom_traversal.js",
-      "sha256": "778618845ccc10ff35495d400b21d4b100d4b3f0b8bd16abfa7c022c0587d6ed",
+      "sha256": "d9880b39f0de838606c2fbd6db90fd5a3244660641785a54785d33cdb480d1b1",
       "phase": "firstRun",
-      "bytes": 140305,
-      "used": 64284,
+      "bytes": 136742,
+      "used": 60721,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -608,10 +608,10 @@
       "demo": "string-marshalling",
       "version": "candidate",
       "path": "c/string-marshalling/jco-candidate/string_marshalling.js",
-      "sha256": "ae8fdde457ea8653193c7d383b22a589fcd8b432be059f7374d0aa6732e4e6e9",
+      "sha256": "851c0f4a21a1a22262fcf11eb9db310fff95f3a9fca5c45afddbda7c73744c95",
       "phase": "init",
-      "bytes": 140559,
-      "used": 39908,
+      "bytes": 136832,
+      "used": 36181,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -640,10 +640,10 @@
       "demo": "string-marshalling",
       "version": "candidate",
       "path": "c/string-marshalling/jco-candidate/string_marshalling.js",
-      "sha256": "ae8fdde457ea8653193c7d383b22a589fcd8b432be059f7374d0aa6732e4e6e9",
+      "sha256": "851c0f4a21a1a22262fcf11eb9db310fff95f3a9fca5c45afddbda7c73744c95",
       "phase": "firstRun",
-      "bytes": 140559,
-      "used": 64799,
+      "bytes": 136832,
+      "used": 61072,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -712,10 +712,10 @@
       "demo": "table-update",
       "version": "candidate",
       "path": "c/table-update/jco-candidate/table_update.js",
-      "sha256": "432be90e739833e1112d74feb5d40175c1b9d5d296b0f0a5931da4b646b857df",
+      "sha256": "aa98c1d52115a1fc134f10d305963f1ba2b8808162a959cc6ec2bcd7a0e61963",
       "phase": "init",
-      "bytes": 145407,
-      "used": 40541,
+      "bytes": 141647,
+      "used": 36781,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -744,10 +744,10 @@
       "demo": "table-update",
       "version": "candidate",
       "path": "c/table-update/jco-candidate/table_update.js",
-      "sha256": "432be90e739833e1112d74feb5d40175c1b9d5d296b0f0a5931da4b646b857df",
+      "sha256": "aa98c1d52115a1fc134f10d305963f1ba2b8808162a959cc6ec2bcd7a0e61963",
       "phase": "firstRun",
-      "bytes": 145407,
-      "used": 66690,
+      "bytes": 141647,
+      "used": 62930,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -816,10 +816,10 @@
       "demo": "attribute-churn",
       "version": "candidate",
       "path": "cpp/attribute-churn/jco-candidate/attribute_churn.js",
-      "sha256": "6b67378864175cff1a48e5ba870649b0c053a6a1d1b14f4dee1c087e321cc193",
+      "sha256": "e3b9d659a771b1549532c489483bb724477ebbe518fb233e71a908c2683816cd",
       "phase": "init",
-      "bytes": 136193,
-      "used": 39248,
+      "bytes": 132630,
+      "used": 35685,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -848,10 +848,10 @@
       "demo": "attribute-churn",
       "version": "candidate",
       "path": "cpp/attribute-churn/jco-candidate/attribute_churn.js",
-      "sha256": "6b67378864175cff1a48e5ba870649b0c053a6a1d1b14f4dee1c087e321cc193",
+      "sha256": "e3b9d659a771b1549532c489483bb724477ebbe518fb233e71a908c2683816cd",
       "phase": "firstRun",
-      "bytes": 136193,
-      "used": 61998,
+      "bytes": 132630,
+      "used": 58435,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -920,10 +920,10 @@
       "demo": "canvas-draw",
       "version": "candidate",
       "path": "cpp/canvas-draw/jco-candidate/canvas_draw.js",
-      "sha256": "9db6114c6ace919dfaeb178e3c775219ed621251438ccf46da78265847624227",
+      "sha256": "e56615050c778c665878f8bb40b589d5ccf40ccb2fa5c8dcc29e8f7f9f6e7caa",
       "phase": "init",
-      "bytes": 144756,
-      "used": 40307,
+      "bytes": 141160,
+      "used": 36711,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -952,10 +952,10 @@
       "demo": "canvas-draw",
       "version": "candidate",
       "path": "cpp/canvas-draw/jco-candidate/canvas_draw.js",
-      "sha256": "9db6114c6ace919dfaeb178e3c775219ed621251438ccf46da78265847624227",
+      "sha256": "e56615050c778c665878f8bb40b589d5ccf40ccb2fa5c8dcc29e8f7f9f6e7caa",
       "phase": "firstRun",
-      "bytes": 144756,
-      "used": 66367,
+      "bytes": 141160,
+      "used": 62771,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -1024,10 +1024,10 @@
       "demo": "canvas-pixels",
       "version": "candidate",
       "path": "cpp/canvas-pixels/jco-candidate/canvas_pixels.js",
-      "sha256": "79caac64cf1b78384ba73659174de3f3cd01060e8981212abe883fd0e837adb8",
+      "sha256": "150ad4d82f3f16ba130542ea90624bf8a100159fb1a38231dd684a6c6a129d05",
       "phase": "init",
-      "bytes": 150730,
-      "used": 41495,
+      "bytes": 147134,
+      "used": 37899,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -1056,10 +1056,10 @@
       "demo": "canvas-pixels",
       "version": "candidate",
       "path": "cpp/canvas-pixels/jco-candidate/canvas_pixels.js",
-      "sha256": "79caac64cf1b78384ba73659174de3f3cd01060e8981212abe883fd0e837adb8",
+      "sha256": "150ad4d82f3f16ba130542ea90624bf8a100159fb1a38231dd684a6c6a129d05",
       "phase": "firstRun",
-      "bytes": 150730,
-      "used": 69628,
+      "bytes": 147134,
+      "used": 66032,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -1128,10 +1128,10 @@
       "demo": "dom-query",
       "version": "candidate",
       "path": "cpp/dom-query/jco-candidate/dom_query.js",
-      "sha256": "1db9f90930bb63362f78ff82630076a6cfd0dd3c1de422c0e817ed6c596cb528",
+      "sha256": "a212f07bb420bf7c416b1a822028462793f00fb8cb404c6dc265eb224c3a7dca",
       "phase": "init",
-      "bytes": 143169,
-      "used": 39938,
+      "bytes": 139606,
+      "used": 36375,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -1160,10 +1160,10 @@
       "demo": "dom-query",
       "version": "candidate",
       "path": "cpp/dom-query/jco-candidate/dom_query.js",
-      "sha256": "1db9f90930bb63362f78ff82630076a6cfd0dd3c1de422c0e817ed6c596cb528",
+      "sha256": "a212f07bb420bf7c416b1a822028462793f00fb8cb404c6dc265eb224c3a7dca",
       "phase": "firstRun",
-      "bytes": 143169,
-      "used": 66467,
+      "bytes": 139606,
+      "used": 62904,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -1232,10 +1232,10 @@
       "demo": "dom-traversal",
       "version": "candidate",
       "path": "cpp/dom-traversal/jco-candidate/dom_traversal.js",
-      "sha256": "7710dbddc144b2f71b39feb33ac38ab4b61a402f63551656e2bc1d8dcceaa6f1",
+      "sha256": "c6044911cbcde7ce1963aa75ac3d46f2188b229a948408f75db1823a3e65061a",
       "phase": "init",
-      "bytes": 140301,
-      "used": 39550,
+      "bytes": 136738,
+      "used": 35987,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -1264,10 +1264,10 @@
       "demo": "dom-traversal",
       "version": "candidate",
       "path": "cpp/dom-traversal/jco-candidate/dom_traversal.js",
-      "sha256": "7710dbddc144b2f71b39feb33ac38ab4b61a402f63551656e2bc1d8dcceaa6f1",
+      "sha256": "c6044911cbcde7ce1963aa75ac3d46f2188b229a948408f75db1823a3e65061a",
       "phase": "firstRun",
-      "bytes": 140301,
-      "used": 64281,
+      "bytes": 136738,
+      "used": 60718,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -1336,10 +1336,10 @@
       "demo": "string-marshalling",
       "version": "candidate",
       "path": "cpp/string-marshalling/jco-candidate/string_marshalling.js",
-      "sha256": "d8ddd17ac76a1a16b3fb3399aec453cddc75b8a33e6402a1b04573480146a92a",
+      "sha256": "21cc925fb08ee6c8a1be13d7d16b930fcc87a1ab9ac8adfd565b8e345978c341",
       "phase": "init",
-      "bytes": 140555,
-      "used": 39906,
+      "bytes": 136828,
+      "used": 36179,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -1368,10 +1368,10 @@
       "demo": "string-marshalling",
       "version": "candidate",
       "path": "cpp/string-marshalling/jco-candidate/string_marshalling.js",
-      "sha256": "d8ddd17ac76a1a16b3fb3399aec453cddc75b8a33e6402a1b04573480146a92a",
+      "sha256": "21cc925fb08ee6c8a1be13d7d16b930fcc87a1ab9ac8adfd565b8e345978c341",
       "phase": "firstRun",
-      "bytes": 140555,
-      "used": 64796,
+      "bytes": 136828,
+      "used": 61069,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -1440,10 +1440,10 @@
       "demo": "table-update",
       "version": "candidate",
       "path": "cpp/table-update/jco-candidate/table_update.js",
-      "sha256": "0c0e0e99c547103305319ee9085be78abdf59c78eb9b7fcbf2f958fe39b066e5",
+      "sha256": "810709bb1e5598ee1dfbd50a3af28350d849b80c0a03e5fb8b07d2a4e837f692",
       "phase": "init",
-      "bytes": 145403,
-      "used": 40539,
+      "bytes": 141643,
+      "used": 36779,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -1472,10 +1472,10 @@
       "demo": "table-update",
       "version": "candidate",
       "path": "cpp/table-update/jco-candidate/table_update.js",
-      "sha256": "0c0e0e99c547103305319ee9085be78abdf59c78eb9b7fcbf2f958fe39b066e5",
+      "sha256": "810709bb1e5598ee1dfbd50a3af28350d849b80c0a03e5fb8b07d2a4e837f692",
       "phase": "firstRun",
-      "bytes": 145403,
-      "used": 66687,
+      "bytes": 141643,
+      "used": 62927,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -1544,10 +1544,10 @@
       "demo": "attribute-churn",
       "version": "candidate",
       "path": "rust/attribute-churn/jco-candidate/attribute_churn.js",
-      "sha256": "7cd84132d6d44bbd0889f4f9a6742c103480ab20f5cbf77d3ce5357c1ca7d42f",
+      "sha256": "bc9b7e79d45abe7b98dc00e4d84a925867c657f74b049f7fd3331b96b74cc65e",
       "phase": "init",
-      "bytes": 134818,
-      "used": 25310,
+      "bytes": 131255,
+      "used": 21747,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -1576,10 +1576,10 @@
       "demo": "attribute-churn",
       "version": "candidate",
       "path": "rust/attribute-churn/jco-candidate/attribute_churn.js",
-      "sha256": "7cd84132d6d44bbd0889f4f9a6742c103480ab20f5cbf77d3ce5357c1ca7d42f",
+      "sha256": "bc9b7e79d45abe7b98dc00e4d84a925867c657f74b049f7fd3331b96b74cc65e",
       "phase": "firstRun",
-      "bytes": 134818,
-      "used": 59528,
+      "bytes": 131255,
+      "used": 55965,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -1648,10 +1648,10 @@
       "demo": "canvas-draw",
       "version": "candidate",
       "path": "rust/canvas-draw/jco-candidate/canvas_draw.js",
-      "sha256": "165748f1b2c3e28e6e70c38f62df2014baa8b790f43f0ed4c71390711b131ab1",
+      "sha256": "2500a1057759e9e3aec427ebf7f6db8bdc1d2c9b9e1145c2749ebc2b31280c24",
       "phase": "init",
-      "bytes": 143375,
-      "used": 26363,
+      "bytes": 139779,
+      "used": 22767,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -1680,10 +1680,10 @@
       "demo": "canvas-draw",
       "version": "candidate",
       "path": "rust/canvas-draw/jco-candidate/canvas_draw.js",
-      "sha256": "165748f1b2c3e28e6e70c38f62df2014baa8b790f43f0ed4c71390711b131ab1",
+      "sha256": "2500a1057759e9e3aec427ebf7f6db8bdc1d2c9b9e1145c2749ebc2b31280c24",
       "phase": "firstRun",
-      "bytes": 143375,
-      "used": 63891,
+      "bytes": 139779,
+      "used": 60295,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -1752,10 +1752,10 @@
       "demo": "canvas-pixels",
       "version": "candidate",
       "path": "rust/canvas-pixels/jco-candidate/canvas_pixels.js",
-      "sha256": "bc46d3475314939fbb9d229faa5911af5810a7ba87fe48571d2b0ef2818f8a7b",
+      "sha256": "e5b9b7ab11c011a32ca87f86ca654da76a546b4d36980a9643d8a2d32dac9cc8",
       "phase": "init",
-      "bytes": 149345,
-      "used": 27547,
+      "bytes": 145749,
+      "used": 23951,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -1784,10 +1784,10 @@
       "demo": "canvas-pixels",
       "version": "candidate",
       "path": "rust/canvas-pixels/jco-candidate/canvas_pixels.js",
-      "sha256": "bc46d3475314939fbb9d229faa5911af5810a7ba87fe48571d2b0ef2818f8a7b",
+      "sha256": "e5b9b7ab11c011a32ca87f86ca654da76a546b4d36980a9643d8a2d32dac9cc8",
       "phase": "firstRun",
-      "bytes": 149345,
-      "used": 67148,
+      "bytes": 145749,
+      "used": 63552,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -1856,10 +1856,10 @@
       "demo": "dom-query",
       "version": "candidate",
       "path": "rust/dom-query/jco-candidate/dom_query.js",
-      "sha256": "ad76defd692976f9524adef6d1482fe5ae9ad3319871e40900dd5e3e5a0911b1",
+      "sha256": "97f3895a5290833911b56db22ead797030055063103392baf14ae5e1b188c632",
       "phase": "init",
-      "bytes": 141789,
-      "used": 25995,
+      "bytes": 138226,
+      "used": 22432,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -1888,10 +1888,10 @@
       "demo": "dom-query",
       "version": "candidate",
       "path": "rust/dom-query/jco-candidate/dom_query.js",
-      "sha256": "ad76defd692976f9524adef6d1482fe5ae9ad3319871e40900dd5e3e5a0911b1",
+      "sha256": "97f3895a5290833911b56db22ead797030055063103392baf14ae5e1b188c632",
       "phase": "firstRun",
-      "bytes": 141789,
-      "used": 63992,
+      "bytes": 138226,
+      "used": 60429,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -1960,10 +1960,10 @@
       "demo": "dom-traversal",
       "version": "candidate",
       "path": "rust/dom-traversal/jco-candidate/dom_traversal.js",
-      "sha256": "ebbda36289dc2ce682bf1ec857eb38642e6882aa9b67be60309587bcdf8146db",
+      "sha256": "a95a1c44fb5cab328a9768c5069465aed379c8df370da5f75f3166f180282d14",
       "phase": "init",
-      "bytes": 139157,
-      "used": 38430,
+      "bytes": 135594,
+      "used": 34867,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -1992,10 +1992,10 @@
       "demo": "dom-traversal",
       "version": "candidate",
       "path": "rust/dom-traversal/jco-candidate/dom_traversal.js",
-      "sha256": "ebbda36289dc2ce682bf1ec857eb38642e6882aa9b67be60309587bcdf8146db",
+      "sha256": "a95a1c44fb5cab328a9768c5069465aed379c8df370da5f75f3166f180282d14",
       "phase": "firstRun",
-      "bytes": 139157,
-      "used": 63157,
+      "bytes": 135594,
+      "used": 59594,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -2064,10 +2064,10 @@
       "demo": "string-marshalling",
       "version": "candidate",
       "path": "rust/string-marshalling/jco-candidate/string_marshalling.js",
-      "sha256": "cdd74ee089cd16a0c09c5c7681245d6f775f59aa3c97a51fa6734db505b04bb0",
+      "sha256": "16f19cac9c3e34d8f504dc249dd063f8fd483c9c598192e29170c26380c775be",
       "phase": "init",
-      "bytes": 139179,
-      "used": 25967,
+      "bytes": 135452,
+      "used": 22240,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -2096,10 +2096,10 @@
       "demo": "string-marshalling",
       "version": "candidate",
       "path": "rust/string-marshalling/jco-candidate/string_marshalling.js",
-      "sha256": "cdd74ee089cd16a0c09c5c7681245d6f775f59aa3c97a51fa6734db505b04bb0",
+      "sha256": "16f19cac9c3e34d8f504dc249dd063f8fd483c9c598192e29170c26380c775be",
       "phase": "firstRun",
-      "bytes": 139179,
-      "used": 62325,
+      "bytes": 135452,
+      "used": 58598,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -2168,10 +2168,10 @@
       "demo": "table-update",
       "version": "candidate",
       "path": "rust/table-update/jco-candidate/table_update.js",
-      "sha256": "fba8ba1d5b74e8d2115a072558a9f68f84414c065337d244500104a0a030c785",
+      "sha256": "60ef59c8ea8b4b5037684de77cbb09c81d05b67fbfc411cb2a38b68b57643f6d",
       "phase": "init",
-      "bytes": 144848,
-      "used": 40000,
+      "bytes": 141088,
+      "used": 36240,
       "factories": [
         {
           "name": "ComponentAsyncState",
@@ -2200,10 +2200,10 @@
       "demo": "table-update",
       "version": "candidate",
       "path": "rust/table-update/jco-candidate/table_update.js",
-      "sha256": "fba8ba1d5b74e8d2115a072558a9f68f84414c065337d244500104a0a030c785",
+      "sha256": "60ef59c8ea8b4b5037684de77cbb09c81d05b67fbfc411cb2a38b68b57643f6d",
       "phase": "firstRun",
-      "bytes": 144848,
-      "used": 66144,
+      "bytes": 141088,
+      "used": 62384,
       "factories": [
         {
           "name": "ComponentAsyncState",
