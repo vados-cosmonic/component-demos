@@ -1,6 +1,6 @@
 # Component demos
 
-This fork benchmarks the browser examples from [eqrion/component-demos at d0b9dd1](https://github.com/eqrion/component-demos/tree/d0b9dd1390a300978193adc623838fef4e4b632b). It runs the same compiled C, C++, and Rust WebAssembly components through jco 1.13.0, pinned upstream main, and a branch that optimizes synchronous host imports. The comparison also includes the demos’ JavaScript, Emscripten (Embind and EM_JS), and Rust wasm-bindgen implementations where available.
+This fork benchmarks the browser examples from [eqrion/component-demos at d0b9dd1](https://github.com/eqrion/component-demos/tree/d0b9dd1390a300978193adc623838fef4e4b632b). It runs the same compiled C, C++, and Rust WebAssembly components through jco 1.13.0, pinned upstream main, and a branch that optimizes synchronous host imports and numeric guest exports. The comparison also includes the demos’ JavaScript, Emscripten (Embind and EM_JS), and Rust wasm-bindgen implementations where available.
 
 ## Bundled and external runtime on the review branch
 
@@ -58,17 +58,36 @@ The allocation study used 480 documents and 960 instantiations across the two re
 
 ### Calling a scalar Wasm export from JavaScript
 
-A JS loop called an exported `increment(u32) -> u32` function 65,536 times per pass. The guest has no imports and all five configurations used the same 61-byte core module. Every pass checked the sum of all returned values. Each figure is the median of ten Chromium page medians after two warm-up passes and five measured passes. [Runner](web/bench/scalar-export.mjs) · [Raw samples and asset hashes](web/bench/results/scalar-export.json)
+The optimized bindings skip creating a task and thread when JavaScript calls an isolated numeric Wasm export. Across a scalar increment fixture and the demos’ three calculators, median same-page speedups over the previous PR head ranged from **43× to 66×**. Both renderers took **0.91–1.06×** the time of Jco 1.13.0 on that paired measure. [Jco change](https://github.com/vados-cosmonic/jco/commit/af9f314c7a1e4d6869c3c80afa24d1cd45686d4f) · [Previous head](https://github.com/vados-cosmonic/jco/commit/86d339dd0d3dce2700d3f0f143824cb52b2b5832)
 
-| Per export call | Direct Wasm | Jco 1.13.0 | Upstream main | PR bundled | PR external |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| Time (ns) | 17.5 | 18.3 | 1,169.6 | 1,209.3 | 1,221.5 |
+| Export (ns/call) | Direct Wasm | Jco 1.13.0 | Main | Bundled before | Bundled after | External before | External after |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Scalar increment | 61.8 | 66.4 | 3,740.7 | 3,649.1 | 62.6 | 3,904.7 | 64.1 |
+| C calculator | 96.1 | 77.8 | 3,771.2 | 3,876.5 | 93.1 | 4,170.2 | 100.7 |
+| Rust calculator | 80.9 | 77.8 | 3,891.8 | 3,951.3 | 73.2 | 3,939.8 | 80.9 |
+| Rust raw calculator | 64.1 | 65.6 | 3,674.3 | 3,922.3 | 61.0 | 3,933.7 | 67.1 |
 
-This call direction exposes a remaining regression. The checked wrapper creates a task and thread for each exported call, including a guest that only adds one to an integer. The host-import benchmarks below measure calls in the other direction. [Measured PR revision](https://github.com/vados-cosmonic/jco/commit/86d339dd0d3dce2700d3f0f143824cb52b2b5832)
+![Call time relative to Jco 1.13.0, before and after the numeric export optimization.](web/bench/results/numeric-export.png)
 
-```sh
-CHROME_BIN=/path/to/chrome node web/bench/scalar-export.mjs /path/to/jco \
-  /path/to/jco/target/debug/examples/transpile /tmp/scalar-export.json
+Each page interleaved seven implementations of the same guest core. Each timed pass made 65,536 calls to `increment(n)` or `add(n, 1)` and checked the sum. The table reports the median of ten page medians, with two warm-ups and five timed passes per page. The chart takes the ratio on each page first and then the median of those ratios. These summaries can differ when page timings vary. [Runner](web/bench/scalar-export.mjs) · [Calculation](web/bench/scalar-export-report.py) · Raw results for [increment](web/bench/results/numeric-export-increment.json), [C](web/bench/results/numeric-export-c-calculator.json), [Rust](web/bench/results/numeric-export-rust-calculator.json), and [raw Rust](web/bench/results/numeric-export-rust-calculator-raw.json)
+
+For each two-export calculator, the bundled JS entry grew by 913 bytes (85 gzip bytes) and the external entry by 1,769 bytes (168 gzip bytes). Both carry the ordinary task path for coercions, reentry, or custom instantiation. Across all 34 demo components, these three calculators were the only generated outputs that changed in either mode. An [earlier run on the preceding PR head](web/bench/results/scalar-export.json) measured the scalar cost that prompted this change.
+
+To reproduce the paired comparison, use two clean Jco checkouts at the linked revisions. Build `cargo build -p js-component-bindgen --example transpile --features embedded-cm-runtime` in each, and build the checked runtime in the newer checkout as described above. Run the following from the demo repository after preparing the pinned main and 1.13.0 benchmark dependencies.
+
+```bash
+export CHROME_BIN=/path/to/chrome
+jco=/path/to/optimized-jco
+before=/path/to/previous-jco
+results=web/bench/results
+runner=(node web/bench/scalar-export.mjs "$jco" "$jco/target/debug/examples/transpile")
+previous=(86d339dd0 "$before/target/debug/examples/transpile")
+"${runner[@]}" "$results/numeric-export-increment.json" "${previous[@]}"
+for fixture in c/calculator rust/calculator rust/calculator-raw; do
+  "${runner[@]}" "$results/numeric-export-${fixture//\//-}.json" "${previous[@]}" \
+    --calculator "$fixture/native/calculator.wasm"
+done
+python3 web/bench/scalar-export-report.py --plot "$results/numeric-export.png"
 ```
 
 <!-- candidate:start -->

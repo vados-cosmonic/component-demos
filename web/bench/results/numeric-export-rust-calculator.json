@@ -1,0 +1,2150 @@
+{
+  "chromium": "HeadlessChrome/156.0.8078.47",
+  "revision": "af9f314c7a1e4d6869c3c80afa24d1cd45686d4f",
+  "main": "fdbf1ae2dbc9469b5c275b5686d8a4c43681618f",
+  "release": "1.13.0",
+  "fixture": "rust/calculator/native/calculator.wasm",
+  "componentSha256": "e3fe579c2971ca8afdab3395c2bf81a548c4d6fc094e3e0b7180dbcf083e23f8",
+  "coreSha256": "36ab0077060d4e794cd29806ddf5cc0545e8c236af982ee4389cc9498cf56ce8",
+  "entries": {
+    "release": "b0dd3ff249d753bfcfd2470b0ac53fccee21fcfa773add77f5c71d9fbf98646e",
+    "main": "c3c139749ac655093f377f4bc5b358fa6219f142d445d181ec87589fdfd75520",
+    "bundled": "0c63eaf596fb075267dbd1982b235dc3e6e7f5b9178f72000925d33ec5ac1120",
+    "external": "516256cfa56644053d5e98dbb3242eb42e7a52c8a227df2759c10807a19e1508",
+    "previous-bundled": "7d65f843d2e8ad5a2713584c545b6bc2d597c2bf29f1fe632dfcf8d96d56e991",
+    "previous-external": "e47c6dfb54663de731e67d67a8acb670db0ae409e41e545ef09d213daa3913e6"
+  },
+  "sizes": {
+    "release": {
+      "jsBytes": 1664,
+      "gzipBytes": 688
+    },
+    "main": {
+      "jsBytes": 104107,
+      "gzipBytes": 21636
+    },
+    "bundled": {
+      "jsBytes": 79457,
+      "gzipBytes": 17842
+    },
+    "external": {
+      "jsBytes": 17044,
+      "gzipBytes": 3612
+    },
+    "previous-bundled": {
+      "jsBytes": 78544,
+      "gzipBytes": 17757
+    },
+    "previous-external": {
+      "jsBytes": 15275,
+      "gzipBytes": 3444
+    }
+  },
+  "generatorSha256": "54ea4769f739e5ed8db1fcfe503a9c67dd1fe8dfda8aa46809462ad9129de676",
+  "previousRevision": "86d339dd0d3dce2700d3f0f143824cb52b2b5832",
+  "previousGeneratorSha256": "ff84e6564b4564795ff2c58c17a3f9ae3f3ccc79b41b30b11255f0d818f37f0a",
+  "runnerSha256": "5b81d55d03a51a28f4cc36c454132cbde868c7df5fa7288d88d0c47f0b189bf2",
+  "count": 65536,
+  "samples": [
+    {
+      "round": 0,
+      "pass": 0,
+      "mode": "main",
+      "elapsedMs": 252.69999998807907
+    },
+    {
+      "round": 0,
+      "pass": 0,
+      "mode": "bundled",
+      "elapsedMs": 7.400000035762787
+    },
+    {
+      "round": 0,
+      "pass": 0,
+      "mode": "external",
+      "elapsedMs": 6.700000047683716
+    },
+    {
+      "round": 0,
+      "pass": 0,
+      "mode": "previous-bundled",
+      "elapsedMs": 218.0999999642372
+    },
+    {
+      "round": 0,
+      "pass": 0,
+      "mode": "previous-external",
+      "elapsedMs": 243.20000004768372
+    },
+    {
+      "round": 0,
+      "pass": 0,
+      "mode": "direct",
+      "elapsedMs": 4.199999988079071
+    },
+    {
+      "round": 0,
+      "pass": 0,
+      "mode": "release",
+      "elapsedMs": 4.5
+    },
+    {
+      "round": 0,
+      "pass": 1,
+      "mode": "bundled",
+      "elapsedMs": 3.800000011920929
+    },
+    {
+      "round": 0,
+      "pass": 1,
+      "mode": "main",
+      "elapsedMs": 242.10000002384186
+    },
+    {
+      "round": 0,
+      "pass": 1,
+      "mode": "release",
+      "elapsedMs": 4
+    },
+    {
+      "round": 0,
+      "pass": 1,
+      "mode": "direct",
+      "elapsedMs": 4.300000011920929
+    },
+    {
+      "round": 0,
+      "pass": 1,
+      "mode": "previous-external",
+      "elapsedMs": 269.69999998807907
+    },
+    {
+      "round": 0,
+      "pass": 1,
+      "mode": "previous-bundled",
+      "elapsedMs": 249.89999997615814
+    },
+    {
+      "round": 0,
+      "pass": 1,
+      "mode": "external",
+      "elapsedMs": 4.600000023841858
+    },
+    {
+      "round": 0,
+      "pass": 2,
+      "mode": "external",
+      "elapsedMs": 4.899999976158142
+    },
+    {
+      "round": 0,
+      "pass": 2,
+      "mode": "previous-bundled",
+      "elapsedMs": 243.80000001192093
+    },
+    {
+      "round": 0,
+      "pass": 2,
+      "mode": "previous-external",
+      "elapsedMs": 267.10000002384186
+    },
+    {
+      "round": 0,
+      "pass": 2,
+      "mode": "direct",
+      "elapsedMs": 4.199999988079071
+    },
+    {
+      "round": 0,
+      "pass": 2,
+      "mode": "release",
+      "elapsedMs": 4.300000011920929
+    },
+    {
+      "round": 0,
+      "pass": 2,
+      "mode": "main",
+      "elapsedMs": 230.89999997615814
+    },
+    {
+      "round": 0,
+      "pass": 2,
+      "mode": "bundled",
+      "elapsedMs": 4.199999988079071
+    },
+    {
+      "round": 0,
+      "pass": 3,
+      "mode": "previous-bundled",
+      "elapsedMs": 232
+    },
+    {
+      "round": 0,
+      "pass": 3,
+      "mode": "external",
+      "elapsedMs": 5.199999988079071
+    },
+    {
+      "round": 0,
+      "pass": 3,
+      "mode": "bundled",
+      "elapsedMs": 4.100000023841858
+    },
+    {
+      "round": 0,
+      "pass": 3,
+      "mode": "main",
+      "elapsedMs": 225.89999997615814
+    },
+    {
+      "round": 0,
+      "pass": 3,
+      "mode": "release",
+      "elapsedMs": 4.399999976158142
+    },
+    {
+      "round": 0,
+      "pass": 3,
+      "mode": "direct",
+      "elapsedMs": 4.399999976158142
+    },
+    {
+      "round": 0,
+      "pass": 3,
+      "mode": "previous-external",
+      "elapsedMs": 230.30000001192093
+    },
+    {
+      "round": 0,
+      "pass": 4,
+      "mode": "previous-external",
+      "elapsedMs": 237.69999998807907
+    },
+    {
+      "round": 0,
+      "pass": 4,
+      "mode": "direct",
+      "elapsedMs": 4.600000023841858
+    },
+    {
+      "round": 0,
+      "pass": 4,
+      "mode": "release",
+      "elapsedMs": 4.100000023841858
+    },
+    {
+      "round": 0,
+      "pass": 4,
+      "mode": "main",
+      "elapsedMs": 224.89999997615814
+    },
+    {
+      "round": 0,
+      "pass": 4,
+      "mode": "bundled",
+      "elapsedMs": 4.300000011920929
+    },
+    {
+      "round": 0,
+      "pass": 4,
+      "mode": "external",
+      "elapsedMs": 4.300000011920929
+    },
+    {
+      "round": 0,
+      "pass": 4,
+      "mode": "previous-bundled",
+      "elapsedMs": 241.5
+    },
+    {
+      "round": 1,
+      "pass": 0,
+      "mode": "bundled",
+      "elapsedMs": 4.5
+    },
+    {
+      "round": 1,
+      "pass": 0,
+      "mode": "main",
+      "elapsedMs": 254.69999998807907
+    },
+    {
+      "round": 1,
+      "pass": 0,
+      "mode": "release",
+      "elapsedMs": 8.800000011920929
+    },
+    {
+      "round": 1,
+      "pass": 0,
+      "mode": "direct",
+      "elapsedMs": 6.799999952316284
+    },
+    {
+      "round": 1,
+      "pass": 0,
+      "mode": "previous-external",
+      "elapsedMs": 269.89999997615814
+    },
+    {
+      "round": 1,
+      "pass": 0,
+      "mode": "previous-bundled",
+      "elapsedMs": 236.10000002384186
+    },
+    {
+      "round": 1,
+      "pass": 0,
+      "mode": "external",
+      "elapsedMs": 4.5
+    },
+    {
+      "round": 1,
+      "pass": 1,
+      "mode": "external",
+      "elapsedMs": 4.199999988079071
+    },
+    {
+      "round": 1,
+      "pass": 1,
+      "mode": "previous-bundled",
+      "elapsedMs": 237.89999997615814
+    },
+    {
+      "round": 1,
+      "pass": 1,
+      "mode": "previous-external",
+      "elapsedMs": 246.9000000357628
+    },
+    {
+      "round": 1,
+      "pass": 1,
+      "mode": "direct",
+      "elapsedMs": 4.899999976158142
+    },
+    {
+      "round": 1,
+      "pass": 1,
+      "mode": "release",
+      "elapsedMs": 4.699999988079071
+    },
+    {
+      "round": 1,
+      "pass": 1,
+      "mode": "main",
+      "elapsedMs": 242.4000000357628
+    },
+    {
+      "round": 1,
+      "pass": 1,
+      "mode": "bundled",
+      "elapsedMs": 4.299999952316284
+    },
+    {
+      "round": 1,
+      "pass": 2,
+      "mode": "previous-bundled",
+      "elapsedMs": 246.4000000357628
+    },
+    {
+      "round": 1,
+      "pass": 2,
+      "mode": "external",
+      "elapsedMs": 4.600000023841858
+    },
+    {
+      "round": 1,
+      "pass": 2,
+      "mode": "bundled",
+      "elapsedMs": 4.600000023841858
+    },
+    {
+      "round": 1,
+      "pass": 2,
+      "mode": "main",
+      "elapsedMs": 276.2999999523163
+    },
+    {
+      "round": 1,
+      "pass": 2,
+      "mode": "release",
+      "elapsedMs": 4.800000011920929
+    },
+    {
+      "round": 1,
+      "pass": 2,
+      "mode": "direct",
+      "elapsedMs": 5.100000023841858
+    },
+    {
+      "round": 1,
+      "pass": 2,
+      "mode": "previous-external",
+      "elapsedMs": 240.0999999642372
+    },
+    {
+      "round": 1,
+      "pass": 3,
+      "mode": "previous-external",
+      "elapsedMs": 224.20000004768372
+    },
+    {
+      "round": 1,
+      "pass": 3,
+      "mode": "direct",
+      "elapsedMs": 4.899999976158142
+    },
+    {
+      "round": 1,
+      "pass": 3,
+      "mode": "release",
+      "elapsedMs": 4.800000011920929
+    },
+    {
+      "round": 1,
+      "pass": 3,
+      "mode": "main",
+      "elapsedMs": 218.80000001192093
+    },
+    {
+      "round": 1,
+      "pass": 3,
+      "mode": "bundled",
+      "elapsedMs": 4.199999988079071
+    },
+    {
+      "round": 1,
+      "pass": 3,
+      "mode": "external",
+      "elapsedMs": 4.399999976158142
+    },
+    {
+      "round": 1,
+      "pass": 3,
+      "mode": "previous-bundled",
+      "elapsedMs": 214.19999998807907
+    },
+    {
+      "round": 1,
+      "pass": 4,
+      "mode": "direct",
+      "elapsedMs": 5.100000023841858
+    },
+    {
+      "round": 1,
+      "pass": 4,
+      "mode": "previous-external",
+      "elapsedMs": 243.29999995231628
+    },
+    {
+      "round": 1,
+      "pass": 4,
+      "mode": "previous-bundled",
+      "elapsedMs": 248
+    },
+    {
+      "round": 1,
+      "pass": 4,
+      "mode": "external",
+      "elapsedMs": 4.900000035762787
+    },
+    {
+      "round": 1,
+      "pass": 4,
+      "mode": "bundled",
+      "elapsedMs": 4.800000011920929
+    },
+    {
+      "round": 1,
+      "pass": 4,
+      "mode": "main",
+      "elapsedMs": 225.79999995231628
+    },
+    {
+      "round": 1,
+      "pass": 4,
+      "mode": "release",
+      "elapsedMs": 4.800000011920929
+    },
+    {
+      "round": 2,
+      "pass": 0,
+      "mode": "external",
+      "elapsedMs": 4.600000023841858
+    },
+    {
+      "round": 2,
+      "pass": 0,
+      "mode": "previous-bundled",
+      "elapsedMs": 341.5999999642372
+    },
+    {
+      "round": 2,
+      "pass": 0,
+      "mode": "previous-external",
+      "elapsedMs": 277
+    },
+    {
+      "round": 2,
+      "pass": 0,
+      "mode": "direct",
+      "elapsedMs": 5.299999952316284
+    },
+    {
+      "round": 2,
+      "pass": 0,
+      "mode": "release",
+      "elapsedMs": 5.300000011920929
+    },
+    {
+      "round": 2,
+      "pass": 0,
+      "mode": "main",
+      "elapsedMs": 244.69999998807907
+    },
+    {
+      "round": 2,
+      "pass": 0,
+      "mode": "bundled",
+      "elapsedMs": 4.5
+    },
+    {
+      "round": 2,
+      "pass": 1,
+      "mode": "previous-bundled",
+      "elapsedMs": 258.80000001192093
+    },
+    {
+      "round": 2,
+      "pass": 1,
+      "mode": "external",
+      "elapsedMs": 4.5
+    },
+    {
+      "round": 2,
+      "pass": 1,
+      "mode": "bundled",
+      "elapsedMs": 4.199999988079071
+    },
+    {
+      "round": 2,
+      "pass": 1,
+      "mode": "main",
+      "elapsedMs": 243.20000004768372
+    },
+    {
+      "round": 2,
+      "pass": 1,
+      "mode": "release",
+      "elapsedMs": 4.799999952316284
+    },
+    {
+      "round": 2,
+      "pass": 1,
+      "mode": "direct",
+      "elapsedMs": 4.800000011920929
+    },
+    {
+      "round": 2,
+      "pass": 1,
+      "mode": "previous-external",
+      "elapsedMs": 240.80000001192093
+    },
+    {
+      "round": 2,
+      "pass": 2,
+      "mode": "previous-external",
+      "elapsedMs": 235.80000001192093
+    },
+    {
+      "round": 2,
+      "pass": 2,
+      "mode": "direct",
+      "elapsedMs": 4.699999988079071
+    },
+    {
+      "round": 2,
+      "pass": 2,
+      "mode": "release",
+      "elapsedMs": 5
+    },
+    {
+      "round": 2,
+      "pass": 2,
+      "mode": "main",
+      "elapsedMs": 267.39999997615814
+    },
+    {
+      "round": 2,
+      "pass": 2,
+      "mode": "bundled",
+      "elapsedMs": 4.5
+    },
+    {
+      "round": 2,
+      "pass": 2,
+      "mode": "external",
+      "elapsedMs": 4.800000011920929
+    },
+    {
+      "round": 2,
+      "pass": 2,
+      "mode": "previous-bundled",
+      "elapsedMs": 245.30000001192093
+    },
+    {
+      "round": 2,
+      "pass": 3,
+      "mode": "direct",
+      "elapsedMs": 5.299999952316284
+    },
+    {
+      "round": 2,
+      "pass": 3,
+      "mode": "previous-external",
+      "elapsedMs": 231
+    },
+    {
+      "round": 2,
+      "pass": 3,
+      "mode": "previous-bundled",
+      "elapsedMs": 228.30000001192093
+    },
+    {
+      "round": 2,
+      "pass": 3,
+      "mode": "external",
+      "elapsedMs": 4.199999988079071
+    },
+    {
+      "round": 2,
+      "pass": 3,
+      "mode": "bundled",
+      "elapsedMs": 3.900000035762787
+    },
+    {
+      "round": 2,
+      "pass": 3,
+      "mode": "main",
+      "elapsedMs": 216.30000001192093
+    },
+    {
+      "round": 2,
+      "pass": 3,
+      "mode": "release",
+      "elapsedMs": 5.299999952316284
+    },
+    {
+      "round": 2,
+      "pass": 4,
+      "mode": "release",
+      "elapsedMs": 4.400000035762787
+    },
+    {
+      "round": 2,
+      "pass": 4,
+      "mode": "main",
+      "elapsedMs": 251.0999999642372
+    },
+    {
+      "round": 2,
+      "pass": 4,
+      "mode": "bundled",
+      "elapsedMs": 4.200000047683716
+    },
+    {
+      "round": 2,
+      "pass": 4,
+      "mode": "external",
+      "elapsedMs": 4.799999952316284
+    },
+    {
+      "round": 2,
+      "pass": 4,
+      "mode": "previous-bundled",
+      "elapsedMs": 272.2000000476837
+    },
+    {
+      "round": 2,
+      "pass": 4,
+      "mode": "previous-external",
+      "elapsedMs": 225
+    },
+    {
+      "round": 2,
+      "pass": 4,
+      "mode": "direct",
+      "elapsedMs": 5.099999964237213
+    },
+    {
+      "round": 3,
+      "pass": 0,
+      "mode": "previous-bundled",
+      "elapsedMs": 308
+    },
+    {
+      "round": 3,
+      "pass": 0,
+      "mode": "external",
+      "elapsedMs": 13
+    },
+    {
+      "round": 3,
+      "pass": 0,
+      "mode": "bundled",
+      "elapsedMs": 21.600000023841858
+    },
+    {
+      "round": 3,
+      "pass": 0,
+      "mode": "main",
+      "elapsedMs": 294.69999998807907
+    },
+    {
+      "round": 3,
+      "pass": 0,
+      "mode": "release",
+      "elapsedMs": 11.800000011920929
+    },
+    {
+      "round": 3,
+      "pass": 0,
+      "mode": "direct",
+      "elapsedMs": 6.800000011920929
+    },
+    {
+      "round": 3,
+      "pass": 0,
+      "mode": "previous-external",
+      "elapsedMs": 336.89999997615814
+    },
+    {
+      "round": 3,
+      "pass": 1,
+      "mode": "previous-external",
+      "elapsedMs": 334.30000001192093
+    },
+    {
+      "round": 3,
+      "pass": 1,
+      "mode": "direct",
+      "elapsedMs": 8.199999988079071
+    },
+    {
+      "round": 3,
+      "pass": 1,
+      "mode": "release",
+      "elapsedMs": 5.199999988079071
+    },
+    {
+      "round": 3,
+      "pass": 1,
+      "mode": "main",
+      "elapsedMs": 250.10000002384186
+    },
+    {
+      "round": 3,
+      "pass": 1,
+      "mode": "bundled",
+      "elapsedMs": 4.599999964237213
+    },
+    {
+      "round": 3,
+      "pass": 1,
+      "mode": "external",
+      "elapsedMs": 5
+    },
+    {
+      "round": 3,
+      "pass": 1,
+      "mode": "previous-bundled",
+      "elapsedMs": 262.19999998807907
+    },
+    {
+      "round": 3,
+      "pass": 2,
+      "mode": "direct",
+      "elapsedMs": 6.200000047683716
+    },
+    {
+      "round": 3,
+      "pass": 2,
+      "mode": "previous-external",
+      "elapsedMs": 339.19999998807907
+    },
+    {
+      "round": 3,
+      "pass": 2,
+      "mode": "previous-bundled",
+      "elapsedMs": 261
+    },
+    {
+      "round": 3,
+      "pass": 2,
+      "mode": "external",
+      "elapsedMs": 5.399999976158142
+    },
+    {
+      "round": 3,
+      "pass": 2,
+      "mode": "bundled",
+      "elapsedMs": 4.800000011920929
+    },
+    {
+      "round": 3,
+      "pass": 2,
+      "mode": "main",
+      "elapsedMs": 251.39999997615814
+    },
+    {
+      "round": 3,
+      "pass": 2,
+      "mode": "release",
+      "elapsedMs": 5.400000035762787
+    },
+    {
+      "round": 3,
+      "pass": 3,
+      "mode": "release",
+      "elapsedMs": 5
+    },
+    {
+      "round": 3,
+      "pass": 3,
+      "mode": "main",
+      "elapsedMs": 273.5999999642372
+    },
+    {
+      "round": 3,
+      "pass": 3,
+      "mode": "bundled",
+      "elapsedMs": 5.5
+    },
+    {
+      "round": 3,
+      "pass": 3,
+      "mode": "external",
+      "elapsedMs": 7.200000047683716
+    },
+    {
+      "round": 3,
+      "pass": 3,
+      "mode": "previous-bundled",
+      "elapsedMs": 275.5
+    },
+    {
+      "round": 3,
+      "pass": 3,
+      "mode": "previous-external",
+      "elapsedMs": 249.19999998807907
+    },
+    {
+      "round": 3,
+      "pass": 3,
+      "mode": "direct",
+      "elapsedMs": 6.800000011920929
+    },
+    {
+      "round": 3,
+      "pass": 4,
+      "mode": "main",
+      "elapsedMs": 250.9000000357628
+    },
+    {
+      "round": 3,
+      "pass": 4,
+      "mode": "release",
+      "elapsedMs": 5.099999964237213
+    },
+    {
+      "round": 3,
+      "pass": 4,
+      "mode": "direct",
+      "elapsedMs": 5.199999988079071
+    },
+    {
+      "round": 3,
+      "pass": 4,
+      "mode": "previous-external",
+      "elapsedMs": 253.9000000357628
+    },
+    {
+      "round": 3,
+      "pass": 4,
+      "mode": "previous-bundled",
+      "elapsedMs": 224.60000002384186
+    },
+    {
+      "round": 3,
+      "pass": 4,
+      "mode": "external",
+      "elapsedMs": 4
+    },
+    {
+      "round": 3,
+      "pass": 4,
+      "mode": "bundled",
+      "elapsedMs": 2.5
+    },
+    {
+      "round": 4,
+      "pass": 0,
+      "mode": "previous-external",
+      "elapsedMs": 247.80000001192093
+    },
+    {
+      "round": 4,
+      "pass": 0,
+      "mode": "direct",
+      "elapsedMs": 8.300000011920929
+    },
+    {
+      "round": 4,
+      "pass": 0,
+      "mode": "release",
+      "elapsedMs": 9
+    },
+    {
+      "round": 4,
+      "pass": 0,
+      "mode": "main",
+      "elapsedMs": 235.5
+    },
+    {
+      "round": 4,
+      "pass": 0,
+      "mode": "bundled",
+      "elapsedMs": 4.800000011920929
+    },
+    {
+      "round": 4,
+      "pass": 0,
+      "mode": "external",
+      "elapsedMs": 5.5
+    },
+    {
+      "round": 4,
+      "pass": 0,
+      "mode": "previous-bundled",
+      "elapsedMs": 261.5
+    },
+    {
+      "round": 4,
+      "pass": 1,
+      "mode": "direct",
+      "elapsedMs": 6.600000023841858
+    },
+    {
+      "round": 4,
+      "pass": 1,
+      "mode": "previous-external",
+      "elapsedMs": 218.5999999642372
+    },
+    {
+      "round": 4,
+      "pass": 1,
+      "mode": "previous-bundled",
+      "elapsedMs": 218.4000000357628
+    },
+    {
+      "round": 4,
+      "pass": 1,
+      "mode": "external",
+      "elapsedMs": 7.599999964237213
+    },
+    {
+      "round": 4,
+      "pass": 1,
+      "mode": "bundled",
+      "elapsedMs": 4.600000023841858
+    },
+    {
+      "round": 4,
+      "pass": 1,
+      "mode": "main",
+      "elapsedMs": 264.5999999642372
+    },
+    {
+      "round": 4,
+      "pass": 1,
+      "mode": "release",
+      "elapsedMs": 5.5
+    },
+    {
+      "round": 4,
+      "pass": 2,
+      "mode": "release",
+      "elapsedMs": 5.400000035762787
+    },
+    {
+      "round": 4,
+      "pass": 2,
+      "mode": "main",
+      "elapsedMs": 280
+    },
+    {
+      "round": 4,
+      "pass": 2,
+      "mode": "bundled",
+      "elapsedMs": 8.899999976158142
+    },
+    {
+      "round": 4,
+      "pass": 2,
+      "mode": "external",
+      "elapsedMs": 7.399999976158142
+    },
+    {
+      "round": 4,
+      "pass": 2,
+      "mode": "previous-bundled",
+      "elapsedMs": 250.20000004768372
+    },
+    {
+      "round": 4,
+      "pass": 2,
+      "mode": "previous-external",
+      "elapsedMs": 268.19999998807907
+    },
+    {
+      "round": 4,
+      "pass": 2,
+      "mode": "direct",
+      "elapsedMs": 5.800000011920929
+    },
+    {
+      "round": 4,
+      "pass": 3,
+      "mode": "main",
+      "elapsedMs": 290.39999997615814
+    },
+    {
+      "round": 4,
+      "pass": 3,
+      "mode": "release",
+      "elapsedMs": 9.100000023841858
+    },
+    {
+      "round": 4,
+      "pass": 3,
+      "mode": "direct",
+      "elapsedMs": 9.899999976158142
+    },
+    {
+      "round": 4,
+      "pass": 3,
+      "mode": "previous-external",
+      "elapsedMs": 226.19999998807907
+    },
+    {
+      "round": 4,
+      "pass": 3,
+      "mode": "previous-bundled",
+      "elapsedMs": 269.5
+    },
+    {
+      "round": 4,
+      "pass": 3,
+      "mode": "external",
+      "elapsedMs": 5
+    },
+    {
+      "round": 4,
+      "pass": 3,
+      "mode": "bundled",
+      "elapsedMs": 4.900000035762787
+    },
+    {
+      "round": 4,
+      "pass": 4,
+      "mode": "bundled",
+      "elapsedMs": 4.699999988079071
+    },
+    {
+      "round": 4,
+      "pass": 4,
+      "mode": "external",
+      "elapsedMs": 5.099999964237213
+    },
+    {
+      "round": 4,
+      "pass": 4,
+      "mode": "previous-bundled",
+      "elapsedMs": 259.10000002384186
+    },
+    {
+      "round": 4,
+      "pass": 4,
+      "mode": "previous-external",
+      "elapsedMs": 337
+    },
+    {
+      "round": 4,
+      "pass": 4,
+      "mode": "direct",
+      "elapsedMs": 4.800000011920929
+    },
+    {
+      "round": 4,
+      "pass": 4,
+      "mode": "release",
+      "elapsedMs": 4.699999988079071
+    },
+    {
+      "round": 4,
+      "pass": 4,
+      "mode": "main",
+      "elapsedMs": 335.69999998807907
+    },
+    {
+      "round": 5,
+      "pass": 0,
+      "mode": "direct",
+      "elapsedMs": 5.399999976158142
+    },
+    {
+      "round": 5,
+      "pass": 0,
+      "mode": "previous-external",
+      "elapsedMs": 281.10000002384186
+    },
+    {
+      "round": 5,
+      "pass": 0,
+      "mode": "previous-bundled",
+      "elapsedMs": 265.80000001192093
+    },
+    {
+      "round": 5,
+      "pass": 0,
+      "mode": "external",
+      "elapsedMs": 6.199999988079071
+    },
+    {
+      "round": 5,
+      "pass": 0,
+      "mode": "bundled",
+      "elapsedMs": 10.5
+    },
+    {
+      "round": 5,
+      "pass": 0,
+      "mode": "main",
+      "elapsedMs": 310.80000001192093
+    },
+    {
+      "round": 5,
+      "pass": 0,
+      "mode": "release",
+      "elapsedMs": 6.5
+    },
+    {
+      "round": 5,
+      "pass": 1,
+      "mode": "release",
+      "elapsedMs": 5.699999988079071
+    },
+    {
+      "round": 5,
+      "pass": 1,
+      "mode": "main",
+      "elapsedMs": 321.5999999642372
+    },
+    {
+      "round": 5,
+      "pass": 1,
+      "mode": "bundled",
+      "elapsedMs": 5.700000047683716
+    },
+    {
+      "round": 5,
+      "pass": 1,
+      "mode": "external",
+      "elapsedMs": 4.599999964237213
+    },
+    {
+      "round": 5,
+      "pass": 1,
+      "mode": "previous-bundled",
+      "elapsedMs": 327.19999998807907
+    },
+    {
+      "round": 5,
+      "pass": 1,
+      "mode": "previous-external",
+      "elapsedMs": 338.80000001192093
+    },
+    {
+      "round": 5,
+      "pass": 1,
+      "mode": "direct",
+      "elapsedMs": 5.300000011920929
+    },
+    {
+      "round": 5,
+      "pass": 2,
+      "mode": "main",
+      "elapsedMs": 331.5
+    },
+    {
+      "round": 5,
+      "pass": 2,
+      "mode": "release",
+      "elapsedMs": 5.299999952316284
+    },
+    {
+      "round": 5,
+      "pass": 2,
+      "mode": "direct",
+      "elapsedMs": 5.5
+    },
+    {
+      "round": 5,
+      "pass": 2,
+      "mode": "previous-external",
+      "elapsedMs": 281.9000000357628
+    },
+    {
+      "round": 5,
+      "pass": 2,
+      "mode": "previous-bundled",
+      "elapsedMs": 243.19999998807907
+    },
+    {
+      "round": 5,
+      "pass": 2,
+      "mode": "external",
+      "elapsedMs": 5
+    },
+    {
+      "round": 5,
+      "pass": 2,
+      "mode": "bundled",
+      "elapsedMs": 5
+    },
+    {
+      "round": 5,
+      "pass": 3,
+      "mode": "bundled",
+      "elapsedMs": 5.899999976158142
+    },
+    {
+      "round": 5,
+      "pass": 3,
+      "mode": "external",
+      "elapsedMs": 6.100000023841858
+    },
+    {
+      "round": 5,
+      "pass": 3,
+      "mode": "previous-bundled",
+      "elapsedMs": 242
+    },
+    {
+      "round": 5,
+      "pass": 3,
+      "mode": "previous-external",
+      "elapsedMs": 238.19999998807907
+    },
+    {
+      "round": 5,
+      "pass": 3,
+      "mode": "direct",
+      "elapsedMs": 5.400000035762787
+    },
+    {
+      "round": 5,
+      "pass": 3,
+      "mode": "release",
+      "elapsedMs": 4.800000011920929
+    },
+    {
+      "round": 5,
+      "pass": 3,
+      "mode": "main",
+      "elapsedMs": 219.79999995231628
+    },
+    {
+      "round": 5,
+      "pass": 4,
+      "mode": "external",
+      "elapsedMs": 3.700000047683716
+    },
+    {
+      "round": 5,
+      "pass": 4,
+      "mode": "bundled",
+      "elapsedMs": 4
+    },
+    {
+      "round": 5,
+      "pass": 4,
+      "mode": "main",
+      "elapsedMs": 256.9000000357628
+    },
+    {
+      "round": 5,
+      "pass": 4,
+      "mode": "release",
+      "elapsedMs": 7.299999952316284
+    },
+    {
+      "round": 5,
+      "pass": 4,
+      "mode": "direct",
+      "elapsedMs": 5.700000047683716
+    },
+    {
+      "round": 5,
+      "pass": 4,
+      "mode": "previous-external",
+      "elapsedMs": 254.89999997615814
+    },
+    {
+      "round": 5,
+      "pass": 4,
+      "mode": "previous-bundled",
+      "elapsedMs": 278.69999998807907
+    },
+    {
+      "round": 6,
+      "pass": 0,
+      "mode": "release",
+      "elapsedMs": 4.600000023841858
+    },
+    {
+      "round": 6,
+      "pass": 0,
+      "mode": "main",
+      "elapsedMs": 291.19999998807907
+    },
+    {
+      "round": 6,
+      "pass": 0,
+      "mode": "bundled",
+      "elapsedMs": 8.199999988079071
+    },
+    {
+      "round": 6,
+      "pass": 0,
+      "mode": "external",
+      "elapsedMs": 7.300000011920929
+    },
+    {
+      "round": 6,
+      "pass": 0,
+      "mode": "previous-bundled",
+      "elapsedMs": 235.30000001192093
+    },
+    {
+      "round": 6,
+      "pass": 0,
+      "mode": "previous-external",
+      "elapsedMs": 259.5999999642372
+    },
+    {
+      "round": 6,
+      "pass": 0,
+      "mode": "direct",
+      "elapsedMs": 3.300000011920929
+    },
+    {
+      "round": 6,
+      "pass": 1,
+      "mode": "main",
+      "elapsedMs": 230.60000002384186
+    },
+    {
+      "round": 6,
+      "pass": 1,
+      "mode": "release",
+      "elapsedMs": 5.400000035762787
+    },
+    {
+      "round": 6,
+      "pass": 1,
+      "mode": "direct",
+      "elapsedMs": 5.5
+    },
+    {
+      "round": 6,
+      "pass": 1,
+      "mode": "previous-external",
+      "elapsedMs": 292.10000002384186
+    },
+    {
+      "round": 6,
+      "pass": 1,
+      "mode": "previous-bundled",
+      "elapsedMs": 252.0999999642372
+    },
+    {
+      "round": 6,
+      "pass": 1,
+      "mode": "external",
+      "elapsedMs": 4.700000047683716
+    },
+    {
+      "round": 6,
+      "pass": 1,
+      "mode": "bundled",
+      "elapsedMs": 4.199999988079071
+    },
+    {
+      "round": 6,
+      "pass": 2,
+      "mode": "bundled",
+      "elapsedMs": 4.200000047683716
+    },
+    {
+      "round": 6,
+      "pass": 2,
+      "mode": "external",
+      "elapsedMs": 4.599999964237213
+    },
+    {
+      "round": 6,
+      "pass": 2,
+      "mode": "previous-bundled",
+      "elapsedMs": 251.69999998807907
+    },
+    {
+      "round": 6,
+      "pass": 2,
+      "mode": "previous-external",
+      "elapsedMs": 311.30000001192093
+    },
+    {
+      "round": 6,
+      "pass": 2,
+      "mode": "direct",
+      "elapsedMs": 5.199999988079071
+    },
+    {
+      "round": 6,
+      "pass": 2,
+      "mode": "release",
+      "elapsedMs": 4.700000047683716
+    },
+    {
+      "round": 6,
+      "pass": 2,
+      "mode": "main",
+      "elapsedMs": 250.5
+    },
+    {
+      "round": 6,
+      "pass": 3,
+      "mode": "external",
+      "elapsedMs": 5.899999976158142
+    },
+    {
+      "round": 6,
+      "pass": 3,
+      "mode": "bundled",
+      "elapsedMs": 5.199999988079071
+    },
+    {
+      "round": 6,
+      "pass": 3,
+      "mode": "main",
+      "elapsedMs": 277.10000002384186
+    },
+    {
+      "round": 6,
+      "pass": 3,
+      "mode": "release",
+      "elapsedMs": 5.599999964237213
+    },
+    {
+      "round": 6,
+      "pass": 3,
+      "mode": "direct",
+      "elapsedMs": 5.600000023841858
+    },
+    {
+      "round": 6,
+      "pass": 3,
+      "mode": "previous-external",
+      "elapsedMs": 268.60000002384186
+    },
+    {
+      "round": 6,
+      "pass": 3,
+      "mode": "previous-bundled",
+      "elapsedMs": 221.5
+    },
+    {
+      "round": 6,
+      "pass": 4,
+      "mode": "previous-bundled",
+      "elapsedMs": 267.89999997615814
+    },
+    {
+      "round": 6,
+      "pass": 4,
+      "mode": "previous-external",
+      "elapsedMs": 247.80000001192093
+    },
+    {
+      "round": 6,
+      "pass": 4,
+      "mode": "direct",
+      "elapsedMs": 2
+    },
+    {
+      "round": 6,
+      "pass": 4,
+      "mode": "release",
+      "elapsedMs": 2
+    },
+    {
+      "round": 6,
+      "pass": 4,
+      "mode": "main",
+      "elapsedMs": 259
+    },
+    {
+      "round": 6,
+      "pass": 4,
+      "mode": "bundled",
+      "elapsedMs": 9
+    },
+    {
+      "round": 6,
+      "pass": 4,
+      "mode": "external",
+      "elapsedMs": 9.5
+    },
+    {
+      "round": 7,
+      "pass": 0,
+      "mode": "main",
+      "elapsedMs": 244
+    },
+    {
+      "round": 7,
+      "pass": 0,
+      "mode": "release",
+      "elapsedMs": 6.700000047683716
+    },
+    {
+      "round": 7,
+      "pass": 0,
+      "mode": "direct",
+      "elapsedMs": 6.699999988079071
+    },
+    {
+      "round": 7,
+      "pass": 0,
+      "mode": "previous-external",
+      "elapsedMs": 290
+    },
+    {
+      "round": 7,
+      "pass": 0,
+      "mode": "previous-bundled",
+      "elapsedMs": 291.10000002384186
+    },
+    {
+      "round": 7,
+      "pass": 0,
+      "mode": "external",
+      "elapsedMs": 5.5
+    },
+    {
+      "round": 7,
+      "pass": 0,
+      "mode": "bundled",
+      "elapsedMs": 5.100000023841858
+    },
+    {
+      "round": 7,
+      "pass": 1,
+      "mode": "bundled",
+      "elapsedMs": 4.899999976158142
+    },
+    {
+      "round": 7,
+      "pass": 1,
+      "mode": "external",
+      "elapsedMs": 5.199999988079071
+    },
+    {
+      "round": 7,
+      "pass": 1,
+      "mode": "previous-bundled",
+      "elapsedMs": 278.80000001192093
+    },
+    {
+      "round": 7,
+      "pass": 1,
+      "mode": "previous-external",
+      "elapsedMs": 264.9000000357628
+    },
+    {
+      "round": 7,
+      "pass": 1,
+      "mode": "direct",
+      "elapsedMs": 5.299999952316284
+    },
+    {
+      "round": 7,
+      "pass": 1,
+      "mode": "release",
+      "elapsedMs": 5.700000047683716
+    },
+    {
+      "round": 7,
+      "pass": 1,
+      "mode": "main",
+      "elapsedMs": 363.5999999642372
+    },
+    {
+      "round": 7,
+      "pass": 2,
+      "mode": "external",
+      "elapsedMs": 9.699999988079071
+    },
+    {
+      "round": 7,
+      "pass": 2,
+      "mode": "bundled",
+      "elapsedMs": 5.600000023841858
+    },
+    {
+      "round": 7,
+      "pass": 2,
+      "mode": "main",
+      "elapsedMs": 241.69999998807907
+    },
+    {
+      "round": 7,
+      "pass": 2,
+      "mode": "release",
+      "elapsedMs": 17.399999976158142
+    },
+    {
+      "round": 7,
+      "pass": 2,
+      "mode": "direct",
+      "elapsedMs": 9.699999988079071
+    },
+    {
+      "round": 7,
+      "pass": 2,
+      "mode": "previous-external",
+      "elapsedMs": 330.80000001192093
+    },
+    {
+      "round": 7,
+      "pass": 2,
+      "mode": "previous-bundled",
+      "elapsedMs": 268.5999999642372
+    },
+    {
+      "round": 7,
+      "pass": 3,
+      "mode": "previous-bundled",
+      "elapsedMs": 260.80000001192093
+    },
+    {
+      "round": 7,
+      "pass": 3,
+      "mode": "previous-external",
+      "elapsedMs": 285.80000001192093
+    },
+    {
+      "round": 7,
+      "pass": 3,
+      "mode": "direct",
+      "elapsedMs": 9.600000023841858
+    },
+    {
+      "round": 7,
+      "pass": 3,
+      "mode": "release",
+      "elapsedMs": 9.699999988079071
+    },
+    {
+      "round": 7,
+      "pass": 3,
+      "mode": "main",
+      "elapsedMs": 241.69999998807907
+    },
+    {
+      "round": 7,
+      "pass": 3,
+      "mode": "bundled",
+      "elapsedMs": 6.100000023841858
+    },
+    {
+      "round": 7,
+      "pass": 3,
+      "mode": "external",
+      "elapsedMs": 7.199999988079071
+    },
+    {
+      "round": 7,
+      "pass": 4,
+      "mode": "previous-external",
+      "elapsedMs": 259.5999999642372
+    },
+    {
+      "round": 7,
+      "pass": 4,
+      "mode": "previous-bundled",
+      "elapsedMs": 246.39999997615814
+    },
+    {
+      "round": 7,
+      "pass": 4,
+      "mode": "external",
+      "elapsedMs": 4.700000047683716
+    },
+    {
+      "round": 7,
+      "pass": 4,
+      "mode": "bundled",
+      "elapsedMs": 4.299999952316284
+    },
+    {
+      "round": 7,
+      "pass": 4,
+      "mode": "main",
+      "elapsedMs": 285.5
+    },
+    {
+      "round": 7,
+      "pass": 4,
+      "mode": "release",
+      "elapsedMs": 4.400000035762787
+    },
+    {
+      "round": 7,
+      "pass": 4,
+      "mode": "direct",
+      "elapsedMs": 6.199999988079071
+    },
+    {
+      "round": 8,
+      "pass": 0,
+      "mode": "bundled",
+      "elapsedMs": 5.099999964237213
+    },
+    {
+      "round": 8,
+      "pass": 0,
+      "mode": "external",
+      "elapsedMs": 6.899999976158142
+    },
+    {
+      "round": 8,
+      "pass": 0,
+      "mode": "previous-bundled",
+      "elapsedMs": 241.60000002384186
+    },
+    {
+      "round": 8,
+      "pass": 0,
+      "mode": "previous-external",
+      "elapsedMs": 297.2000000476837
+    },
+    {
+      "round": 8,
+      "pass": 0,
+      "mode": "direct",
+      "elapsedMs": 5.800000011920929
+    },
+    {
+      "round": 8,
+      "pass": 0,
+      "mode": "release",
+      "elapsedMs": 5.199999988079071
+    },
+    {
+      "round": 8,
+      "pass": 0,
+      "mode": "main",
+      "elapsedMs": 274.69999998807907
+    },
+    {
+      "round": 8,
+      "pass": 1,
+      "mode": "external",
+      "elapsedMs": 9.800000011920929
+    },
+    {
+      "round": 8,
+      "pass": 1,
+      "mode": "bundled",
+      "elapsedMs": 9.699999988079071
+    },
+    {
+      "round": 8,
+      "pass": 1,
+      "mode": "main",
+      "elapsedMs": 265.39999997615814
+    },
+    {
+      "round": 8,
+      "pass": 1,
+      "mode": "release",
+      "elapsedMs": 6.5
+    },
+    {
+      "round": 8,
+      "pass": 1,
+      "mode": "direct",
+      "elapsedMs": 8.300000011920929
+    },
+    {
+      "round": 8,
+      "pass": 1,
+      "mode": "previous-external",
+      "elapsedMs": 256.19999998807907
+    },
+    {
+      "round": 8,
+      "pass": 1,
+      "mode": "previous-bundled",
+      "elapsedMs": 261.5
+    },
+    {
+      "round": 8,
+      "pass": 2,
+      "mode": "previous-bundled",
+      "elapsedMs": 281.2999999523163
+    },
+    {
+      "round": 8,
+      "pass": 2,
+      "mode": "previous-external",
+      "elapsedMs": 328.7000000476837
+    },
+    {
+      "round": 8,
+      "pass": 2,
+      "mode": "direct",
+      "elapsedMs": 9.099999964237213
+    },
+    {
+      "round": 8,
+      "pass": 2,
+      "mode": "release",
+      "elapsedMs": 11.199999988079071
+    },
+    {
+      "round": 8,
+      "pass": 2,
+      "mode": "main",
+      "elapsedMs": 443.5
+    },
+    {
+      "round": 8,
+      "pass": 2,
+      "mode": "bundled",
+      "elapsedMs": 5.899999976158142
+    },
+    {
+      "round": 8,
+      "pass": 2,
+      "mode": "external",
+      "elapsedMs": 6.100000023841858
+    },
+    {
+      "round": 8,
+      "pass": 3,
+      "mode": "previous-external",
+      "elapsedMs": 293.39999997615814
+    },
+    {
+      "round": 8,
+      "pass": 3,
+      "mode": "previous-bundled",
+      "elapsedMs": 377.10000002384186
+    },
+    {
+      "round": 8,
+      "pass": 3,
+      "mode": "external",
+      "elapsedMs": 5.099999964237213
+    },
+    {
+      "round": 8,
+      "pass": 3,
+      "mode": "bundled",
+      "elapsedMs": 5.100000023841858
+    },
+    {
+      "round": 8,
+      "pass": 3,
+      "mode": "main",
+      "elapsedMs": 241.19999998807907
+    },
+    {
+      "round": 8,
+      "pass": 3,
+      "mode": "release",
+      "elapsedMs": 5.5
+    },
+    {
+      "round": 8,
+      "pass": 3,
+      "mode": "direct",
+      "elapsedMs": 5.800000011920929
+    },
+    {
+      "round": 8,
+      "pass": 4,
+      "mode": "direct",
+      "elapsedMs": 5.099999964237213
+    },
+    {
+      "round": 8,
+      "pass": 4,
+      "mode": "release",
+      "elapsedMs": 5.5
+    },
+    {
+      "round": 8,
+      "pass": 4,
+      "mode": "main",
+      "elapsedMs": 240.5
+    },
+    {
+      "round": 8,
+      "pass": 4,
+      "mode": "bundled",
+      "elapsedMs": 5
+    },
+    {
+      "round": 8,
+      "pass": 4,
+      "mode": "external",
+      "elapsedMs": 4.800000011920929
+    },
+    {
+      "round": 8,
+      "pass": 4,
+      "mode": "previous-bundled",
+      "elapsedMs": 243.69999998807907
+    },
+    {
+      "round": 8,
+      "pass": 4,
+      "mode": "previous-external",
+      "elapsedMs": 256
+    },
+    {
+      "round": 9,
+      "pass": 0,
+      "mode": "external",
+      "elapsedMs": 5.199999988079071
+    },
+    {
+      "round": 9,
+      "pass": 0,
+      "mode": "bundled",
+      "elapsedMs": 6
+    },
+    {
+      "round": 9,
+      "pass": 0,
+      "mode": "main",
+      "elapsedMs": 258.69999998807907
+    },
+    {
+      "round": 9,
+      "pass": 0,
+      "mode": "release",
+      "elapsedMs": 4.800000011920929
+    },
+    {
+      "round": 9,
+      "pass": 0,
+      "mode": "direct",
+      "elapsedMs": 4.699999988079071
+    },
+    {
+      "round": 9,
+      "pass": 0,
+      "mode": "previous-external",
+      "elapsedMs": 244.89999997615814
+    },
+    {
+      "round": 9,
+      "pass": 0,
+      "mode": "previous-bundled",
+      "elapsedMs": 251.30000001192093
+    },
+    {
+      "round": 9,
+      "pass": 1,
+      "mode": "previous-bundled",
+      "elapsedMs": 316.39999997615814
+    },
+    {
+      "round": 9,
+      "pass": 1,
+      "mode": "previous-external",
+      "elapsedMs": 294.30000001192093
+    },
+    {
+      "round": 9,
+      "pass": 1,
+      "mode": "direct",
+      "elapsedMs": 6.800000011920929
+    },
+    {
+      "round": 9,
+      "pass": 1,
+      "mode": "release",
+      "elapsedMs": 7.300000011920929
+    },
+    {
+      "round": 9,
+      "pass": 1,
+      "mode": "main",
+      "elapsedMs": 261.19999998807907
+    },
+    {
+      "round": 9,
+      "pass": 1,
+      "mode": "bundled",
+      "elapsedMs": 6
+    },
+    {
+      "round": 9,
+      "pass": 1,
+      "mode": "external",
+      "elapsedMs": 7.800000011920929
+    },
+    {
+      "round": 9,
+      "pass": 2,
+      "mode": "previous-external",
+      "elapsedMs": 213.89999997615814
+    },
+    {
+      "round": 9,
+      "pass": 2,
+      "mode": "previous-bundled",
+      "elapsedMs": 287.7000000476837
+    },
+    {
+      "round": 9,
+      "pass": 2,
+      "mode": "external",
+      "elapsedMs": 5
+    },
+    {
+      "round": 9,
+      "pass": 2,
+      "mode": "bundled",
+      "elapsedMs": 4.5
+    },
+    {
+      "round": 9,
+      "pass": 2,
+      "mode": "main",
+      "elapsedMs": 262.89999997615814
+    },
+    {
+      "round": 9,
+      "pass": 2,
+      "mode": "release",
+      "elapsedMs": 5.5
+    },
+    {
+      "round": 9,
+      "pass": 2,
+      "mode": "direct",
+      "elapsedMs": 5.100000023841858
+    },
+    {
+      "round": 9,
+      "pass": 3,
+      "mode": "direct",
+      "elapsedMs": 6.599999964237213
+    },
+    {
+      "round": 9,
+      "pass": 3,
+      "mode": "release",
+      "elapsedMs": 4.800000011920929
+    },
+    {
+      "round": 9,
+      "pass": 3,
+      "mode": "main",
+      "elapsedMs": 230.80000001192093
+    },
+    {
+      "round": 9,
+      "pass": 3,
+      "mode": "bundled",
+      "elapsedMs": 4.5
+    },
+    {
+      "round": 9,
+      "pass": 3,
+      "mode": "external",
+      "elapsedMs": 5.099999964237213
+    },
+    {
+      "round": 9,
+      "pass": 3,
+      "mode": "previous-bundled",
+      "elapsedMs": 248.30000001192093
+    },
+    {
+      "round": 9,
+      "pass": 3,
+      "mode": "previous-external",
+      "elapsedMs": 205
+    },
+    {
+      "round": 9,
+      "pass": 4,
+      "mode": "release",
+      "elapsedMs": 3.400000035762787
+    },
+    {
+      "round": 9,
+      "pass": 4,
+      "mode": "direct",
+      "elapsedMs": 4.699999988079071
+    },
+    {
+      "round": 9,
+      "pass": 4,
+      "mode": "previous-external",
+      "elapsedMs": 251.19999998807907
+    },
+    {
+      "round": 9,
+      "pass": 4,
+      "mode": "previous-bundled",
+      "elapsedMs": 241.69999998807907
+    },
+    {
+      "round": 9,
+      "pass": 4,
+      "mode": "external",
+      "elapsedMs": 6.199999988079071
+    },
+    {
+      "round": 9,
+      "pass": 4,
+      "mode": "bundled",
+      "elapsedMs": 4.100000023841858
+    },
+    {
+      "round": 9,
+      "pass": 4,
+      "mode": "main",
+      "elapsedMs": 240.89999997615814
+    }
+  ]
+}
