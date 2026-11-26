@@ -4,7 +4,7 @@ This fork benchmarks the browser examples from [eqrion/component-demos at d0b9dd
 
 ## Browser bindings at the PR head
 
-In the full timing run at `b731ebc91`, both the internal Oxc bundle and the external checked runtime stayed within 10× of the fastest compiled shim in **all 21 warm headline cases**. Tree traversal had the largest gap. The internal bundle took **5.50×** the shim’s time for the C guest, and the external runtime took **5.78×** for Rust. Cold startup and Jco 1.13.0 parity remain open. [Jco fork PR](https://github.com/vados-cosmonic/jco/pull/62) · [Minified builds](#minified-browser-bindings) · [Equal-work bulk queries](#materializing-bulk-dom-query-results) · [External runtime packaging](#packaging-the-external-runtime-for-browsers)
+In the full timing run at `b731ebc91`, both the internal Oxc bundle and the external checked runtime stayed within 10× of the fastest compiled shim in **all 21 warm headline cases**. Tree traversal had the largest gap. The internal bundle took **5.50×** the shim’s time for the C guest, and the external runtime took **5.78×** for Rust. Cold startup and Jco 1.13.0 parity remain open. [Jco fork PR](https://github.com/vados-cosmonic/jco/pull/62) · [Minified builds](#minified-browser-bindings) · [Equal-work bulk queries](#materializing-bulk-dom-query-results) · [External runtime packaging](#packaging-the-external-runtime-for-browsers) · [Warmed tables and traversal](#warm-table-creation-and-tree-traversal)
 
 | Headline comparison | Internal Oxc | External runtime |
 | --- | ---: | ---: |
@@ -60,6 +60,49 @@ Use Jco revision `b731ebc91` for the PR checkout in the [full-matrix setup](#ful
 ```sh
 python3 web/bench/review-matrix-report.py web/bench/results/review-matrix-b731ebc91.json.gz \
   --plot /tmp/review-matrix-b731ebc91.png
+```
+
+</details>
+
+## Warm table creation and tree traversal
+
+In the full minified matrix, external Rust table creation and tree traversal took **1.22×** and **1.16×** the time of Jco 1.13.0 on the second guest call. This follow-up ran the same generated assets side by side and timed eight guest calls per build. Over calls five through eight, median table creation took **0.95–1.02×** the release time across C, C++ and Rust on the two PR renderers. Tree traversal took **0.77–0.84×**. [Full matrix](#minified-browser-bindings) · [Timings for all eight calls](web/bench/results/paired-dom-minified.json.gz)
+
+![Paired times for warmed table creation and tree traversal relative to Jco 1.13.0, with individual median intervals.](web/bench/results/paired-dom-minified.png)
+
+| Guest phase | Internal / 1.13.0, call 2 | External / 1.13.0, call 2 | Internal / 1.13.0, calls 5–8 | External / 1.13.0, calls 5–8 |
+| --- | ---: | ---: | ---: | ---: |
+| Create 2,000 table rows | 0.98–1.02× | 1.01–1.05× | 0.99–1.00× | 0.95–1.02× |
+| Traverse 19,531 nodes | 0.85–0.94× | 0.98–1.10× | 0.77–0.79× | 0.81–0.84× |
+
+The ranges summarize three language medians. Each of 96 fresh Chromium documents ran the four builds on one workload and language, with balanced order and immediate predecessors in each four-call block. The runner checked the report contents, node count for traversal, and runtime requests for each provider layout. Each ratio pairs measurements within a pass, takes the median per page, and then takes the median across 16 pages per language and workload. The full-matrix run used separate documents for each implementation. Page isolation and invocation count both affect the comparison. [Browser runner](web/bench/paired-dom-review.mjs) · [Report and chart](web/bench/paired-dom-report.py)
+
+<details><summary>Phase ratios, individual 95% median intervals and reproduction</summary>
+
+| Workload phase | Internal / 1.13.0 | External / 1.13.0 | Packed / external |
+| --- | ---: | ---: | ---: |
+| C table creation | 1.00× (0.92–1.05) | 0.95× (0.92–1.00) | 1.02× (0.96–1.07) |
+| C selected-row update | 0.81× (0.75–0.85) | 0.77× (0.73–0.84) | 0.99× (0.95–1.05) |
+| C unselected-row removal | 0.74× (0.64–0.81) | 0.74× (0.64–0.79) | 0.96× (0.90–1.01) |
+| C tree construction | 0.80× (0.74–0.86) | 0.81× (0.73–0.93) | 1.01× (0.86–1.08) |
+| C tree traversal | 0.77× (0.74–0.84) | 0.81× (0.65–0.84) | 0.99× (0.87–1.07) |
+| C++ table creation | 1.00× (0.92–1.13) | 1.02× (0.95–1.05) | 1.02× (0.90–1.09) |
+| C++ selected-row update | 0.78× (0.71–0.85) | 0.82× (0.74–0.94) | 0.99× (0.82–1.04) |
+| C++ unselected-row removal | 0.75× (0.63–0.89) | 0.73× (0.63–0.76) | 0.96× (0.91–0.99) |
+| C++ tree construction | 0.82× (0.74–0.87) | 0.85× (0.79–0.89) | 0.96× (0.86–1.08) |
+| C++ tree traversal | 0.79× (0.71–0.88) | 0.81× (0.58–0.87) | 0.99× (0.93–1.08) |
+| Rust table creation | 0.99× (0.93–1.11) | 0.97× (0.93–1.06) | 1.00× (0.94–1.09) |
+| Rust selected-row update | 0.84× (0.79–0.90) | 0.82× (0.78–0.85) | 1.05× (0.89–1.13) |
+| Rust unselected-row removal | 0.72× (0.63–0.77) | 0.70× (0.63–0.85) | 0.98× (0.83–1.03) |
+| Rust tree construction | 0.78× (0.73–0.83) | 0.82× (0.66–1.01) | 1.02× (0.85–1.10) |
+| Rust tree traversal | 0.79× (0.69–0.85) | 0.84× (0.77–0.90) | 1.00× (0.97–1.05) |
+
+Use the built Jco checkout and minified 1.13.0 files from the full matrix, then run the following in this fork. The runner verifies the JavaScript and Wasm against the archived matrix before launching Chromium. The packed configuration additionally builds a shared provider from the checked runtime.
+
+```sh
+CHROME_BIN=/path/to/chrome ROUNDS=16 node web/bench/paired-dom-review.mjs \
+  /path/to/built/jco /tmp/paired-dom.json.gz --minify
+python3 web/bench/paired-dom-report.py /tmp/paired-dom.json.gz --plot /tmp/paired-dom.png
 ```
 
 </details>

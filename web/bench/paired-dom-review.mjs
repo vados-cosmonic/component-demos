@@ -10,16 +10,21 @@ import { gzipSync, gunzipSync } from "node:zlib";
 import puppeteer from "puppeteer-core";
 import { bundleSharedProvider } from "./shared-provider.mjs";
 
-const [checkout, output] = process.argv.slice(2);
-assert(checkout && output, "Usage: paired-dom-review.mjs <built Jco checkout> <output.json.gz>");
+const [checkout, output, flag, ...extra] = process.argv.slice(2);
+const minify = flag === "--minify";
+assert(checkout && output && !extra.length && (flag === undefined || minify), "Usage: paired-dom-review.mjs <built Jco checkout> <output.json.gz> [--minify]");
 const bench = import.meta.dirname, web = join(bench, "..");
 const rounds = Number(process.env.ROUNDS ?? 16);
 assert(Number.isInteger(rounds) && rounds > 0 && rounds % 4 === 0);
-const matrixBytes = await readFile(join(bench, "results/review-matrix.json.gz"));
+const matrixFile = minify ? "review-matrix-minified-eaca992c8.json.gz" : "review-matrix.json.gz";
+const matrixBytes = await readFile(join(bench, "results", matrixFile));
 const matrix = JSON.parse(gunzipSync(matrixBytes));
 const hash = bytes => createHash("sha256").update(bytes).digest("hex");
 const git = (...args) => execFileSync("git", args, { cwd: checkout, encoding: "utf8" }).trim();
-assert.equal(git("rev-parse", "HEAD"), matrix.candidate);
+const revision = git("rev-parse", "HEAD");
+// A documentation-only successor can supply the same generated assets. Every
+// file executed by the browser is checked against the selected matrix below.
+git("merge-base", "--is-ancestor", matrix.candidate, revision);
 assert.equal(git("status", "--porcelain", "--untracked-files=no"), "");
 const { transpileBytes } = await import(pathToFileURL(resolve(checkout, "packages/jco-transpile/dist/transpile.js")));
 const runtime = resolve(checkout, "packages/jco-cm-runtime/dist");
@@ -31,7 +36,9 @@ function add(path, bytes) {
 for (const name of await readdir(runtime, { recursive: true })) {
   if (name.endsWith(".js") && !name.startsWith("debug/")) add("/runtime/" + name, await readFile(join(runtime, name)));
 }
-const cases = [{ lang: "c", demo: "table-update" }, { lang: "rust", demo: "dom-traversal" }];
+const cases = minify
+  ? ["c", "cpp", "rust"].flatMap(lang => ["table-update", "dom-traversal"].map(demo => ({ lang, demo })))
+  : [{ lang: "c", demo: "table-update" }, { lang: "rust", demo: "dom-traversal" }];
 for (const path of ["host/web-host.js", "host/common.js", ...cases.map(c => "examples/" + c.demo + "/main.js")]) {
   add("/" + path, await readFile(join(web, path)));
 }
@@ -48,11 +55,11 @@ for (const c of cases) {
     c.entries[version] = dir + "/" + name + ".js";
     if (version === "release") {
       for (const path of Object.keys(matrix.manifest).filter(p => p.startsWith(dir + "/"))) {
-        add(path, await readFile(join(web, lang, demo, "jco-baseline", basename(path))));
+        add(path, await readFile(join(web, lang, demo, minify ? "jco-baseline-minified" : "jco-baseline", basename(path))));
       }
     } else {
       const bytes = await readFile(join(web, lang, demo, "native", name + ".wasm"));
-      const options = { name, nodejsCompat: false, base64Cutoff: 5000, namespacedExports: true, emitTypescriptDeclarations: false, map: { ...map } };
+      const options = { name, minify, nodejsCompat: false, base64Cutoff: 5000, namespacedExports: true, emitTypescriptDeclarations: false, map: { ...map } };
       if (version === "external") Object.assign(options, { cmRuntimeEsModule: "/runtime", cmRuntimeSyncImports: true });
       const { files } = await transpileBytes(bytes, options);
       for (const [file, bytes] of Object.entries(files)) add(dir + "/" + file, bytes);
@@ -127,12 +134,12 @@ try {
           }
           return samples;
         }, { c, orders });
-        samples.push(...data.map(s => ({ round, demo: c.demo, ...s })));
+        samples.push(...data.map(s => ({ round, lang: c.lang, demo: c.demo, ...s })));
       } finally { await page.close(); }
     }
     console.log("Completed paired DOM round", round + 1, "of", rounds);
   }
-  await writeFile(output, gzipSync(JSON.stringify({ revision: matrix.candidate, matrixSha256: hash(matrixBytes), browser: await browser.version(),
+  await writeFile(output, gzipSync(JSON.stringify({ revision, minify, matrixSha256: hash(matrixBytes), browser: await browser.version(),
     runnerSha256: hash(await readFile(import.meta.filename)), packerSha256: hash(await readFile(join(bench, "shared-provider.mjs"))),
     packedSha256: hash(provider.bytes), packedBytes: provider.bytes.length, rounds, modes, cases, samples })));
 } finally { await browser?.close(); server.closeAllConnections(); server.close(); }
