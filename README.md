@@ -2,6 +2,34 @@
 
 This fork benchmarks the browser examples from [eqrion/component-demos at d0b9dd1](https://github.com/eqrion/component-demos/tree/d0b9dd1390a300978193adc623838fef4e4b632b). It runs the same compiled C, C++, and Rust WebAssembly components through jco 1.13.0, pinned upstream main, and a branch that optimizes synchronous host imports and numeric guest exports. The comparison also includes the demos’ JavaScript, Emscripten (Embind and EM_JS), and Rust wasm-bindgen implementations where available.
 
+## Loading the UTF-8 decoder for synchronous imports
+
+Synchronous host calls can decode a string without loading the general lifting module and its stream, future and error-context dependencies. The checked runtime now exposes the same decoder through the synchronous entry that these components already import. In six small DOM workloads, the external bindings fetched **19 JavaScript files instead of 23** and transferred **27.26 KiB less JavaScript** per component at the median. [Jco implementation](https://github.com/vados-cosmonic/jco/commit/36875ba1a) · [Measured PR head](https://github.com/vados-cosmonic/jco/commit/b731ebc9160203466a5c2bf5bc2debb6a77d28e0)
+
+| Median across six workload and language pairs | Jco 1.13.0 | External before | External after | Internal Oxc after |
+| --- | ---: | ---: | ---: | ---: |
+| JavaScript requests | 1 | 23 | 19 | 1 |
+| JavaScript transferred (KiB) | 21.49 | 193.48 | 166.21 | 127.00 |
+| Import (ms) | 12.50 | 65.84 | 59.87 | 28.19 |
+| First guest result (ms) | 21.31 | 81.62 | 75.16 | 44.75 |
+
+Each of 16 Chromium processes ran C, C++ and Rust guests for a DOM query (8 elements, 2 iterations) and a table update (8 rows). Each configuration ran in a fresh document with DevTools disconnected. The 384 documents used identical guest cores, verified response sizes and checked the first guest result. All six cases had lower median first-result time with the new external bindings. Pairing within each case and round, then taking one median per browser, gave a first-result ratio of **0.925×**, with an individual 95% sign-test interval of **0.851–1.020×**. The request and byte savings are exact for these assets. The timing interval includes parity. [Per-document times, requests and compiler hashes](web/bench/results/decoder-startup.json.gz) · [Report and per-case intervals](web/bench/decoder-report.py)
+
+Across all 34 demo inputs, the change moved the decoder import in 28 external entries and saved 42 bytes in each. The other six external entries stayed byte-identical. All original API-v1 external entries remained byte-identical. In internal Oxc output, only the location of a single decoder alias declaration changed in the 28 affected entries. Every emitted Wasm file matched byte for byte. [All generated-asset comparisons](web/bench/results/decoder-assets.json)
+
+Use clean Jco checkouts at `ad2aacc9b` and `b731ebc91`. Build the checked runtime in each with `pnpm --filter @bytecodealliance/jco-cm-runtime build` and the native example with `cargo build -p js-component-bindgen --features embedded-cm-runtime --example transpile`, using separate target directories. Prepare the 1.13.0 demo files as described in [Reproduce the comparison](#reproduce-the-comparison). From this benchmark checkout, run the following.
+
+```bash
+before=/path/to/previous-jco
+after=/path/to/updated-jco
+old_bin="$before/target/debug/examples/transpile"
+new_bin="$after/target/debug/examples/transpile"
+CHROME_BIN=/path/to/chrome ROUNDS=16 node web/bench/decoder-startup.mjs \
+  "$before" "$old_bin" "$after" "$new_bin" /tmp/decoder-startup.json.gz
+python3 web/bench/decoder-report.py /tmp/decoder-startup.json.gz
+python3 web/bench/decoder-assets.py "$old_bin" "$new_bin" /tmp/decoder-assets.json
+```
+
 ## PR head against upstream main
 
 The PR incorporates upstream main at `83e25bb19`. In the same seven Chromium pages, both PR renderers recovered most of main’s scalar host-call overhead, and both beat 1.13.0 for resource handles and short string returns. The scalar call still cost 4.6 ns more than 1.13.0 with the internal bundle and 7.6 ns more with the external runtime. [PR head `ad2aacc9b`](https://github.com/vados-cosmonic/jco/commit/ad2aacc9be6fe35c02ae91d9c8c5cde3693e722d) · [Upstream revision](https://github.com/bytecodealliance/jco/commit/83e25bb19bc45c8a346e4ecdd19b4a1541700fe7)
