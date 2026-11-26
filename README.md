@@ -14,7 +14,7 @@ At `db4a3aca0`, the external JavaScript entry shrank **15.0–17.9% on every wor
 | Import (ms) | 5.27 | 11.94 | 10.00 | 22.77 |
 | First full result including import (ms) | 61.83 | 203.50 | 62.76 | 78.30 |
 
-Both PR renderers were within 10× of the fastest compiled shim in **21/21 warm headline cases**. The largest ratios were **4.92× internal and 4.50× external**. Each renderer matched or beat 1.13.0 on 18/21 warm headlines in this run. Each met the shim target in 81/84 comparable subphases. The three exceptions return a materialized list of DOM handles, while the original shim discards a live collection. [Equal-work DOM queries](#materializing-bulk-dom-query-results) · [Warmed tables and traversal](#warm-table-creation-and-tree-traversal) · [Canvas readback](#canvas-readback-at-the-pr-head) · [Wasm packaging](#fetching-or-embedding-the-primary-wasm-core) · [Preloading external runtime modules](#preloading-external-runtime-modules) · [HTTP gzip](#serving-the-browser-bindings-with-http-gzip) · [Multi-entry application build](#bundling-the-component-entries-as-one-browser-application) · [Trailing-slash fix](#checked-runtime-package-spelling)
+Both PR renderers were within 10× of the fastest compiled shim in **21/21 warm headline cases**. The largest ratios were **4.92× internal and 4.50× external**. Each renderer matched or beat 1.13.0 on 18/21 warm headlines in this run. Each met the shim target in 81/84 comparable subphases. The three exceptions return a materialized list of DOM handles, while the original shim discards a live collection. [Paired release intervals](#paired-timing-intervals-against-jco-1130) · [Equal-work DOM queries](#materializing-bulk-dom-query-results) · [Warmed tables and traversal](#warm-table-creation-and-tree-traversal) · [Canvas readback](#canvas-readback-at-the-pr-head) · [Wasm packaging](#fetching-or-embedding-the-primary-wasm-core) · [Preloading external runtime modules](#preloading-external-runtime-modules) · [HTTP gzip](#serving-the-browser-bindings-with-http-gzip) · [Multi-entry application build](#bundling-the-component-entries-as-one-browser-application) · [Trailing-slash fix](#checked-runtime-package-spelling)
 
 ![Warm operation time versus the fastest shim and 1.13.0, and first-result time versus 1.13.0, for both PR renderers.](web/bench/results/review-matrix-minified-db4a3aca0.png)
 
@@ -57,6 +57,19 @@ python3 web/bench/review-matrix-report.py /tmp/checked-provider.json.gz --plot /
 ```
 
 </details>
+
+### Paired timing intervals against Jco 1.13.0
+
+Each timing ratio compares a PR build to 1.13.0 for the same language, workload and browser round. Across ten rounds, the individual intervals show a clearer regression in time to the first result on the external runtime than on the second guest call. Rust tree traversal had the highest warm point estimates, **1.065×** internally (interval 0.780–1.595×) and **1.068×** externally (0.603–1.128×). Those ranges allow both a speedup and a slowdown. [Raw samples](web/bench/results/review-matrix-minified-db4a3aca0.json.gz)
+
+| Phase and build | Interval favors PR | Interval includes parity | Interval favors 1.13.0 |
+| --- | ---: | ---: | ---: |
+| Warm operation, internal Oxc | 8 | 13 | 0 |
+| Warm operation, external runtime | 8 | 13 | 0 |
+| First result, internal Oxc | 3 | 16 | 2 |
+| First result, external runtime | 4 | 4 | 13 |
+
+The bounds are distribution-free intervals for the median paired time ratio. With ten pairs, the second-lowest and second-highest observations give at least 95% coverage for each interval individually. These counts use no adjustment for testing multiple workloads. To print every interval, run `python3 web/bench/review-matrix-report.py web/bench/results/review-matrix-minified-db4a3aca0.json.gz --release-intervals`. [Report generator](web/bench/review-matrix-report.py)
 
 ## Checked runtime package spelling
 

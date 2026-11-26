@@ -12,6 +12,8 @@ bench = Path(__file__).resolve().parent
 parser = argparse.ArgumentParser()
 parser.add_argument("input", type=Path, nargs="?", default=bench / "results/review-matrix.json.gz")
 parser.add_argument("--plot", type=Path)
+parser.add_argument("--release-intervals", action="store_true",
+                    help="show individual paired median intervals against Jco 1.13.0")
 args = parser.parse_args()
 with gzip.open(args.input) as source:
     result = json.load(source)
@@ -132,9 +134,40 @@ for v in versions:
             x = stats[v, k]
             threshold = 10 if "shim" in k.lower() else 1
             print(k, sum(y <= threshold for y in x), "/", len(x), "maximum", round(max(x), 3))
+if args.release_intervals or result.get("checkedPackage"):
+    # Order-statistic bounds for a two-sided sign test, with at least 95%
+    # individual coverage. Pairs share one timing round within each case.
+    if rounds < 6:
+        parser.error("median intervals require at least six paired rounds")
+    rank = max(i for i in range(rounds) if 2 * sum(comb(rounds,j) for j in range(i+1)) / 2**rounds <= .05)
+
+    def median_interval(ratios):
+        ordered = sorted(ratios)
+        return median(ordered), ordered[rank], ordered[-rank-1]
+
+if args.release_intervals:
+    print("\n| Guest and operation | Internal warm / release | External warm / release | Internal first / release | External first / release |")
+    print("| --- | ---: | ---: | ---: | ---: |")
+    counts = defaultdict(Counter)
+    for demo, (metric, title) in focus.items():
+        for lang, label in languages.items():
+            base = samples[demo,lang,"release"]
+            fields = []
+            for phase, get in (("warm", lambda row: row["warm"][metric]), ("first", lambda row: row["firstResultMs"])):
+                for version in ("bundled", "external"):
+                    current = samples[demo,lang,version]
+                    mid, lo, hi = median_interval(get(current[r]) / get(base[r]) for r in range(rounds))
+                    outcome = "faster" if hi < 1 else "slower" if lo > 1 else "includes parity"
+                    counts[phase,version][outcome] += 1
+                    fields.append(f"{mid:.3f}× ({lo:.3f}–{hi:.3f})")
+            print("|", label, title, "|", " | ".join(fields), "|")
+    print("\n| Phase and build | Entirely faster | Includes parity | Entirely slower |")
+    print("| --- | ---: | ---: | ---: |")
+    for (phase,version), counter in counts.items():
+        print(f"| {phase} {version} | {counter['faster']} | {counter['includes parity']} | {counter['slower']} |")
+
 if result.get("checkedPackage"):
     assert result["checkedPackage"] == "@bytecodealliance/jco-cm-runtime"
-    rank = max(i for i in range(rounds) if 2 * sum(comb(rounds,j) for j in range(i+1)) / 2**rounds <= .05)
     changes = defaultdict(list)
     print("\n| Guest and operation | Entry bytes saved | Gzip bytes saved | Paired import | Paired first result | Paired warm operation |")
     print("| --- | ---: | ---: | ---: | ---: | ---: |")
@@ -160,8 +193,7 @@ if result.get("checkedPackage"):
             fields = []
             for key, get in (("import", lambda row: row["loadMs"]), ("first", lambda row: row["firstResultMs"]),
                              ("warm", lambda row: row["warm"][metric])):
-                ratios = sorted(get(current[r])/get(previous[r]) for r in range(rounds))
-                mid, lo, hi = median(ratios), ratios[rank], ratios[-rank-1]
+                mid, lo, hi = median_interval(get(current[r])/get(previous[r]) for r in range(rounds))
                 changes[key].append(mid)
                 changes[key+"Faster"].append(hi < 1)
                 changes[key+"Slower"].append(lo > 1)
