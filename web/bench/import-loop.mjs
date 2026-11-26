@@ -64,6 +64,7 @@ const repeats = 5;
 const warmups = 2;
 const pixelCopies = 2048;
 const textCopies = 1024;
+const shortTextCopies = 32768;
 const browser = await puppeteer.launch({
   executablePath: process.env.CHROME_BIN, channel: process.env.CHROME_BIN ? undefined : "chrome", pipe: true,
   args: process.env.CHROME_NO_SANDBOX === "1" ? ["--no-sandbox"] : [],
@@ -73,7 +74,7 @@ try {
   for (let round = 0; round < rounds; round++) {
     const page = await browser.newPage();
     try {
-      samples.push(...await page.evaluate(async ({ variants, round, iterations, repeats, warmups, pixelCopies, textCopies }) => {
+      samples.push(...await page.evaluate(async ({ variants, round, iterations, repeats, warmups, pixelCopies, textCopies, shortTextCopies }) => {
         const guests = {};
         const sample = "tdxx-sample-id-with-ascii-bytes!";
         class Item { constructor(value) { this.value = value; } }
@@ -81,15 +82,18 @@ try {
         const source = new Uint8Array(176 * 176 * 4 + 2).subarray(1, -1);
         for (let i = 0; i < source.length; i++) source[i] = i & 255;
         const encoder = new TextEncoder();
-        const ascii = "x".repeat(16384);
-        const texts = Array(4).fill(ascii);
-        for (const [i, unit] of ["é", "漢", "😀", "aé漢😀"].entries()) {
-          const width = encoder.encode(unit).length;
-          texts.push(String.fromCharCode(65 + i) + unit.repeat(Math.floor(16383 / width)) + "z".repeat(16383 % width));
-        }
-        const digests = texts.map(text => {
+        const texts = [16384, 16].flatMap(size => {
+          const values = Array(4).fill("x".repeat(size));
+          for (const [i, unit] of ["é", "漢", "😀", "aé漢😀"].entries()) {
+            const width = encoder.encode(unit).length;
+            const content = unit.repeat(Math.floor((size - 1) / width)) + "z".repeat((size - 1) % width);
+            values.push(String.fromCharCode(65 + i) + content);
+          }
+          return values;
+        });
+        const digests = texts.map((text, selector) => {
           const bytes = encoder.encode(text);
-          if (bytes.length !== 16384) throw Error("Unexpected UTF-8 fixture length");
+          if (bytes.length !== (selector < 8 ? 16384 : 16)) throw Error("Unexpected UTF-8 fixture length");
           return bytes.reduce((hash, byte) => Math.imul(hash ^ byte, 16777619), 2166136261) >>> 0;
         });
         let lastPixelWrite;
@@ -155,6 +159,8 @@ try {
         for (const guest of Object.values(guests)) {
           guest.asciiResult = count => guest.textReturns(count, 0);
           guest.unicodeResult = count => guest.textReturns(count, 4);
+          guest.shortAsciiResult = count => guest.textReturns(count, 8);
+          guest.shortUnicodeResult = count => guest.textReturns(count, 12);
         }
         const names = Object.keys(guests);
         const rows = [];
@@ -165,6 +171,8 @@ try {
           { op: "options", count: iterations, mean: 63.5 },
           { op: "pixels", count: pixelCopies, mean: 127.5 },
           { op: "pixelWrites", count: pixelCopies, mean: 127.5 },
+          { op: "shortAsciiResult", count: shortTextCopies, mean: 120, selectors: [8] },
+          { op: "shortUnicodeResult", count: shortTextCopies, mean: 66.5, selectors: [12, 13, 14, 15] },
           { op: "asciiResult", count: textCopies, mean: 120, selectors: [0] },
           { op: "unicodeResult", count: textCopies, mean: 66.5, selectors: [4, 5, 6, 7] },
         ];
@@ -196,7 +204,7 @@ try {
           }
         }
         return rows;
-      }, { variants, round, iterations, repeats, warmups, pixelCopies, textCopies }));
+      }, { variants, round, iterations, repeats, warmups, pixelCopies, textCopies, shortTextCopies }));
     } finally {
       await page.close();
     }
@@ -204,7 +212,7 @@ try {
   }
   const result = {
     date: new Date().toISOString(), chrome: await browser.version(), cpu: cpus()[0].model,
-    system: [platform(), release(), arch()], node: process.version, rounds, iterations, repeats, warmups, pixelCopies, textCopies,
+    system: [platform(), release(), arch()], node: process.version, rounds, iterations, repeats, warmups, pixelCopies, textCopies, shortTextCopies,
     baseline: inventory.baseline, main: inventory.main, candidate: inventory.candidate, assets,
     fixtureSha256: hash(fixture), inputSha256: hash(input), runnerSha256: hash(await readFile(import.meta.filename)), samples,
   };

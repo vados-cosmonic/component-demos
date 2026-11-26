@@ -10,57 +10,60 @@ For longer host-returned strings, the runtime can encode into a reusable buffer 
 
 ## Optimized browser bindings
 
-The candidate uses js-component-bindgen’s internal Oxc bundler and the checked jco-cm-runtime. For eligible single-instance, synchronous components, a host import reuses the caller’s task. Resource drops use a one-argument trampoline that checks the instance flag and records traps. The internal Oxc bundle drops the general asynchronous import fallback for these components. The adapter holds direct references to its task stack and instance flags, checks the store for interruptions, and lifts short ASCII strings in groups of four bytes. Synchronous UTF-8 results of 256 to 262,144 code units can reuse a per-instance byte buffer, capped at 256 KiB. The runtime encodes there before requesting the exact guest allocation. Nested calls and larger results use the ordinary encoder. When lifting a borrowed host resource, the runtime validates the handle and reads its 32-bit representation directly. Imported host resources with automatically assigned representations use their guest handle as an array index. Explicit host representations and shared tables use a representation map. Components with async operations, cross-component resource transfers or call tracking keep the general adapter. [Jco commit `5db31f3a5`](https://github.com/vados-cosmonic/jco/commit/5db31f3a5bb23c4392f76f68845b37e7f4d2c3bf)
+The candidate uses js-component-bindgen’s internal Oxc bundler and the checked jco-cm-runtime. For eligible single-instance, synchronous components, a host import reuses the caller’s task. Resource drops use a one-argument trampoline that checks the instance flag and records traps. The internal Oxc bundle drops the general asynchronous import fallback for these components. The adapter holds direct references to its task stack and instance flags, checks the store for interruptions, and lifts short ASCII strings in groups of four bytes. During a synchronous guest allocation, the checked runtime clears the instance’s may-leave flag and restores it on return or throw. Allocators in components with context-slot operations keep the general guard, which supplies fresh slots for each call. Synchronous UTF-8 results of 256 to 262,144 code units can reuse a per-instance byte buffer, capped at 256 KiB. The runtime encodes there before requesting the exact guest allocation. Nested calls and larger results use the ordinary encoder. When lifting a borrowed host resource, the runtime validates the handle and reads its 32-bit representation directly. Imported host resources with automatically assigned representations use their guest handle as an array index. Explicit host representations and shared tables use a representation map. Components with async operations, cross-component resource transfers or call tracking keep the general adapter. [Jco commit `7c5712b61`](https://github.com/vados-cosmonic/jco/commit/7c5712b61abb6a026ea7eb94228d77a87bd030e6)
 
 All Jco builds used the same guest binaries. Each value is the median of 7 fresh-page samples with one warm-up per page. The run collected 728 samples on 2026-11-25 with HeadlessChrome/156.0.8078.47 on Intel(R) Xeon(R) Processor @ 2.60GHz.
 
-The candidate finished within **10× of the fastest available compiled shim in 21/21** headline comparisons. The largest ratio was **4.88×**. On separate fresh pages it matched or beat **1.13.0 in 16/21** and **stock main in 20/21**. On the same warmed page it matched or beat **1.13.0 in 19/21** headline cases and 78/84 across all phases. The shim comparison selects the lowest median among Embind, EM_JS and wasm-bindgen for each operation, including shims written in a different guest language. The phase tables in the original comparison describe workload differences and include raw JavaScript.
+The candidate finished within **10× of the fastest available compiled shim in 21/21** headline comparisons. The largest ratio was **4.14×**. On separate fresh pages it matched or beat **1.13.0 in 14/21** and **stock main in 18/21**. On the same warmed page it matched or beat **1.13.0 in 19/21** headline cases and 80/84 across all phases. The shim comparison selects the lowest median among Embind, EM_JS and wasm-bindgen for each operation, including shims written in a different guest language. The phase tables in the original comparison describe workload differences and include raw JavaScript.
 
 ![Candidate runtime relative to the two targets by operation and language](web/bench/results/candidate-runtime.png)
 
 | Operation | Guest | Unit | 1.13.0 | Stock main | Candidate | Candidate / 1.13.0 | Fastest shim | Shim time | Candidate / shim |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Attribute write | C | µs | 2.67 | 8.21 | 1.31 | 0.49× | Embind | 2.32 | 0.56× |
-| Attribute write | C++ | µs | 2.11 | 7.88 | 1.43 | 0.68× | Embind | 2.32 | 0.62× |
-| Attribute write | Rust | µs | 3.00 | 8.50 | 1.46 | 0.49× | Embind | 2.32 | 0.63× |
-| Canvas fillRect | C | µs | 2.15 | 6.84 | 2.00 | 0.93× | Embind | 2.79 | 0.72× |
-| Canvas fillRect | C++ | µs | 1.76 | 7.69 | 1.75 | 0.99× | Embind | 2.79 | 0.63× |
-| Canvas fillRect | Rust | µs | 1.79 | 7.39 | 1.87 | 1.05× | Embind | 2.79 | 0.67× |
-| Canvas pixel read | C | µs | 696.90 | 636.60 | 705.90 | 1.01× | Embind | 357.50 | 1.97× |
-| Canvas pixel read | C++ | µs | 715.60 | 785.90 | 493.60 | 0.69× | Embind | 357.50 | 1.38× |
-| Canvas pixel read | Rust | µs | 630.00 | 600.50 | 552.20 | 0.88× | Embind | 357.50 | 1.54× |
-| DOM ID lookup | C | µs | 2.65 | 9.55 | 2.10 | 0.79× | Embind | 2.26 | 0.93× |
-| DOM ID lookup | C++ | µs | 2.34 | 11.68 | 1.60 | 0.69× | Embind | 2.26 | 0.71× |
-| DOM ID lookup | Rust | µs | 1.96 | 10.98 | 1.50 | 0.76× | Embind | 2.26 | 0.66× |
-| Tree traversal | C | ms | 16.90 | 122.62 | 18.61 | 1.10× | EM_JS | 5.19 | 3.59× |
-| Tree traversal | C++ | ms | 16.52 | 120.09 | 18.69 | 1.13× | EM_JS | 5.19 | 3.60× |
-| Tree traversal | Rust | ms | 17.88 | 128.53 | 25.31 | 1.42× | EM_JS | 5.19 | 4.88× |
-| Read 1 KiB string | C | µs | 6.37 | 8.09 | 2.29 | 0.36× | wasm-bindgen | 6.06 | 0.38× |
-| Read 1 KiB string | C++ | µs | 4.29 | 7.34 | 2.30 | 0.54× | wasm-bindgen | 6.06 | 0.38× |
-| Read 1 KiB string | Rust | µs | 7.01 | 8.91 | 2.33 | 0.33× | wasm-bindgen | 6.06 | 0.38× |
-| Table creation | C | ms | 16.98 | 78.19 | 12.90 | 0.76× | EM_JS | 6.56 | 1.97× |
-| Table creation | C++ | ms | 15.18 | 74.88 | 14.38 | 0.95× | EM_JS | 6.56 | 2.19× |
-| Table creation | Rust | ms | 15.33 | 76.03 | 12.62 | 0.82× | EM_JS | 6.56 | 1.92× |
+| Attribute write | C | µs | 1.36 | 3.67 | 0.68 | 0.49× | Embind | 1.05 | 0.64× |
+| Attribute write | C++ | µs | 1.36 | 3.99 | 0.57 | 0.42× | Embind | 1.05 | 0.54× |
+| Attribute write | Rust | µs | 1.41 | 4.15 | 0.86 | 0.61× | Embind | 1.05 | 0.82× |
+| Canvas fillRect | C | µs | 1.02 | 3.88 | 1.00 | 0.99× | Embind | 1.62 | 0.62× |
+| Canvas fillRect | C++ | µs | 1.04 | 4.00 | 0.92 | 0.88× | Embind | 1.62 | 0.57× |
+| Canvas fillRect | Rust | µs | 0.84 | 3.84 | 0.94 | 1.11× | Embind | 1.62 | 0.58× |
+| Canvas pixel read | C | µs | 335.20 | 323.00 | 324.80 | 0.97× | Embind | 194.10 | 1.67× |
+| Canvas pixel read | C++ | µs | 318.20 | 315.50 | 360.60 | 1.13× | Embind | 194.10 | 1.86× |
+| Canvas pixel read | Rust | µs | 324.70 | 324.50 | 361.70 | 1.11× | Embind | 194.10 | 1.86× |
+| DOM ID lookup | C | µs | 1.29 | 5.20 | 0.89 | 0.69× | Embind | 1.25 | 0.72× |
+| DOM ID lookup | C++ | µs | 1.36 | 4.59 | 0.95 | 0.70× | Embind | 1.25 | 0.76× |
+| DOM ID lookup | Rust | µs | 1.14 | 4.81 | 0.84 | 0.73× | Embind | 1.25 | 0.67× |
+| Tree traversal | C | ms | 14.66 | 96.83 | 13.84 | 0.94× | EM_JS | 4.10 | 3.38× |
+| Tree traversal | C++ | ms | 13.76 | 97.31 | 15.65 | 1.14× | EM_JS | 4.10 | 3.82× |
+| Tree traversal | Rust | ms | 15.54 | 107.26 | 16.96 | 1.09× | EM_JS | 4.10 | 4.14× |
+| Read 1 KiB string | C | µs | 17.00 | 7.17 | 2.02 | 0.12× | wasm-bindgen | 5.55 | 0.36× |
+| Read 1 KiB string | C++ | µs | 4.68 | 8.02 | 1.95 | 0.42× | wasm-bindgen | 5.55 | 0.35× |
+| Read 1 KiB string | Rust | µs | 9.68 | 7.25 | 1.92 | 0.20× | wasm-bindgen | 5.55 | 0.35× |
+| Table creation | C | ms | 12.38 | 62.73 | 14.48 | 1.17× | EM_JS | 5.71 | 2.53× |
+| Table creation | C++ | ms | 13.09 | 69.38 | 13.06 | 1.00× | EM_JS | 5.71 | 2.29× |
+| Table creation | Rust | ms | 12.45 | 67.34 | 13.94 | 1.12× | EM_JS | 5.71 | 2.44× |
 
 ### Change from the previous branch revision
 
-Both revisions ran on the same guest binaries in the same browser session. Each cell divides the candidate median by the previous revision’s median. Parentheses count the rounds in which the candidate finished faster. [Compare `3f65947fd` and `5db31f3a5`](https://github.com/vados-cosmonic/jco/compare/3f65947fd57caf61bd5ad2fba06f3fd00734049c...5db31f3a5bb23c4392f76f68845b37e7f4d2c3bf)
+Both revisions ran on the same guest binaries in the same browser session. Each cell divides the candidate median by the previous revision’s median. Parentheses count the rounds in which the candidate finished faster. [Compare `5db31f3a5` and `7c5712b61`](https://github.com/vados-cosmonic/jco/compare/5db31f3a5bb23c4392f76f68845b37e7f4d2c3bf...7c5712b61abb6a026ea7eb94228d77a87bd030e6)
+
+The generated JavaScript and Wasm were byte-identical for 9/21 headline cases. On separate fresh pages, the ratios for those identical builds ranged from 0.87× to 1.08×. That spread measures run-to-run variation on this machine. [Output hashes](web/bench/results/candidate-sizes.json)
 
 | Operation | C | C++ | Rust |
 | --- | --- | --- | --- |
-| Attribute write | 0.92× (4/7) | 1.06× (1/7) | 0.79× (6/7) |
-| Canvas fillRect | 1.29× (4/7) | 0.77× (5/7) | 1.25× (2/7) |
-| Canvas pixel read | 0.96× (5/7) | 0.66× (6/7) | 1.09× (2/7) |
-| DOM ID lookup | 1.05× (2/7) | 0.93× (5/7) | 0.88× (5/7) |
-| Tree traversal | 0.93× (3/7) | 0.99× (6/7) | 1.15× (3/7) |
-| Read 1 KiB string | 0.89× (6/7) | 1.00× (3/7) | 0.99× (2/7) |
-| Table creation | 0.79× (3/7) | 0.95× (5/7) | 0.91× (4/7) |
-| Bulk DOM query | 1.38× (3/7) | 1.20× (3/7) | 0.65× (5/7) |
-| Tree construction | 0.90× (4/7) | 0.97× (5/7) | 0.94× (3/7) |
-| set 8 B | 0.83× (5/7) | 1.14× (2/7) | 0.98× (4/7) |
-| get 8 B | 0.92× (5/7) | 0.98× (4/7) | 0.96× (4/7) |
-| get 16384 B | 0.91× (4/7) | 0.99× (3/7) | 1.07× (2/7) |
-| get 262144 B | 0.98× (4/7) | 0.98× (6/7) | 1.02× (3/7) |
+| Attribute write | 0.94× (5/7) | 0.93× (4/7) | 1.08× (2/7) |
+| Canvas fillRect | 1.03× (3/7) | 0.96× (4/7) | 0.96× (4/7) |
+| Canvas pixel read | 0.97× (4/7) | 1.07× (3/7) | 1.05× (3/7) |
+| DOM ID lookup | 1.02× (4/7) | 0.78× (6/7) | 1.09× (3/7) |
+| Tree traversal | 0.87× (5/7) | 1.00× (5/7) | 1.04× (4/7) |
+| Read 1 KiB string | 0.93× (5/7) | 0.93× (4/7) | 0.87× (6/7) |
+| Table creation | 1.13× (3/7) | 0.99× (3/7) | 1.14× (4/7) |
+| Bulk DOM query | 0.96× (3/7) | 0.81× (6/7) | 1.27× (1/7) |
+| Tree construction | 0.92× (5/7) | 0.98× (4/7) | 1.14× (1/7) |
+| set 8 B | 0.92× (6/7) | 1.02× (2/7) | 0.98× (4/7) |
+| get 8 B | 0.53× (7/7) | 0.65× (6/7) | 0.82× (6/7) |
+| get 128 B | 0.87× (6/7) | 0.97× (5/7) | 0.99× (4/7) |
+| get 16384 B | 0.93× (4/7) | 1.07× (3/7) | 0.98× (3/7) |
+| get 262144 B | 0.96× (5/7) | 1.00× (3/7) | 1.00× (2/7) |
 
 ### Warm 1.13.0 comparison on the same page
 
@@ -70,46 +73,44 @@ For each guest and workload, both builds run once to warm up, then 4 times each 
 
 | Operation | Guest | Candidate / 1.13.0 | Middle 50% of page ratios | Pages at or below 1× |
 | --- | --- | --- | --- | --- |
-| Attribute write | C | 0.50× | 0.49–0.51× | 9/9 |
-| Attribute write | C++ | 0.51× | 0.51–0.53× | 9/9 |
-| Attribute write | Rust | 0.55× | 0.54–0.58× | 9/9 |
-| Canvas fillRect | C | 0.90× | 0.89–0.92× | 9/9 |
-| Canvas fillRect | C++ | 0.90× | 0.88–1.00× | 6/9 |
-| Canvas fillRect | Rust | 0.90× | 0.89–0.92× | 9/9 |
-| Canvas pixel read | C | 0.93× | 0.86–0.96× | 8/9 |
-| Canvas pixel read | C++ | 1.05× | 1.02–1.20× | 2/9 |
-| Canvas pixel read | Rust | 1.01× | 0.96–1.09× | 4/9 |
-| DOM ID lookup | C | 0.61× | 0.58–0.67× | 9/9 |
-| DOM ID lookup | C++ | 0.63× | 0.58–0.72× | 9/9 |
-| DOM ID lookup | Rust | 0.64× | 0.56–0.77× | 9/9 |
-| Tree traversal | C | 0.80× | 0.75–0.83× | 9/9 |
-| Tree traversal | C++ | 0.85× | 0.81–0.89× | 9/9 |
-| Tree traversal | Rust | 0.69× | 0.58–0.89× | 8/9 |
-| Read 1 KiB string | C | 0.49× | 0.41–0.56× | 9/9 |
-| Read 1 KiB string | C++ | 0.51× | 0.47–0.55× | 9/9 |
-| Read 1 KiB string | Rust | 0.50× | 0.48–0.53× | 9/9 |
-| Table creation | C | 0.88× | 0.82–0.99× | 7/9 |
-| Table creation | C++ | 0.95× | 0.79–1.02× | 6/9 |
-| Table creation | Rust | 0.93× | 0.91–1.01× | 5/9 |
+| Attribute write | C | 0.49× | 0.48–0.50× | 9/9 |
+| Attribute write | C++ | 0.51× | 0.49–0.52× | 9/9 |
+| Attribute write | Rust | 0.57× | 0.55–0.59× | 9/9 |
+| Canvas fillRect | C | 0.92× | 0.91–0.93× | 7/9 |
+| Canvas fillRect | C++ | 0.94× | 0.93–0.97× | 8/9 |
+| Canvas fillRect | Rust | 0.94× | 0.94–0.97× | 9/9 |
+| Canvas pixel read | C | 1.13× | 1.10–1.50× | 2/9 |
+| Canvas pixel read | C++ | 1.01× | 0.95–1.02× | 4/9 |
+| Canvas pixel read | Rust | 0.97× | 0.86–1.01× | 6/9 |
+| DOM ID lookup | C | 0.59× | 0.56–0.70× | 9/9 |
+| DOM ID lookup | C++ | 0.59× | 0.56–0.71× | 9/9 |
+| DOM ID lookup | Rust | 0.63× | 0.59–0.74× | 9/9 |
+| Tree traversal | C | 0.78× | 0.77–0.83× | 9/9 |
+| Tree traversal | C++ | 0.82× | 0.76–0.85× | 8/9 |
+| Tree traversal | Rust | 0.67× | 0.56–0.92× | 8/9 |
+| Read 1 KiB string | C | 0.48× | 0.47–0.54× | 9/9 |
+| Read 1 KiB string | C++ | 0.50× | 0.46–0.52× | 9/9 |
+| Read 1 KiB string | Rust | 0.49× | 0.48–0.49× | 9/9 |
+| Table creation | C | 0.96× | 0.81–1.04× | 6/9 |
+| Table creation | C++ | 0.94× | 0.82–0.97× | 8/9 |
+| Table creation | Rust | 0.94× | 0.92–0.95× | 9/9 |
 
-Across all 84 reported phases and string lengths, the same-page comparison matched or beat 1.13.0 in **78/84** cases. Totals and subphases overlap.
+Across all 84 reported phases and string lengths, the same-page comparison matched or beat 1.13.0 in **80/84** cases. Totals and subphases overlap.
 
 | Slower paired phase | Guest | Metric | Candidate / 1.13.0 | Pages at or below 1× |
 | --- | --- | --- | --- | --- |
-| canvas-pixels | C | putImageData(): µs/call | 1.062× | 3/9 |
-| canvas-pixels | C++ | getImageData(): µs/call | 1.050× | 2/9 |
-| string-marshalling | Rust | set 1024 B | 1.030× | 4/9 |
-| string-marshalling | Rust | set 16384 B | 1.023× | 4/9 |
-| string-marshalling | C++ | set 16384 B | 1.019× | 3/9 |
-| canvas-pixels | Rust | getImageData(): µs/call | 1.012× | 4/9 |
+| canvas-pixels | C | getImageData(): µs/call | 1.129× | 2/9 |
+| canvas-pixels | C++ | getImageData(): µs/call | 1.007× | 4/9 |
+| string-marshalling | Rust | set 16384 B | 1.003× | 3/9 |
+| string-marshalling | C | set 16384 B | 1.001× | 4/9 |
 
-Across all reported phases and string lengths, 81/84 comparable candidate medians were within 10× of the fastest compiled shim and 66/84 matched or beat 1.13.0. Totals and their subphases overlap. Each ratio compares the same phase on both sides.
+Across all reported phases and string lengths, 81/84 comparable candidate medians were within 10× of the fastest compiled shim and 64/84 matched or beat 1.13.0. Totals and their subphases overlap. Each ratio compares the same phase on both sides.
 
 | Phases above 10× | Phase | Guest | Shim | Candidate / shim |
 | --- | --- | --- | --- | --- |
-| dom-query | bulk: total ms | C | Embind | 817.17× |
-| dom-query | bulk: total ms | C++ | Embind | 700.00× |
-| dom-query | bulk: total ms | Rust | Embind | 461.50× |
+| dom-query | bulk: total ms | C | Embind | 486.75× |
+| dom-query | bulk: total ms | C++ | Embind | 518.25× |
+| dom-query | bulk: total ms | Rust | Embind | 555.25× |
 
 The bulk DOM query returns a live collection to Embind, which discards it. The component host materializes the collection with `Array.from`, then the bindings lower every element into a WIT resource handle. The ratio includes that difference in work. [Embind loop](cpp/dom-query/emscripten/main.cpp) · [Component host](web/host/web-host.js) · [C guest loop](c/dom-query/main.c)
 
@@ -119,24 +120,24 @@ These 216 fresh-page samples compare each language’s exact core Wasm binary wi
 
 The bulk query copies 2,000 handles per call, 10 times. Each traversal visits 19,531 nodes. The runner checks the rendered fixture or node count for each guest and verifies list counts and handle release for the direct shim after warm-up and measurement.
 
-With list materialization on both sides, the candidate took **1.54–1.65×** the direct shim’s bulk-query time across the three guests. Times below are per measured workload, after warm-up.
+With list materialization on both sides, the candidate took **1.49–2.03×** the direct shim’s bulk-query time across the three guests. Times below are per measured workload, after warm-up.
 
 ![DOM phase times for Jco 1.13.0 and the candidate relative to the same-guest direct shim](web/bench/results/dom-control-runtime.png)
 
 | Phase | Guest | Direct (ms) | 1.13.0 (ms) | Candidate (ms) | Candidate / direct | Candidate / 1.13.0 | Rounds at or below 1.13.0 | Candidate / previous | Rounds at or below previous |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| DOM ID lookup | C | 15.53 | 29.48 | 20.91 | 1.35× | 0.71× | 9/9 | 0.98× | 4/9 |
-| DOM ID lookup | C++ | 18.01 | 28.20 | 23.58 | 1.31× | 0.84× | 8/9 | 1.01× | 6/9 |
-| DOM ID lookup | Rust | 15.03 | 26.26 | 19.82 | 1.32× | 0.75× | 8/9 | 1.07× | 3/9 |
-| Bulk DOM query | C | 6.84 | 12.71 | 10.99 | 1.61× | 0.87× | 7/9 | 0.90× | 5/9 |
-| Bulk DOM query | C++ | 7.87 | 11.88 | 12.96 | 1.65× | 1.09× | 4/9 | 1.11× | 3/9 |
-| Bulk DOM query | Rust | 7.25 | 11.86 | 11.19 | 1.54× | 0.94× | 5/9 | 0.99× | 4/9 |
-| Tree construction | C | 28.35 | 56.18 | 53.40 | 1.88× | 0.95× | 7/9 | 0.99× | 7/9 |
-| Tree construction | C++ | 28.86 | 52.71 | 51.94 | 1.80× | 0.99× | 5/9 | 0.99× | 6/9 |
-| Tree construction | Rust | 28.06 | 47.79 | 49.93 | 1.78× | 1.04× | 3/9 | 0.99× | 5/9 |
-| Tree traversal | C | 6.81 | 15.37 | 15.37 | 2.26× | 1.00× | 2/9 | 0.94× | 6/9 |
-| Tree traversal | C++ | 7.05 | 14.50 | 15.92 | 2.26× | 1.10× | 2/9 | 0.99× | 6/9 |
-| Tree traversal | Rust | 8.01 | 17.06 | 19.03 | 2.38× | 1.12× | 2/9 | 0.92× | 6/9 |
+| DOM ID lookup | C | 13.43 | 26.61 | 18.68 | 1.39× | 0.70× | 8/9 | 1.05× | 5/9 |
+| DOM ID lookup | C++ | 13.68 | 26.79 | 20.75 | 1.52× | 0.77× | 8/9 | 1.00× | 5/9 |
+| DOM ID lookup | Rust | 13.71 | 22.16 | 16.56 | 1.21× | 0.75× | 8/9 | 0.92× | 6/9 |
+| Bulk DOM query | C | 5.94 | 11.14 | 10.48 | 1.76× | 0.94× | 5/9 | 0.97× | 7/9 |
+| Bulk DOM query | C++ | 6.08 | 11.21 | 12.36 | 2.03× | 1.10× | 4/9 | 1.14× | 3/9 |
+| Bulk DOM query | Rust | 6.29 | 11.40 | 9.40 | 1.49× | 0.82× | 6/9 | 0.93× | 6/9 |
+| Tree construction | C | 23.41 | 48.23 | 40.12 | 1.71× | 0.83× | 7/9 | 0.86× | 8/9 |
+| Tree construction | C++ | 22.09 | 52.67 | 48.34 | 2.19× | 0.92× | 4/9 | 1.00× | 3/9 |
+| Tree construction | Rust | 20.23 | 46.95 | 39.37 | 1.95× | 0.84× | 8/9 | 0.88× | 6/9 |
+| Tree traversal | C | 5.54 | 13.24 | 12.94 | 2.34× | 0.98× | 4/9 | 0.99× | 5/9 |
+| Tree traversal | C++ | 5.86 | 14.75 | 16.33 | 2.79× | 1.11× | 3/9 | 1.07× | 3/9 |
+| Tree traversal | Rust | 6.70 | 16.66 | 16.51 | 2.46× | 0.99× | 4/9 | 0.96× | 6/9 |
 
 ### Cost of a synchronous host import
 
@@ -144,22 +145,26 @@ The scalar, string and resource loops run 131,072 iterations per pass. The strin
 
 The byte-list loops copy a 176 × 176 RGBA region (123,904 bytes) 2,048 times per pass in each direction. The host-to-guest case uses a reusable host view and a fixed guest allocation. In the reverse direction the host keeps the final snapshot while the guest changes the source in Wasm. Both cases sum the changing first byte during the loop and verify the whole payload afterward. The canvas demo also measures browser readback, host allocation and guest allocation.
 
-The string-return loops make 1,024 calls per pass. Each result occupies 16 KiB in Wasm. One host returns a repeated ASCII string. The other rotates four strings containing two-, three-, and four-byte UTF-8 sequences. The guest checks each byte length, sums the first bytes, and hashes every distinct result outside the timer.
+The string-return loops make 32,768 calls per pass for 16-byte results and 1,024 for 16 KiB results. One host returns a repeated ASCII string. The other rotates four strings containing two-, three-, and four-byte UTF-8 sequences. The guest checks each byte length, sums the first bytes, and hashes every distinct result outside the timer.
 
 Times are nanoseconds per guest iteration, including the loop and host work. Each cell is the median of 7 fresh-page medians, with 2 warm-ups and 5 timed passes per page. The runner interleaves the four builds. [Raw timings and digests](web/bench/results/import-loop.json)
 
 | Operation | Direct | 1.13.0 | Stock main | Candidate | Candidate / 1.13.0 | Candidate / direct |
 | --- | --- | --- | --- | --- | --- | --- |
-| u32 | 13.7 | 12.2 | 1,896.7 | 14.5 | 1.19× | 1.06× |
-| 2-byte string | 489.0 | 479.9 | 2,873.2 | 133.5 | 0.28× | 0.27× |
-| 9-byte string | 499.0 | 486.8 | 2,916.0 | 212.9 | 0.44× | 0.43× |
-| 32-byte string | 444.8 | 447.8 | 2,584.8 | 476.8 | 1.06× | 1.07× |
-| Acquire, borrow, drop | 51.1 | 334.2 | 5,252.8 | 144.2 | 0.43× | 2.82× |
-| Optional resource, half present | 32.0 | 235.7 | 3,295.9 | 142.7 | 0.61× | 4.45× |
-| 121 KiB host-to-guest byte list | 5,712.9 | 5,371.1 | 10,693.4 | 6,445.3 | 1.20× | 1.13× |
-| 121 KiB guest-to-host byte list | 111,767.6 | 112,939.5 | 118,066.4 | 113,037.1 | 1.00× | 1.01× |
-| 16 KiB UTF-8 result, repeated ASCII | 38,281.2 | 38,378.9 | 62,988.3 | 22,851.6 | 0.60× | 0.60× |
-| 16 KiB UTF-8 result, rotating Unicode | 53,710.9 | 51,074.2 | 84,375.0 | 35,546.9 | 0.70× | 0.66× |
+| u32 | 13.7 | 12.2 | 1,831.1 | 14.5 | 1.19× | 1.06× |
+| 2-byte string | 425.0 | 415.0 | 2,540.6 | 116.0 | 0.28× | 0.27× |
+| 9-byte string | 418.1 | 405.9 | 2,395.6 | 167.8 | 0.41× | 0.40× |
+| 32-byte string | 382.2 | 399.8 | 2,404.0 | 389.9 | 0.98× | 1.02× |
+| Acquire, borrow, drop | 41.2 | 222.0 | 4,149.6 | 114.4 | 0.52× | 2.78× |
+| Optional resource, half present | 30.5 | 168.6 | 2,957.9 | 124.4 | 0.74× | 4.08× |
+| 121 KiB host-to-guest byte list | 4,541.0 | 4,589.8 | 8,203.1 | 4,834.0 | 1.05× | 1.06× |
+| 121 KiB guest-to-host byte list | 95,410.2 | 94,043.0 | 99,853.5 | 93,359.4 | 0.99× | 0.98× |
+| 16-byte UTF-8 result, repeated ASCII | 1,611.3 | 1,654.1 | 3,848.3 | 360.1 | 0.22× | 0.22× |
+| 16-byte UTF-8 result, rotating Unicode | 1,663.2 | 1,843.3 | 4,339.6 | 909.4 | 0.49× | 0.55× |
+| 16 KiB UTF-8 result, repeated ASCII | 33,203.1 | 33,105.5 | 50,683.6 | 17,285.2 | 0.52× | 0.52× |
+| 16 KiB UTF-8 result, rotating Unicode | 43,750.0 | 43,652.3 | 74,511.7 | 30,078.1 | 0.69× | 0.69× |
+
+![Time per guest iteration relative to Jco 1.13.0, by import and transfer direction](web/bench/results/import-loop-runtime.png)
 
 ### Where the canvas read spends its time
 
@@ -167,103 +172,103 @@ The same-page comparison was repeated with a clock around the demo’s host meth
 
 | Guest | Bindings | Full read (µs) | Inside host (µs) | Remainder (µs) | Inside host (%) |
 | --- | --- | --- | --- | --- | --- |
-| C | 1.13.0 | 500.5 | 476.9 | 24.1 | 95.6% |
-| C | Candidate | 604.8 | 569.6 | 28.5 | 95.0% |
-| C++ | 1.13.0 | 531.2 | 506.1 | 25.2 | 95.5% |
-| C++ | Candidate | 563.8 | 531.0 | 32.8 | 94.4% |
-| Rust | 1.13.0 | 474.2 | 452.7 | 25.4 | 95.3% |
-| Rust | Candidate | 573.7 | 540.3 | 32.8 | 94.6% |
+| C | 1.13.0 | 325.7 | 314.6 | 13.7 | 96.1% |
+| C | Candidate | 329.9 | 316.4 | 13.5 | 96.0% |
+| C++ | 1.13.0 | 340.2 | 326.3 | 12.7 | 96.2% |
+| C++ | Candidate | 312.7 | 300.2 | 13.0 | 96.0% |
+| Rust | 1.13.0 | 338.2 | 324.7 | 13.2 | 96.2% |
+| Rust | Candidate | 307.3 | 295.2 | 12.2 | 96.0% |
 
-The host accounted for 94.4–95.6% of the full read across these builds. The candidate spent 28.5–32.8 µs per read outside the host, compared with 24.1–25.4 µs for 1.13.0.
+The host accounted for 96.0–96.2% of the full read across these builds. The candidate spent 12.2–13.5 µs per read outside the host, compared with 12.7–13.7 µs for 1.13.0.
 
 <details><summary>All timed phases and string lengths</summary>
 
 | Demo | Phase | Guest | Candidate time | Fresh-page / 1.13.0 | Same-page / 1.13.0 | Candidate / main | Fastest shim | Candidate / shim |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| attribute-churn | total time | C | 104.45 ms | 0.49× | 0.50× | 0.16× | Embind | 0.56× |
-| attribute-churn | total time | C++ | 114.53 ms | 0.68× | 0.51× | 0.18× | Embind | 0.62× |
-| attribute-churn | total time | Rust | 116.83 ms | 0.49× | 0.55× | 0.17× | Embind | 0.63× |
-| attribute-churn | per setAttribute() | C | 1.31 µs | 0.49× | 0.50× | 0.16× | Embind | 0.56× |
-| attribute-churn | per setAttribute() | C++ | 1.43 µs | 0.68× | 0.51× | 0.18× | Embind | 0.62× |
-| attribute-churn | per setAttribute() | Rust | 1.46 µs | 0.49× | 0.55× | 0.17× | Embind | 0.63× |
-| canvas-draw | total | C | 99.91 ms | 0.93× | 0.90× | 0.29× | Embind | 0.72× |
-| canvas-draw | total | C++ | 87.33 ms | 0.99× | 0.90× | 0.23× | Embind | 0.63× |
-| canvas-draw | total | Rust | 93.53 ms | 1.05× | 0.90× | 0.25× | Embind | 0.67× |
-| canvas-draw | per fill_rect() | C | 2.00 µs | 0.93× | 0.90× | 0.29× | Embind | 0.72× |
-| canvas-draw | per fill_rect() | C++ | 1.75 µs | 0.99× | 0.90× | 0.23× | Embind | 0.63× |
-| canvas-draw | per fill_rect() | Rust | 1.87 µs | 1.05× | 0.90× | 0.25× | Embind | 0.67× |
-| canvas-pixels | getImageData(): µs/call | C | 705.90 µs | 1.01× | 0.93× | 1.11× | Embind | 1.97× |
-| canvas-pixels | getImageData(): µs/call | C++ | 493.60 µs | 0.69× | 1.05× | 0.63× | Embind | 1.38× |
-| canvas-pixels | getImageData(): µs/call | Rust | 552.20 µs | 0.88× | 1.01× | 0.92× | Embind | 1.54× |
-| canvas-pixels | putImageData(): µs/call | C | 517.70 µs | 1.00× | 1.06× | 1.17× | Embind | 1.90× |
-| canvas-pixels | putImageData(): µs/call | C++ | 376.20 µs | 0.73× | 0.96× | 0.59× | Embind | 1.38× |
-| canvas-pixels | putImageData(): µs/call | Rust | 425.20 µs | 0.95× | 0.99× | 0.97× | Embind | 1.56× |
-| dom-query | individual: total ms | C | 41.93 ms | 0.79× | 0.61× | 0.22× | Embind | 0.93× |
-| dom-query | individual: total ms | C++ | 32.05 ms | 0.69× | 0.63× | 0.14× | Embind | 0.71× |
-| dom-query | individual: total ms | Rust | 29.95 ms | 0.77× | 0.64× | 0.14× | Embind | 0.66× |
-| dom-query | bulk: total ms | C | 24.52 ms | 1.01× | 0.73× | 0.82× | Embind | 817.17× |
-| dom-query | bulk: total ms | C++ | 21.00 ms | 1.25× | 0.76× | 0.56× | Embind | 700.00× |
-| dom-query | bulk: total ms | Rust | 13.85 ms | 0.75× | 0.74× | 0.42× | Embind | 461.50× |
-| dom-query | individual: µs/element | C | 2.10 µs | 0.79× | 0.61× | 0.22× | Embind | 0.93× |
-| dom-query | individual: µs/element | C++ | 1.60 µs | 0.69× | 0.63× | 0.14× | Embind | 0.71× |
-| dom-query | individual: µs/element | Rust | 1.50 µs | 0.76× | 0.64× | 0.14× | Embind | 0.66× |
-| dom-traversal | build | C | 56.34 ms | 0.96× | 0.85× | 0.21× | EM_JS | 2.55× |
-| dom-traversal | build | C++ | 63.02 ms | 1.07× | 0.80× | 0.25× | EM_JS | 2.85× |
-| dom-traversal | build | Rust | 53.09 ms | 0.93× | 0.83× | 0.20× | EM_JS | 2.40× |
-| dom-traversal | traverse (total) | C | 18.61 ms | 1.10× | 0.80× | 0.15× | EM_JS | 3.59× |
-| dom-traversal | traverse (total) | C++ | 18.69 ms | 1.13× | 0.85× | 0.16× | EM_JS | 3.60× |
-| dom-traversal | traverse (total) | Rust | 25.31 ms | 1.42× | 0.69× | 0.20× | EM_JS | 4.88× |
-| dom-traversal | traverse (per node) | C | 0.95 µs | 1.10× | 0.80× | 0.15× | EM_JS | 3.58× |
-| dom-traversal | traverse (per node) | C++ | 0.96 µs | 1.13× | 0.85× | 0.16× | EM_JS | 3.60× |
-| dom-traversal | traverse (per node) | Rust | 1.30 µs | 1.42× | 0.69× | 0.20× | EM_JS | 4.87× |
-| string-marshalling | set 8 B | C | 0.42 µs | 0.44× | 0.64× | 0.12× | EM_JS | 1.13× |
-| string-marshalling | set 8 B | C++ | 0.48 µs | 0.46× | 0.64× | 0.15× | EM_JS | 1.27× |
-| string-marshalling | set 8 B | Rust | 0.49 µs | 0.54× | 0.74× | 0.12× | EM_JS | 1.30× |
-| string-marshalling | get 8 B | C | 0.83 µs | 0.35× | 0.31× | 0.13× | EM_JS | 3.56× |
-| string-marshalling | get 8 B | C++ | 0.86 µs | 0.33× | 0.30× | 0.18× | EM_JS | 3.69× |
-| string-marshalling | get 8 B | Rust | 0.78 µs | 0.34× | 0.29× | 0.13× | EM_JS | 3.34× |
-| string-marshalling | set 128 B | C | 0.82 µs | 0.73× | 0.90× | 0.18× | wasm-bindgen | 1.31× |
-| string-marshalling | set 128 B | C++ | 0.68 µs | 0.54× | 0.96× | 0.16× | wasm-bindgen | 1.09× |
-| string-marshalling | set 128 B | Rust | 0.73 µs | 0.78× | 0.90× | 0.17× | wasm-bindgen | 1.16× |
-| string-marshalling | get 128 B | C | 2.15 µs | 0.41× | 0.73× | 0.32× | wasm-bindgen | 2.24× |
-| string-marshalling | get 128 B | C++ | 2.02 µs | 0.73× | 0.68× | 0.32× | wasm-bindgen | 2.10× |
-| string-marshalling | get 128 B | Rust | 2.19 µs | 1.02× | 0.77× | 0.33× | wasm-bindgen | 2.28× |
-| string-marshalling | set 1024 B | C | 1.07 µs | 0.88× | 0.98× | 0.22× | wasm-bindgen | 1.08× |
-| string-marshalling | set 1024 B | C++ | 1.06 µs | 0.98× | 0.98× | 0.25× | wasm-bindgen | 1.07× |
-| string-marshalling | set 1024 B | Rust | 1.17 µs | 1.12× | 1.03× | 0.26× | wasm-bindgen | 1.18× |
-| string-marshalling | get 1024 B | C | 2.29 µs | 0.36× | 0.49× | 0.28× | wasm-bindgen | 0.38× |
-| string-marshalling | get 1024 B | C++ | 2.30 µs | 0.54× | 0.51× | 0.31× | wasm-bindgen | 0.38× |
-| string-marshalling | get 1024 B | Rust | 2.33 µs | 0.33× | 0.50× | 0.26× | wasm-bindgen | 0.38× |
-| string-marshalling | set 16384 B | C | 7.52 µs | 0.92× | 0.98× | 0.65× | wasm-bindgen | 1.01× |
-| string-marshalling | set 16384 B | C++ | 7.54 µs | 0.99× | 1.02× | 0.69× | wasm-bindgen | 1.01× |
-| string-marshalling | set 16384 B | Rust | 7.81 µs | 1.05× | 1.02× | 0.68× | wasm-bindgen | 1.05× |
-| string-marshalling | get 16384 B | C | 19.66 µs | 0.47× | 0.54× | 0.32× | wasm-bindgen | 0.20× |
-| string-marshalling | get 16384 B | C++ | 18.86 µs | 0.19× | 0.45× | 0.31× | wasm-bindgen | 0.19× |
-| string-marshalling | get 16384 B | Rust | 21.39 µs | 0.42× | 0.55× | 0.36× | wasm-bindgen | 0.22× |
-| string-marshalling | set 262144 B | C | 117.95 µs | 0.40× | 0.76× | 0.38× | Embind | 0.83× |
-| string-marshalling | set 262144 B | C++ | 110.20 µs | 0.36× | 0.73× | 0.36× | Embind | 0.78× |
-| string-marshalling | set 262144 B | Rust | 115.90 µs | 0.43× | 0.89× | 0.38× | Embind | 0.82× |
-| string-marshalling | get 262144 B | C | 308.10 µs | 0.28× | 0.29× | 0.35× | wasm-bindgen | 0.20× |
-| string-marshalling | get 262144 B | C++ | 286.00 µs | 0.27× | 0.29× | 0.35× | wasm-bindgen | 0.19× |
-| string-marshalling | get 262144 B | Rust | 296.00 µs | 0.27× | 0.29× | 0.33× | wasm-bindgen | 0.19× |
-| table-update | create: total ms | C | 12.90 ms | 0.76× | 0.88× | 0.17× | EM_JS | 1.97× |
-| table-update | create: total ms | C++ | 14.38 ms | 0.95× | 0.95× | 0.19× | EM_JS | 2.19× |
-| table-update | create: total ms | Rust | 12.62 ms | 0.82× | 0.93× | 0.17× | EM_JS | 1.92× |
-| table-update | create: µs/row | C | 6.45 µs | 0.76× | 0.88× | 0.17× | EM_JS | 1.97× |
-| table-update | create: µs/row | C++ | 7.19 µs | 0.95× | 0.95× | 0.19× | EM_JS | 2.19× |
-| table-update | create: µs/row | Rust | 6.31 µs | 0.82× | 0.93× | 0.17× | EM_JS | 1.92× |
-| table-update | update (selected): total ms | C | 0.99 ms | 0.74× | 0.83× | 0.26× | wasm-bindgen | 0.87× |
-| table-update | update (selected): total ms | C++ | 1.06 ms | 0.91× | 0.90× | 0.27× | wasm-bindgen | 0.93× |
-| table-update | update (selected): total ms | Rust | 1.44 ms | 1.19× | 0.86× | 0.38× | wasm-bindgen | 1.26× |
-| table-update | update (selected): µs/row | C | 0.50 µs | 0.74× | 0.83× | 0.26× | wasm-bindgen | 0.87× |
-| table-update | update (selected): µs/row | C++ | 0.53 µs | 0.91× | 0.90× | 0.27× | wasm-bindgen | 0.93× |
-| table-update | update (selected): µs/row | Rust | 0.72 µs | 1.19× | 0.86× | 0.38× | wasm-bindgen | 1.27× |
-| table-update | clear (unselected): total ms | C | 3.42 ms | 0.69× | 0.79× | 0.18× | wasm-bindgen | 1.11× |
-| table-update | clear (unselected): total ms | C++ | 3.59 ms | 0.80× | 0.82× | 0.16× | wasm-bindgen | 1.17× |
-| table-update | clear (unselected): total ms | Rust | 3.15 ms | 0.73× | 0.80× | 0.16× | wasm-bindgen | 1.02× |
-| table-update | clear (unselected): µs/row | C | 1.71 µs | 0.69× | 0.79× | 0.18× | wasm-bindgen | 1.11× |
-| table-update | clear (unselected): µs/row | C++ | 1.79 µs | 0.80× | 0.82× | 0.16× | wasm-bindgen | 1.17× |
-| table-update | clear (unselected): µs/row | Rust | 1.57 µs | 0.73× | 0.80× | 0.16× | wasm-bindgen | 1.02× |
+| attribute-churn | total time | C | 53.98 ms | 0.49× | 0.49× | 0.18× | Embind | 0.64× |
+| attribute-churn | total time | C++ | 45.46 ms | 0.42× | 0.51× | 0.14× | Embind | 0.54× |
+| attribute-churn | total time | Rust | 68.46 ms | 0.61× | 0.56× | 0.21× | Embind | 0.82× |
+| attribute-churn | per setAttribute() | C | 0.68 µs | 0.49× | 0.49× | 0.18× | Embind | 0.64× |
+| attribute-churn | per setAttribute() | C++ | 0.57 µs | 0.42× | 0.51× | 0.14× | Embind | 0.54× |
+| attribute-churn | per setAttribute() | Rust | 0.86 µs | 0.61× | 0.57× | 0.21× | Embind | 0.82× |
+| canvas-draw | total | C | 50.26 ms | 0.99× | 0.92× | 0.26× | Embind | 0.62× |
+| canvas-draw | total | C++ | 45.79 ms | 0.88× | 0.94× | 0.23× | Embind | 0.57× |
+| canvas-draw | total | Rust | 46.88 ms | 1.11× | 0.94× | 0.24× | Embind | 0.58× |
+| canvas-draw | per fill_rect() | C | 1.00 µs | 0.99× | 0.92× | 0.26× | Embind | 0.62× |
+| canvas-draw | per fill_rect() | C++ | 0.92 µs | 0.88× | 0.94× | 0.23× | Embind | 0.57× |
+| canvas-draw | per fill_rect() | Rust | 0.94 µs | 1.11× | 0.94× | 0.24× | Embind | 0.58× |
+| canvas-pixels | getImageData(): µs/call | C | 324.80 µs | 0.97× | 1.13× | 1.01× | Embind | 1.67× |
+| canvas-pixels | getImageData(): µs/call | C++ | 360.60 µs | 1.13× | 1.01× | 1.14× | Embind | 1.86× |
+| canvas-pixels | getImageData(): µs/call | Rust | 361.70 µs | 1.11× | 0.97× | 1.11× | Embind | 1.86× |
+| canvas-pixels | putImageData(): µs/call | C | 238.70 µs | 0.96× | 0.96× | 0.87× | Embind | 1.36× |
+| canvas-pixels | putImageData(): µs/call | C++ | 253.70 µs | 1.04× | 0.91× | 0.88× | Embind | 1.44× |
+| canvas-pixels | putImageData(): µs/call | Rust | 257.30 µs | 0.57× | 0.91× | 0.98× | Embind | 1.46× |
+| dom-query | individual: total ms | C | 17.86 ms | 0.69× | 0.59× | 0.17× | Embind | 0.72× |
+| dom-query | individual: total ms | C++ | 18.99 ms | 0.70× | 0.59× | 0.21× | Embind | 0.76× |
+| dom-query | individual: total ms | Rust | 16.80 ms | 0.73× | 0.63× | 0.17× | Embind | 0.67× |
+| dom-query | bulk: total ms | C | 9.73 ms | 0.86× | 0.75× | 0.56× | Embind | 486.75× |
+| dom-query | bulk: total ms | C++ | 10.37 ms | 0.86× | 0.75× | 0.57× | Embind | 518.25× |
+| dom-query | bulk: total ms | Rust | 11.11 ms | 1.04× | 0.76× | 0.63× | Embind | 555.25× |
+| dom-query | individual: µs/element | C | 0.89 µs | 0.69× | 0.59× | 0.17× | Embind | 0.72× |
+| dom-query | individual: µs/element | C++ | 0.95 µs | 0.70× | 0.59× | 0.21× | Embind | 0.76× |
+| dom-query | individual: µs/element | Rust | 0.84 µs | 0.73× | 0.63× | 0.17× | Embind | 0.67× |
+| dom-traversal | build | C | 46.13 ms | 0.95× | 0.85× | 0.24× | EM_JS | 2.63× |
+| dom-traversal | build | C++ | 46.04 ms | 0.94× | 0.73× | 0.23× | EM_JS | 2.62× |
+| dom-traversal | build | Rust | 47.68 ms | 1.04× | 0.83× | 0.23× | EM_JS | 2.72× |
+| dom-traversal | traverse (total) | C | 13.84 ms | 0.94× | 0.78× | 0.14× | EM_JS | 3.38× |
+| dom-traversal | traverse (total) | C++ | 15.65 ms | 1.14× | 0.82× | 0.16× | EM_JS | 3.82× |
+| dom-traversal | traverse (total) | Rust | 16.96 ms | 1.09× | 0.67× | 0.16× | EM_JS | 4.14× |
+| dom-traversal | traverse (per node) | C | 0.71 µs | 0.94× | 0.78× | 0.14× | EM_JS | 3.37× |
+| dom-traversal | traverse (per node) | C++ | 0.80 µs | 1.14× | 0.82× | 0.16× | EM_JS | 3.82× |
+| dom-traversal | traverse (per node) | Rust | 0.87 µs | 1.09× | 0.67× | 0.16× | EM_JS | 4.13× |
+| string-marshalling | set 8 B | C | 0.41 µs | 0.50× | 0.75× | 0.13× | EM_JS | 1.05× |
+| string-marshalling | set 8 B | C++ | 0.40 µs | 0.48× | 0.66× | 0.12× | EM_JS | 1.02× |
+| string-marshalling | set 8 B | Rust | 0.36 µs | 0.41× | 0.71× | 0.11× | EM_JS | 0.91× |
+| string-marshalling | get 8 B | C | 0.54 µs | 0.20× | 0.25× | 0.12× | EM_JS | 2.62× |
+| string-marshalling | get 8 B | C++ | 0.51 µs | 0.24× | 0.25× | 0.11× | EM_JS | 2.49× |
+| string-marshalling | get 8 B | Rust | 0.49 µs | 0.22× | 0.24× | 0.10× | EM_JS | 2.37× |
+| string-marshalling | set 128 B | C | 0.61 µs | 1.01× | 0.87× | 0.16× | wasm-bindgen | 1.16× |
+| string-marshalling | set 128 B | C++ | 0.61 µs | 0.79× | 0.90× | 0.16× | wasm-bindgen | 1.16× |
+| string-marshalling | set 128 B | Rust | 0.59 µs | 0.63× | 0.91× | 0.15× | wasm-bindgen | 1.12× |
+| string-marshalling | get 128 B | C | 1.76 µs | 0.73× | 0.75× | 0.34× | wasm-bindgen | 2.11× |
+| string-marshalling | get 128 B | C++ | 1.76 µs | 0.70× | 0.74× | 0.39× | wasm-bindgen | 2.11× |
+| string-marshalling | get 128 B | Rust | 1.83 µs | 0.81× | 0.71× | 0.38× | wasm-bindgen | 2.19× |
+| string-marshalling | set 1024 B | C | 1.00 µs | 0.81× | 0.98× | 0.30× | wasm-bindgen | 1.12× |
+| string-marshalling | set 1024 B | C++ | 0.99 µs | 0.95× | 0.92× | 0.28× | wasm-bindgen | 1.11× |
+| string-marshalling | set 1024 B | Rust | 0.97 µs | 0.77× | 0.97× | 0.28× | wasm-bindgen | 1.09× |
+| string-marshalling | get 1024 B | C | 2.02 µs | 0.12× | 0.48× | 0.28× | wasm-bindgen | 0.36× |
+| string-marshalling | get 1024 B | C++ | 1.95 µs | 0.42× | 0.50× | 0.24× | wasm-bindgen | 0.35× |
+| string-marshalling | get 1024 B | Rust | 1.92 µs | 0.20× | 0.49× | 0.26× | wasm-bindgen | 0.35× |
+| string-marshalling | set 16384 B | C | 7.33 µs | 1.05× | 1.00× | 0.76× | wasm-bindgen | 1.14× |
+| string-marshalling | set 16384 B | C++ | 7.12 µs | 1.01× | 1.00× | 0.72× | wasm-bindgen | 1.11× |
+| string-marshalling | set 16384 B | Rust | 6.59 µs | 0.91× | 1.00× | 0.63× | wasm-bindgen | 1.03× |
+| string-marshalling | get 16384 B | C | 18.23 µs | 0.53× | 0.54× | 0.36× | wasm-bindgen | 0.23× |
+| string-marshalling | get 16384 B | C++ | 19.43 µs | 0.23× | 0.53× | 0.36× | wasm-bindgen | 0.24× |
+| string-marshalling | get 16384 B | Rust | 17.83 µs | 0.50× | 0.49× | 0.32× | wasm-bindgen | 0.22× |
+| string-marshalling | set 262144 B | C | 108.60 µs | 0.42× | 0.99× | 0.44× | Embind | 0.99× |
+| string-marshalling | set 262144 B | C++ | 107.75 µs | 0.43× | 0.72× | 0.41× | Embind | 0.98× |
+| string-marshalling | set 262144 B | Rust | 104.17 µs | 0.40× | 0.70× | 0.39× | Embind | 0.95× |
+| string-marshalling | get 262144 B | C | 274.15 µs | 0.29× | 0.29× | 0.37× | wasm-bindgen | 0.22× |
+| string-marshalling | get 262144 B | C++ | 273.00 µs | 0.29× | 0.30× | 0.37× | wasm-bindgen | 0.22× |
+| string-marshalling | get 262144 B | Rust | 277.15 µs | 0.29× | 0.30× | 0.35× | wasm-bindgen | 0.22× |
+| table-update | create: total ms | C | 14.48 ms | 1.17× | 0.96× | 0.23× | EM_JS | 2.53× |
+| table-update | create: total ms | C++ | 13.06 ms | 1.00× | 0.94× | 0.19× | EM_JS | 2.29× |
+| table-update | create: total ms | Rust | 13.94 ms | 1.12× | 0.94× | 0.21× | EM_JS | 2.44× |
+| table-update | create: µs/row | C | 7.24 µs | 1.17× | 0.96× | 0.23× | EM_JS | 2.54× |
+| table-update | create: µs/row | C++ | 6.53 µs | 1.00× | 0.94× | 0.19× | EM_JS | 2.29× |
+| table-update | create: µs/row | Rust | 6.97 µs | 1.12× | 0.94× | 0.21× | EM_JS | 2.44× |
+| table-update | update (selected): total ms | C | 1.05 ms | 1.15× | 0.79× | 0.34× | wasm-bindgen | 1.16× |
+| table-update | update (selected): total ms | C++ | 1.00 ms | 0.95× | 0.88× | 0.31× | wasm-bindgen | 1.10× |
+| table-update | update (selected): total ms | Rust | 0.94 ms | 0.97× | 0.83× | 0.31× | wasm-bindgen | 1.04× |
+| table-update | update (selected): µs/row | C | 0.53 µs | 1.15× | 0.79× | 0.34× | wasm-bindgen | 1.16× |
+| table-update | update (selected): µs/row | C++ | 0.50 µs | 0.95× | 0.88× | 0.31× | wasm-bindgen | 1.10× |
+| table-update | update (selected): µs/row | Rust | 0.47 µs | 0.97× | 0.83× | 0.31× | wasm-bindgen | 1.04× |
+| table-update | clear (unselected): total ms | C | 3.58 ms | 0.99× | 0.77× | 0.24× | wasm-bindgen | 1.52× |
+| table-update | clear (unselected): total ms | C++ | 3.23 ms | 0.80× | 0.74× | 0.19× | wasm-bindgen | 1.38× |
+| table-update | clear (unselected): total ms | Rust | 3.46 ms | 0.99× | 0.78× | 0.22× | wasm-bindgen | 1.47× |
+| table-update | clear (unselected): µs/row | C | 1.79 µs | 0.99× | 0.77× | 0.24× | wasm-bindgen | 1.52× |
+| table-update | clear (unselected): µs/row | C++ | 1.62 µs | 0.80× | 0.75× | 0.19× | wasm-bindgen | 1.38× |
+| table-update | clear (unselected): µs/row | Rust | 1.73 µs | 0.99× | 0.78× | 0.22× | wasm-bindgen | 1.47× |
 
 </details>
 
@@ -273,9 +278,9 @@ Payload medians cover 34 component inputs. Compression is per file. Startup is t
 
 | Build | JS (KiB) | Core Wasm (KiB) | Total (KiB) | Gzip (KiB) | Brotli (KiB) | Startup (ms) |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1.13.0 | 19.4 | 64.4 | 85.4 | 29.3 | 24.1 | 18.09 |
-| Stock main | 180.8 | 64.4 | 252.1 | 57.6 | 47.8 | 42.08 |
-| Candidate | 149.7 | 64.4 | 217.5 | 53.6 | 44.5 | 37.03 |
+| 1.13.0 | 19.4 | 64.4 | 85.4 | 29.3 | 24.1 | 10.36 |
+| Stock main | 180.8 | 64.4 | 252.1 | 57.6 | 47.8 | 23.58 |
+| Candidate | 149.9 | 64.4 | 217.7 | 53.7 | 44.5 | 21.17 |
 
 ### Generated JavaScript reached by each demo
 
@@ -285,7 +290,7 @@ Chromium recorded block coverage on 126 fresh pages in a separate run. One page 
 | --- | --- | --- | --- | --- |
 | 1.13.0 | 4.8 | 16.3 | 76.6% | 5.0 |
 | Stock main | 53.9 | 96.3 | 51.2% | 91.3 |
-| Candidate | 42.6 | 67.5 | 44.1% | 85.1 |
+| Candidate | 42.8 | 67.1 | 43.9% | 85.9 |
 
 <details><summary>Candidate startup, variation and paired comparison to 1.13.0</summary>
 
@@ -293,27 +298,27 @@ The paired ratio divides the candidate time by the 1.13.0 time within each round
 
 | Operation | Guest | Startup median (ms) | Warm phase p25 | Warm phase p50 | Warm phase p75 | Phase unit | Paired ratio to 1.13.0 | Rounds at or below 1.13.0 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Attribute write | C | 40.25 | 0.98 | 1.31 | 1.63 | µs | 0.49× | 7/7 |
-| Attribute write | C++ | 45.07 | 1.13 | 1.43 | 1.58 | µs | 0.64× | 7/7 |
-| Attribute write | Rust | 40.48 | 1.32 | 1.46 | 1.73 | µs | 0.56× | 7/7 |
-| Canvas fillRect | C | 41.51 | 1.48 | 2.00 | 2.04 | µs | 0.87× | 5/7 |
-| Canvas fillRect | C++ | 40.55 | 1.57 | 1.75 | 2.38 | µs | 0.93× | 5/7 |
-| Canvas fillRect | Rust | 37.03 | 1.75 | 1.87 | 2.49 | µs | 1.02× | 3/7 |
-| Canvas pixel read | C | 44.68 | 506.00 | 705.90 | 748.25 | µs | 1.03× | 3/7 |
-| Canvas pixel read | C++ | 44.88 | 473.85 | 493.60 | 587.40 | µs | 0.72× | 6/7 |
-| Canvas pixel read | Rust | 39.08 | 490.75 | 552.20 | 662.45 | µs | 0.92× | 6/7 |
-| DOM ID lookup | C | 44.56 | 1.80 | 2.10 | 2.15 | µs | 0.76× | 4/7 |
-| DOM ID lookup | C++ | 42.20 | 1.53 | 1.60 | 1.71 | µs | 0.69× | 6/7 |
-| DOM ID lookup | Rust | 35.64 | 1.34 | 1.50 | 1.81 | µs | 0.74× | 6/7 |
-| Tree traversal | C | 27.57 | 18.04 | 18.61 | 19.47 | ms | 1.03× | 1/7 |
-| Tree traversal | C++ | 29.12 | 15.07 | 18.69 | 19.32 | ms | 0.93× | 4/7 |
-| Tree traversal | Rust | 28.53 | 20.62 | 25.31 | 28.44 | ms | 1.39× | 2/7 |
-| Read 1 KiB string | C | 26.01 | 2.00 | 2.29 | 2.51 | µs | 0.44× | 7/7 |
-| Read 1 KiB string | C++ | 24.13 | 2.21 | 2.30 | 2.42 | µs | 0.53× | 7/7 |
-| Read 1 KiB string | Rust | 26.51 | 2.23 | 2.33 | 2.60 | µs | 0.37× | 7/7 |
-| Table creation | C | 23.97 | 11.82 | 12.90 | 14.71 | ms | 0.80× | 5/7 |
-| Table creation | C++ | 24.08 | 10.98 | 14.38 | 15.47 | ms | 0.91× | 6/7 |
-| Table creation | Rust | 26.29 | 11.43 | 12.62 | 14.55 | ms | 0.84× | 5/7 |
+| Attribute write | C | 20.82 | 0.63 | 0.68 | 0.69 | µs | 0.48× | 7/7 |
+| Attribute write | C++ | 21.07 | 0.54 | 0.57 | 0.66 | µs | 0.46× | 7/7 |
+| Attribute write | Rust | 18.28 | 0.78 | 0.86 | 0.89 | µs | 0.58× | 7/7 |
+| Canvas fillRect | C | 21.25 | 0.80 | 1.00 | 1.11 | µs | 0.93× | 5/7 |
+| Canvas fillRect | C++ | 21.16 | 0.85 | 0.92 | 0.98 | µs | 0.90× | 5/7 |
+| Canvas fillRect | Rust | 21.14 | 0.81 | 0.94 | 0.97 | µs | 0.96× | 4/7 |
+| Canvas pixel read | C | 23.81 | 294.35 | 324.80 | 346.25 | µs | 0.94× | 6/7 |
+| Canvas pixel read | C++ | 23.37 | 331.80 | 360.60 | 371.95 | µs | 1.11× | 2/7 |
+| Canvas pixel read | Rust | 22.71 | 348.95 | 361.70 | 371.40 | µs | 1.07× | 2/7 |
+| DOM ID lookup | C | 22.94 | 0.81 | 0.89 | 1.07 | µs | 0.79× | 5/7 |
+| DOM ID lookup | C++ | 23.36 | 0.91 | 0.95 | 1.08 | µs | 0.74× | 6/7 |
+| DOM ID lookup | Rust | 21.17 | 0.75 | 0.84 | 0.91 | µs | 0.82× | 6/7 |
+| Tree traversal | C | 20.51 | 13.06 | 13.84 | 15.49 | ms | 0.98× | 4/7 |
+| Tree traversal | C++ | 20.87 | 13.71 | 15.65 | 15.80 | ms | 1.11× | 2/7 |
+| Tree traversal | Rust | 20.12 | 16.82 | 16.96 | 20.34 | ms | 1.23× | 0/7 |
+| Read 1 KiB string | C | 20.77 | 1.93 | 2.02 | 2.17 | µs | 0.11× | 7/7 |
+| Read 1 KiB string | C++ | 22.86 | 1.86 | 1.95 | 2.05 | µs | 0.45× | 7/7 |
+| Read 1 KiB string | Rust | 19.38 | 1.88 | 1.92 | 1.99 | µs | 0.20× | 7/7 |
+| Table creation | C | 26.36 | 13.93 | 14.48 | 15.38 | ms | 1.14× | 3/7 |
+| Table creation | C++ | 24.67 | 11.96 | 13.06 | 13.86 | ms | 0.95× | 4/7 |
+| Table creation | Rust | 21.92 | 12.59 | 13.94 | 14.97 | ms | 1.09× | 2/7 |
 
 </details>
 
@@ -325,9 +330,9 @@ Run the dependency installation, main setup and size commands in [Reproduce the 
 
 ```sh
 git clone https://github.com/vados-cosmonic/jco ../jco-candidate
-git -C ../jco-candidate checkout 5db31f3a5bb23c4392f76f68845b37e7f4d2c3bf
+git -C ../jco-candidate checkout 7c5712b61abb6a026ea7eb94228d77a87bd030e6
 node web/bench/candidate.mjs ../jco-candidate
-git -C ../jco-candidate worktree add --detach ../jco-reference 3f65947fd57caf61bd5ad2fba06f3fd00734049c
+git -C ../jco-candidate worktree add --detach ../jco-reference 5db31f3a5bb23c4392f76f68845b37e7f4d2c3bf
 node web/bench/candidate.mjs --reference ../jco-reference
 CHROME_BIN=/path/to/chrome BENCH_CANDIDATE=1 ROUNDS=7 node web/bench/browser.mjs
 CHROME_BIN=/path/to/chrome BENCH_DOM_CONTROL=1 ROUNDS=9 node web/bench/browser.mjs
@@ -357,9 +362,9 @@ node web/bench/candidate.mjs --verify-wasm ../jco-candidate
 
 These stock and shim timings come from the same interleaved fresh-page trial as the performance branch. [Full trial](web/bench/results/candidate-browser.json) · [Stock and shim samples](web/bench/results/browser.json)
 
-Across the seven operations below and three guest languages, main took longer in **19 of 21** median comparisons. The highest ratio was **7.27×** for the C++ guest in `dom-traversal`.
+Across the seven operations below and three guest languages, main took longer in **16 of 21** median comparisons. The highest ratio was **7.07×** for the C++ guest in `dom-traversal`.
 
-For 256 KiB string reads, the median time on main changed by -23% to -19% across the three guest languages. The phase tables below include every tested string size.
+For 256 KiB string reads, the median time on main changed by -23% to -18% across the three guest languages. The phase tables below include every tested string size.
 
 Each cell is the median of 7 fresh-page samples. The chart divides main’s median time by 1.13.0’s for the same guest and operation. A value below 1× means main finished faster.
 
@@ -367,13 +372,13 @@ Each cell is the median of 7 fresh-page samples. The chart divides main’s medi
 
 | Operation | JS | Embind | EM_JS | wasm-bindgen | C 1.13.0 | C main | C++ 1.13.0 | C++ main | Rust 1.13.0 | Rust main |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| Attribute write (µs) | 0.574 | 2.32 | — | — | 2.67 | 8.21 | 2.11 | 7.88 | 3.00 | 8.50 |
-| Canvas fillRect (µs) | 1.90 | 2.79 | — | — | 2.15 | 6.84 | 1.76 | 7.69 | 1.79 | 7.39 |
-| Canvas pixel read (µs) | 384.50 | 357.50 | — | — | 696.90 | 636.60 | 715.60 | 785.90 | 630.00 | 600.50 |
-| DOM ID lookup (µs) | 0.743 | 2.26 | — | — | 2.65 | 9.55 | 2.34 | 11.68 | 1.96 | 10.98 |
-| Tree traversal (ms) | 1.08 | 24.72 | 5.19 | 7.43 | 16.90 | 122.62 | 16.52 | 120.09 | 17.88 | 128.53 |
-| Read 1 KiB string (µs) | 0.105 | 13.53 | 10.62 | 6.06 | 6.37 | 8.09 | 4.29 | 7.34 | 7.01 | 8.91 |
-| Table creation (ms) | 4.17 | 17.73 | 6.56 | 10.58 | 16.98 | 78.19 | 15.18 | 74.88 | 15.33 | 76.03 |
+| Attribute write (µs) | 0.306 | 1.05 | — | — | 1.36 | 3.67 | 1.36 | 3.99 | 1.41 | 4.15 |
+| Canvas fillRect (µs) | 0.755 | 1.62 | — | — | 1.02 | 3.88 | 1.04 | 4.00 | 0.845 | 3.84 |
+| Canvas pixel read (µs) | 171.50 | 194.10 | — | — | 335.20 | 323.00 | 318.20 | 315.50 | 324.70 | 324.50 |
+| DOM ID lookup (µs) | 0.264 | 1.25 | — | — | 1.29 | 5.20 | 1.36 | 4.59 | 1.14 | 4.81 |
+| Tree traversal (ms) | 0.895 | 21.44 | 4.10 | 5.72 | 14.66 | 96.83 | 13.76 | 97.31 | 15.54 | 107.26 |
+| Read 1 KiB string (µs) | 0.093 | 11.15 | 11.17 | 5.55 | 17.00 | 7.17 | 4.68 | 8.02 | 9.68 | 7.25 |
+| Table creation (ms) | 3.65 | 14.43 | 5.71 | 9.02 | 12.38 | 62.73 | 13.09 | 69.38 | 12.45 | 67.34 |
 
 Embind and EM_JS are the C++ Emscripten variants. An em dash marks an unavailable combination. Across toolchains, the upstream implementations can do different amounts of work. For example, the JavaScript bulk DOM query obtains a live collection while the component host materializes a list.
 
@@ -383,13 +388,13 @@ Each cell spans the 25th to 75th percentile of measured times, using linear inte
 
 | Operation | C 1.13.0 | C main | C++ 1.13.0 | C++ main | Rust 1.13.0 | Rust main |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Attribute write (µs) | 2.26–2.94 | 7.30–9.75 | 1.95–2.60 | 7.46–8.52 | 2.33–3.20 | 8.13–9.62 |
-| Canvas fillRect (µs) | 1.68–2.39 | 6.11–7.44 | 1.64–2.58 | 6.60–9.24 | 1.68–2.37 | 6.51–8.43 |
-| Canvas pixel read (µs) | 587.80–738.75 | 581.50–825.85 | 545.95–791.75 | 706.55–815.15 | 512.85–727.15 | 562.75–700.95 |
-| DOM ID lookup (µs) | 2.25–2.78 | 8.73–9.85 | 2.22–2.60 | 8.64–11.87 | 1.80–2.05 | 8.25–12.21 |
-| Tree traversal (ms) | 16.09–20.15 | 121.52–157.06 | 15.65–19.56 | 117.53–141.24 | 17.21–22.08 | 126.56–137.66 |
-| Read 1 KiB string (µs) | 4.72–6.85 | 8.00–8.22 | 4.12–4.68 | 7.26–8.33 | 4.66–11.30 | 8.08–9.47 |
-| Table creation (ms) | 16.02–17.73 | 71.43–83.98 | 12.88–17.23 | 69.29–86.19 | 15.10–17.09 | 71.96–80.42 |
+| Attribute write (µs) | 1.31–1.42 | 3.53–3.75 | 1.31–1.39 | 3.86–4.06 | 1.35–1.47 | 4.05–4.27 |
+| Canvas fillRect (µs) | 0.857–1.06 | 3.81–3.99 | 0.984–1.13 | 3.46–4.08 | 0.827–1.10 | 3.70–3.94 |
+| Canvas pixel read (µs) | 324.10–349.15 | 311.60–348.70 | 290.90–345.90 | 313.40–322.35 | 296.20–353.40 | 313.00–361.75 |
+| DOM ID lookup (µs) | 1.13–1.33 | 4.97–5.51 | 1.17–1.40 | 4.45–4.90 | 0.978–1.22 | 4.40–5.26 |
+| Tree traversal (ms) | 13.40–15.52 | 93.12–101.72 | 11.74–15.66 | 93.05–99.98 | 13.52–17.00 | 102.99–114.74 |
+| Read 1 KiB string (µs) | 10.25–19.12 | 6.48–7.78 | 3.82–5.10 | 7.28–8.10 | 4.51–28.02 | 6.73–7.50 |
+| Table creation (ms) | 11.19–13.86 | 61.60–74.09 | 12.74–15.15 | 62.66–70.94 | 12.11–12.60 | 64.86–69.15 |
 
 </details>
 
@@ -401,38 +406,38 @@ Times come from the tables rendered by the demos and retain their original repor
 
 | Operation | JS | Embind | EM_JS | wasm-bindgen | C 1.13.0 | C main | C++ 1.13.0 | C++ main | Rust 1.13.0 | Rust main |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| total time (ms) | 45.90 | 185.75 | — | — | 213.78 | 656.79 | 168.66 | 630.05 | 239.85 | 679.94 |
-| per setAttribute() (µs) | 0.574 | 2.32 | — | — | 2.67 | 8.21 | 2.11 | 7.88 | 3.00 | 8.50 |
+| total time (ms) | 24.49 | 83.84 | — | — | 109.11 | 293.75 | 108.64 | 318.94 | 113.06 | 331.80 |
+| per setAttribute() (µs) | 0.306 | 1.05 | — | — | 1.36 | 3.67 | 1.36 | 3.99 | 1.41 | 4.15 |
 
 **canvas-draw**
 
 | Operation | JS | Embind | EM_JS | wasm-bindgen | C 1.13.0 | C main | C++ 1.13.0 | C++ main | Rust 1.13.0 | Rust main |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| total (ms) | 95.12 | 139.53 | — | — | 107.65 | 341.89 | 88.07 | 384.61 | 89.32 | 369.33 |
-| per fill_rect() (µs) | 1.90 | 2.79 | — | — | 2.15 | 6.84 | 1.76 | 7.69 | 1.79 | 7.39 |
+| total (ms) | 37.74 | 80.93 | — | — | 50.84 | 194.00 | 52.13 | 200.03 | 42.23 | 192.03 |
+| per fill_rect() (µs) | 0.755 | 1.62 | — | — | 1.02 | 3.88 | 1.04 | 4.00 | 0.845 | 3.84 |
 
 **canvas-pixels**
 
 | Operation | JS | Embind | EM_JS | wasm-bindgen | C 1.13.0 | C main | C++ 1.13.0 | C++ main | Rust 1.13.0 | Rust main |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| getImageData() (µs) | 384.50 | 357.50 | — | — | 696.90 | 636.60 | 715.60 | 785.90 | 630.00 | 600.50 |
-| putImageData() (µs) | 27.40 | 272.60 | — | — | 517.30 | 443.00 | 514.20 | 638.80 | 447.00 | 438.00 |
+| getImageData() (µs) | 171.50 | 194.10 | — | — | 335.20 | 323.00 | 318.20 | 315.50 | 324.70 | 324.50 |
+| putImageData() (µs) | 13.60 | 175.90 | — | — | 249.00 | 273.80 | 243.50 | 288.80 | 454.50 | 261.60 |
 
 **dom-query**
 
 | Operation | JS | Embind | EM_JS | wasm-bindgen | C 1.13.0 | C main | C++ 1.13.0 | C++ main | Rust 1.13.0 | Rust main |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| individual, total (ms) | 14.87 | 45.15 | — | — | 52.95 | 191.01 | 46.74 | 233.66 | 39.14 | 219.62 |
-| bulk, total (ms) | 0.025 | 0.03 | — | — | 24.30 | 29.75 | 16.81 | 37.48 | 18.35 | 32.88 |
-| individual: µs/element (µs) | 0.743 | 2.26 | — | — | 2.65 | 9.55 | 2.34 | 11.68 | 1.96 | 10.98 |
+| individual, total (ms) | 5.28 | 24.91 | — | — | 25.73 | 104.00 | 27.12 | 91.89 | 22.87 | 96.17 |
+| bulk, total (ms) | 0.015 | 0.02 | — | — | 11.33 | 17.54 | 12.06 | 18.17 | 10.65 | 17.50 |
+| individual: µs/element (µs) | 0.264 | 1.25 | — | — | 1.29 | 5.20 | 1.36 | 4.59 | 1.14 | 4.81 |
 
 **dom-traversal**
 
 | Operation | JS | Embind | EM_JS | wasm-bindgen | C 1.13.0 | C main | C++ 1.13.0 | C++ main | Rust 1.13.0 | Rust main |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| build (ms) | 14.86 | 42.09 | 22.12 | 34.36 | 58.80 | 264.44 | 58.63 | 255.15 | 57.39 | 266.56 |
-| traverse (total) (ms) | 1.08 | 24.72 | 5.19 | 7.43 | 16.90 | 122.62 | 16.52 | 120.09 | 17.88 | 128.53 |
-| traverse (per node) (µs) | 0.055 | 1.26 | 0.266 | 0.38 | 0.865 | 6.28 | 0.846 | 6.15 | 0.915 | 6.58 |
+| build (ms) | 10.84 | 30.38 | 17.55 | 25.36 | 48.74 | 192.35 | 49.24 | 199.61 | 45.93 | 207.52 |
+| traverse (total) (ms) | 0.895 | 21.44 | 4.10 | 5.72 | 14.66 | 96.83 | 13.76 | 97.31 | 15.54 | 107.26 |
+| traverse (per node) (µs) | 0.046 | 1.10 | 0.21 | 0.293 | 0.751 | 4.96 | 0.705 | 4.98 | 0.795 | 5.49 |
 
 **string-marshalling**
 
@@ -440,37 +445,37 @@ Times come from the tables rendered by the demos and retain their original repor
 
 | Operation | JS | Embind | EM_JS | wasm-bindgen | C 1.13.0 | C main | C++ 1.13.0 | C++ main | Rust 1.13.0 | Rust main |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| set 8 B (µs) | 0.211 | 0.896 | 0.376 | 0.566 | 0.969 | 3.41 | 1.04 | 3.29 | 0.905 | 4.04 |
-| set 8 B (MB/s) | 37.91 | 8.93 | 21.28 | 14.13 | 8.26 | 2.35 | 7.67 | 2.43 | 8.84 | 1.98 |
-| get 8 B (µs) | 0.09 | 1.11 | 0.233 | 0.259 | 2.34 | 6.27 | 2.63 | 4.71 | 2.29 | 6.06 |
-| get 8 B (MB/s) | 88.89 | 7.20 | 34.33 | 30.89 | 3.42 | 1.28 | 3.04 | 1.70 | 3.49 | 1.32 |
-| set 128 B (µs) | 0.333 | 1.41 | 0.877 | 0.625 | 1.11 | 4.52 | 1.26 | 4.24 | 0.928 | 4.26 |
-| set 128 B (MB/s) | 384.38 | 90.72 | 145.95 | 204.80 | 114.80 | 28.31 | 101.35 | 30.20 | 137.93 | 30.05 |
-| get 128 B (µs) | 0.08 | 3.05 | 1.43 | 0.961 | 5.20 | 6.66 | 2.76 | 6.33 | 2.15 | 6.75 |
-| get 128 B (MB/s) | 1,600.00 | 42.01 | 89.57 | 133.19 | 24.64 | 19.21 | 46.39 | 20.24 | 59.62 | 18.95 |
-| set 1024 B (µs) | 1.06 | 1.73 | 2.72 | 0.991 | 1.22 | 4.88 | 1.08 | 4.24 | 1.05 | 4.50 |
-| set 1024 B (MB/s) | 967.86 | 592.59 | 376.75 | 1,033.30 | 840.03 | 209.71 | 946.40 | 241.62 | 978.97 | 227.66 |
-| get 1024 B (µs) | 0.105 | 13.53 | 10.62 | 6.06 | 6.37 | 8.09 | 4.29 | 7.34 | 7.01 | 8.91 |
-| get 1024 B (MB/s) | 9,752.38 | 75.71 | 96.40 | 168.87 | 160.78 | 126.56 | 238.64 | 139.57 | 146.16 | 114.98 |
-| set 16384 B (µs) | 13.52 | 9.85 | 36.38 | 7.47 | 8.13 | 11.56 | 7.61 | 10.95 | 7.42 | 11.47 |
-| set 16384 B (MB/s) | 1,211.74 | 1,663.86 | 450.42 | 2,192.72 | 2,015.00 | 1,417.79 | 2,154.09 | 1,495.85 | 2,206.60 | 1,428.92 |
-| get 16384 B (µs) | 0.493 | 198.85 | 175.35 | 97.17 | 41.95 | 60.83 | 98.53 | 60.17 | 50.34 | 60.12 |
-| get 16384 B (MB/s) | 33,233.27 | 82.39 | 93.44 | 168.60 | 390.56 | 269.36 | 166.29 | 272.27 | 325.49 | 272.50 |
-| set 262144 B (µs) | 199.22 | 141.45 | 539.20 | 280.90 | 291.70 | 311.60 | 305.70 | 305.20 | 269.70 | 302.75 |
-| set 262144 B (MB/s) | 1,315.86 | 1,853.26 | 486.17 | 933.23 | 898.68 | 841.28 | 857.52 | 858.93 | 971.98 | 865.88 |
-| get 262144 B (µs) | 13.81 | 3,420.05 | 2,604.90 | 1,520.55 | 1,091.90 | 883.00 | 1,076.30 | 826.10 | 1,091.15 | 888.70 |
-| get 262144 B (MB/s) | 18,978.06 | 76.65 | 100.63 | 172.40 | 240.08 | 296.88 | 243.56 | 317.33 | 240.25 | 294.97 |
+| set 8 B (µs) | 0.175 | 0.717 | 0.394 | 0.502 | 0.832 | 3.10 | 0.842 | 3.45 | 0.886 | 3.17 |
+| set 8 B (MB/s) | 45.71 | 11.16 | 20.30 | 15.94 | 9.62 | 2.58 | 9.50 | 2.32 | 9.03 | 2.53 |
+| get 8 B (µs) | 0.075 | 0.987 | 0.206 | 0.22 | 2.73 | 4.51 | 2.13 | 4.52 | 2.19 | 4.67 |
+| get 8 B (MB/s) | 106.67 | 8.11 | 38.83 | 36.36 | 2.93 | 1.78 | 3.76 | 1.77 | 3.66 | 1.71 |
+| set 128 B (µs) | 0.284 | 1.08 | 0.867 | 0.524 | 0.602 | 3.68 | 0.768 | 3.81 | 0.928 | 3.81 |
+| set 128 B (MB/s) | 450.70 | 118.52 | 147.64 | 244.27 | 212.62 | 34.77 | 166.67 | 33.63 | 137.93 | 33.59 |
+| get 128 B (µs) | 0.08 | 2.02 | 1.51 | 0.834 | 2.40 | 5.15 | 2.51 | 4.54 | 2.25 | 4.84 |
+| get 128 B (MB/s) | 1,600.00 | 63.52 | 84.71 | 153.48 | 53.38 | 24.84 | 50.96 | 28.16 | 56.94 | 26.42 |
+| set 1024 B (µs) | 1.00 | 1.51 | 2.86 | 0.89 | 1.24 | 3.36 | 1.05 | 3.50 | 1.25 | 3.50 |
+| set 1024 B (MB/s) | 1,020.94 | 678.60 | 357.79 | 1,150.56 | 827.14 | 304.49 | 978.97 | 292.15 | 816.59 | 292.32 |
+| get 1024 B (µs) | 0.093 | 11.15 | 11.17 | 5.55 | 17.00 | 7.17 | 4.68 | 8.02 | 9.68 | 7.25 |
+| get 1024 B (MB/s) | 11,010.75 | 91.84 | 91.71 | 184.50 | 60.22 | 142.90 | 218.62 | 127.70 | 105.74 | 141.30 |
+| set 16384 B (µs) | 12.42 | 7.80 | 35.98 | 6.42 | 7.00 | 9.65 | 7.05 | 9.85 | 7.25 | 10.49 |
+| set 16384 B (MB/s) | 1,319.48 | 2,099.71 | 455.43 | 2,552.42 | 2,341.57 | 1,697.82 | 2,324.96 | 1,662.84 | 2,259.86 | 1,561.72 |
+| get 16384 B (µs) | 0.453 | 154.85 | 167.55 | 79.38 | 34.73 | 50.83 | 82.66 | 53.70 | 35.81 | 55.92 |
+| get 16384 B (MB/s) | 36,167.77 | 105.81 | 97.79 | 206.41 | 471.82 | 322.36 | 198.20 | 305.10 | 457.49 | 292.96 |
+| set 262144 B (µs) | 149.14 | 110.10 | 558.45 | 233.90 | 256.25 | 244.05 | 252.15 | 260.85 | 259.00 | 269.35 |
+| set 262144 B (MB/s) | 1,757.69 | 2,380.96 | 469.41 | 1,120.75 | 1,023.00 | 1,074.14 | 1,039.64 | 1,004.96 | 1,012.14 | 973.25 |
+| get 262144 B (µs) | 11.27 | 2,439.05 | 2,624.30 | 1,252.65 | 957.90 | 736.15 | 937.00 | 734.10 | 957.45 | 783.90 |
+| get 262144 B (MB/s) | 23,260.34 | 107.48 | 99.89 | 209.27 | 273.67 | 356.10 | 279.77 | 357.10 | 273.79 | 334.41 |
 
 **table-update**
 
 | Operation | JS | Embind | EM_JS | wasm-bindgen | C 1.13.0 | C main | C++ 1.13.0 | C++ main | Rust 1.13.0 | Rust main |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| create, total (ms) | 4.17 | 17.73 | 6.56 | 10.58 | 16.98 | 78.19 | 15.18 | 74.88 | 15.33 | 76.03 |
-| create, per row (µs) | 2.08 | 8.86 | 3.28 | 5.29 | 8.49 | 39.09 | 7.59 | 37.44 | 7.67 | 38.02 |
-| update (selected), total (ms) | 0.56 | 1.42 | 1.16 | 1.14 | 1.34 | 3.86 | 1.16 | 4.00 | 1.21 | 3.73 |
-| update (selected), per row (µs) | 0.28 | 0.708 | 0.58 | 0.567 | 0.673 | 1.93 | 0.58 | 2.00 | 0.603 | 1.86 |
-| clear (unselected), total (ms) | 2.00 | 4.08 | 3.73 | 3.08 | 4.95 | 18.86 | 4.47 | 22.02 | 4.32 | 19.57 |
-| clear (unselected), per row (µs) | 1.00 | 2.04 | 1.86 | 1.54 | 2.48 | 9.43 | 2.23 | 11.01 | 2.16 | 9.78 |
+| create, total (ms) | 3.65 | 14.43 | 5.71 | 9.02 | 12.38 | 62.73 | 13.09 | 69.38 | 12.45 | 67.34 |
+| create, per row (µs) | 1.82 | 7.21 | 2.86 | 4.51 | 6.19 | 31.37 | 6.54 | 34.69 | 6.22 | 33.67 |
+| update (selected), total (ms) | 0.445 | 1.13 | 1.07 | 0.905 | 0.915 | 3.08 | 1.05 | 3.27 | 0.97 | 3.06 |
+| update (selected), per row (µs) | 0.222 | 0.565 | 0.537 | 0.453 | 0.458 | 1.54 | 0.525 | 1.64 | 0.485 | 1.53 |
+| clear (unselected), total (ms) | 1.48 | 3.45 | 3.15 | 2.35 | 3.62 | 15.21 | 4.06 | 16.91 | 3.49 | 15.68 |
+| clear (unselected), per row (µs) | 0.737 | 1.73 | 1.58 | 1.18 | 1.81 | 7.61 | 2.03 | 8.46 | 1.75 | 7.84 |
 
 </details>
 
@@ -480,13 +485,13 @@ Elapsed browser time for dynamic import through instantiation, with the shared d
 
 | Workload | Embind | EM_JS | wasm-bindgen | C 1.13.0 | C main | C++ 1.13.0 | C++ main | Rust 1.13.0 | Rust main |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| attribute-churn | 25.62 | — | — | 25.52 | 50.19 | 21.49 | 48.72 | 19.56 | 46.75 |
-| canvas-draw | 26.42 | — | — | 19.61 | 49.05 | 22.86 | 45.44 | 21.82 | 47.63 |
-| canvas-pixels | 27.59 | — | — | 20.29 | 49.62 | 20.36 | 51.18 | 18.79 | 48.22 |
-| dom-query | 24.00 | — | — | 18.09 | 41.94 | 19.97 | 47.11 | 17.42 | 42.08 |
-| dom-traversal | 18.37 | 12.45 | 11.54 | 14.69 | 35.58 | 13.45 | 32.79 | 14.47 | 32.62 |
-| string-marshalling | 16.19 | 9.70 | 8.90 | 12.70 | 29.90 | 11.99 | 28.12 | 11.49 | 25.62 |
-| table-update | 16.07 | 10.00 | 8.72 | 11.94 | 25.21 | 12.94 | 25.94 | 11.99 | 30.36 |
+| attribute-churn | 15.16 | — | — | 10.29 | 22.31 | 9.83 | 23.05 | 10.36 | 22.44 |
+| canvas-draw | 13.68 | — | — | 10.27 | 24.48 | 10.83 | 23.07 | 11.30 | 22.70 |
+| canvas-pixels | 13.81 | — | — | 10.22 | 26.85 | 10.31 | 25.46 | 11.06 | 24.34 |
+| dom-query | 12.90 | — | — | 10.68 | 25.00 | 10.03 | 23.38 | 10.65 | 23.18 |
+| dom-traversal | 13.37 | 9.08 | 7.81 | 10.28 | 24.83 | 10.83 | 22.93 | 10.77 | 23.75 |
+| string-marshalling | 11.71 | 8.31 | 7.88 | 9.06 | 22.13 | 9.37 | 23.58 | 9.05 | 21.76 |
+| table-update | 13.32 | 9.00 | 8.30 | 12.40 | 26.34 | 10.39 | 23.96 | 10.87 | 25.87 |
 
 </details>
 

@@ -1,8 +1,8 @@
 {
-  "date": "2026-11-25T23:31:46.301Z",
+  "date": "2026-11-26T00:06:00.101Z",
   "browser": "HeadlessChrome/156.0.8078.47",
   "node": "v26.13.0",
-  "sizesSha256": "291720871ed48dacffc8c6afcffa73d40394a4a19d5c9a2a39f43a752506a4ef",
+  "sizesSha256": "b5aac50d3be7b881baf3de77d5610be39fee71d78ce62ae822835903046d98cd",
   "runnerSha256": "b43678cdfc02f3573986abc51ad534e49ae9f80821450ac82d7acb17ec6fec3a",
   "sources": {
     "host/common.js": "4e3f3437d37d8e150708efb3e33551dffa6c83164e165ed1750936f6a10c3c83",
@@ -208,20 +208,20 @@
       "demo": "canvas-pixels",
       "version": "candidate",
       "path": "c/canvas-pixels/jco-candidate/canvas_pixels.js",
-      "sha256": "ced6daaedc4126b0192ce7c1d58728fbea60ed35c267d6d9e3f56c716562068d",
+      "sha256": "3b61eef1cce1a30966be8914e64c22fb0ed78bd34650ed12462bf81a256a4b74",
       "phase": "init",
-      "bytes": 165726,
-      "used": 45678
+      "bytes": 166056,
+      "used": 45805
     },
     {
       "lang": "c",
       "demo": "canvas-pixels",
       "version": "candidate",
       "path": "c/canvas-pixels/jco-candidate/canvas_pixels.js",
-      "sha256": "ced6daaedc4126b0192ce7c1d58728fbea60ed35c267d6d9e3f56c716562068d",
+      "sha256": "3b61eef1cce1a30966be8914e64c22fb0ed78bd34650ed12462bf81a256a4b74",
       "phase": "firstRun",
-      "bytes": 165726,
-      "used": 74350
+      "bytes": 166056,
+      "used": 73853
     },
     {
       "lang": "c",
@@ -268,20 +268,20 @@
       "demo": "dom-query",
       "version": "candidate",
       "path": "c/dom-query/jco-candidate/dom_query.js",
-      "sha256": "974b0f8fd16a5e73edd5d8a77d379cd6ac92122dc1089c0485fb7a9bedbabfc7",
+      "sha256": "945dd4c7c42ae24c7724e7777018f6c93abb14228ef82e8de01f2d6c177d2de3",
       "phase": "init",
-      "bytes": 157962,
-      "used": 43922
+      "bytes": 158292,
+      "used": 44049
     },
     {
       "lang": "c",
       "demo": "dom-query",
       "version": "candidate",
       "path": "c/dom-query/jco-candidate/dom_query.js",
-      "sha256": "974b0f8fd16a5e73edd5d8a77d379cd6ac92122dc1089c0485fb7a9bedbabfc7",
+      "sha256": "945dd4c7c42ae24c7724e7777018f6c93abb14228ef82e8de01f2d6c177d2de3",
       "phase": "firstRun",
-      "bytes": 157962,
-      "used": 70988
+      "bytes": 158292,
+      "used": 70491
     },
     {
       "lang": "c",
@@ -388,20 +388,20 @@
       "demo": "string-marshalling",
       "version": "candidate",
       "path": "c/string-marshalling/jco-candidate/string_marshalling.js",
-      "sha256": "ecfe3b0f50af065c8c7911575d1fe00b53140923426b3d100b4378838326682d",
+      "sha256": "c3716e46d0f6bdcd5e2ec54c53a2d0a91cce2b41ad573ea617cac7ea2c7f9bba",
       "phase": "init",
-      "bytes": 155192,
-      "used": 43734
+      "bytes": 155522,
+      "used": 43861
     },
     {
       "lang": "c",
       "demo": "string-marshalling",
       "version": "candidate",
       "path": "c/string-marshalling/jco-candidate/string_marshalling.js",
-      "sha256": "ecfe3b0f50af065c8c7911575d1fe00b53140923426b3d100b4378838326682d",
+      "sha256": "c3716e46d0f6bdcd5e2ec54c53a2d0a91cce2b41ad573ea617cac7ea2c7f9bba",
       "phase": "firstRun",
-      "bytes": 155192,
-      "used": 69161
+      "bytes": 155522,
+      "used": 68664
     },
     {
       "lang": "c",
@@ -448,20 +448,20 @@
       "demo": "table-update",
       "version": "candidate",
       "path": "c/table-update/jco-candidate/table_update.js",
-      "sha256": "aec7347cd80b3bb51b66554efd5e402e6cee195db0a8a0e353aadbea31c449d7",
+      "sha256": "5dc320f3da36ba9ecfe6943ea665a01a0075aada477f59c0252656c179721c7a",
       "phase": "init",
-      "bytes": 160157,
-      "used": 44484
+      "bytes": 160487,
+      "used": 44611
     },
     {
       "lang": "c",
       "demo": "table-update",
       "version": "candidate",
       "path": "c/table-update/jco-candidate/table_update.js",
-      "sha256": "aec7347cd80b3bb51b66554efd5e402e6cee195db0a8a0e353aadbea31c449d7",
+      "sha256": "5dc320f3da36ba9ecfe6943ea665a01a0075aada477f59c0252656c179721c7a",
       "phase": "firstRun",
-      "bytes": 160157,
-      "used": 71169
+      "bytes": 160487,
+      "used": 70672
     },
     {
       "lang": "cpp",
@@ -628,20 +628,20 @@
       "demo": "canvas-pixels",
       "version": "candidate",
       "path": "cpp/canvas-pixels/jco-candidate/canvas_pixels.js",
-      "sha256": "695bd199f74eaa0e8324a3b9301771f8778e49cdda85dfb234207715244cb918",
+      "sha256": "ff751f4d42f38a919c843a644e3c2f8ffe02b9142653e16ed97fa26afa5046cc",
       "phase": "init",
-      "bytes": 165714,
-      "used": 45672
+      "bytes": 166044,
+      "used": 45799
     },
     {
       "lang": "cpp",
       "demo": "canvas-pixels",
       "version": "candidate",
       "path": "cpp/canvas-pixels/jco-candidate/canvas_pixels.js",
-      "sha256": "695bd199f74eaa0e8324a3b9301771f8778e49cdda85dfb234207715244cb918",
+      "sha256": "ff751f4d42f38a919c843a644e3c2f8ffe02b9142653e16ed97fa26afa5046cc",
       "phase": "firstRun",
-      "bytes": 165714,
-      "used": 74341
+      "bytes": 166044,
+      "used": 73844
     },
     {
       "lang": "cpp",
@@ -688,20 +688,20 @@
       "demo": "dom-query",
       "version": "candidate",
       "path": "cpp/dom-query/jco-candidate/dom_query.js",
-      "sha256": "31ee4311b787ff2b0799439e0e35fa5df011106981f0ebedebd54aa65e125664",
+      "sha256": "e8fa5aadf6e9be729cccade8a7cc1d2a6ce659f3f5b4592e7ca4c60883ced442",
       "phase": "init",
-      "bytes": 157958,
-      "used": 43920
+      "bytes": 158288,
+      "used": 44047
     },
     {
       "lang": "cpp",
       "demo": "dom-query",
       "version": "candidate",
       "path": "cpp/dom-query/jco-candidate/dom_query.js",
-      "sha256": "31ee4311b787ff2b0799439e0e35fa5df011106981f0ebedebd54aa65e125664",
+      "sha256": "e8fa5aadf6e9be729cccade8a7cc1d2a6ce659f3f5b4592e7ca4c60883ced442",
       "phase": "firstRun",
-      "bytes": 157958,
-      "used": 70985
+      "bytes": 158288,
+      "used": 70488
     },
     {
       "lang": "cpp",
@@ -808,20 +808,20 @@
       "demo": "string-marshalling",
       "version": "candidate",
       "path": "cpp/string-marshalling/jco-candidate/string_marshalling.js",
-      "sha256": "63abcab682ddff52ca982cba0a09b45bd6b5f4dafd38aec585105d5346b2cd29",
+      "sha256": "bae71de476d0bd949df45ba72819a79906a3ea90d9f60d3ae5b56c56226cc2a8",
       "phase": "init",
-      "bytes": 155188,
-      "used": 43732
+      "bytes": 155518,
+      "used": 43859
     },
     {
       "lang": "cpp",
       "demo": "string-marshalling",
       "version": "candidate",
       "path": "cpp/string-marshalling/jco-candidate/string_marshalling.js",
-      "sha256": "63abcab682ddff52ca982cba0a09b45bd6b5f4dafd38aec585105d5346b2cd29",
+      "sha256": "bae71de476d0bd949df45ba72819a79906a3ea90d9f60d3ae5b56c56226cc2a8",
       "phase": "firstRun",
-      "bytes": 155188,
-      "used": 69158
+      "bytes": 155518,
+      "used": 68661
     },
     {
       "lang": "cpp",
@@ -868,20 +868,20 @@
       "demo": "table-update",
       "version": "candidate",
       "path": "cpp/table-update/jco-candidate/table_update.js",
-      "sha256": "0fbdf1ccfd66062b4ffa624142c5aa84b8a2fa15e8d3b3c8b34d780aee49b363",
+      "sha256": "07ab3f2ce25aa6067d1eefc7115ca1b4feca97a1afaa1b6a5cfe36262a259a1f",
       "phase": "init",
-      "bytes": 160153,
-      "used": 44482
+      "bytes": 160483,
+      "used": 44609
     },
     {
       "lang": "cpp",
       "demo": "table-update",
       "version": "candidate",
       "path": "cpp/table-update/jco-candidate/table_update.js",
-      "sha256": "0fbdf1ccfd66062b4ffa624142c5aa84b8a2fa15e8d3b3c8b34d780aee49b363",
+      "sha256": "07ab3f2ce25aa6067d1eefc7115ca1b4feca97a1afaa1b6a5cfe36262a259a1f",
       "phase": "firstRun",
-      "bytes": 160153,
-      "used": 71166
+      "bytes": 160483,
+      "used": 70669
     },
     {
       "lang": "rust",
@@ -1048,20 +1048,20 @@
       "demo": "canvas-pixels",
       "version": "candidate",
       "path": "rust/canvas-pixels/jco-candidate/canvas_pixels.js",
-      "sha256": "648533943c46ae6004e66568679c1343f80a5babc956fe238c49e2a2c4317ab0",
+      "sha256": "cd6e1e5284e7ad47f801b4a376dbefede19b5340124f0b0d2fd9d9b76ccd3dc7",
       "phase": "init",
-      "bytes": 164287,
-      "used": 32610
+      "bytes": 164617,
+      "used": 32737
     },
     {
       "lang": "rust",
       "demo": "canvas-pixels",
       "version": "candidate",
       "path": "rust/canvas-pixels/jco-candidate/canvas_pixels.js",
-      "sha256": "648533943c46ae6004e66568679c1343f80a5babc956fe238c49e2a2c4317ab0",
+      "sha256": "cd6e1e5284e7ad47f801b4a376dbefede19b5340124f0b0d2fd9d9b76ccd3dc7",
       "phase": "firstRun",
-      "bytes": 164287,
-      "used": 71819
+      "bytes": 164617,
+      "used": 71322
     },
     {
       "lang": "rust",
@@ -1108,20 +1108,20 @@
       "demo": "dom-query",
       "version": "candidate",
       "path": "rust/dom-query/jco-candidate/dom_query.js",
-      "sha256": "65de9a2c17b175ef2e4bdc47447b4dd19492df4be94dfcb475dc94c4a2225651",
+      "sha256": "d4bbb0fc44ae90ab2928996b823e9ece75f68ed2a68670020f1d9b9e38a6a72f",
       "phase": "init",
-      "bytes": 156536,
-      "used": 30863
+      "bytes": 156866,
+      "used": 30990
     },
     {
       "lang": "rust",
       "demo": "dom-query",
       "version": "candidate",
       "path": "rust/dom-query/jco-candidate/dom_query.js",
-      "sha256": "65de9a2c17b175ef2e4bdc47447b4dd19492df4be94dfcb475dc94c4a2225651",
+      "sha256": "d4bbb0fc44ae90ab2928996b823e9ece75f68ed2a68670020f1d9b9e38a6a72f",
       "phase": "firstRun",
-      "bytes": 156536,
-      "used": 68468
+      "bytes": 156866,
+      "used": 67971
     },
     {
       "lang": "rust",
@@ -1228,20 +1228,20 @@
       "demo": "string-marshalling",
       "version": "candidate",
       "path": "rust/string-marshalling/jco-candidate/string_marshalling.js",
-      "sha256": "bdbf31d83ecabf488eb7cd4f97bfe4dc04ca15a756d06543feacea94c723237a",
+      "sha256": "279e2fa7adb180919ea140d217d4190019c858a56a137e1141ef93f58eba3f67",
       "phase": "init",
-      "bytes": 153770,
-      "used": 30679
+      "bytes": 154100,
+      "used": 30806
     },
     {
       "lang": "rust",
       "demo": "string-marshalling",
       "version": "candidate",
       "path": "rust/string-marshalling/jco-candidate/string_marshalling.js",
-      "sha256": "bdbf31d83ecabf488eb7cd4f97bfe4dc04ca15a756d06543feacea94c723237a",
+      "sha256": "279e2fa7adb180919ea140d217d4190019c858a56a137e1141ef93f58eba3f67",
       "phase": "firstRun",
-      "bytes": 153770,
-      "used": 66645
+      "bytes": 154100,
+      "used": 66148
     },
     {
       "lang": "rust",
@@ -1288,20 +1288,20 @@
       "demo": "table-update",
       "version": "candidate",
       "path": "rust/table-update/jco-candidate/table_update.js",
-      "sha256": "561ea9d54d9886de219c10a5357df12e8d07f3c87d8628481bdc1c90e708124b",
+      "sha256": "093bb5c8a05883498c18da9f8382fd29bc0e81f15c3bbaf9c7868fbb246d6f41",
       "phase": "init",
-      "bytes": 159325,
-      "used": 43670
+      "bytes": 159655,
+      "used": 43797
     },
     {
       "lang": "rust",
       "demo": "table-update",
       "version": "candidate",
       "path": "rust/table-update/jco-candidate/table_update.js",
-      "sha256": "561ea9d54d9886de219c10a5357df12e8d07f3c87d8628481bdc1c90e708124b",
+      "sha256": "093bb5c8a05883498c18da9f8382fd29bc0e81f15c3bbaf9c7868fbb246d6f41",
       "phase": "firstRun",
-      "bytes": 159325,
-      "used": 70350
+      "bytes": 159655,
+      "used": 69853
     }
   ]
 }

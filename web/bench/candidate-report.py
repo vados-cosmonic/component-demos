@@ -152,6 +152,8 @@ para(f"The candidate uses js-component-bindgen’s internal Oxc bundler and the 
      "The internal Oxc bundle drops the general asynchronous import fallback for these components. "
      "The adapter holds direct references to its task stack and instance flags, checks the store for interruptions, "
      "and lifts short ASCII strings in groups of four bytes. "
+     "During a synchronous guest allocation, the checked runtime clears the instance’s may-leave flag and restores it on return or throw. "
+     "Allocators in components with context-slot operations keep the general guard, which supplies fresh slots for each call. "
      "Synchronous UTF-8 results of 256 to 262,144 code units can reuse a per-instance byte buffer, capped at 256 KiB. "
      "The runtime encodes there before requesting the exact guest allocation. Nested calls and larger results use the ordinary encoder. "
      "When lifting a borrowed host resource, the runtime validates the handle and reads its 32-bit representation directly. "
@@ -201,7 +203,7 @@ if reference:
     comparisons = [(demo, metric, label) for demo, (metric, label, _) in focus.items()]
     comparisons += [("dom-query", "bulk: total ms", "Bulk DOM query"),
                     ("dom-traversal", "build", "Tree construction")]
-    comparisons += [("string-marshalling", metric, metric) for metric in ("set 8 B", "get 8 B", "get 16384 B", "get 262144 B")]
+    comparisons += [("string-marshalling", metric, metric) for metric in ("set 8 B", "get 8 B", "get 128 B", "get 16384 B", "get 262144 B")]
     def paired_change(demo, lang, metric):
         current = times[demo, f"{lang} candidate", metric]
         previous = times[demo, f"{lang} reference", metric]
@@ -357,7 +359,8 @@ loop_rounds = range(1, loop["rounds"] + 1)
 loop_passes = set(range(1, loop["repeats"] + 1))
 loop_times = defaultdict(dict)
 transfer_counts = {"pixels": loop["pixelCopies"], "pixelWrites": loop["pixelCopies"],
-                   "asciiResult": loop["textCopies"], "unicodeResult": loop["textCopies"]}
+                   "asciiResult": loop["textCopies"], "unicodeResult": loop["textCopies"],
+                   "shortAsciiResult": loop["shortTextCopies"], "shortUnicodeResult": loop["shortTextCopies"]}
 for sample in loop["samples"]:
     group = loop_times[sample["op"], sample.get("length"), sample["name"], sample["round"]]
     expected_count = transfer_counts.get(sample["op"], loop["iterations"])
@@ -365,11 +368,14 @@ for sample in loop["samples"]:
         raise ValueError("Duplicate or invalid import loop sample")
     group[sample["pass"]] = sample["elapsedMs"] * 1e6 / sample["count"]
 loop_rows = []
+loop_ratios = []
 for op, length, label in [("numbers", None, "u32"), ("strings", 2, "2-byte string"), ("strings", 9, "9-byte string"),
                           ("strings", 32, "32-byte string"), ("resources", None, "Acquire, borrow, drop"),
                           ("options", None, "Optional resource, half present"),
                           ("pixels", None, "121 KiB host-to-guest byte list"),
                           ("pixelWrites", None, "121 KiB guest-to-host byte list"),
+                          ("shortAsciiResult", None, "16-byte UTF-8 result, repeated ASCII"),
+                          ("shortUnicodeResult", None, "16-byte UTF-8 result, rotating Unicode"),
                           ("asciiResult", None, "16 KiB UTF-8 result, repeated ASCII"),
                           ("unicodeResult", None, "16 KiB UTF-8 result, rotating Unicode")]:
     medians = []
@@ -379,6 +385,7 @@ for op, length, label in [("numbers", None, "u32"), ("strings", 2, "2-byte strin
             raise ValueError("Missing import loop sample")
         medians.append(median(median(group.values()) for group in groups))
     direct, baseline, main, candidate = medians
+    loop_ratios.append((label, direct / baseline, main / baseline, candidate / baseline))
     loop_rows.append([label, *[f"{v:,.1f}" for v in medians],
                       f"{candidate / baseline:.2f}×", f"{candidate / direct:.2f}×"])
 para("### Cost of a synchronous host import")
@@ -392,13 +399,34 @@ para(f"The byte-list loops copy a 176 × 176 RGBA region ({176 * 176 * 4:,} byte
      "and a fixed guest allocation. In the reverse direction the host keeps the final snapshot while the guest "
      "changes the source in Wasm. Both cases sum the changing first byte during the loop and verify the whole "
      "payload afterward. The canvas demo also measures browser readback, host allocation and guest allocation.")
-para(f"The string-return loops make {loop['textCopies']:,} calls per pass. Each result occupies 16 KiB in Wasm. "
+para(f"The string-return loops make {loop['shortTextCopies']:,} calls per pass for 16-byte results and "
+     f"{loop['textCopies']:,} for 16 KiB results. "
      "One host returns a repeated ASCII string. The other rotates four strings containing two-, three-, and four-byte "
      "UTF-8 sequences. The guest checks each byte length, sums the first bytes, and hashes every distinct result outside the timer.")
 para(f"Times are nanoseconds per guest iteration, including the loop and host work. Each cell is the median "
      f"of {loop['rounds']} fresh-page medians, with {loop['warmups']} warm-ups and {loop['repeats']} timed passes "
      f"per page. The runner interleaves the four builds. [Raw timings and digests](web/bench/results/import-loop.json)")
 table(["Operation", "Direct", "1.13.0", "Stock main", "Candidate", "Candidate / 1.13.0", "Candidate / direct"], loop_rows)
+
+fig, ax = plt.subplots(figsize=(9.5, 5.5), layout="constrained")
+for column, name, color, marker in [(1, "Direct shim", "#69717b", "o"), (2, "Stock main", "#c46320", "s"),
+                                     (3, "Candidate", "#067c77", "D")]:
+    ax.scatter([row[column] for row in loop_ratios], [i + (column - 2) * .18 for i in range(len(loop_ratios))],
+               label=name, color=color, marker=marker, s=30)
+ax.set_xscale("log", base=2)
+ax.axvline(1, linestyle="--", color="#515151", linewidth=1, label="1.13.0")
+left, right = ax.get_xlim()
+ticks = [2.0 ** power for power in range(-10, 11) if left <= 2.0 ** power <= right]
+ax.set_xticks(ticks, [f"{tick:g}×" for tick in ticks])
+ax.set_yticks(range(len(loop_ratios)), [row[0] for row in loop_ratios])
+ax.invert_yaxis()
+ax.grid(axis="x", alpha=.2)
+ax.set_axisbelow(True)
+ax.set_xlabel("Median time per guest iteration / 1.13.0 (lower is faster)")
+ax.legend(loc="upper center", bbox_to_anchor=(.5, -.13), ncol=4, fontsize=9)
+fig.savefig(results / "import-loop-runtime.png", dpi=155)
+plt.close(fig)
+para("![Time per guest iteration relative to Jco 1.13.0, by import and transfer direction](web/bench/results/import-loop-runtime.png)")
 
 canvas = json.loads((results / "canvas-control-browser.json").read_text())
 if canvas["sizesSha256"] != run["sizesSha256"] or canvas["candidate"] != run["candidate"]:
