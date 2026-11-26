@@ -4,7 +4,7 @@ This fork benchmarks the browser examples from [eqrion/component-demos at d0b9dd
 
 ## Browser bindings at the PR head
 
-Both the internal Oxc bundle and the external checked runtime stayed within 10× of the fastest compiled shim in **all 21 warm headline cases**. Tree traversal had the largest gap. The internal bundle took **5.50×** the shim’s time for the C guest, and the external runtime took **5.78×** for Rust. Cold startup and Jco 1.13.0 parity remain open. [Jco fork PR](https://github.com/vados-cosmonic/jco/pull/62)
+In the full timing run at `b731ebc91`, both the internal Oxc bundle and the external checked runtime stayed within 10× of the fastest compiled shim in **all 21 warm headline cases**. Tree traversal had the largest gap. The internal bundle took **5.50×** the shim’s time for the C guest, and the external runtime took **5.78×** for Rust. Cold startup and Jco 1.13.0 parity remain open. [Jco fork PR](https://github.com/vados-cosmonic/jco/pull/62)
 
 | Headline comparison | Internal Oxc | External runtime |
 | --- | ---: | ---: |
@@ -63,6 +63,26 @@ python3 web/bench/review-matrix-report.py web/bench/results/review-matrix-b731eb
 ```
 
 </details>
+
+## Generated size after resource destructors
+
+Jco revision `eaca992c8` puts the closing braces of each resource destructor on separate lines. The generator tracks one indentation change per line. Previously, each imported resource could add two spaces to every later line, including the following functions and the module initializer. For the C table-update demo, the external checked entry fell from **69,179 to 64,090 bytes**, or **8,750 to 8,417 bytes** with gzip. [Generator fix and regression tests](https://github.com/vados-cosmonic/jco/commit/eaca992c895fbf08bdd7f0968e0e5e4e0fc8643e)
+
+| Bindings | Entries changed | Median bytes saved per changed entry | Median gzip bytes saved | Median reduction in entry size |
+| --- | ---: | ---: | ---: | ---: |
+| Internal Oxc bundle | 0/34 | — | — | — |
+| External, checked sync imports | 28/34 | 4,359 | 402 | 6.4% |
+| External, original API-v1 contract | 28/34 | 6,530 | 637 | 6.7% |
+
+Every emitted Wasm file and internal Oxc entry matched the previous build byte for byte. Acorn parsed each changed external entry to the same JavaScript syntax tree, including literal values and raw spellings. Applying the new entry sizes to the 21 full-matrix request lists lowers median uncompressed external JS from 165.94 to 161.51 KiB. The external runtime package itself is identical. [Per-input sizes and hashes](web/bench/results/resource-drop-sizes.json) · [Verifier](web/bench/resource-drop-sizes.mjs)
+
+To reproduce, prepare the demo inputs and build the native `transpile` example with the `embedded-cm-runtime` feature in separate Jco checkouts at `b731ebc91` and `eaca992c8`. Install this fork’s web dependencies with `npm ci --prefix web`, then run the verifier from the fork.
+
+```sh
+node web/bench/resource-drop-sizes.mjs \
+  /path/to/before/target/debug/examples/transpile \
+  /path/to/after/target/debug/examples/transpile /tmp/resource-drop-sizes.json
+```
 
 ## Loading the UTF-8 decoder for synchronous imports
 
