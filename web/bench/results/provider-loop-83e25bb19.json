@@ -1,0 +1,2975 @@
+{
+  "revision": "ad2aacc9be6fe35c02ae91d9c8c5cde3693e722d",
+  "generatorSha256": "734eeb4dcfebee79924bbc4347547c7520df8393414fc0ba3d6d2a27af99c5d4",
+  "fixtureSha256": "ec36d497a31aa87ba0e455ab023a39352132e0a7fc320e66012109527a5f019e",
+  "upstream": "83e25bb19bc45c8a346e4ecdd19b4a1541700fe7",
+  "upstreamGeneratorSha256": "84c17923cfb84fb7ed537f710c0dc3a9746c1b1f7ea38f93842776368c4a892b",
+  "release": "1.13.0",
+  "entries": {
+    "bundled": {
+      "bytes": 121383,
+      "sha256": "357a51c75f4b0c51196ae490a1d3725bff3d7cd48850ad9ee8964095eb211a79"
+    },
+    "external": {
+      "bytes": 56792,
+      "sha256": "bf3e45e7bcb25b7c442260930ef7161cdf27c3fd8bfe84cef81c38bb3deb05ee"
+    },
+    "main": {
+      "bytes": 186818,
+      "sha256": "fbf413fc22d662633e37782db970d899a62358193c587f9f2464f2328fc276d9"
+    },
+    "release": {
+      "bytes": 9844,
+      "sha256": "81a1f72ba40511b1d35474f548d760859f5c8660ad0959853e2515b289808eb4"
+    }
+  },
+  "runnerSha256": "c57fd3f34f93de69730d99763dff13bb5bf1ec653e739a4e2311312545ae1946",
+  "cores": {
+    "loop.core.wasm": "a7dd4c2ed827e00587bff09cb9d117a39627272f442780bcdb491f534b8627b6",
+    "loop.core2.wasm": "a0446a0e9035c8ba8aa65b0a12d55dd0a880d06c476fac804420bcee28385178"
+  },
+  "chrome": "HeadlessChrome/156.0.8078.47",
+  "count": 65536,
+  "samples": [
+    {
+      "round": 0,
+      "pass": 0,
+      "op": "numbers",
+      "name": "main",
+      "elapsedMs": 128.39999997615814
+    },
+    {
+      "round": 0,
+      "pass": 0,
+      "op": "numbers",
+      "name": "release",
+      "elapsedMs": 0.800000011920929
+    },
+    {
+      "round": 0,
+      "pass": 0,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 1
+    },
+    {
+      "round": 0,
+      "pass": 0,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 1.199999988079071
+    },
+    {
+      "round": 0,
+      "pass": 1,
+      "op": "numbers",
+      "name": "release",
+      "elapsedMs": 0.800000011920929
+    },
+    {
+      "round": 0,
+      "pass": 1,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 0.8999999761581421
+    },
+    {
+      "round": 0,
+      "pass": 1,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 1.2000000476837158
+    },
+    {
+      "round": 0,
+      "pass": 1,
+      "op": "numbers",
+      "name": "main",
+      "elapsedMs": 134.89999997615814
+    },
+    {
+      "round": 0,
+      "pass": 2,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 1.699999988079071
+    },
+    {
+      "round": 0,
+      "pass": 2,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 1.300000011920929
+    },
+    {
+      "round": 0,
+      "pass": 2,
+      "op": "numbers",
+      "name": "main",
+      "elapsedMs": 138.69999998807907
+    },
+    {
+      "round": 0,
+      "pass": 2,
+      "op": "numbers",
+      "name": "release",
+      "elapsedMs": 0.800000011920929
+    },
+    {
+      "round": 0,
+      "pass": 3,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 1.399999976158142
+    },
+    {
+      "round": 0,
+      "pass": 3,
+      "op": "numbers",
+      "name": "main",
+      "elapsedMs": 161.5
+    },
+    {
+      "round": 0,
+      "pass": 3,
+      "op": "numbers",
+      "name": "release",
+      "elapsedMs": 1
+    },
+    {
+      "round": 0,
+      "pass": 3,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 1.300000011920929
+    },
+    {
+      "round": 0,
+      "pass": 4,
+      "op": "numbers",
+      "name": "main",
+      "elapsedMs": 149
+    },
+    {
+      "round": 0,
+      "pass": 4,
+      "op": "numbers",
+      "name": "release",
+      "elapsedMs": 1.5999999642372131
+    },
+    {
+      "round": 0,
+      "pass": 4,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 1.2000000476837158
+    },
+    {
+      "round": 0,
+      "pass": 4,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 1.199999988079071
+    },
+    {
+      "round": 0,
+      "pass": 0,
+      "op": "resources",
+      "name": "main",
+      "elapsedMs": 382.5
+    },
+    {
+      "round": 0,
+      "pass": 0,
+      "op": "resources",
+      "name": "release",
+      "elapsedMs": 19.299999952316284
+    },
+    {
+      "round": 0,
+      "pass": 0,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 8.900000035762787
+    },
+    {
+      "round": 0,
+      "pass": 0,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 10.599999964237213
+    },
+    {
+      "round": 0,
+      "pass": 1,
+      "op": "resources",
+      "name": "release",
+      "elapsedMs": 22.80000001192093
+    },
+    {
+      "round": 0,
+      "pass": 1,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 9.5
+    },
+    {
+      "round": 0,
+      "pass": 1,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 9.699999988079071
+    },
+    {
+      "round": 0,
+      "pass": 1,
+      "op": "resources",
+      "name": "main",
+      "elapsedMs": 341.10000002384186
+    },
+    {
+      "round": 0,
+      "pass": 2,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 8.799999952316284
+    },
+    {
+      "round": 0,
+      "pass": 2,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 9.200000047683716
+    },
+    {
+      "round": 0,
+      "pass": 2,
+      "op": "resources",
+      "name": "main",
+      "elapsedMs": 338.5999999642372
+    },
+    {
+      "round": 0,
+      "pass": 2,
+      "op": "resources",
+      "name": "release",
+      "elapsedMs": 14.900000035762787
+    },
+    {
+      "round": 0,
+      "pass": 3,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 9.100000023841858
+    },
+    {
+      "round": 0,
+      "pass": 3,
+      "op": "resources",
+      "name": "main",
+      "elapsedMs": 327.0999999642372
+    },
+    {
+      "round": 0,
+      "pass": 3,
+      "op": "resources",
+      "name": "release",
+      "elapsedMs": 13.800000011920929
+    },
+    {
+      "round": 0,
+      "pass": 3,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 7.900000035762787
+    },
+    {
+      "round": 0,
+      "pass": 4,
+      "op": "resources",
+      "name": "main",
+      "elapsedMs": 355.0999999642372
+    },
+    {
+      "round": 0,
+      "pass": 4,
+      "op": "resources",
+      "name": "release",
+      "elapsedMs": 25.30000001192093
+    },
+    {
+      "round": 0,
+      "pass": 4,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 17.600000023841858
+    },
+    {
+      "round": 0,
+      "pass": 4,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 15.199999988079071
+    },
+    {
+      "round": 0,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "main",
+      "elapsedMs": 369.30000001192093
+    },
+    {
+      "round": 0,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "release",
+      "elapsedMs": 142
+    },
+    {
+      "round": 0,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 56.80000001192093
+    },
+    {
+      "round": 0,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 67.5
+    },
+    {
+      "round": 0,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "release",
+      "elapsedMs": 172.5
+    },
+    {
+      "round": 0,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 65.19999998807907
+    },
+    {
+      "round": 0,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 40
+    },
+    {
+      "round": 0,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "main",
+      "elapsedMs": 378.60000002384186
+    },
+    {
+      "round": 0,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 37.89999997615814
+    },
+    {
+      "round": 0,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 40.80000001192093
+    },
+    {
+      "round": 0,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "main",
+      "elapsedMs": 300.39999997615814
+    },
+    {
+      "round": 0,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "release",
+      "elapsedMs": 138.5
+    },
+    {
+      "round": 0,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 54.60000002384186
+    },
+    {
+      "round": 0,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "main",
+      "elapsedMs": 320.60000002384186
+    },
+    {
+      "round": 0,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "release",
+      "elapsedMs": 148.29999995231628
+    },
+    {
+      "round": 0,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 55.30000001192093
+    },
+    {
+      "round": 0,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "main",
+      "elapsedMs": 351.9000000357628
+    },
+    {
+      "round": 0,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "release",
+      "elapsedMs": 144.69999998807907
+    },
+    {
+      "round": 0,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 55.39999997615814
+    },
+    {
+      "round": 0,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 43.90000003576279
+    },
+    {
+      "round": 1,
+      "pass": 0,
+      "op": "numbers",
+      "name": "release",
+      "elapsedMs": 0.9000000357627869
+    },
+    {
+      "round": 1,
+      "pass": 0,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 1.199999988079071
+    },
+    {
+      "round": 1,
+      "pass": 0,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 1.800000011920929
+    },
+    {
+      "round": 1,
+      "pass": 0,
+      "op": "numbers",
+      "name": "main",
+      "elapsedMs": 161.10000002384186
+    },
+    {
+      "round": 1,
+      "pass": 1,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 1.399999976158142
+    },
+    {
+      "round": 1,
+      "pass": 1,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 1.699999988079071
+    },
+    {
+      "round": 1,
+      "pass": 1,
+      "op": "numbers",
+      "name": "main",
+      "elapsedMs": 149.60000002384186
+    },
+    {
+      "round": 1,
+      "pass": 1,
+      "op": "numbers",
+      "name": "release",
+      "elapsedMs": 0.800000011920929
+    },
+    {
+      "round": 1,
+      "pass": 2,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 2
+    },
+    {
+      "round": 1,
+      "pass": 2,
+      "op": "numbers",
+      "name": "main",
+      "elapsedMs": 117.89999997615814
+    },
+    {
+      "round": 1,
+      "pass": 2,
+      "op": "numbers",
+      "name": "release",
+      "elapsedMs": 0.6000000238418579
+    },
+    {
+      "round": 1,
+      "pass": 2,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 1
+    },
+    {
+      "round": 1,
+      "pass": 3,
+      "op": "numbers",
+      "name": "main",
+      "elapsedMs": 105.39999997615814
+    },
+    {
+      "round": 1,
+      "pass": 3,
+      "op": "numbers",
+      "name": "release",
+      "elapsedMs": 1.199999988079071
+    },
+    {
+      "round": 1,
+      "pass": 3,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 1.2000000476837158
+    },
+    {
+      "round": 1,
+      "pass": 3,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 1.5
+    },
+    {
+      "round": 1,
+      "pass": 4,
+      "op": "numbers",
+      "name": "release",
+      "elapsedMs": 0.699999988079071
+    },
+    {
+      "round": 1,
+      "pass": 4,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 1.5999999642372131
+    },
+    {
+      "round": 1,
+      "pass": 4,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 1.300000011920929
+    },
+    {
+      "round": 1,
+      "pass": 4,
+      "op": "numbers",
+      "name": "main",
+      "elapsedMs": 156.69999998807907
+    },
+    {
+      "round": 1,
+      "pass": 0,
+      "op": "resources",
+      "name": "release",
+      "elapsedMs": 19.19999998807907
+    },
+    {
+      "round": 1,
+      "pass": 0,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 10.5
+    },
+    {
+      "round": 1,
+      "pass": 0,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 9.800000011920929
+    },
+    {
+      "round": 1,
+      "pass": 0,
+      "op": "resources",
+      "name": "main",
+      "elapsedMs": 345.89999997615814
+    },
+    {
+      "round": 1,
+      "pass": 1,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 11.300000011920929
+    },
+    {
+      "round": 1,
+      "pass": 1,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 9.699999988079071
+    },
+    {
+      "round": 1,
+      "pass": 1,
+      "op": "resources",
+      "name": "main",
+      "elapsedMs": 358
+    },
+    {
+      "round": 1,
+      "pass": 1,
+      "op": "resources",
+      "name": "release",
+      "elapsedMs": 13.800000011920929
+    },
+    {
+      "round": 1,
+      "pass": 2,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 10.100000023841858
+    },
+    {
+      "round": 1,
+      "pass": 2,
+      "op": "resources",
+      "name": "main",
+      "elapsedMs": 302.0999999642372
+    },
+    {
+      "round": 1,
+      "pass": 2,
+      "op": "resources",
+      "name": "release",
+      "elapsedMs": 14.100000023841858
+    },
+    {
+      "round": 1,
+      "pass": 2,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 10.5
+    },
+    {
+      "round": 1,
+      "pass": 3,
+      "op": "resources",
+      "name": "main",
+      "elapsedMs": 318.5
+    },
+    {
+      "round": 1,
+      "pass": 3,
+      "op": "resources",
+      "name": "release",
+      "elapsedMs": 14.899999976158142
+    },
+    {
+      "round": 1,
+      "pass": 3,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 9.300000011920929
+    },
+    {
+      "round": 1,
+      "pass": 3,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 9.300000011920929
+    },
+    {
+      "round": 1,
+      "pass": 4,
+      "op": "resources",
+      "name": "release",
+      "elapsedMs": 15.399999976158142
+    },
+    {
+      "round": 1,
+      "pass": 4,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 11.700000047683716
+    },
+    {
+      "round": 1,
+      "pass": 4,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 8.599999964237213
+    },
+    {
+      "round": 1,
+      "pass": 4,
+      "op": "resources",
+      "name": "main",
+      "elapsedMs": 342
+    },
+    {
+      "round": 1,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "release",
+      "elapsedMs": 187.4000000357628
+    },
+    {
+      "round": 1,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 32.39999997615814
+    },
+    {
+      "round": 1,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 40.90000003576279
+    },
+    {
+      "round": 1,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "main",
+      "elapsedMs": 291.69999998807907
+    },
+    {
+      "round": 1,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 35
+    },
+    {
+      "round": 1,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 33.59999996423721
+    },
+    {
+      "round": 1,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "main",
+      "elapsedMs": 244.5
+    },
+    {
+      "round": 1,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "release",
+      "elapsedMs": 132.9000000357628
+    },
+    {
+      "round": 1,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 30.5
+    },
+    {
+      "round": 1,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "main",
+      "elapsedMs": 355.39999997615814
+    },
+    {
+      "round": 1,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "release",
+      "elapsedMs": 151.19999998807907
+    },
+    {
+      "round": 1,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 33.5
+    },
+    {
+      "round": 1,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "main",
+      "elapsedMs": 318.7000000476837
+    },
+    {
+      "round": 1,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "release",
+      "elapsedMs": 122.59999996423721
+    },
+    {
+      "round": 1,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 48.90000003576279
+    },
+    {
+      "round": 1,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 37.89999997615814
+    },
+    {
+      "round": 1,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "release",
+      "elapsedMs": 168.39999997615814
+    },
+    {
+      "round": 1,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 40.30000001192093
+    },
+    {
+      "round": 1,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 76.90000003576279
+    },
+    {
+      "round": 1,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "main",
+      "elapsedMs": 264.69999998807907
+    },
+    {
+      "round": 2,
+      "pass": 0,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 1.399999976158142
+    },
+    {
+      "round": 2,
+      "pass": 0,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 1.4000000357627869
+    },
+    {
+      "round": 2,
+      "pass": 0,
+      "op": "numbers",
+      "name": "main",
+      "elapsedMs": 192.60000002384186
+    },
+    {
+      "round": 2,
+      "pass": 0,
+      "op": "numbers",
+      "name": "release",
+      "elapsedMs": 1.300000011920929
+    },
+    {
+      "round": 2,
+      "pass": 1,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 1.699999988079071
+    },
+    {
+      "round": 2,
+      "pass": 1,
+      "op": "numbers",
+      "name": "main",
+      "elapsedMs": 165.5999999642372
+    },
+    {
+      "round": 2,
+      "pass": 1,
+      "op": "numbers",
+      "name": "release",
+      "elapsedMs": 1.100000023841858
+    },
+    {
+      "round": 2,
+      "pass": 1,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 1.800000011920929
+    },
+    {
+      "round": 2,
+      "pass": 2,
+      "op": "numbers",
+      "name": "main",
+      "elapsedMs": 137.19999998807907
+    },
+    {
+      "round": 2,
+      "pass": 2,
+      "op": "numbers",
+      "name": "release",
+      "elapsedMs": 1.100000023841858
+    },
+    {
+      "round": 2,
+      "pass": 2,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 1.399999976158142
+    },
+    {
+      "round": 2,
+      "pass": 2,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 1.600000023841858
+    },
+    {
+      "round": 2,
+      "pass": 3,
+      "op": "numbers",
+      "name": "release",
+      "elapsedMs": 0.8999999761581421
+    },
+    {
+      "round": 2,
+      "pass": 3,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 1.199999988079071
+    },
+    {
+      "round": 2,
+      "pass": 3,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 1.600000023841858
+    },
+    {
+      "round": 2,
+      "pass": 3,
+      "op": "numbers",
+      "name": "main",
+      "elapsedMs": 155.89999997615814
+    },
+    {
+      "round": 2,
+      "pass": 4,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 1.4000000357627869
+    },
+    {
+      "round": 2,
+      "pass": 4,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 1.2999999523162842
+    },
+    {
+      "round": 2,
+      "pass": 4,
+      "op": "numbers",
+      "name": "main",
+      "elapsedMs": 148.80000001192093
+    },
+    {
+      "round": 2,
+      "pass": 4,
+      "op": "numbers",
+      "name": "release",
+      "elapsedMs": 0.9000000357627869
+    },
+    {
+      "round": 2,
+      "pass": 0,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 7.299999952316284
+    },
+    {
+      "round": 2,
+      "pass": 0,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 9.300000011920929
+    },
+    {
+      "round": 2,
+      "pass": 0,
+      "op": "resources",
+      "name": "main",
+      "elapsedMs": 316.60000002384186
+    },
+    {
+      "round": 2,
+      "pass": 0,
+      "op": "resources",
+      "name": "release",
+      "elapsedMs": 17.5
+    },
+    {
+      "round": 2,
+      "pass": 1,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 8.199999988079071
+    },
+    {
+      "round": 2,
+      "pass": 1,
+      "op": "resources",
+      "name": "main",
+      "elapsedMs": 340.10000002384186
+    },
+    {
+      "round": 2,
+      "pass": 1,
+      "op": "resources",
+      "name": "release",
+      "elapsedMs": 22.30000001192093
+    },
+    {
+      "round": 2,
+      "pass": 1,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 9.099999964237213
+    },
+    {
+      "round": 2,
+      "pass": 2,
+      "op": "resources",
+      "name": "main",
+      "elapsedMs": 323.30000001192093
+    },
+    {
+      "round": 2,
+      "pass": 2,
+      "op": "resources",
+      "name": "release",
+      "elapsedMs": 16.30000001192093
+    },
+    {
+      "round": 2,
+      "pass": 2,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 8.800000011920929
+    },
+    {
+      "round": 2,
+      "pass": 2,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 10.5
+    },
+    {
+      "round": 2,
+      "pass": 3,
+      "op": "resources",
+      "name": "release",
+      "elapsedMs": 15
+    },
+    {
+      "round": 2,
+      "pass": 3,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 7.899999976158142
+    },
+    {
+      "round": 2,
+      "pass": 3,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 8.600000023841858
+    },
+    {
+      "round": 2,
+      "pass": 3,
+      "op": "resources",
+      "name": "main",
+      "elapsedMs": 327.5
+    },
+    {
+      "round": 2,
+      "pass": 4,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 8.299999952316284
+    },
+    {
+      "round": 2,
+      "pass": 4,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 9.199999988079071
+    },
+    {
+      "round": 2,
+      "pass": 4,
+      "op": "resources",
+      "name": "main",
+      "elapsedMs": 352
+    },
+    {
+      "round": 2,
+      "pass": 4,
+      "op": "resources",
+      "name": "release",
+      "elapsedMs": 15.600000023841858
+    },
+    {
+      "round": 2,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 41.30000001192093
+    },
+    {
+      "round": 2,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 35.80000001192093
+    },
+    {
+      "round": 2,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "main",
+      "elapsedMs": 334.39999997615814
+    },
+    {
+      "round": 2,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "release",
+      "elapsedMs": 141.60000002384186
+    },
+    {
+      "round": 2,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 57.69999998807907
+    },
+    {
+      "round": 2,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "main",
+      "elapsedMs": 307.80000001192093
+    },
+    {
+      "round": 2,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "release",
+      "elapsedMs": 137.10000002384186
+    },
+    {
+      "round": 2,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 34.69999998807907
+    },
+    {
+      "round": 2,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "main",
+      "elapsedMs": 310.80000001192093
+    },
+    {
+      "round": 2,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "release",
+      "elapsedMs": 158.80000001192093
+    },
+    {
+      "round": 2,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 36.19999998807907
+    },
+    {
+      "round": 2,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 62.09999996423721
+    },
+    {
+      "round": 2,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "release",
+      "elapsedMs": 159.10000002384186
+    },
+    {
+      "round": 2,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 41.89999997615814
+    },
+    {
+      "round": 2,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 55.40000003576279
+    },
+    {
+      "round": 2,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "main",
+      "elapsedMs": 250.19999998807907
+    },
+    {
+      "round": 2,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 32.5
+    },
+    {
+      "round": 2,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 39.19999998807907
+    },
+    {
+      "round": 2,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "main",
+      "elapsedMs": 248.80000001192093
+    },
+    {
+      "round": 2,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "release",
+      "elapsedMs": 129.30000001192093
+    },
+    {
+      "round": 3,
+      "pass": 0,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 1.699999988079071
+    },
+    {
+      "round": 3,
+      "pass": 0,
+      "op": "numbers",
+      "name": "main",
+      "elapsedMs": 178
+    },
+    {
+      "round": 3,
+      "pass": 0,
+      "op": "numbers",
+      "name": "release",
+      "elapsedMs": 4.5
+    },
+    {
+      "round": 3,
+      "pass": 0,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 5.400000035762787
+    },
+    {
+      "round": 3,
+      "pass": 1,
+      "op": "numbers",
+      "name": "main",
+      "elapsedMs": 179
+    },
+    {
+      "round": 3,
+      "pass": 1,
+      "op": "numbers",
+      "name": "release",
+      "elapsedMs": 0.800000011920929
+    },
+    {
+      "round": 3,
+      "pass": 1,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 2.199999988079071
+    },
+    {
+      "round": 3,
+      "pass": 1,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 1.199999988079071
+    },
+    {
+      "round": 3,
+      "pass": 2,
+      "op": "numbers",
+      "name": "release",
+      "elapsedMs": 0.699999988079071
+    },
+    {
+      "round": 3,
+      "pass": 2,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 1.100000023841858
+    },
+    {
+      "round": 3,
+      "pass": 2,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 1.0999999642372131
+    },
+    {
+      "round": 3,
+      "pass": 2,
+      "op": "numbers",
+      "name": "main",
+      "elapsedMs": 121.20000004768372
+    },
+    {
+      "round": 3,
+      "pass": 3,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 1.399999976158142
+    },
+    {
+      "round": 3,
+      "pass": 3,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 1.199999988079071
+    },
+    {
+      "round": 3,
+      "pass": 3,
+      "op": "numbers",
+      "name": "main",
+      "elapsedMs": 130.80000001192093
+    },
+    {
+      "round": 3,
+      "pass": 3,
+      "op": "numbers",
+      "name": "release",
+      "elapsedMs": 0.800000011920929
+    },
+    {
+      "round": 3,
+      "pass": 4,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 1.300000011920929
+    },
+    {
+      "round": 3,
+      "pass": 4,
+      "op": "numbers",
+      "name": "main",
+      "elapsedMs": 134.39999997615814
+    },
+    {
+      "round": 3,
+      "pass": 4,
+      "op": "numbers",
+      "name": "release",
+      "elapsedMs": 0.7999999523162842
+    },
+    {
+      "round": 3,
+      "pass": 4,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 1.2000000476837158
+    },
+    {
+      "round": 3,
+      "pass": 0,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 8.699999988079071
+    },
+    {
+      "round": 3,
+      "pass": 0,
+      "op": "resources",
+      "name": "main",
+      "elapsedMs": 314.60000002384186
+    },
+    {
+      "round": 3,
+      "pass": 0,
+      "op": "resources",
+      "name": "release",
+      "elapsedMs": 90.30000001192093
+    },
+    {
+      "round": 3,
+      "pass": 0,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 8.899999976158142
+    },
+    {
+      "round": 3,
+      "pass": 1,
+      "op": "resources",
+      "name": "main",
+      "elapsedMs": 338.80000001192093
+    },
+    {
+      "round": 3,
+      "pass": 1,
+      "op": "resources",
+      "name": "release",
+      "elapsedMs": 70.69999998807907
+    },
+    {
+      "round": 3,
+      "pass": 1,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 7.5
+    },
+    {
+      "round": 3,
+      "pass": 1,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 8.300000011920929
+    },
+    {
+      "round": 3,
+      "pass": 2,
+      "op": "resources",
+      "name": "release",
+      "elapsedMs": 66.89999997615814
+    },
+    {
+      "round": 3,
+      "pass": 2,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 6.900000035762787
+    },
+    {
+      "round": 3,
+      "pass": 2,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 7.899999976158142
+    },
+    {
+      "round": 3,
+      "pass": 2,
+      "op": "resources",
+      "name": "main",
+      "elapsedMs": 297.69999998807907
+    },
+    {
+      "round": 3,
+      "pass": 3,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 7.600000023841858
+    },
+    {
+      "round": 3,
+      "pass": 3,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 7.800000011920929
+    },
+    {
+      "round": 3,
+      "pass": 3,
+      "op": "resources",
+      "name": "main",
+      "elapsedMs": 344.89999997615814
+    },
+    {
+      "round": 3,
+      "pass": 3,
+      "op": "resources",
+      "name": "release",
+      "elapsedMs": 84.5
+    },
+    {
+      "round": 3,
+      "pass": 4,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 10.5
+    },
+    {
+      "round": 3,
+      "pass": 4,
+      "op": "resources",
+      "name": "main",
+      "elapsedMs": 357.10000002384186
+    },
+    {
+      "round": 3,
+      "pass": 4,
+      "op": "resources",
+      "name": "release",
+      "elapsedMs": 84.59999996423721
+    },
+    {
+      "round": 3,
+      "pass": 4,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 7.699999988079071
+    },
+    {
+      "round": 3,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 61.10000002384186
+    },
+    {
+      "round": 3,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "main",
+      "elapsedMs": 367.19999998807907
+    },
+    {
+      "round": 3,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "release",
+      "elapsedMs": 156.89999997615814
+    },
+    {
+      "round": 3,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 61.90000003576279
+    },
+    {
+      "round": 3,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "main",
+      "elapsedMs": 311.69999998807907
+    },
+    {
+      "round": 3,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "release",
+      "elapsedMs": 195.19999998807907
+    },
+    {
+      "round": 3,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 91.10000002384186
+    },
+    {
+      "round": 3,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 75
+    },
+    {
+      "round": 3,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "release",
+      "elapsedMs": 266.5999999642372
+    },
+    {
+      "round": 3,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 55.80000001192093
+    },
+    {
+      "round": 3,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 52.40000003576279
+    },
+    {
+      "round": 3,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "main",
+      "elapsedMs": 356.39999997615814
+    },
+    {
+      "round": 3,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 72.60000002384186
+    },
+    {
+      "round": 3,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 52.799999952316284
+    },
+    {
+      "round": 3,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "main",
+      "elapsedMs": 371.30000001192093
+    },
+    {
+      "round": 3,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "release",
+      "elapsedMs": 207.9000000357628
+    },
+    {
+      "round": 3,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 48.19999998807907
+    },
+    {
+      "round": 3,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "main",
+      "elapsedMs": 431.0999999642372
+    },
+    {
+      "round": 3,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "release",
+      "elapsedMs": 287.7000000476837
+    },
+    {
+      "round": 3,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 86.29999995231628
+    },
+    {
+      "round": 4,
+      "pass": 0,
+      "op": "numbers",
+      "name": "main",
+      "elapsedMs": 211.60000002384186
+    },
+    {
+      "round": 4,
+      "pass": 0,
+      "op": "numbers",
+      "name": "release",
+      "elapsedMs": 1.199999988079071
+    },
+    {
+      "round": 4,
+      "pass": 0,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 1.699999988079071
+    },
+    {
+      "round": 4,
+      "pass": 0,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 1.800000011920929
+    },
+    {
+      "round": 4,
+      "pass": 1,
+      "op": "numbers",
+      "name": "release",
+      "elapsedMs": 1.199999988079071
+    },
+    {
+      "round": 4,
+      "pass": 1,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 1.699999988079071
+    },
+    {
+      "round": 4,
+      "pass": 1,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 2.800000011920929
+    },
+    {
+      "round": 4,
+      "pass": 1,
+      "op": "numbers",
+      "name": "main",
+      "elapsedMs": 220.80000001192093
+    },
+    {
+      "round": 4,
+      "pass": 2,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 1.699999988079071
+    },
+    {
+      "round": 4,
+      "pass": 2,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 3.600000023841858
+    },
+    {
+      "round": 4,
+      "pass": 2,
+      "op": "numbers",
+      "name": "main",
+      "elapsedMs": 224.89999997615814
+    },
+    {
+      "round": 4,
+      "pass": 2,
+      "op": "numbers",
+      "name": "release",
+      "elapsedMs": 1.300000011920929
+    },
+    {
+      "round": 4,
+      "pass": 3,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 1.800000011920929
+    },
+    {
+      "round": 4,
+      "pass": 3,
+      "op": "numbers",
+      "name": "main",
+      "elapsedMs": 215.39999997615814
+    },
+    {
+      "round": 4,
+      "pass": 3,
+      "op": "numbers",
+      "name": "release",
+      "elapsedMs": 3.600000023841858
+    },
+    {
+      "round": 4,
+      "pass": 3,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 4.099999964237213
+    },
+    {
+      "round": 4,
+      "pass": 4,
+      "op": "numbers",
+      "name": "main",
+      "elapsedMs": 224.10000002384186
+    },
+    {
+      "round": 4,
+      "pass": 4,
+      "op": "numbers",
+      "name": "release",
+      "elapsedMs": 1.199999988079071
+    },
+    {
+      "round": 4,
+      "pass": 4,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 1.600000023841858
+    },
+    {
+      "round": 4,
+      "pass": 4,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 2.199999988079071
+    },
+    {
+      "round": 4,
+      "pass": 0,
+      "op": "resources",
+      "name": "main",
+      "elapsedMs": 523.1000000238419
+    },
+    {
+      "round": 4,
+      "pass": 0,
+      "op": "resources",
+      "name": "release",
+      "elapsedMs": 33.799999952316284
+    },
+    {
+      "round": 4,
+      "pass": 0,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 13.800000011920929
+    },
+    {
+      "round": 4,
+      "pass": 0,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 11.800000011920929
+    },
+    {
+      "round": 4,
+      "pass": 1,
+      "op": "resources",
+      "name": "release",
+      "elapsedMs": 27.100000023841858
+    },
+    {
+      "round": 4,
+      "pass": 1,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 12.899999976158142
+    },
+    {
+      "round": 4,
+      "pass": 1,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 12.100000023841858
+    },
+    {
+      "round": 4,
+      "pass": 1,
+      "op": "resources",
+      "name": "main",
+      "elapsedMs": 529.5999999642372
+    },
+    {
+      "round": 4,
+      "pass": 2,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 17.69999998807907
+    },
+    {
+      "round": 4,
+      "pass": 2,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 15.300000011920929
+    },
+    {
+      "round": 4,
+      "pass": 2,
+      "op": "resources",
+      "name": "main",
+      "elapsedMs": 480
+    },
+    {
+      "round": 4,
+      "pass": 2,
+      "op": "resources",
+      "name": "release",
+      "elapsedMs": 18.099999964237213
+    },
+    {
+      "round": 4,
+      "pass": 3,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 12.200000047683716
+    },
+    {
+      "round": 4,
+      "pass": 3,
+      "op": "resources",
+      "name": "main",
+      "elapsedMs": 483.19999998807907
+    },
+    {
+      "round": 4,
+      "pass": 3,
+      "op": "resources",
+      "name": "release",
+      "elapsedMs": 23
+    },
+    {
+      "round": 4,
+      "pass": 3,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 11.699999988079071
+    },
+    {
+      "round": 4,
+      "pass": 4,
+      "op": "resources",
+      "name": "main",
+      "elapsedMs": 454.30000001192093
+    },
+    {
+      "round": 4,
+      "pass": 4,
+      "op": "resources",
+      "name": "release",
+      "elapsedMs": 18.700000047683716
+    },
+    {
+      "round": 4,
+      "pass": 4,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 11.5
+    },
+    {
+      "round": 4,
+      "pass": 4,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 13.799999952316284
+    },
+    {
+      "round": 4,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "main",
+      "elapsedMs": 482.39999997615814
+    },
+    {
+      "round": 4,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "release",
+      "elapsedMs": 221
+    },
+    {
+      "round": 4,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 46.30000001192093
+    },
+    {
+      "round": 4,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 55.299999952316284
+    },
+    {
+      "round": 4,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "release",
+      "elapsedMs": 178.5
+    },
+    {
+      "round": 4,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 75.20000004768372
+    },
+    {
+      "round": 4,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 54.09999996423721
+    },
+    {
+      "round": 4,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "main",
+      "elapsedMs": 402.80000001192093
+    },
+    {
+      "round": 4,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 66.5
+    },
+    {
+      "round": 4,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 73.80000001192093
+    },
+    {
+      "round": 4,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "main",
+      "elapsedMs": 411.0999999642372
+    },
+    {
+      "round": 4,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "release",
+      "elapsedMs": 171.9000000357628
+    },
+    {
+      "round": 4,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 43.5
+    },
+    {
+      "round": 4,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "main",
+      "elapsedMs": 467.5999999642372
+    },
+    {
+      "round": 4,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "release",
+      "elapsedMs": 153.9000000357628
+    },
+    {
+      "round": 4,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 36.59999996423721
+    },
+    {
+      "round": 4,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "main",
+      "elapsedMs": 324.7000000476837
+    },
+    {
+      "round": 4,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "release",
+      "elapsedMs": 190.89999997615814
+    },
+    {
+      "round": 4,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 50
+    },
+    {
+      "round": 4,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 85.89999997615814
+    },
+    {
+      "round": 5,
+      "pass": 0,
+      "op": "numbers",
+      "name": "release",
+      "elapsedMs": 5
+    },
+    {
+      "round": 5,
+      "pass": 0,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 5.699999988079071
+    },
+    {
+      "round": 5,
+      "pass": 0,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 3.800000011920929
+    },
+    {
+      "round": 5,
+      "pass": 0,
+      "op": "numbers",
+      "name": "main",
+      "elapsedMs": 172
+    },
+    {
+      "round": 5,
+      "pass": 1,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 1.300000011920929
+    },
+    {
+      "round": 5,
+      "pass": 1,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 1.699999988079071
+    },
+    {
+      "round": 5,
+      "pass": 1,
+      "op": "numbers",
+      "name": "main",
+      "elapsedMs": 184.60000002384186
+    },
+    {
+      "round": 5,
+      "pass": 1,
+      "op": "numbers",
+      "name": "release",
+      "elapsedMs": 1.199999988079071
+    },
+    {
+      "round": 5,
+      "pass": 2,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 1.600000023841858
+    },
+    {
+      "round": 5,
+      "pass": 2,
+      "op": "numbers",
+      "name": "main",
+      "elapsedMs": 194
+    },
+    {
+      "round": 5,
+      "pass": 2,
+      "op": "numbers",
+      "name": "release",
+      "elapsedMs": 1.9000000357627869
+    },
+    {
+      "round": 5,
+      "pass": 2,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 2.5
+    },
+    {
+      "round": 5,
+      "pass": 3,
+      "op": "numbers",
+      "name": "main",
+      "elapsedMs": 173.19999998807907
+    },
+    {
+      "round": 5,
+      "pass": 3,
+      "op": "numbers",
+      "name": "release",
+      "elapsedMs": 1.0999999642372131
+    },
+    {
+      "round": 5,
+      "pass": 3,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 1.7000000476837158
+    },
+    {
+      "round": 5,
+      "pass": 3,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 1.5
+    },
+    {
+      "round": 5,
+      "pass": 4,
+      "op": "numbers",
+      "name": "release",
+      "elapsedMs": 0.8999999761581421
+    },
+    {
+      "round": 5,
+      "pass": 4,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 1.300000011920929
+    },
+    {
+      "round": 5,
+      "pass": 4,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 1.5999999642372131
+    },
+    {
+      "round": 5,
+      "pass": 4,
+      "op": "numbers",
+      "name": "main",
+      "elapsedMs": 185.20000004768372
+    },
+    {
+      "round": 5,
+      "pass": 0,
+      "op": "resources",
+      "name": "release",
+      "elapsedMs": 26.100000023841858
+    },
+    {
+      "round": 5,
+      "pass": 0,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 14.199999988079071
+    },
+    {
+      "round": 5,
+      "pass": 0,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 14.199999988079071
+    },
+    {
+      "round": 5,
+      "pass": 0,
+      "op": "resources",
+      "name": "main",
+      "elapsedMs": 412.19999998807907
+    },
+    {
+      "round": 5,
+      "pass": 1,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 10
+    },
+    {
+      "round": 5,
+      "pass": 1,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 14
+    },
+    {
+      "round": 5,
+      "pass": 1,
+      "op": "resources",
+      "name": "main",
+      "elapsedMs": 376.10000002384186
+    },
+    {
+      "round": 5,
+      "pass": 1,
+      "op": "resources",
+      "name": "release",
+      "elapsedMs": 16.5
+    },
+    {
+      "round": 5,
+      "pass": 2,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 11.099999964237213
+    },
+    {
+      "round": 5,
+      "pass": 2,
+      "op": "resources",
+      "name": "main",
+      "elapsedMs": 365.30000001192093
+    },
+    {
+      "round": 5,
+      "pass": 2,
+      "op": "resources",
+      "name": "release",
+      "elapsedMs": 26
+    },
+    {
+      "round": 5,
+      "pass": 2,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 9.600000023841858
+    },
+    {
+      "round": 5,
+      "pass": 3,
+      "op": "resources",
+      "name": "main",
+      "elapsedMs": 441.39999997615814
+    },
+    {
+      "round": 5,
+      "pass": 3,
+      "op": "resources",
+      "name": "release",
+      "elapsedMs": 18.5
+    },
+    {
+      "round": 5,
+      "pass": 3,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 9.699999988079071
+    },
+    {
+      "round": 5,
+      "pass": 3,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 20.5
+    },
+    {
+      "round": 5,
+      "pass": 4,
+      "op": "resources",
+      "name": "release",
+      "elapsedMs": 21.600000023841858
+    },
+    {
+      "round": 5,
+      "pass": 4,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 12.300000011920929
+    },
+    {
+      "round": 5,
+      "pass": 4,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 15.700000047683716
+    },
+    {
+      "round": 5,
+      "pass": 4,
+      "op": "resources",
+      "name": "main",
+      "elapsedMs": 445.5999999642372
+    },
+    {
+      "round": 5,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "release",
+      "elapsedMs": 145.9000000357628
+    },
+    {
+      "round": 5,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 56.80000001192093
+    },
+    {
+      "round": 5,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 48.19999998807907
+    },
+    {
+      "round": 5,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "main",
+      "elapsedMs": 295
+    },
+    {
+      "round": 5,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 41.5
+    },
+    {
+      "round": 5,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 39.30000001192093
+    },
+    {
+      "round": 5,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "main",
+      "elapsedMs": 289.5
+    },
+    {
+      "round": 5,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "release",
+      "elapsedMs": 150.5999999642372
+    },
+    {
+      "round": 5,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 60.30000001192093
+    },
+    {
+      "round": 5,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "main",
+      "elapsedMs": 400.9000000357628
+    },
+    {
+      "round": 5,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "release",
+      "elapsedMs": 281.5
+    },
+    {
+      "round": 5,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 53.89999997615814
+    },
+    {
+      "round": 5,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "main",
+      "elapsedMs": 370
+    },
+    {
+      "round": 5,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "release",
+      "elapsedMs": 169.60000002384186
+    },
+    {
+      "round": 5,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 77.59999996423721
+    },
+    {
+      "round": 5,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 88.19999998807907
+    },
+    {
+      "round": 5,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "release",
+      "elapsedMs": 169.5
+    },
+    {
+      "round": 5,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 81.30000001192093
+    },
+    {
+      "round": 5,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 62.19999998807907
+    },
+    {
+      "round": 5,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "main",
+      "elapsedMs": 411.60000002384186
+    },
+    {
+      "round": 6,
+      "pass": 0,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 1.9000000357627869
+    },
+    {
+      "round": 6,
+      "pass": 0,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 1.899999976158142
+    },
+    {
+      "round": 6,
+      "pass": 0,
+      "op": "numbers",
+      "name": "main",
+      "elapsedMs": 172.30000001192093
+    },
+    {
+      "round": 6,
+      "pass": 0,
+      "op": "numbers",
+      "name": "release",
+      "elapsedMs": 1.100000023841858
+    },
+    {
+      "round": 6,
+      "pass": 1,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 1.5
+    },
+    {
+      "round": 6,
+      "pass": 1,
+      "op": "numbers",
+      "name": "main",
+      "elapsedMs": 183
+    },
+    {
+      "round": 6,
+      "pass": 1,
+      "op": "numbers",
+      "name": "release",
+      "elapsedMs": 1.899999976158142
+    },
+    {
+      "round": 6,
+      "pass": 1,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 1.600000023841858
+    },
+    {
+      "round": 6,
+      "pass": 2,
+      "op": "numbers",
+      "name": "main",
+      "elapsedMs": 210.69999998807907
+    },
+    {
+      "round": 6,
+      "pass": 2,
+      "op": "numbers",
+      "name": "release",
+      "elapsedMs": 1.699999988079071
+    },
+    {
+      "round": 6,
+      "pass": 2,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 1.199999988079071
+    },
+    {
+      "round": 6,
+      "pass": 2,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 1.5
+    },
+    {
+      "round": 6,
+      "pass": 3,
+      "op": "numbers",
+      "name": "release",
+      "elapsedMs": 1.300000011920929
+    },
+    {
+      "round": 6,
+      "pass": 3,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 1.899999976158142
+    },
+    {
+      "round": 6,
+      "pass": 3,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 2.400000035762787
+    },
+    {
+      "round": 6,
+      "pass": 3,
+      "op": "numbers",
+      "name": "main",
+      "elapsedMs": 169.0999999642372
+    },
+    {
+      "round": 6,
+      "pass": 4,
+      "op": "numbers",
+      "name": "bundled",
+      "elapsedMs": 1.7000000476837158
+    },
+    {
+      "round": 6,
+      "pass": 4,
+      "op": "numbers",
+      "name": "external",
+      "elapsedMs": 1.7999999523162842
+    },
+    {
+      "round": 6,
+      "pass": 4,
+      "op": "numbers",
+      "name": "main",
+      "elapsedMs": 160.60000002384186
+    },
+    {
+      "round": 6,
+      "pass": 4,
+      "op": "numbers",
+      "name": "release",
+      "elapsedMs": 1.199999988079071
+    },
+    {
+      "round": 6,
+      "pass": 0,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 12.099999964237213
+    },
+    {
+      "round": 6,
+      "pass": 0,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 11.800000011920929
+    },
+    {
+      "round": 6,
+      "pass": 0,
+      "op": "resources",
+      "name": "main",
+      "elapsedMs": 469.60000002384186
+    },
+    {
+      "round": 6,
+      "pass": 0,
+      "op": "resources",
+      "name": "release",
+      "elapsedMs": 32.39999997615814
+    },
+    {
+      "round": 6,
+      "pass": 1,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 13.599999964237213
+    },
+    {
+      "round": 6,
+      "pass": 1,
+      "op": "resources",
+      "name": "main",
+      "elapsedMs": 464.30000001192093
+    },
+    {
+      "round": 6,
+      "pass": 1,
+      "op": "resources",
+      "name": "release",
+      "elapsedMs": 37.40000003576279
+    },
+    {
+      "round": 6,
+      "pass": 1,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 17.19999998807907
+    },
+    {
+      "round": 6,
+      "pass": 2,
+      "op": "resources",
+      "name": "main",
+      "elapsedMs": 382
+    },
+    {
+      "round": 6,
+      "pass": 2,
+      "op": "resources",
+      "name": "release",
+      "elapsedMs": 15.099999964237213
+    },
+    {
+      "round": 6,
+      "pass": 2,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 7.900000035762787
+    },
+    {
+      "round": 6,
+      "pass": 2,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 12.699999988079071
+    },
+    {
+      "round": 6,
+      "pass": 3,
+      "op": "resources",
+      "name": "release",
+      "elapsedMs": 18.69999998807907
+    },
+    {
+      "round": 6,
+      "pass": 3,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 11.400000035762787
+    },
+    {
+      "round": 6,
+      "pass": 3,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 10.5
+    },
+    {
+      "round": 6,
+      "pass": 3,
+      "op": "resources",
+      "name": "main",
+      "elapsedMs": 410
+    },
+    {
+      "round": 6,
+      "pass": 4,
+      "op": "resources",
+      "name": "bundled",
+      "elapsedMs": 20.899999976158142
+    },
+    {
+      "round": 6,
+      "pass": 4,
+      "op": "resources",
+      "name": "external",
+      "elapsedMs": 9.699999988079071
+    },
+    {
+      "round": 6,
+      "pass": 4,
+      "op": "resources",
+      "name": "main",
+      "elapsedMs": 417.4000000357628
+    },
+    {
+      "round": 6,
+      "pass": 4,
+      "op": "resources",
+      "name": "release",
+      "elapsedMs": 29
+    },
+    {
+      "round": 6,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 93.89999997615814
+    },
+    {
+      "round": 6,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 64.90000003576279
+    },
+    {
+      "round": 6,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "main",
+      "elapsedMs": 356.89999997615814
+    },
+    {
+      "round": 6,
+      "pass": 0,
+      "op": "textReturns",
+      "name": "release",
+      "elapsedMs": 146.30000001192093
+    },
+    {
+      "round": 6,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 41.69999998807907
+    },
+    {
+      "round": 6,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "main",
+      "elapsedMs": 315.5
+    },
+    {
+      "round": 6,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "release",
+      "elapsedMs": 119.89999997615814
+    },
+    {
+      "round": 6,
+      "pass": 1,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 30.600000023841858
+    },
+    {
+      "round": 6,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "main",
+      "elapsedMs": 260.19999998807907
+    },
+    {
+      "round": 6,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "release",
+      "elapsedMs": 116.69999998807907
+    },
+    {
+      "round": 6,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 47.200000047683716
+    },
+    {
+      "round": 6,
+      "pass": 2,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 70.79999995231628
+    },
+    {
+      "round": 6,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "release",
+      "elapsedMs": 120.60000002384186
+    },
+    {
+      "round": 6,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 49
+    },
+    {
+      "round": 6,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 52.89999997615814
+    },
+    {
+      "round": 6,
+      "pass": 3,
+      "op": "textReturns",
+      "name": "main",
+      "elapsedMs": 222.30000001192093
+    },
+    {
+      "round": 6,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "bundled",
+      "elapsedMs": 45.30000001192093
+    },
+    {
+      "round": 6,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "external",
+      "elapsedMs": 70
+    },
+    {
+      "round": 6,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "main",
+      "elapsedMs": 537.1999999880791
+    },
+    {
+      "round": 6,
+      "pass": 4,
+      "op": "textReturns",
+      "name": "release",
+      "elapsedMs": 232.69999998807907
+    }
+  ]
+}

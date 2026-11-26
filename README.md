@@ -2,6 +2,26 @@
 
 This fork benchmarks the browser examples from [eqrion/component-demos at d0b9dd1](https://github.com/eqrion/component-demos/tree/d0b9dd1390a300978193adc623838fef4e4b632b). It runs the same compiled C, C++, and Rust WebAssembly components through jco 1.13.0, pinned upstream main, and a branch that optimizes synchronous host imports and numeric guest exports. The comparison also includes the demos’ JavaScript, Emscripten (Embind and EM_JS), and Rust wasm-bindgen implementations where available.
 
+## PR head against upstream main
+
+The PR incorporates upstream main at `83e25bb19`. In the same seven Chromium pages, both PR renderers recovered most of main’s scalar host-call overhead, and both beat 1.13.0 for resource handles and short string returns. The scalar call still cost 4.6 ns more than 1.13.0 with the internal bundle and 7.6 ns more with the external runtime. [PR head `ad2aacc9b`](https://github.com/vados-cosmonic/jco/commit/ad2aacc9be6fe35c02ae91d9c8c5cde3693e722d) · [Upstream revision](https://github.com/bytecodealliance/jco/commit/83e25bb19bc45c8a346e4ecdd19b4a1541700fe7)
+
+| Warm operation, ns per guest iteration | Jco 1.13.0 | Upstream main | PR, internal Oxc | PR, external runtime |
+| --- | ---: | ---: | ---: | ---: |
+| Scalar host call | 16.8 | 2,378.8 | 21.4 | 24.4 |
+| Acquire, borrow and drop a resource | 329.6 | 5,218.5 | 152.6 | 148.0 |
+| Return a 16-byte ASCII string | 2,307.1 | 5,369.6 | 762.9 | 843.8 |
+
+The generated JavaScript entry for this fixture was 9.6 KiB with 1.13.0, 182.4 KiB with upstream main and 118.5 KiB with the PR’s internal bundle. The external entry was 55.5 KiB plus its separately loaded runtime. Every mode ran identical Wasm cores. Each cell is the median of seven page medians, with two warmups, five measured passes and a checksum on every pass. The full demo and cold-start tables below retain their original pinned revisions. [Runner](web/bench/provider-loop.mjs) · [All 420 timed passes, generator hashes and entry sizes](web/bench/results/provider-loop-83e25bb19.json)
+
+Build the native `transpile` example with `--features embedded-cm-runtime` in each checkout, using separate Cargo target directories. Build the PR runtime with `pnpm --filter @bytecodealliance/jco-cm-runtime build` and install this fork’s web dependencies with `npm ci --prefix web`.
+
+```sh
+CHROME_BIN=/path/to/chrome node web/bench/provider-loop.mjs \
+  /path/to/pr /path/to/pr/target/debug/examples/transpile /tmp/upstream-comparison.json \
+  /path/to/upstream /path/to/upstream/target/debug/examples/transpile
+```
+
 ## Bundled and external runtime on the review branch
 
 The review branch uses the same checked operations for synchronous calls in both renderers. This run compares them directly against a custom provider using the original API-v1 contract. All three used the same runtime source and the same two Wasm core binaries. The external modes differ only in whether the provider opts into the synchronous operations. [Jco PR #62](https://github.com/vados-cosmonic/jco/pull/62) · [Measured Jco revision](https://github.com/vados-cosmonic/jco/commit/275c3071a3760180de923cda62388fc08d34f7cf)
@@ -555,6 +575,8 @@ Compared with 1.13.0, the candidate’s median paired difference was **+4.94 ms*
 Each instant on a page counts once, including when several compile calls overlap. Pending calls measure elapsed wall time and can include fetching a module, scheduling and JavaScript running on the same page. The time from the entry script’s response to the first Wasm call also includes loading its dependencies. Instrumented pages copy the interval records after import readiness and before calling the guest. Columns are medians across workload medians and can sum to a different value from the median import. [Call intervals and ordinary control samples](web/bench/results/wasm-startup.json)
 
 ![Share of module import time before, during and between WebAssembly calls for each Jco build](web/bench/results/wasm-startup.png)
+
+The C and C++ guests also instantiate a 24-byte Wasm module whose start function calls the guest initializer. Across all 126 candidate traces for these 14 workloads, that module’s compilation had already settled when the preceding instance finished. The median duration of its final instantiation, including the guest initializer, was 0.025 ms for the candidate and 0.015 ms for 1.13.0. Both figures summarize workload medians. This accounts for little of the measured import gap. The trace records this adapter as the third inline compile and the fourth instantiation. [Raw Wasm call intervals](web/bench/results/wasm-startup.json)
 
 #### When the binding module starts executing
 

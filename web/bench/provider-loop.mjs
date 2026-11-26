@@ -7,15 +7,25 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import puppeteer from "puppeteer-core";
 
-const [checkout, generator, output] = process.argv.slice(2);
-assert(checkout && generator && output, "Usage: provider-loop.mjs <jco-checkout> <native-generator> <results.json>");
-const git = (...args) => execFileSync("git", args, { cwd: checkout, encoding: "utf8" }).trim();
-assert.equal(git("status", "--porcelain", "--untracked-files=no"), "");
-const revision = git("rev-parse", "HEAD");
+const [checkout, generator, output, upstreamCheckout, upstreamGenerator] = process.argv.slice(2);
+assert(checkout && generator && output, "Usage: provider-loop.mjs <jco-checkout> <native-generator> <results.json> [<upstream-checkout> <upstream-generator>]");
+assert.equal(Boolean(upstreamCheckout), Boolean(upstreamGenerator));
+function cleanRevision(cwd) {
+  const git = (...args) => execFileSync("git", args, { cwd, encoding: "utf8" }).trim();
+  assert.equal(git("status", "--porcelain", "--untracked-files=no"), "");
+  return git("rev-parse", "HEAD");
+}
+const revision = cleanRevision(checkout);
+const upstream = upstreamCheckout && cleanRevision(upstreamCheckout);
 const hash = bytes => createHash("sha256").update(bytes).digest("hex");
 const fixture = join(import.meta.dirname, "import-loop.wat");
 const staging = await mkdtemp(join(tmpdir(), "jco-providers-"));
-const modes = { bundled: [], external: ["--runtime=../runtime", "--cm-runtime-sync-imports"], compatibility: ["--runtime=../runtime"] };
+const modes = { bundled: [], external: ["--runtime=../runtime", "--cm-runtime-sync-imports"] };
+if (upstream) modes.main = [];
+else modes.compatibility = ["--runtime=../runtime"];
+const labels = Object.keys(modes);
+const entries = {};
+let release;
 const files = new Map();
 const cores = {};
 const runtime = join(checkout, "packages/jco-cm-runtime/dist");
@@ -25,18 +35,35 @@ for (const filename of await readdir(runtime, { recursive: true })) {
 try {
   const input = join(staging, "loop.wasm");
   execFileSync("wasm-tools", ["parse", fixture, "-o", input]);
+  function record(name, assets) {
+    const digest = {};
+    for (const [file, bytes] of Object.entries(assets)) {
+      files.set("/" + name + "/" + file, bytes);
+      if (file.endsWith(".wasm")) digest[file] = hash(bytes);
+    }
+    assert.equal(Object.keys(digest).length, 2);
+    if (Object.keys(cores).length === 0) Object.assign(cores, digest);
+    assert.deepEqual(digest, cores);
+    const entry = files.get("/" + name + "/loop.js");
+    entries[name] = { bytes: entry.length, sha256: hash(entry) };
+    assert.equal(entry.includes("../runtime/intrinsics/sync.js"), name === "external");
+  }
   for (const [name, flags] of Object.entries(modes)) {
     const dir = join(staging, name);
-    execFileSync(resolve(generator), [input, dir, "--name=loop", "--instantiation", "--no-nodejs-compat", "--base64-cutoff=0", ...flags]);
-    for (const file of await readdir(dir)) {
-      const bytes = await readFile(join(dir, file));
-      files.set("/" + name + "/" + file, bytes);
-      if (file.endsWith(".wasm")) {
-        cores[file] ??= hash(bytes);
-        assert.equal(hash(bytes), cores[file]);
-      }
-    }
-    assert.equal(files.get("/" + name + "/loop.js").includes("../runtime/intrinsics/sync.js"), name === "external");
+    // The stock example derives the entry name and zero base64 cutoff from the input.
+    const args = upstream ? ["--instantiation"] : ["--name=loop", "--instantiation", "--no-nodejs-compat", "--base64-cutoff=0"];
+    execFileSync(resolve(name === "main" ? upstreamGenerator : generator), [input, dir, ...args, ...flags]);
+    const assets = {};
+    for (const file of await readdir(dir)) assets[file] = await readFile(join(dir, file));
+    record(name, assets);
+  }
+  if (upstream) {
+    const { transpile } = await import("@bytecodealliance/jco");
+    release = JSON.parse(await readFile(new URL("../node_modules/@bytecodealliance/jco/package.json", import.meta.url))).version;
+    assert.equal(release, "1.13.0");
+    const { files } = await transpile(await readFile(input), { name: "loop", instantiation: "async", base64Cutoff: 0 });
+    record("release", Object.fromEntries(Object.entries(files).map(([file, bytes]) => [file, Buffer.from(bytes)])));
+    labels.push("release");
   }
 } finally {
   await rm(staging, { recursive: true, force: true });
@@ -84,11 +111,12 @@ try {
         }
       }
       return rows;
-    }, { names: Object.keys(modes), round, count }));
+    }, { names: labels, round, count }));
     await page.close();
   }
   await writeFile(output, JSON.stringify({ revision, generatorSha256: hash(await readFile(generator)), fixtureSha256: hash(await readFile(fixture)),
-    cores, chrome: await browser.version(), count, samples }, null, 2) + "\n");
+    upstream, upstreamGeneratorSha256: upstreamGenerator && hash(await readFile(upstreamGenerator)), release, entries,
+    runnerSha256: hash(await readFile(import.meta.filename)), cores, chrome: await browser.version(), count, samples }, null, 2) + "\n");
 } finally {
   await browser.close();
 }
