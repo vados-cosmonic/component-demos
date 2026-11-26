@@ -14,10 +14,11 @@ import { parse } from "acorn";
 const [checkout, output, study, ...extra] = process.argv.slice(2);
 const preload = study === "--modulepreload";
 const compression = study === "--gzip";
-const application = study === "--app-bundle";
+const singleEntry = study === "--single-entry";
+const application = study === "--app-bundle" || singleEntry;
 const checkedPackage = preload || compression || application;
 assert(!extra.length && (study === undefined || checkedPackage));
-assert(checkout && output, "Usage: core-startup.mjs <built Jco checkout> <output.json.gz> [--modulepreload|--gzip|--app-bundle]");
+assert(checkout && output, "Usage: core-startup.mjs <built Jco checkout> <output.json.gz> [--modulepreload|--gzip|--app-bundle|--single-entry]");
 const rounds = Number(process.env.ROUNDS ?? 18);
 assert(Number.isInteger(rounds) && rounds >= 6 && rounds % 6 === 0);
 const bench = import.meta.dirname, web = join(bench, "..");
@@ -92,10 +93,18 @@ let bundlerVersion;
 if (application) {
   const {bundleApp} = await import("./app-bundle.mjs");
   for (const build of [...modes]) {
-    const packaged = await bundleApp(resolve(checkout), cases, build, assets);
-    bundlerVersion = packaged.version;
-    Object.assign(appGraph, packaged.graph);
-    for (const [path, bytes] of packaged.files) add(path, bytes);
+    // Separate builds model pages deployed independently. A multi-entry build
+    // can share a chunk even when each measured document loads just one guest.
+    const groups = singleEntry ? cases.map(item => [item]) : [cases];
+    for (const group of groups) {
+      const packaged = await bundleApp(resolve(checkout), group, build, assets);
+      bundlerVersion = packaged.version;
+      Object.assign(appGraph, packaged.graph);
+      for (const [path, bytes] of packaged.files) {
+        assert(!assets.has(path), "Duplicate application output " + path);
+        add(path, bytes);
+      }
+    }
     modes.push(build + "-app");
   }
 }

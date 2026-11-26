@@ -383,6 +383,25 @@ python3 web/bench/core-startup-report.py /tmp/app-bundle.json.gz --plot /tmp/app
 
 </details>
 
+### Bundling one component per page
+
+For a page that loads one component, building its external bindings and checked runtime together reduced the median cold first result from **31.00 to 17.73 ms**. Chromium fetched one JavaScript file totaling 70.02 KiB at the median, down from 19 files totaling 124.30 KiB. The internal Oxc bundle already used one file. The repeat bundle step had a paired first-result ratio of 0.998× for internal Oxc and 1.002× for Jco 1.13.0. [Raw timings, request sizes and build hashes](web/bench/results/single-entry.json.gz)
+
+| Build | Cold first result (ms), original → single-entry build | Paired time ratio | JS for all six components built individually (KiB) | JS for all six in one multi-entry build (KiB) |
+| --- | ---: | ---: | ---: | ---: |
+| Jco 1.13.0 | 8.75 → 8.97 | 1.002× | 58.32 | 58.75 |
+| Internal Oxc | 17.27 → 17.22 | 0.998× | 434.66 | 435.08 |
+| External runtime | 31.00 → 17.73 | 0.574× | 420.50 | 191.04 |
+
+The last two columns count the uncompressed bytes at each distinct JS URL once across all six components. The external multi-entry build shares runtime code across those URLs and saves **229.46 KiB** if the application uses every component. Each timing used a fresh document loading one guest. The experiment covered 648 Chromium documents on HTTP/1.1 loopback and checked each guest report, Wasm hash and set of network responses. All six external workloads had individual 95% paired intervals below parity. All 12 internal and release intervals included parity. [Multi-entry assets and request traces](web/bench/results/app-bundle.json.gz)
+
+Use the setup above with Jco at `ee0d0ff26` and run the single-entry comparison and verifier.
+
+```sh
+CHROME_BIN=/path/to/chrome ROUNDS=18 node web/bench/core-startup.mjs /path/to/built/jco /tmp/single-entry.json.gz --single-entry
+python3 web/bench/core-startup-report.py /tmp/single-entry.json.gz
+```
+
 ## Packaging the external runtime for browsers
 
 The checked external bindings at PR revision `eaca992c8` used 59 runtime exports across 15 small browser workloads. Packing those exports into one shared ES module reduced median first-result time from **31.48 to 17.67 ms** and total JavaScript from **161.5 to 111.0 KiB**. The same guests took **17.91 ms** with the internal Oxc bundle and **9.10 ms** with Jco 1.13.0. The first result includes importing the component and running its small workload. [Runner](web/bench/provider-startup.mjs) · [Named exports and import map builder](web/bench/shared-provider.mjs)

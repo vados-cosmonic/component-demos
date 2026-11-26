@@ -20,17 +20,21 @@ def digest(path):
     return sha256(path.read_bytes()).hexdigest()
 
 compression = data.get("study") == "--gzip"
-application = data.get("study") == "--app-bundle"
+application = data.get("study") in ("--app-bundle", "--single-entry")
 assert compression or application or "study" not in data
-suffix = {"--gzip":"-gzip", "--app-bundle":"-app", None:"-inline"}[data.get("study")]
+suffix = {"--gzip":"-gzip", "--app-bundle":"-app", "--single-entry":"-app", None:"-inline"}[data.get("study")]
 filename = "review-matrix-minified-db4a3aca0.json.gz" if compression or application else "review-matrix-minified-eaca992c8.json.gz"
 matrix = bench / "results" / filename
 assert digest(matrix) == data["matrixSha256"]
 # The initial core-packaging study used the runner before it also supported preload hints.
 runner_hash = digest(bench / "core-startup.mjs")
 if application:
-    assert data["runnerSha256"] == runner_hash
+    archived = digest(args.input) == "47e8ebdc26bdc78349ccaa1ea87f72521aaa3f0bde6469e2baa761c65fd606d2"
+    expected = "466960754fb757fcf1c9d427b20e81ca859813b16324d6acb560f59aed73888f" if archived else runner_hash
+    assert data["runnerSha256"] == expected
     assert data["appBundlerSha256"] == digest(bench / "app-bundle.mjs")
+    if data["study"] == "--single-entry":
+        assert all(not imports for imports in data["appGraph"].values())
 elif compression:
     expected = "1b7c6595f83094cf251228c11a9ba75c9231f6d8e073379d0f19536add75a640" if digest(args.input) == "935e5c7ae1d3e6fbe4777daaeef51de545e62e3a91e497d69312c381180fa73d" else runner_hash
     assert data["runnerSha256"] == expected
@@ -153,6 +157,19 @@ for mode, name in labels.items():
         sizes = f"{both('jsRequests')} | {both('jsBytes',1024)}"
     print(f"| {name} | {both('loadMs')} | {both('firstMs')} | {typical_ratio(mode,'firstMs'):.3f}× | {sizes} |")
 
+if application:
+    # Distinct URLs measure the JS a cache could reuse across all six components.
+    # Rows time one cold guest each, so this is a size calculation only.
+    print("\n| Build | All six original entries, distinct JS KiB | All six application entries, distinct JS KiB |")
+    print("| --- | ---: | ---: |")
+    for mode, name in labels.items():
+        totals = []
+        for layout in (mode, mode + suffix):
+            urls = {req["path"] for case in cases for req in rows[0,case,layout]["requests"]
+                    if req["path"].endswith(".js")}
+            totals.append(sum(manifest[url]["bytes"] for url in urls) / 1024)
+        print(f"| {name} | {totals[0]:.2f} | {totals[1]:.2f} |")
+
 rank = max(i for i in range(rounds) if 2*sum(comb(rounds,j) for j in range(i+1))/2**rounds <= .05)
 def interval(case, mode):
     times = sorted(paired(case,mode,"firstMs"))
@@ -178,7 +195,7 @@ if args.plot:
     ax.set_yticks(range(len(cases)), [label(c) for c in cases])
     ax.invert_yaxis()
     ax.grid(axis="x",alpha=.2)
-    comparison = {"--gzip":"gzip / uncompressed", "--app-bundle":"application build / original", None:"embedded / fetched"}[data.get("study")]
+    comparison = {"--gzip":"gzip / uncompressed", "--app-bundle":"application build / original", "--single-entry":"single-entry build / original", None:"embedded / fetched"}[data.get("study")]
     ax.set_xlabel("Time to first result, "+comparison)
     fig.legend(*ax.get_legend_handles_labels(),loc="outside lower center",ncol=3)
     fig.savefig(args.plot,dpi=150)
