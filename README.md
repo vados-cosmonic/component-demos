@@ -2,6 +2,86 @@
 
 This fork benchmarks the browser examples from [eqrion/component-demos at d0b9dd1](https://github.com/eqrion/component-demos/tree/d0b9dd1390a300978193adc623838fef4e4b632b). It runs the same compiled C, C++, and Rust WebAssembly components through jco 1.13.0, pinned upstream main, and a branch that optimizes synchronous host imports and numeric guest exports. The comparison also includes the demos’ JavaScript, Emscripten (Embind and EM_JS), and Rust wasm-bindgen implementations where available.
 
+## External runtime startup at 427b9c0d7
+
+The checked runtime package groups the short UTF-8 decoder, synchronous waiter and JS helpers into one shared chunk. Across all 21 generated C, C++ and Rust demos this removes three runtime requests, from 18 to 15. Each standalone numeric conversion still loads 2,779 bytes. The largest cost is for a standalone import of the component-state module, which grows by 5,613 bytes (1,502 gzipped). All 18 public entries expose the same names. The internal Oxc bundle gets its runtime from the embedded source. [Package build change](https://github.com/vados-cosmonic/jco/commit/427b9c0d7)
+
+Two independent 20-round Chromium trials used six small DOM-query and table-update cases. Each trial ran 1,280 fresh documents. Each guest used the same Wasm and generated JS entry in both package layouts. The server used TLS on loopback and sent uncompressed responses. Relative gains pair builds within a workload and round. Absolute times summarize the six workload medians.
+
+| Time to first guest result | Previous external | Grouped helpers | Paired reduction | Application bundle |
+| --- | ---: | ---: | ---: | ---: |
+| HTTP/1.1, first trial | 48.81 ms | 45.08 ms | 6.8% | 26.80 ms |
+| HTTP/1.1, repeat | 49.54 ms | 45.67 ms | 7.0% | 27.74 ms |
+| HTTP/2, first trial | 49.42 ms | 45.23 ms | 8.0% | 28.41 ms |
+| HTTP/2, repeat | 49.47 ms | 45.29 ms | 8.1% | 28.28 ms |
+
+The conversion-only import's timing intervals included parity on both protocols. The standalone component-state probe took 8.56 → 9.12 ms on HTTP/1.1 (paired time ratio 1.071×, individual 95% interval 0.980–1.260) and 8.97 → 9.00 ms on HTTP/2 (1.014×, 0.940–1.080). [First trial and conversion probe](web/bench/results/compact-helpers-47f6dc0c1.json.gz) · [Replication and component-state probe](web/bench/results/compact-component-47f6dc0c1.json.gz)
+
+![Per-workload times to first result relative to the previous external package, including the standalone component-state import.](web/bench/results/compact-component-47f6dc0c1.png)
+
+| Runtime layout | Runtime requests per demo | Runtime gzip per demo (KiB) | Standalone numeric conversion (bytes) | Largest standalone increase (bytes) |
+| --- | ---: | ---: | ---: | ---: |
+| Previous automatic splitting | 18 | 34.61 | 2,779 | — |
+| One group for modules shared by at least four entries | 11 | 30.29 | 93,326 | 90,547 |
+| Split that group by importing entries, 1 KiB merge threshold | 17 | 35.20 | 2,877 | 6,401 |
+| Split by importing entries, 16 KiB threshold | 14 | 34.03 | 54,067 | 51,288 |
+| Group component-state source files | 17 | 34.19 | 2,779 | 4,760 |
+| Group the three helpers | 15 | 33.77 | 2,779 | 5,613 |
+
+The analysis starts at the static imports of each generated adapter and follows the browser module graph. It checks each adapter against the full matrix, every original runtime file against its hash and all public export names across the eight layouts. Gzip is the sum of individually compressed runtime modules at level 9. [All layouts, module graphs, file sizes and hashes](web/bench/results/runtime-layouts-47f6dc0c1.json.gz)
+
+### Full workloads over compressed HTTP/2
+
+A third trial used 2,000-element DOM queries and 2,000-row tables in C, C++ and Rust, across 16 rounds and 768 fresh documents. Chromium fetched Brotli-compressed modules over TLS. All 33 regenerated control modules matched the previous package byte for byte. The grouped package served the same entry and guest Wasm in each pair. [Timings, requests and browser settings](web/bench/results/compact-helpers-http2-427b9c0d7.json.gz)
+
+| Time to first guest result | Jco 1.13.0 | Internal Oxc | Previous external | Grouped helpers | Paired reduction vs previous external |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Loopback | 59.14 ms | 62.96 ms | 89.95 ms | 87.31 ms | 4.9% |
+| 40 ms latency, 10 Mbit/s | 160.93 ms | 173.00 ms | 320.90 ms | 273.69 ms | 14.4% |
+
+On the limited connection, individual paired 95% intervals favored the grouped package on all six workloads. On loopback, one favored grouping and five included parity. On the limited connection the median start of the guest Wasm fetch moved from 206.75 to 161.83 ms. Median Brotli JS fell from 36.14 to 35.37 KiB. Including the guest Wasm, the external builds used 20 and 17 requests respectively. Release and internal Oxc used two each.
+
+![First result for the six full workloads over loopback and a limited HTTP/2 connection.](web/bench/results/compact-helpers-http2-427b9c0d7.png)
+
+### Full demo matrix
+
+The head-to-head comparison used 12 rounds and 1,164 fresh Chromium documents. Times and sizes below summarize 21 workload medians. The 203 assets outside the external runtime matched their previous hashes, including every generated adapter, internal bundle and guest Wasm file. The two controlled package-layout trials above isolate the effect of the change. [Full timings and served asset hashes](web/bench/results/review-matrix-minified-427b9c0d7.json.gz)
+
+| Median across 21 workloads | Jco 1.13.0 | Upstream main at `326f52ab4` | Internal Oxc | External checked |
+| --- | ---: | ---: | ---: | ---: |
+| Import and initialization (ms) | 5.09 | 12.68 | 9.50 | 19.42 |
+| Time to first guest result (ms) | 61.18 | 198.56 | 65.28 | 76.42 |
+| Minified JS entry (KiB) | 9.58 | 111.34 | 71.54 | 24.99 |
+| Total JS (KiB) | 9.58 | 111.34 | 71.54 | 123.76 |
+| Total gzipped JS (KiB) | 3.01 | 25.42 | 18.96 | 39.74 |
+| JS requests | 1 | 1 | 1 | 16 |
+| Warm workloads matching or beating release | — | — | 15/21 | 15/21 |
+| Warm workloads matching or beating main | — | — | 20/21 | 21/21 |
+| Worst warm time / fastest compiled shim | — | — | 4.82× | 5.93× |
+
+Both modes stayed within 10× of the fastest compiled shim on 21/21 warm headline operations and 81/84 individual phases. Against Jco 1.13.0, individual paired 95% intervals were entirely slower on 0/21 internal and 2/21 external warm operations. The two were C++ table creation (1.109×, interval 1.024–1.213) and Rust table creation (1.149×, 1.013–1.371). First result matched or beat release on 8/21 internal and 6/21 external medians. Five internal and fifteen external first-result intervals were entirely slower.
+
+![Warm operation and time to first result for all 21 workloads.](web/bench/results/review-matrix-minified-427b9c0d7.png)
+
+<details><summary>Reproduce the package and browser comparisons</summary>
+
+Build the two Jco checkouts and prepare the upstream and release assets using the [matrix setup](#full-demo-matrix-on-the-merged-pr). Set `before` and `after` to their respective checkout paths and `stage` to the prepared upstream build. The two small-workload trials build the alternative and original packages at `47f6dc0c1`. The full matrix and full-workload transport trial use the built checkout at `427b9c0d7`, including its rebuilt checked runtime. The transport trial regenerates automatic splitting from the same compiled sources as its control. The runner checks requested URLs, sizes, protocol, returned measurements, and the position and immediate predecessor of each treatment.
+
+```sh
+export CHROME_BIN=/path/to/chrome
+old=web/bench/results/review-matrix-minified-47f6dc0c1.json.gz
+node web/bench/runtime-layouts.mjs "$before" "$old" /tmp/layouts.json.gz
+node web/bench/runtime-chunks.mjs "$before" "$old" /tmp/first.json.gz --compact-helpers
+node web/bench/runtime-chunks.mjs "$before" "$old" /tmp/repeat.json.gz --compact-component
+python3 web/bench/runtime-chunks-report.py /tmp/repeat.json.gz "$old" --plot /tmp/repeat.png
+ROUNDS=12 node web/bench/review-matrix.mjs "$after" "$stage" /tmp/full.json.gz --minify-checked
+python3 web/bench/review-matrix-report.py /tmp/full.json.gz --release-intervals --plot /tmp/full.png
+node web/bench/runtime-chunks.mjs "$after" /tmp/full.json.gz /tmp/network.json.gz --automatic-control
+python3 web/bench/runtime-chunks-report.py /tmp/network.json.gz /tmp/full.json.gz --previous-matrix "$old" --plot /tmp/network.png
+```
+
+</details>
+
 ## Browser bindings at 47f6dc0c1
 
 Across the branch, reusing the active export task for eligible synchronous host calls produced the largest measured gain. These controlled guest-loop measurements come from the earlier implementation at `ad2aacc9b` and its upstream base at `83e25bb19`. Each guest enters once and repeats the measured operation. [Host-loop experiment and raw data](#pr-head-against-upstream-main)

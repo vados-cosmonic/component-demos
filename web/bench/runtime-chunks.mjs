@@ -7,18 +7,21 @@ import { createSecureServer } from "node:http2";
 import { createServer } from "node:https";
 import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
-import { basename, join, resolve } from "node:path";
+import { basename, join, posix, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { brotliCompressSync, constants, gunzipSync, gzipSync } from "node:zlib";
 import puppeteer from "puppeteer-core";
+import { parse } from "acorn";
 import { bundleApp } from "./app-bundle.mjs";
 
 const [checkout, matrixFile, output, study, ...extra] = process.argv.slice(2);
 const appPreload = study === "--shaped-preload";
-const shaped = study === "--shaped" || appPreload;
+const automaticControl = study === "--automatic-control";
+const shaped = study === "--shaped" || appPreload || automaticControl;
+const alternative = automaticControl ? "automatic" : "grouped";
 const compactHelpers = study === "--compact-helpers" || study === "--compact-component";
 assert(!extra.length && (!study || shaped || compactHelpers));
-assert(output, "Usage: runtime-chunks.mjs <built Jco checkout> <matrix.json.gz> <output.json.gz> [--shaped|--shaped-preload|--compact-helpers|--compact-component]");
+assert(output, "Usage: runtime-chunks.mjs <built Jco checkout> <matrix.json.gz> <output.json.gz> [--shaped|--shaped-preload|--compact-helpers|--compact-component|--automatic-control]");
 const digest = (x) => createHash("sha256").update(x).digest("hex");
 const matrixBytes = await readFile(matrixFile);
 const matrix = JSON.parse(gunzipSync(matrixBytes));
@@ -51,7 +54,7 @@ const assets = new Map(),
 const builds = appPreload
   ? ["release", "bundled", "application", "application-preload"]
   : shaped
-  ? ["release", "bundled", "external", "application"]
+  ? ["release", "bundled", "external", automaticControl ? "automatic" : "application"]
   : ["release", "bundled", "external", "grouped", "application"];
 const protocols = shaped ? ["h2"] : ["http/1.1", "h2"];
 const profiles = appPreload ? ["limited"] : shaped ? ["loopback", "limited"] : [null];
@@ -69,52 +72,60 @@ function closure(initial) {
   for (const path of reached) for (const child of graph[path]) reached.add(child);
   return [...reached].sort();
 }
-for (const layout of shaped ? ["external"] : ["external", "grouped"]) {
-  const prefix = layout === "external" ? "/runtime/" : "/grouped/";
+// Read the installed package for the control. Its chunk policy can change
+// between revisions, while the experiment's alternative policy stays fixed.
+const runtimeFiles = Object.keys(matrix.manifest).filter(path => path.startsWith("/runtime/"));
+for (const path of runtimeFiles) {
+  const bytes = await readFile(join(pkg, "dist", path.slice("/runtime/".length)));
+  add(path, bytes, path);
+  const ast = parse(bytes.toString("utf8"), { ecmaVersion: "latest", sourceType: "module" });
+  graph[path] = ast.body.filter(node => node.source?.value.startsWith("."))
+    .map(node => posix.join(posix.dirname(path), node.source.value));
+}
+function registerEntry(layout, entry, path) {
+  imports[layout][entry === "index" ? matrix.checkedPackage : matrix.checkedPackage + "/" + entry] = path;
+  footprints[layout][entry] = closure([path]);
+}
+imports.external = {};
+footprints.external = {};
+for (const entry of Object.keys(input)) {
+  const name = entry + ".js";
+  api[entry] = Object.keys(await import(pathToFileURL(join(pkg, "dist", name)))).sort();
+  registerEntry("external", entry, "/runtime/" + name);
+}
+if (!shaped || automaticControl) {
   const bundle = await rolldown({
-    input,
-    platform: "neutral",
-    external: [/^node:/],
-    preserveEntrySignatures: "strict",
-    transform: { dropLabels: ["DEBUG"] },
+    input, platform: "neutral", external: [/^node:/],
+    preserveEntrySignatures: "strict", transform: { dropLabels: ["DEBUG"] },
   });
   try {
+    const group = compactHelpers
+      ? { name: "shared", test: /\/intrinsics\/(?:decode-utf8|sync-waiter|js-helper)\.js$/ }
+      : { name: "common", minShareCount: 4 };
     const { output } = await bundle.generate({
-      format: "esm",
-      minify: true,
-      sourcemap: true,
-      entryFileNames: "[name].js",
+      format: "esm", minify: true, sourcemap: true, entryFileNames: "[name].js",
       chunkFileNames: "chunks/[name]-[hash].js",
-      ...(layout === "grouped"
-        ? { codeSplitting: { groups: [compactHelpers
-          ? { name: "shared", test: /\/intrinsics\/(?:decode-utf8|sync-waiter|js-helper)\.js$/ }
-          : { name: "common", minShareCount: 4 }] } }
-        : {}),
+      ...(automaticControl ? {} : { codeSplitting: { groups: [group] } }),
     });
-    const chunks = output.filter((x) => x.type === "chunk");
-    const local = new Set(chunks.map((c) => c.fileName));
+    const chunks = output.filter(x => x.type === "chunk");
+    const local = new Set(chunks.map(c => c.fileName));
     for (const c of chunks) {
-      const path = prefix + c.fileName;
-      add(path, c.code, layout === "external" ? path : null);
-      graph[path] = c.imports.filter((i) => local.has(i)).map((i) => prefix + i);
+      const path = "/grouped/" + c.fileName;
+      add(path, c.code);
+      graph[path] = c.imports.filter(i => local.has(i)).map(i => "/grouped/" + i);
     }
-    imports[layout] = {};
-    footprints[layout] = {};
+    imports[alternative] = {};
+    footprints[alternative] = {};
     for (const entry of Object.keys(input)) {
-      const path = prefix + entry + ".js",
-        names = chunks.find((c) => c.fileName === entry + ".js").exports.toSorted();
-      if (layout === "external") api[entry] = names;
-      else assert.deepEqual(names, api[entry], entry);
-      imports[layout][
-        entry === "index" ? matrix.checkedPackage : matrix.checkedPackage + "/" + entry
-      ] = path;
-      footprints[layout][entry] = closure([path]);
+      const file = entry + ".js";
+      assert.deepEqual(chunks.find(c => c.fileName === file).exports.toSorted(), api[entry], entry);
+      registerEntry(alternative, entry, "/grouped/" + file);
     }
-  } finally {
-    await bundle.close();
-  }
+  } finally { await bundle.close(); }
 }
-const inputs = { "dom-query": [8, 2], "table-update": [8] };
+const inputs = automaticControl
+  ? Object.fromEntries(["dom-query", "table-update"].map(name => [name, Object.values(matrix.workloads[name])]))
+  : { "dom-query": [8, 2], "table-update": [8] };
 for (const file of [
   "host/web-host.js",
   "host/common.js",
@@ -180,9 +191,9 @@ for (const demo of Object.keys(inputs))
           closure(publicFiles),
           requests.filter((p) => p.startsWith("/runtime/")).sort(),
         );
-        if (shaped) continue;
+        if (shaped && !automaticControl) continue;
         const grouped = closure(publicFiles.map((p) => p.replace("/runtime/", "/grouped/")));
-        expected[key].grouped = {
+        expected[key][alternative] = {
           entry: ref.entry,
           requests: [...requests.filter((p) => !p.startsWith("/runtime/")), ...grouped].sort(),
         };
@@ -317,7 +328,7 @@ function handler(req, res) {
   res.setHeader("cross-origin-opener-policy", "same-origin");
   res.setHeader("cross-origin-embedder-policy", "require-corp");
   if (path.startsWith("/page/")) {
-    const layout = path === "/page/grouped" ? "grouped" : "external";
+    const layout = path === "/page/" + alternative ? alternative : "external";
     res.setHeader("content-type", "text/html");
     return res.end(
       '<!doctype html><script type="importmap">' +

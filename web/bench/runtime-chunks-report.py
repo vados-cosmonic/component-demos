@@ -13,6 +13,7 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("samples", type=Path)
 parser.add_argument("matrix", type=Path)
 parser.add_argument("--plot", type=Path)
+parser.add_argument("--previous-matrix", type=Path, help="check regenerated automatic chunks against the earlier shipped package")
 args = parser.parse_args()
 with gzip.open(args.samples) as stream:
     run = json.load(stream)
@@ -20,7 +21,8 @@ with gzip.open(args.matrix) as stream:
     matrix = json.load(stream)
 assert sha256(args.matrix.read_bytes()).hexdigest() == run["matrixSha256"]
 app_preload = run.get("study") == "--shaped-preload"
-shaped = app_preload or run.get("study") == "--shaped"
+automatic = run.get("study") == "--automatic-control"
+shaped = app_preload or automatic or run.get("study") == "--shaped"
 runner_hash = sha256(Path(__file__).with_name("runtime-chunks.mjs").read_bytes()).hexdigest()
 # The uncompressed transport trial used the original runner at 2cf7d38.
 archived = {"976c95bd7fdf03cb25f46deb6ef2b87a4ca825cd8fd3b0cd0d6a5e661ddbb8df": "e17ab34cfd9e83216d789a96ee38e599a208c6360a5e4727d7478b6f0b907555"}
@@ -30,6 +32,7 @@ archived["819808b8fabdb74bd34aa85c138eaeaa03c8ce03bfadbf79d8dc63baea8e844d"] = "
 archived["6ca821aebda496bd78959086b2f9468d980a301ec695662192c5f65649479716"] = "2620a5793ba7ce816265fb34207f09affae47b0a042928fba2cbb1ba068f97b7"
 # The compact helper trial used conversion as its standalone caller.
 archived["f8bc0a73a0eef861abe07a01500d60f0d564bcdb6e92a6101cd8910e403d39bf"] = "2128c49f615f4df96366ad6e7a24ecd0f174704e47eb56b24b0bc08d34d2bd6d"
+archived["d3f417ae8ca4615e56e972f09507c3a090df2400d55db5c333622d3cdd0a26d5"] = "44694858aab947f9bfef462f2f2667e7afef50e14a9ed6e9b9d5abca5a446e9e"
 assert run["runnerSha256"] == archived.get(sha256(args.samples.read_bytes()).hexdigest(), runner_hash)
 if not shaped:
     assert matrix["candidate"] == run["revision"]
@@ -42,7 +45,9 @@ if shaped:
     assert run["profiles"] == (["limited"] if app_preload else ["loopback", "limited"])
     assert run["emulation"] == {"latency": 40, "download": 1250000, "upload": 1250000}
     assert run["contentEncoding"] == "br" and run["brotliQuality"] == 11
-    assert run["inputs"] == {"dom-query": [8, 2], "table-update": [8]}
+    expected_inputs = ({name: list(matrix["workloads"][name].values()) for name in ("dom-query", "table-update")}
+                       if automatic else {"dom-query": [8, 2], "table-update": [8]})
+    assert run["inputs"] == expected_inputs
     assert set(cases) == {f"{lang}/{demo}" for lang in ["c", "cpp", "rust"] for demo in run["inputs"]}
     if app_preload:
         for w in cases:
@@ -51,7 +56,7 @@ if shaped:
             assert hinted["hint"] in ordinary["requests"] and hinted["hint"] != ordinary["entry"]
             assert hinted["hint"].endswith(".js")
     assert builds == (["release", "bundled", "application", "application-preload"] if app_preload
-                      else ["release", "bundled", "external", "application"])
+                      else ["release", "bundled", "external", "automatic" if automatic else "application"])
 else:
     assert rounds == 20 and protocols == ["http/1.1", "h2"]
     assert builds == ["release", "bundled", "external", "grouped", "application"]
@@ -62,6 +67,15 @@ for path, asset in files.items():
         continue
     path = path.replace("/external-app/", "/external/")
     assert all(asset[k] == matrix["manifest"][path][k] for k in ("sha256", "bytes")), path
+
+if args.previous_matrix:
+    assert automatic, "--previous-matrix is for the automatic-splitting control"
+    with gzip.open(args.previous_matrix) as stream:
+        previous = json.load(stream)
+    old_package = {p.removeprefix("/runtime/"): v["sha256"] for p, v in previous["manifest"].items()
+                   if p.startswith("/runtime/")}
+    control = {p.removeprefix("/grouped/"): v["sha256"] for p, v in files.items() if p.startswith("/grouped/")}
+    assert control == old_package, "the control must reproduce every previously shipped runtime module"
 
 cells = {}
 positions, predecessors = Counter(), Counter()
@@ -136,8 +150,8 @@ if shaped:
                           for w in cases] for index in [0, 1]]
             print(m, "last JS response / start of guest Wasm fetch (ms)",
                   *(round(median(v), 2) for v in summaries))
-        treatment = "application-preload" if app_preload else "application"
-        for baseline in ["application" if app_preload else "external", "release", "bundled"]:
+        treatment = "external" if automatic else "application-preload" if app_preload else "application"
+        for baseline in ["automatic" if automatic else "application" if app_preload else "external", "release", "bundled"]:
             pairs = [paired(w, profile, treatment, baseline) for w in cases]
             print(treatment, "/", baseline, f"{median(p[0] for p in pairs):.3f}×",
                   "individual intervals below / above parity", sum(p[2] < 1 for p in pairs), sum(p[1] > 1 for p in pairs))
@@ -145,7 +159,7 @@ if shaped:
         import matplotlib.pyplot as plt
         titles = {"limited": "40 ms latency · 10 Mbit/s", "loopback": "Loopback"}
         names = {"release": "Jco 1.13.0", "bundled": "Internal Oxc", "external": "External package",
-                 "application": "Application bundle", "application-preload": "Bundle + chunk preload"}
+                 "automatic": "Previous package", "application": "Application bundle", "application-preload": "Bundle + chunk preload"}
         labels = [names[m] for m in builds]
         fig, axes = plt.subplots(1, len(conditions), squeeze=False, figsize=(4.5*len(conditions), 3.5), layout="constrained")
         for ax, profile in zip(axes[0], conditions, strict=True):
