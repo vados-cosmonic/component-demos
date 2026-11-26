@@ -10,12 +10,16 @@ import { pathToFileURL } from "node:url";
 import { gzipSync } from "node:zlib";
 import puppeteer from "puppeteer-core";
 
-const [checkout, upstreamBuild, output, flag, ...extra] = process.argv.slice(2);
+const [checkout, upstreamBuild, output, flag, previousBuild, ...extra] = process.argv.slice(2);
 assert(checkout && upstreamBuild && output && !extra.length && (flag === undefined || flag === "--minify"),
-  "Usage: review-matrix.mjs <built PR checkout> <upstream dist+vendor directory with commit file> <output.json.gz> [--minify]");
+  "Usage: review-matrix.mjs <built PR checkout> <upstream dist+vendor directory with commit file> <output.json.gz> [--minify [previous-transpiler-directory]]");
 const minify = flag === "--minify";
+assert(!previousBuild || minify, "The checked-package comparison uses minified output");
+const versions = ["release", "main", "bundled", "external"];
+if (previousBuild) versions.push("previous");
+const checkedPackage = "@bytecodealliance/jco-cm-runtime";
 const rounds = Number(process.env.ROUNDS ?? 8);
-assert(Number.isInteger(rounds) && rounds > 0 && rounds % 4 === 0);
+assert(Number.isInteger(rounds) && rounds > 0 && rounds % (previousBuild ? 10 : 4) === 0);
 const web = join(import.meta.dirname, "..");
 const hash = bytes => createHash("sha256").update(bytes).digest("hex");
 const git = (...args) => execFileSync("git", args, { cwd: checkout, encoding: "utf8" }).trim();
@@ -37,14 +41,23 @@ const maps = (await readFile(join(web, "host/imports.txt"), "utf8")).trim().spli
 });
 const tools = {};
 const compilers = {};
-for (const [version, dir] of [["bundled", join(checkout, "packages/jco-transpile")], ["main", upstreamBuild]]) {
+const generators = [["bundled", join(checkout, "packages/jco-transpile")], ["main", upstreamBuild]];
+if (previousBuild) generators.push(["previous", previousBuild]);
+for (const [version, dir] of generators) {
   const entry = resolve(dir, "dist/transpile.js");
   tools[version] = (await import(pathToFileURL(entry))).transpileBytes;
-  compilers[version] = {};
+  compilers[version] = { "dist/transpile.js": hash(await readFile(entry)) };
   for (const name of await readdir(join(dir, "vendor"))) {
     if (/^js-component-bindgen-component.*(?:\.wasm|-instantiation\.js)$/.test(name)) {
       compilers[version][name] = hash(await readFile(join(dir, "vendor", name)));
     }
+  }
+}
+if (previousBuild) {
+  // The adapter minifier is the only changed compiler stage. The runtime files
+  // served to both configurations come from the same directory below.
+  for (const [file, sha] of Object.entries(compilers.previous)) {
+    if (file !== "dist/transpile.js") assert.equal(sha, compilers.bundled[file], file);
   }
 }
 const assets = new Map();
@@ -73,11 +86,13 @@ for (const { input, variants } of inventory.components) {
   if (!Object.hasOwn(workloads, demo) || name !== demo.replaceAll("-", "_")) continue;
   const component = await readAsset(input);
   let reference;
-  for (const version of ["release", "main", "bundled", "external"]) {
+  for (const version of versions) {
     const dir = "/" + lang + "/" + demo + "/" + version;
     const options = { name, nodejsCompat: false, minify, base64Cutoff: 5000, namespacedExports: true,
       emitTypescriptDeclarations: false, map: Object.fromEntries(maps) };
-    if (version === "external") Object.assign(options, { cmRuntimeEsModule: "/runtime", cmRuntimeSyncImports: true });
+    if (version === "external" || version === "previous") {
+      Object.assign(options, previousBuild ? { cmRuntimeEsModule: checkedPackage } : { cmRuntimeEsModule: "/runtime", cmRuntimeSyncImports: true });
+    }
     let files;
     if (version === "release" && minify) {
       const release = await releaseCompiler(component, { name, nodejsCompat: false, map: Object.fromEntries(maps), minify });
@@ -103,7 +118,7 @@ for (const { input, variants } of inventory.components) {
     builds.push({ demo, lang, version, entry: dir + "/" + name + ".js", kind: "jco" });
   }
 }
-assert.equal(builds.length, 4 * 3 * Object.keys(workloads).length);
+assert.equal(builds.length, versions.length * 3 * Object.keys(workloads).length);
 for (const [directory, files] of Object.entries(inventory.alternatives)) {
   const [lang, source, backend] = directory.split("/");
   const demo = source.replace(/-wasm-bindgen$/, "");
@@ -156,8 +171,23 @@ function shuffle(items) {
   }
   return result;
 }
+const packageImports = {};
+if (previousBuild) {
+  for (const path of assets.keys()) {
+    if (path.startsWith("/runtime/")) packageImports[checkedPackage + path.slice("/runtime".length,-3)] = path;
+  }
+}
 const groups = Map.groupBy(builds, b => b.kind === "jco" ? b.demo + "/" + b.lang : b.entry);
 const sequences = [[0,1,3,2], [1,2,0,3], [2,3,1,0], [3,0,2,1]];
+if (previousBuild) {
+  // An odd number of treatments needs both directions of each rotation for
+  // every ordered pair to occur equally often as immediate predecessors.
+  sequences.length = 0;
+  for (let shift = 0; shift < 5; shift++) {
+    const row = [0,1,4,2,3].map(i => (i + shift) % 5);
+    sequences.push(row, row.toReversed());
+  }
+}
 const blocks = new Map();
 const samples = [];
 let chromium;
@@ -166,10 +196,10 @@ for (let round = 0; round < rounds; round++) {
   for (const key of shuffle([...groups.keys()])) {
     const group = groups.get(key);
     if (group.length === 1) { queue.push(group[0]); continue; }
-    assert.equal(group.length, 4);
-    if (round % 4 === 0) blocks.set(key, { labels: shuffle(group), order: shuffle(sequences) });
+    assert.equal(group.length, versions.length);
+    if (round % sequences.length === 0) blocks.set(key, { labels: shuffle(group), order: shuffle(sequences) });
     const { labels, order } = blocks.get(key);
-    queue.push(...order[round % 4].map(i => labels[i]));
+    queue.push(...order[round % sequences.length].map(i => labels[i]));
   }
   const gate = Promise.withResolvers(), done = Promise.withResolvers();
   done.promise.catch(() => {});
@@ -190,7 +220,8 @@ for (let round = 0; round < rounds; round++) {
       const build = queue[position];
       if (path === "/trial/" + position) {
         res.setHeader("Content-Type", "text/html");
-        return res.end(`<!doctype html><body><script type="module">
+        const map = previousBuild ? '<script type="importmap">' + JSON.stringify({ imports: packageImports }) + '</script>' : "";
+        return res.end(`<!doctype html><head>${map}</head><body><script type="module">
           let data;
           try { data = await (${measure})(${JSON.stringify(build)}, ${JSON.stringify(Object.values(workloads[build.demo]))}) }
           catch (e) { data = { error: String(e.stack || e) } }
@@ -208,6 +239,9 @@ for (let round = 0; round < rounds; round++) {
         for (const request of data.requests) {
           assert.equal(request.bytes, manifest[request.path].bytes, request.path);
           assert(request.transferred > 0);
+        }
+        if (previousBuild && ["previous", "external"].includes(build.version)) {
+          assert(data.requests.some(r => r.path === "/runtime/intrinsics/sync.js"));
         }
         samples.push({ round, position, ...build, ...data });
         position++;
@@ -244,6 +278,6 @@ for (let round = 0; round < rounds; round++) {
   console.log("Completed full matrix round", round + 1, "of", rounds);
 }
 await writeFile(output, gzipSync(JSON.stringify({ release: inventory.baseline, upstream, candidate, compilers, rounds, chromium,
-  minify, minifiedInventorySha256: minify ? hash(minifiedSizes) : undefined,
+  minify, checkedPackage: previousBuild ? checkedPackage : undefined, minifiedInventorySha256: minify ? hash(minifiedSizes) : undefined,
   node: process.version, cpu: cpus()[0].model, inventorySha256: hash(inventoryBytes), runnerSha256: hash(await readFile(import.meta.filename)),
   workloads, manifest, samples }), { level: 9 }));

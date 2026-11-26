@@ -4,6 +4,7 @@ from collections import Counter, defaultdict
 import gzip
 import hashlib
 import json
+from math import comb
 from pathlib import Path
 from statistics import median
 
@@ -19,8 +20,10 @@ runner_hash = hashlib.sha256((bench / "review-matrix.mjs").read_bytes()).hexdige
 if "minify" not in result:
     # Original eight-round archives predate the minification switch.
     assert result["runnerSha256"] == "9b76e7f77a7653cf5ada4b8d114ce9572a0e34796f8ecd904820a0299474289f"
-else:
+elif result["runnerSha256"] != "b9e3afa3b4354a6544ebb8ea5d593f7d3ed193706585e6a2db1a103ec6d977de":
     assert result["runnerSha256"] == runner_hash
+else:
+    assert "checkedPackage" not in result
 if result.get("minify"):
     inventory = (bench / "results/minified-sizes.json").read_bytes()
     assert result["minifiedInventorySha256"] == hashlib.sha256(inventory).hexdigest()
@@ -45,6 +48,7 @@ assert focus.keys() == result["workloads"].keys()
 rounds = result["rounds"]
 languages = {"c": "C", "cpp": "C++", "rust": "Rust"}
 versions = ["release", "main", "bundled", "external"]
+timed_versions = versions + (["previous"] if result.get("checkedPackage") else [])
 samples = defaultdict(dict)
 positions = defaultdict(list)
 for row in result["samples"]:
@@ -61,9 +65,9 @@ for demo in focus:
         counts = Counter()
         for r in range(rounds):
             block = sorted(positions[(demo, lang), r])
-            assert len(block) == 4 and block[-1][0] == block[0][0] + 3
+            assert len(block) == len(timed_versions) and block[-1][0] == block[0][0] + len(block) - 1
             counts.update((index, version) for index, (_, version) in enumerate(block))
-        assert len(counts) == 16 and set(counts.values()) == {rounds // 4}
+        assert len(counts) == len(timed_versions)**2 and set(counts.values()) == {rounds // len(timed_versions)}
 
 def paired(rows, base, value):
     return median(value(row) / value(base[r]) for r, row in rows.items())
@@ -79,7 +83,7 @@ for demo, (metric, title) in focus.items():
         def first(row):
             return row["firstResultMs"]
         builds = {v: samples[demo, lang, v] for v in versions}
-        shims = [(language, rows) for (d, language, v), rows in samples.items() if d == demo and v not in versions]
+        shims = [(language, rows) for (d, language, v), rows in samples.items() if d == demo and v not in timed_versions]
         best = min(median(map(warm, rows.values())) for _, rows in shims)
         matched = [median(map(warm, rows.values())) for language, rows in shims if language == lang]
         cells = []
@@ -125,6 +129,46 @@ for v in versions:
             x = stats[v, k]
             threshold = 10 if "shim" in k.lower() else 1
             print(k, sum(y <= threshold for y in x), "/", len(x), "maximum", round(max(x), 3))
+if result.get("checkedPackage"):
+    assert result["checkedPackage"] == "@bytecodealliance/jco-cm-runtime"
+    rank = max(i for i in range(rounds) if 2 * sum(comb(rounds,j) for j in range(i+1)) / 2**rounds <= .05)
+    changes = defaultdict(list)
+    print("\n| Guest and operation | Entry bytes saved | Gzip bytes saved | Paired import | Paired first result | Paired warm operation |")
+    print("| --- | ---: | ---: | ---: | ---: | ---: |")
+    for demo, (metric, title) in focus.items():
+        for lang, label in languages.items():
+            current = samples[demo,lang,"external"]
+            previous = samples[demo,lang,"previous"]
+            old = result["manifest"][previous[0]["entry"]]
+            new = result["manifest"][current[0]["entry"]]
+            sizes = [old[k] - new[k] for k in ("bytes","gzip")]
+            assert all(size > 0 for size in sizes)
+            for key, size in zip(("size","gzip"), sizes):
+                changes[key].append(size)
+            predecessors = Counter()
+            for r in range(rounds):
+                order = [v for _,v in sorted(positions[(demo,lang),r])]
+                predecessors.update(zip(order, order[1:]))
+                def requests(row):
+                    return {q["path"].replace("/previous/","/external/"): q["bytes"]
+                            for q in row["requests"] if q["path"] != row["entry"]}
+                assert requests(current[r]) == requests(previous[r])
+            assert len(predecessors) == 20 and set(predecessors.values()) == {rounds // 5}
+            fields = []
+            for key, get in (("import", lambda row: row["loadMs"]), ("first", lambda row: row["firstResultMs"]),
+                             ("warm", lambda row: row["warm"][metric])):
+                ratios = sorted(get(current[r])/get(previous[r]) for r in range(rounds))
+                mid, lo, hi = median(ratios), ratios[rank], ratios[-rank-1]
+                changes[key].append(mid)
+                changes[key+"Faster"].append(hi < 1)
+                changes[key+"Slower"].append(lo > 1)
+                fields.append(f"{mid:.2f}× ({lo:.2f}–{hi:.2f})")
+            print("|", label, title, "|", *[str(s)+" |" for s in sizes], " | ".join(fields), "|")
+    for key in ("size","gzip","import","first","warm"):
+        print(key, "min / median / max", *(round(fn(changes[key]),4) for fn in (min,median,max)))
+        if key in ("import","first","warm"):
+            print("Intervals entirely faster / slower:", sum(changes[key+"Faster"]),sum(changes[key+"Slower"]))
+
 if args.plot:
     import matplotlib
     matplotlib.use("Agg")
