@@ -81,7 +81,7 @@ elif result["runnerSha256"] == "cf7384f34b03e4389275108649c7dbbaa719ab94cbcfd91e
     # Benchmark commit f2d27b2 supplied ROUNDS=10 explicitly.
     assert result["checkedPackage"] and result["rounds"] == 10
 else:
-    assert result["runnerSha256"] in {runner_hash, "3d97f1f9f129c0e2cb208c3af2fe975cf6082343173a102152b3418ef72d4600", "07165d2b608750c3e0c01f73a1bcd2ab8c68761030fe8ff07fa8bb8a4039e297"}
+    assert result["runnerSha256"] in {runner_hash, "6150410709be1ac88973e3d113affce3b2dc875ea7523964bd074816189f543b", "3d97f1f9f129c0e2cb208c3af2fe975cf6082343173a102152b3418ef72d4600", "07165d2b608750c3e0c01f73a1bcd2ab8c68761030fe8ff07fa8bb8a4039e297"}
 if result.get("minify"):
     inventory = (bench / "results/minified-sizes.json").read_bytes()
     assert result["minifiedInventorySha256"] == hashlib.sha256(inventory).hexdigest()

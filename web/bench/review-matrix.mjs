@@ -213,6 +213,8 @@ if (compareCompilers) {
 const blocks = new Map();
 const samples = [];
 let chromium;
+class PageTimeout extends Error {}
+const discardedRounds = [];
 for (let round = 0; round < rounds; round++) {
   const queue = [];
   for (const key of shuffle([...groups.keys()])) {
@@ -223,10 +225,36 @@ for (let round = 0; round < rounds; round++) {
     const { labels, order } = blocks.get(key);
     queue.push(...order[round % sequences.length].map(i => labels[i]));
   }
+  // Restart the whole balanced round after a browser hang. Keeping a partial
+  // round would give some builds more observations or a different predecessor.
+  for (let attempt = 0; ; attempt++) {
+    try {
+      samples.push(...await measureRound(round, queue));
+      break;
+    } catch (error) {
+      if (!(error instanceof PageTimeout) || attempt === 2) throw error;
+      discardedRounds.push({ round, attempt, reason: error.message });
+      console.warn("Repeating round", round + 1, error.message);
+    }
+  }
+  console.log("Completed full matrix round", round + 1, "of", rounds);
+}
+await writeFile(output, gzipSync(JSON.stringify({ release: inventory.baseline, upstream, commonBase, candidate, compilers, rounds, chromium,
+  discardedRounds, minify, ...(compareCompilers && { compareCompilers }), checkedPackage: useCheckedPackage ? checkedPackage : undefined, minifiedInventorySha256: minify ? hash(minifiedSizes) : undefined,
+  node: process.version, cpu: cpus()[0].model, inventorySha256: hash(inventoryBytes), runnerSha256: hash(await readFile(import.meta.filename)),
+  workloads, manifest, samples }), { level: 9 }));
+
+async function measureRound(round, queue) {
+  const roundSamples = [];
   const gate = Promise.withResolvers(), done = Promise.withResolvers();
   done.promise.catch(() => {});
   let position = 0;
-  const watchdog = setTimeout(() => done.reject(Error("Page stopped responding at " + position)), 90000);
+  // A busy machine can take more than 90 seconds for a whole round.
+  // Reset the inactivity timer after each verified document.
+  const watchdog = setTimeout(() => {
+    const build = queue[position];
+    done.reject(new PageTimeout(`Page stopped responding at ${position}: ${build?.entry}`));
+  }, 90000);
   const server = createServer(async (req, res) => {
     try {
       const path = new URL(req.url, "http://localhost").pathname;
@@ -266,7 +294,7 @@ for (let round = 0; round < rounds; round++) {
         if (useCheckedPackage && ["previous", "external", "previous-external"].includes(build.version)) {
           assert(data.requests.some(r => r.path === runtimePrefix + "intrinsics/sync.js"));
         }
-        samples.push({ round, position, ...build, ...data });
+        roundSamples.push({ round, position, ...build, ...data });
         position++;
         watchdog.refresh();
         if (position === queue.length) { res.end(); done.resolve(); }
@@ -298,9 +326,5 @@ for (let round = 0; round < rounds; round++) {
       await browser?.close();
     } finally { server.closeAllConnections(); server.close(); }
   }
-  console.log("Completed full matrix round", round + 1, "of", rounds);
+  return roundSamples;
 }
-await writeFile(output, gzipSync(JSON.stringify({ release: inventory.baseline, upstream, commonBase, candidate, compilers, rounds, chromium,
-  minify, ...(compareCompilers && { compareCompilers }), checkedPackage: useCheckedPackage ? checkedPackage : undefined, minifiedInventorySha256: minify ? hash(minifiedSizes) : undefined,
-  node: process.version, cpu: cpus()[0].model, inventorySha256: hash(inventoryBytes), runnerSha256: hash(await readFile(import.meta.filename)),
-  workloads, manifest, samples }), { level: 9 }));
