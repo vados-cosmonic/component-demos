@@ -21,3 +21,31 @@ A second 12-round matrix used byte-identical shipping assets, the same Chromium 
 In each row, a marker shows the median across the three guest languages and a line spans their range. Lower ratios mean less time. The left panel compares warm execution against the fastest compiled shim for that operation. The right compares time from module import to the first completed guest result against Jco 1.13.0 within the same language and browser round.
 
 ![Warm time relative to the fastest compiled shim and first-result time relative to release for Jco 1.13.0, main, internal Oxc and external runtime.](../web/bench/results/builds-overview-3e25d8d82.png)
+
+## Results by guest and workload on PR 62
+
+Each warm shim ratio uses the fastest compiled shim measured for that operation across the guest languages. Ratios against release pair the same language, workload and browser round. A ratio below 1 means Jco took less time. [Measured rounds and asset digests](../web/bench/results/review-matrix-sync-task-3e25d8d82.json.gz)
+
+| Operation | Guest | Bundled / shim | External / shim | Bundled / 1.13 warm | External / 1.13 warm | Bundled / 1.13 first result | External / 1.13 first result |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Attribute write | C | 0.55× | 0.56× | 0.56× | 0.56× | 0.71× | 0.76× |
+| Attribute write | C++ | 0.52× | 0.52× | 0.49× | 0.51× | 0.66× | 0.74× |
+| Attribute write | Rust | 0.67× | 0.68× | 0.56× | 0.58× | 0.69× | 0.78× |
+| Canvas fillRect | C | 0.56× | 0.62× | 0.94× | 1.05× | 1.10× | 1.39× |
+| Canvas fillRect | C++ | 0.53× | 0.52× | 0.89× | 0.93× | 1.04× | 1.28× |
+| Canvas fillRect | Rust | 0.58× | 0.54× | 0.90× | 0.94× | 1.04× | 1.23× |
+| Canvas pixel read | C | 1.82× | 1.73× | 1.10× | 1.00× | 1.12× | 1.33× |
+| Canvas pixel read | C++ | 1.78× | 1.87× | 0.98× | 1.03× | 1.17× | 1.32× |
+| Canvas pixel read | Rust | 1.77× | 1.78× | 0.90× | 0.99× | 1.18× | 1.17× |
+| DOM ID lookup | C | 0.94× | 0.92× | 0.77× | 0.77× | 1.02× | 1.34× |
+| DOM ID lookup | C++ | 0.88× | 0.85× | 0.78× | 0.76× | 1.08× | 1.30× |
+| DOM ID lookup | Rust | 0.82× | 0.75× | 0.72× | 0.67× | 1.01× | 1.17× |
+| Tree traversal | C | 4.45× | 4.57× | 0.98× | 1.04× | 0.94× | 1.21× |
+| Tree traversal | C++ | 4.93× | 4.98× | 1.03× | 1.10× | 0.93× | 1.25× |
+| Tree traversal | Rust | 4.05× | 4.56× | 0.94× | 1.07× | 0.96× | 1.18× |
+| Read 1 KiB string | C | 0.37× | 0.36× | 0.47× | 0.49× | 0.92× | 1.00× |
+| Read 1 KiB string | C++ | 0.37× | 0.38× | 0.47× | 0.47× | 0.97× | 1.04× |
+| Read 1 KiB string | Rust | 0.36× | 0.38× | 0.46× | 0.49× | 0.98× | 0.97× |
+| Table creation | C | 2.91× | 2.80× | 1.08× | 1.11× | 1.15× | 1.62× |
+| Table creation | C++ | 2.56× | 2.60× | 1.06× | 0.98× | 1.13× | 1.54× |
+| Table creation | Rust | 2.37× | 2.77× | 1.05× | 1.05× | 1.27× | 1.51× |

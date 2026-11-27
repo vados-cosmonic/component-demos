@@ -1,4 +1,4 @@
-"""Render the binding-optimization measurements into the README."""
+"""Render the binding-optimization measurements into the candidate study."""
 from collections import defaultdict
 from hashlib import sha256
 import json

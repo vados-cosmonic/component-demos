@@ -2,6 +2,19 @@
 
 [Benchmark overview](../README.md)
 
+## Complete payload on the integration PR
+
+The 21 entries cover seven demos in C, C++ and Rust. The browser request list determines which runtime modules count for each component. Summing per-file compressed sizes models each JS request being compressed independently. Tiny inlined adapter cores count toward the entry's JS size. The final column covers separately served Wasm. [Primary matrix, requests and per-file inventory](../web/bench/results/review-matrix-sync-task-3e25d8d82.json.gz)
+
+| Build | Entry KiB, median | Complete raw JS KiB, median (range) | Complete gzip JS KiB, median | JS requests, median | Raw guest Wasm KiB, median |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Jco 1.13.0 | 9.58 | 9.58 (8.47–11.01) | 3.01 | 1 | 66.61 |
+| Upstream main | 111.34 | 111.34 (102.86–122.90) | 25.42 | 1 | 66.61 |
+| Internal Oxc | 69.75 | 69.75 (66.23–73.08) | 18.57 | 1 | 66.61 |
+| External runtime | 23.09 | 106.75 (104.16–110.14) | 34.67 | 15 | 66.61 |
+
+External Jco serves a smaller generated entry, but the first component also fetches its shared dependencies. The browser can reuse those modules on a later navigation when deployment caching permits it. [Repeat-navigation and shared-runtime measurements](browser-delivery.md)
+
 ### Which runtime methods do the demos call?
 
 Chromium recorded calls in four runtime classes while each component loaded, ran its full demo workload and shut down via `whenIdle()` and `stop()`. Each of the 42 documents loaded the same minified JS and Wasm as the timing matrix. Internal Oxc and external bindgen reached the same set of 36 named methods. A method can run in several phases. Constructors and named accessors count as methods. [Per-document V8 counts and method ranges](../web/bench/results/runtime-class-methods-4b9682bfe.json.gz)
