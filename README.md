@@ -44,9 +44,14 @@ A deployment experiment measured time from navigation to the first C table resul
 
 ## Review and remaining work
 
-The integration PR contains the full compiler changes. Review begins with the shared task and resource operations on the pinned upstream main, followed by the separate package split on its integrated prerequisite. The runtime slice passed 509 checked tests, its packed-package consumer test and embedded snapshot verification. [Runtime operations PR](https://github.com/vados-cosmonic/jco/pull/63) · [Packaging PR](https://github.com/vados-cosmonic/jco/pull/64)
+| Fork PR | Scope and review order |
+| --- | --- |
+| [#63](https://github.com/vados-cosmonic/jco/pull/63) | Shared synchronous task and resource operations on the pinned upstream main. Includes provider documentation, the checked runtime and the embedded snapshot. Passed 509 checked tests and packed-consumer conformance. |
+| [#62](https://github.com/vados-cosmonic/jco/pull/62) | Integration branch with compiler eligibility rules and measurements for both bindgen modes. |
+| [#64](https://github.com/vados-cosmonic/jco/pull/64) | Two packaging commits already in #62, isolated against the point immediately before the package split. |
+| [#65](https://github.com/vados-cosmonic/jco/pull/65) | Reentrant FIFO callback fix on top of #62. The exact head passed 527 checked runtime tests, 374 Rust tests and 71 integration fixtures. |
 
-The lock-release follow-up at local revision `81c0d5d61` fixes duplicate callbacks when a waiter reenters the component. In the isolated Chromium probe the empty lock cycle fell from 36.39 to 19.54 ns and the 32-callback cycle from 1,464.84 to 673.22 ns. The one-callback interval included parity. Full-suite FIFO validation, separate upstream review of the changes, and cold-start parity with 1.13.0 are outstanding at this checkpoint. [Callback measurements and checks](docs/lock-release.md) · [Review history](docs/revision-comparisons.md)
+The FIFO change fixes duplicate callbacks on nested lock release. In the first focused trial, the empty lock cycle fell from 36.39 to 19.54 ns and the 32-callback cycle from 1,464.84 to 673.22 ns. The one-callback interval included parity. [Callback measurements](docs/lock-release.md) · [Revision comparisons](docs/revision-comparisons.md)
 
 ## Reproduce the comparison
 

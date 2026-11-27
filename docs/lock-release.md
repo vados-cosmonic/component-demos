@@ -2,9 +2,9 @@
 
 [Benchmark overview](../README.md)
 
-### Local checkpoint for reentrant lock release
+## Why the runtime needs a shared cursor
 
-On the fork PR at `fe136cf1a`, a callback that acquires and releases the guest lock again can cause a later callback to run twice for one registration. The local FIFO change at `81c0d5d61` advances a shared cursor before invoking each callback. The inline Rust-generated bindings and checked runtime implement the same ordering. The runtime has a regression test for duplicate registrations, reentry, new registrations during release and a callback that throws. The final FIFO revision is local and its full demo matrix is pending.
+On the fork PR at `fe136cf1a`, a callback that acquires and releases the guest lock again can cause a later callback to run twice for one registration. The FIFO follow-up at `81c0d5d61` advances a shared cursor before invoking each callback. The inline Rust-generated bindings and checked runtime implement the same ordering. The runtime has a regression test for duplicate registrations, reentry, new registrations during release and a callback that throws. The exact head passed 527 checked runtime tests, 197 Rust tests with internal bundling, 177 Rust tests with the external configuration, 71 integration fixtures and the embedded runtime consistency check. [FIFO follow-up PR](https://github.com/vados-cosmonic/jco/pull/65)
 
 | Callbacks registered per release | Previous runtime, ns | FIFO runtime, ns | Paired FIFO / previous (individual 95% interval) |
 | ---: | ---: | ---: | ---: |
