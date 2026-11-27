@@ -12,7 +12,17 @@ A deployment that already knows the URLs can put a `Link` header on its HTML res
 | Internal Oxc | 436.30 / 370.45 ms | 0.854× (0.779–0.947) | 0.983× (0.766–1.118) |
 | External runtime | 509.33 / 478.23 ms | 0.915× (0.846–0.989) | 1.212× (1.103–1.365) |
 
-The internal and external first results arrived 14.6% and 8.5% sooner in the paired comparison. Applying the same hints to release and external Jco still left external Jco 21.2% slower. Internal Jco's interval included parity. Each cell used 12 fresh browser contexts across 12 balanced rounds, with all six treatments per round. The ratios pair observations within rounds, so they can differ from ratios of the displayed medians. Absolute times include loading the demo page and running the table guest. This single-workload deployment experiment leaves the default generator and the other 20 workloads open.
+The internal and external first results arrived 14.6% and 8.5% sooner in the paired comparison. Applying the same hints to release and external Jco still left external Jco 21.2% slower. Internal Jco's interval included parity. Each cell used 12 fresh browser contexts across 12 balanced rounds, with all six treatments per round. The ratios pair observations within rounds, so they can differ from ratios of the displayed medians. Absolute times include loading the demo page and running the table guest. This deployment trial measures the table workload with explicit response headers. The default generator still has a cold-start gap.
+
+We then repeated the C trial and ran the C++ and Rust versions consecutively on the same compiled assets. Each trial used another 72 fresh contexts. The table reports paired time to the first result, with individual 95% intervals.
+
+| Guest | Internal, hinted / ordinary | External, hinted / ordinary | Hinted internal / hinted release | Hinted external / hinted release |
+| --- | ---: | ---: | ---: | ---: |
+| C, repeat | 0.852 (0.809–0.950) | 0.885 (0.790–1.011) | 0.989 (0.953–1.118) | 1.262 (1.168–1.435) |
+| C++ | 0.867 (0.767–0.889) | 0.839 (0.758–0.902) | 1.013 (0.932–1.061) | 1.255 (1.137–1.333) |
+| Rust | 0.880 (0.781–0.919) | 0.885 (0.785–0.951) | 1.026 (0.845–1.168) | 1.260 (1.159–1.328) |
+
+Internal first-result time fell 12–15% across the three guests. External point estimates fell 11–16%, with the C repeat interval including parity. Compared with an equally hinted release, internal intervals included parity for all three guests and external took 25–26% longer. The release control itself varied from 446 ms on the first ordinary C navigation trial to 209 ms in its repeat. Only within-round ratios are used for the conclusions. [C repeat](../web/bench/results/navigation-preload-c-repeat-3e25d8d82.json.gz) · [C++](../web/bench/results/navigation-preload-cpp-repeat-3e25d8d82.json.gz) · [Rust](../web/bench/results/navigation-preload-rust-repeat-3e25d8d82.json.gz)
 
 To repeat, use the checked runtime and internal compiler at `3e25d8d82`, set `CHROME_BIN` to Chromium, and run from the repository root.
 

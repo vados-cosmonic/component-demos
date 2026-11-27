@@ -2,6 +2,58 @@
 
 [Benchmark overview](../README.md)
 
+## FIFO follow-up on PR 65
+
+The exact FIFO head at `81c0d5d61` completed 12 balanced Chromium rounds, including all six Jco builds and the compiled shims, with 1,668 fresh documents and zero discarded rounds in the completed run. The preceding compiler and package matched the archived integration assets. Each workload served the same guest core across Jco builds. Compare revisions using measurements paired within this run. The release first-result median was 118.75 ms here and 63.33 ms in the earlier run. [Raw matrix](../web/bench/results/review-matrix-fifo-81c0d5d61.json.gz) · [FIFO PR](https://github.com/vados-cosmonic/jco/pull/65)
+
+| FIFO matrix, medians across 21 workloads | Jco 1.13.0 | Upstream main | Internal Oxc | External runtime |
+| --- | ---: | ---: | ---: | ---: |
+| Import and initialization (ms) | 11.27 | 27.68 | 20.88 | 44.95 |
+| First result (ms) | 118.75 | 425.23 | 122.40 | 154.38 |
+| Complete JS, gzip (KiB) | 3.01 | 25.42 | 18.61 | 34.71 |
+
+Relative to the preceding compiler in the same rounds, FIFO's overall paired warm ratios were **0.981×** (0.930–1.035) internally and **0.986×** (0.956–1.027) externally. First-result ratios were **1.006×** (0.956–1.040) and **1.015×** (0.998–1.036). Each interval summarizes the 12 round-level medians across workloads. Two internal workload import intervals and one external first-result interval were wholly slower. The fix adds 109 raw JS bytes in each mode and a median of 47 gzip bytes internally or 45 externally. [Correctness and isolated cost of callbacks](lock-release.md)
+
+Both modes met the warm 10× shim target on all 21 headlines and 81 of 84 individual phases. Median import time exceeded 1.13.0 on all 21 workloads in each mode, with every individual interval wholly slower. No warm headline had an interval wholly slower than release. The largest warm shim gaps for the two modes were 5.40× and 5.82×, both on Rust tree traversal.
+
+![FIFO warm and first-result performance relative to the compiled shims and Jco 1.13.0](../web/bench/results/builds-overview-81c0d5d61.png)
+
+<details><summary>All 21 workloads at the FIFO revision</summary>
+
+| Operation | Guest | Bundled / shim | External / shim | Bundled / 1.13 warm | External / 1.13 warm | Bundled / 1.13 first result | External / 1.13 first result |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Attribute write | C | 0.48× | 0.46× | 0.51× | 0.55× | 0.69× | 0.79× |
+| Attribute write | C++ | 0.45× | 0.58× | 0.47× | 0.47× | 0.70× | 0.90× |
+| Attribute write | Rust | 0.61× | 0.59× | 0.58× | 0.59× | 0.73× | 0.84× |
+| Canvas fillRect | C | 0.48× | 0.55× | 0.93× | 0.98× | 1.12× | 1.47× |
+| Canvas fillRect | C++ | 0.56× | 0.58× | 0.94× | 1.00× | 1.00× | 1.38× |
+| Canvas fillRect | Rust | 0.51× | 0.50× | 0.88× | 0.90× | 1.13× | 1.40× |
+| Canvas pixel read | C | 1.77× | 1.60× | 1.06× | 1.06× | 1.14× | 1.54× |
+| Canvas pixel read | C++ | 1.61× | 2.00× | 1.01× | 1.06× | 1.13× | 1.46× |
+| Canvas pixel read | Rust | 1.75× | 1.67× | 1.02× | 0.99× | 1.21× | 1.41× |
+| DOM ID lookup | C | 0.80× | 0.88× | 0.80× | 0.76× | 1.03× | 1.30× |
+| DOM ID lookup | C++ | 0.77× | 0.68× | 0.70× | 0.75× | 1.03× | 1.26× |
+| DOM ID lookup | Rust | 0.68× | 0.76× | 0.77× | 0.84× | 1.07× | 1.26× |
+| Tree traversal | C | 4.75× | 5.68× | 1.02× | 1.00× | 1.02× | 1.38× |
+| Tree traversal | C++ | 4.18× | 5.45× | 0.90× | 1.22× | 1.12× | 1.35× |
+| Tree traversal | Rust | 5.40× | 5.82× | 1.04× | 1.11× | 1.13× | 1.37× |
+| Read 1 KiB string | C | 0.34× | 0.50× | 0.42× | 0.57× | 0.91× | 1.00× |
+| Read 1 KiB string | C++ | 0.38× | 0.34× | 0.40× | 0.36× | 0.94× | 1.02× |
+| Read 1 KiB string | Rust | 0.37× | 0.37× | 0.39× | 0.41× | 0.90× | 0.94× |
+| Table creation | C | 3.13× | 2.99× | 1.00× | 1.07× | 1.21× | 1.80× |
+| Table creation | C++ | 3.32× | 3.24× | 1.07× | 1.20× | 1.14× | 1.70× |
+| Table creation | Rust | 2.68× | 3.56× | 0.92× | 1.16× | 1.18× | 1.55× |
+
+</details>
+
+To verify the same generated assets and regenerate the tables and chart, run from the repository root.
+
+```sh
+python3 web/bench/review-matrix-report.py web/bench/results/review-matrix-fifo-81c0d5d61.json.gz \
+  --compare-entries web/bench/results/review-matrix-sync-task-3e25d8d82.json.gz \
+  --release-intervals --plot-builds /tmp/fifo-overview.png
+```
+
 ## Browser performance on the Jco review branch
 
 The review branch beat upstream main on all 21 warm headline workloads. Across C, C++ and Rust, tree traversal ran **8.4–9.2× faster internally** and **7.8–7.9× faster externally** than main. For warm table creation the ranges were **4.9–5.5×** and **4.5–5.5×**. These are within-round comparisons against main at `326f52ab4`. [Jco performance PR](https://github.com/vados-cosmonic/jco/pull/62) · [Pinned upstream revision](https://github.com/bytecodealliance/jco/commit/326f52ab4403466b21b989c995f9bb97b2b9e038)

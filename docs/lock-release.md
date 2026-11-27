@@ -20,3 +20,18 @@ To verify the FIFO results from the benchmark root, run the following command. T
 ```sh
 python3 web/bench/lock-release-report.py web/bench/results/lock-release-fifo-81c0d5d61.json.gz web/bench/results/lock-release-fifo-assets-81c0d5d61.json.gz
 ```
+
+## Independent callback repeat on the full-matrix assets
+
+Sixteen more Chromium processes exercised the exact FIFO runtime and its preceding package. The direction and intervals repeat for zero and 32 callbacks. At one callback the repeat estimate was 16.8% slower, close to the first estimate of 17.4%. Both individual intervals include parity. Four callbacks were faster in the first trial, while the repeat interval included parity. No application-wide warm or first-result improvement was established by the paired matrix. [Repeat samples](../web/bench/results/lock-release-fifo-repeat-81c0d5d61.json.gz) · [Full browser matrix and controls](browser-performance.md#fifo-follow-up-on-pr-65)
+
+| Callbacks | Preceding runtime, ns | FIFO runtime, ns | Paired FIFO / preceding time (individual 95% interval) |
+| ---: | ---: | ---: | ---: |
+| 0 | 49.96 | 26.58 | 0.535 (0.477–0.642) |
+| 1 | 152.13 | 175.13 | 1.168 (0.930–1.295) |
+| 4 | 340.88 | 280.00 | 0.744 (0.598–1.031) |
+| 32 | 1,857.91 | 983.89 | 0.499 (0.387–0.611) |
+
+```sh
+python3 web/bench/lock-release-report.py web/bench/results/lock-release-fifo-repeat-81c0d5d61.json.gz web/bench/results/review-matrix-fifo-81c0d5d61.json.gz
+```

@@ -4,18 +4,20 @@ This fork measures browser bindings for the same C, C++, and Rust WebAssembly co
 
 ## Browser performance on the Jco review branch
 
-Both modes met the **10× target on all 21 warm headline workloads** on the published PR at `fe136cf1a`. Across guest languages, tree traversal ran 8.4–9.2× faster than main internally and 7.8–7.9× faster externally. For table creation the gains were 4.9–5.5× and 4.5–5.5×, respectively. The primary measurement used 12 balanced Chromium rounds and 1,668 fresh documents. A second matrix used byte-identical PR assets. [Per-workload results and repeat](docs/browser-performance.md) · [DOM and canvas controls](docs/dom-performance.md)
+Both the integration PR and its FIFO follow-up met the **10× shim target on all 21 warm headline workloads** in both modes. On the FIFO head, Rust tree traversal had the largest gap at **5.40× internally and 5.82× externally**. The one internal warm median above upstream main was Rust canvas readback at 1.015× (individual 95% interval 0.884–1.081). Each matrix used 12 balanced Chromium rounds and 1,668 fresh documents. [Per-workload results and controls](docs/browser-performance.md) · [DOM and canvas breakdown](docs/dom-performance.md)
 
-| Primary matrix | Internal Oxc | External runtime |
-| --- | ---: | ---: |
-| Warm workloads faster than upstream main | 21/21 | 21/21 |
-| Largest warm time relative to fastest compiled shim | 4.93× | 4.98× |
-| Warm medians at or below Jco 1.13.0 | 16/21 | 13/21 |
-| First-result medians at or below Jco 1.13.0 | 9/21 | 5/21 |
+| Warm or first-result comparison | #62 internal | #62 external | #65 FIFO internal | #65 FIFO external |
+| --- | ---: | ---: | ---: | ---: |
+| Warm workloads faster than upstream main | 21/21 | 21/21 | 20/21 | 21/21 |
+| Largest warm time relative to fastest compiled shim | 4.93× | 4.98× | 5.40× | 5.82× |
+| Warm medians at or below Jco 1.13.0 | 16/21 | 13/21 | 14/21 | 12/21 |
+| First-result medians at or below Jco 1.13.0 | 9/21 | 5/21 | 7/21 | 5/21 |
+
+On the integration PR, tree traversal ran 8.4–9.2× faster than main internally and 7.8–7.9× faster externally across the three guest languages. Table creation ran 4.9–5.5× and 4.5–5.5× faster, respectively.
 
 Across all 84 original warm phases, 81 met the 10× target. In the other three phases, the fastest shim discarded a live DOM collection. When it also materialized and dropped the 2,000 handles returned by the component, both Jco modes took 1.46–1.64× the shim time. [Equal-work measurements](docs/runtime-packaging.md#loading-synchronous-task-operations-in-the-browser)
 
-![Warm time against the fastest compiled shim and first-result time against Jco 1.13.0, across all four Jco builds.](web/bench/results/builds-overview-3e25d8d82.png)
+![Warm time against the fastest compiled shim and first-result time against Jco 1.13.0, across all four Jco builds.](web/bench/results/builds-overview-81c0d5d61.png)
 
 ## Host calls and resources
 
@@ -28,7 +30,7 @@ A synchronous leaf can reuse its active guest task and skip a subtask allocation
 
 ## Module size and cold startup
 
-These are medians across the 21 workloads. JavaScript sizes include the generated binding and all runtime modules it fetches. Guest Wasm and per-file Brotli measurements are in the size breakdown. [Module size](docs/module-size.md) · [Cold-start and instantiation breakdown](docs/cold-start.md)
+These are medians across the 21 workloads on the integration PR (#62). JavaScript sizes include the generated binding and all runtime modules it fetches. Guest Wasm and per-file Brotli measurements are in the size breakdown. [Module size](docs/module-size.md) · [Cold-start and instantiation breakdown](docs/cold-start.md)
 
 | Median | Jco 1.13.0 | Upstream main | Internal Oxc | External runtime |
 | --- | ---: | ---: | ---: | ---: |
@@ -40,7 +42,7 @@ These are medians across the 21 workloads. JavaScript sizes include the generate
 
 Cold startup is the remaining gap. Import was measurably slower than 1.13.0 in both runs on 20/21 internal and 21/21 external workloads. Even with all cores compiled and the bindings imported, the first table instance took about 1.0 ms on release, 4.6–4.8 ms internally and 5.2–5.3 ms externally. Splitting seven synchronous task operations out of the external async driver saved 4,212 Brotli bytes and reduced paired import time by 6.7% against the preceding external build. [Runtime packaging](docs/runtime-packaging.md) · [HTTP, caching and application bundling](docs/browser-delivery.md)
 
-A deployment experiment measured time from navigation to the first C table result. Preload links in the HTML response reduced paired time by 14.6% internally and 8.5% externally. With the same hints applied to release, external Jco still took 21.2% longer. [Cold-navigation measurements](docs/cold-start.md#preloading-the-bindings-from-the-navigation-response)
+Preload links on the HTML response reduced time from navigation to the first table result. Across the C repeat, C++ and Rust trials, internal Jco took 12–15% less time with hints. External point estimates improved 11–16%, with the C interval including parity. Against an equally hinted release, internal intervals included parity and external Jco still took 25–26% longer across the three guests. [Cold-navigation measurements](docs/cold-start.md#preloading-the-bindings-from-the-navigation-response)
 
 ## Review and remaining work
 
@@ -51,7 +53,7 @@ A deployment experiment measured time from navigation to the first C table resul
 | [#64](https://github.com/vados-cosmonic/jco/pull/64) | Two packaging commits already in #62, isolated against the point immediately before the package split. |
 | [#65](https://github.com/vados-cosmonic/jco/pull/65) | Reentrant FIFO callback fix on top of #62. The exact head passed 527 checked runtime tests, 374 Rust tests and 71 integration fixtures. |
 
-The FIFO change fixes duplicate callbacks on nested lock release. In the first focused trial, the empty lock cycle fell from 36.39 to 19.54 ns and the 32-callback cycle from 1,464.84 to 673.22 ns. The one-callback interval included parity. [Callback measurements](docs/lock-release.md) · [Revision comparisons](docs/revision-comparisons.md)
+The FIFO change fixes duplicate callbacks on nested lock release. In the first focused trial, the empty lock cycle fell from 36.39 to 19.54 ns and the 32-callback cycle from 1,464.84 to 673.22 ns. In an independent repeat the empty cycle took 0.535× the previous time and the 32-callback cycle took 0.499×. Both one-callback point estimates were about 17% slower, and both intervals included parity. [Callback measurements](docs/lock-release.md) · [Revision comparisons](docs/revision-comparisons.md)
 
 ## Reproduce the comparison
 
