@@ -2,6 +2,40 @@
 
 [Benchmark overview](../README.md)
 
+## Upstream PR with scoped task reuse
+
+The compiler at `8030a21cf` verifies that a synchronous guest owns the executing task before reusing it. Twelve balanced Chromium rounds covered four Jco builds and the compiled shims, with 1,164 fresh documents and zero discarded rounds. Both modes beat main on all 21 warm workloads. The largest gaps to the compiled shim were 5.90× internally and 7.15× externally, both on C tree traversal. [Raw measurements](../web/bench/results/review-matrix-upstream-8030a21cf.json.gz) · [Upstream PR](https://github.com/bytecodealliance/jco/pull/2551)
+
+Cold import and initialization remained slower than Jco 1.13.0 in all 21 individual paired intervals in both modes. Three internal and one external warm interval were also wholly slower than 1.13.0. The table reports workload medians. A ratio below 1 means Jco took less time than the comparison build.
+
+<details><summary>All 21 workloads with scoped task reuse</summary>
+
+| Operation | Guest | Bundled / shim | External / shim | Bundled / 1.13 warm | External / 1.13 warm | Bundled / 1.13 first result | External / 1.13 first result |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Attribute write | C | 0.54× | 0.49× | 0.54× | 0.52× | 0.63× | 0.74× |
+| Attribute write | C++ | 0.49× | 0.48× | 0.54× | 0.58× | 0.67× | 0.87× |
+| Attribute write | Rust | 0.68× | 0.78× | 0.58× | 0.61× | 0.78× | 0.89× |
+| Canvas fillRect | C | 0.64× | 0.80× | 0.98× | 1.01× | 1.12× | 1.45× |
+| Canvas fillRect | C++ | 0.72× | 0.75× | 0.95× | 0.96× | 1.21× | 1.41× |
+| Canvas fillRect | Rust | 0.71× | 0.64× | 0.94× | 0.92× | 1.07× | 1.22× |
+| Canvas pixel read | C | 2.14× | 1.93× | 1.07× | 0.94× | 1.32× | 1.62× |
+| Canvas pixel read | C++ | 1.76× | 1.73× | 1.02× | 1.00× | 1.14× | 1.47× |
+| Canvas pixel read | Rust | 2.04× | 2.20× | 1.37× | 1.14× | 1.21× | 1.73× |
+| DOM ID lookup | C | 0.71× | 0.73× | 0.73× | 0.77× | 0.98× | 1.18× |
+| DOM ID lookup | C++ | 0.82× | 0.75× | 0.81× | 0.80× | 1.07× | 1.32× |
+| DOM ID lookup | Rust | 0.61× | 0.60× | 0.71× | 0.77× | 1.02× | 1.32× |
+| Tree traversal | C | 5.90× | 7.15× | 1.03× | 1.18× | 1.09× | 1.33× |
+| Tree traversal | C++ | 5.49× | 5.63× | 1.10× | 1.17× | 1.06× | 1.34× |
+| Tree traversal | Rust | 5.23× | 5.92× | 1.09× | 1.28× | 1.09× | 1.18× |
+| Read 1 KiB string | C | 0.39× | 0.37× | 0.42× | 0.46× | 0.90× | 0.91× |
+| Read 1 KiB string | C++ | 0.45× | 0.40× | 0.46× | 0.43× | 0.88× | 0.90× |
+| Read 1 KiB string | Rust | 0.41× | 0.44× | 0.47× | 0.44× | 0.81× | 0.91× |
+| Table creation | C | 2.34× | 2.36× | 1.19× | 1.08× | 1.30× | 1.76× |
+| Table creation | C++ | 2.76× | 3.32× | 1.25× | 1.17× | 1.34× | 1.76× |
+| Table creation | Rust | 2.87× | 2.56× | 1.07× | 1.08× | 1.25× | 1.63× |
+
+</details>
+
 ## FIFO follow-up on PR 65
 
 The exact FIFO head at `81c0d5d61` completed 12 balanced Chromium rounds, including all six Jco builds and the compiled shims, with 1,668 fresh documents and zero discarded rounds in the completed run. The preceding compiler and package matched the archived integration assets. Each workload served the same guest core across Jco builds. Compare revisions using measurements paired within this run. The release first-result median was 118.75 ms here and 63.33 ms in the earlier run. [Raw matrix](../web/bench/results/review-matrix-fifo-81c0d5d61.json.gz) · [FIFO PR](https://github.com/vados-cosmonic/jco/pull/65)
