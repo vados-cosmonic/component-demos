@@ -194,7 +194,7 @@ para(f"The candidate finished within **10× of the fastest available compiled sh
      "median among Embind, EM_JS and wasm-bindgen for each operation, including shims written in a different guest language. "
      "The phase tables in the original comparison describe workload differences and include raw JavaScript.")
 startup_summary_at = len(lines)
-para("![Candidate runtime relative to the two targets by operation and language](web/bench/results/candidate-runtime.png)")
+para("![Candidate runtime relative to the two targets by operation and language](../web/bench/results/candidate-runtime.png)")
 table(["Operation", "Guest", "Unit", "1.13.0", "Stock main", "Candidate", "Candidate / 1.13.0",
        "Fastest shim", "Shim time", "Candidate / shim"], rows)
 shim_guests = {"C++ emscripten": "cpp", "C++ em-js": "cpp", "Rust wasm-bindgen": "rust"}
@@ -311,7 +311,7 @@ if reference:
         para(f"The generated JavaScript and Wasm were byte-identical for {len(controls)}/{len(unchanged)} headline cases. "
              f"On separate fresh pages, the ratios for those identical builds ranged from {min(controls):.2f}× to "
              f"{max(controls):.2f}×. That spread measures run-to-run variation on this machine. "
-             "[Output hashes](web/bench/results/candidate-sizes.json)")
+             "[Output hashes](../web/bench/results/candidate-sizes.json)")
     comparisons = [(demo, metric, label) for demo, (metric, label, _) in focus.items()]
     comparisons += [("dom-query", "bulk: total ms", "Bulk DOM query"),
                     ("dom-traversal", "build", "Tree construction")]
@@ -331,7 +331,7 @@ para(f"For each guest and workload, both builds run once to warm up, then {paire
      "Each pair alternates which build runs first. The runner clears the DOM and performance entries before every call. "
      f"It repeats this on {paired_run['rounds']} fresh pages. Each page contributes the median of its candidate / 1.13.0 "
      f"ratios. The median across pages was at or below 1× for **{paired_winners}/{len(paired_rows)}** headline cases. "
-     "[Raw paired timings](web/bench/results/paired-browser.json)")
+     "[Raw paired timings](../web/bench/results/paired-browser.json)")
 fig, ax = plt.subplots(figsize=(8.5, 4.8), layout="constrained")
 for (guest, observations), offset, color, marker in zip(paired_intervals.items(), (-.23, 0, .23),
                                                         ("#005f73", "#a34b13", "#614a8d"), ("o", "s", "D")):
@@ -349,7 +349,7 @@ ax.legend(ncols=4, loc="lower center", bbox_to_anchor=(.5, 1))
 fig.savefig(results / "paired-runtime.png", dpi=155)
 plt.close(fig)
 para("![Median paired time ratios by workload and guest, with bars spanning the middle half of page ratios]"
-     "(web/bench/results/paired-runtime.png)")
+     "(../web/bench/results/paired-runtime.png)")
 para("The middle 50% describes variation between pages. The median interval uses a two-sided sign test over "
      "independent page medians at the 95% level for each phase individually. Measurements on this CPU and browser "
      "can share machine load across pages.")
@@ -389,8 +389,8 @@ if misses:
     table(["Phases above 10×", "Phase", "Guest", "Shim", "Candidate / shim"], misses)
 para("The bulk DOM query returns a live collection to Embind, which discards it. The component host materializes "
      "the collection with `Array.from`, then the bindings lower every element into a WIT resource handle. "
-     "The ratio includes that difference in work. [Embind loop](cpp/dom-query/emscripten/main.cpp) · "
-     "[Component host](web/host/web-host.js) · [C guest loop](c/dom-query/main.c)")
+     "The ratio includes that difference in work. [Embind loop](../cpp/dom-query/emscripten/main.cpp) · "
+     "[Component host](../web/host/web-host.js) · [C guest loop](../c/dom-query/main.c)")
 control_path = results / "dom-control-browser.json"
 if control_path.exists():
     control = json.loads(control_path.read_text())
@@ -418,7 +418,7 @@ if control_path.exists():
          "each set of bindings in the table. The direct JS shim calls the same DOM host, puts owned handles in guest memory "
          "and recycles them on guest drops. It implements the synchronous imports used by these guests. Jco also "
          "provides Canonical ABI checks, task tracking and instance shutdown. "
-         "[Direct shim](web/bench/dom-core-shim.mjs) · [Raw timings and correctness checks](web/bench/results/dom-control-browser.json)")
+         "[Direct shim](../web/bench/dom-core-shim.mjs) · [Raw timings and correctness checks](../web/bench/results/dom-control-browser.json)")
     query = control["workloads"]["dom-query"]
     traversal = control["workloads"]["dom-traversal"]
     nodes = sum(traversal["numChildren"] ** level for level in range(traversal["depth"] + 1))
@@ -469,7 +469,7 @@ if control_path.exists():
     fig.savefig(results / "dom-control-runtime.png", dpi=155)
     plt.close(fig)
     para("![DOM phase times for Jco 1.13.0 and the candidate relative to the same-guest direct shim]"
-         "(web/bench/results/dom-control-runtime.png)")
+         "(../web/bench/results/dom-control-runtime.png)")
     table(["Phase", "Guest", "Direct (ms)", "1.13.0 (ms)", "Candidate (ms)", "Candidate / direct",
            "Candidate / 1.13.0", "Rounds at or below 1.13.0",
            *(["Candidate / previous", "Rounds at or below previous"] if previous else [])], matched_rows)
@@ -543,7 +543,7 @@ para(f"The string-return loops make {loop['shortTextCopies']:,} calls per pass f
      "UTF-8 sequences. The guest checks each byte length, sums the first bytes, and hashes every distinct result outside the timer.")
 para(f"Times are nanoseconds per guest iteration, including the loop and host work. Each cell is the median "
      f"of {loop['rounds']} fresh-page medians, with {loop['warmups']} warm-ups and {loop['repeats']} timed passes "
-     f"per page. The runner interleaves the four builds. [Raw timings and digests](web/bench/results/import-loop.json)")
+     f"per page. The runner interleaves the four builds. [Raw timings and digests](../web/bench/results/import-loop.json)")
 table(["Operation", "Direct", "1.13.0", "Stock main", "Candidate", "Candidate / 1.13.0", "Candidate / direct"], loop_rows)
 
 fig, ax = plt.subplots(figsize=(9.5, 5.5), layout="constrained")
@@ -564,7 +564,7 @@ ax.set_xlabel("Median time per guest iteration / 1.13.0 (lower is faster)")
 ax.legend(loc="upper center", bbox_to_anchor=(.5, -.13), ncol=4, fontsize=9)
 fig.savefig(results / "import-loop-runtime.png", dpi=155)
 plt.close(fig)
-para("![Time per guest iteration relative to Jco 1.13.0, by import and transfer direction](web/bench/results/import-loop-runtime.png)")
+para("![Time per guest iteration relative to Jco 1.13.0, by import and transfer direction](../web/bench/results/import-loop-runtime.png)")
 
 canvas = json.loads((results / "canvas-control-browser.json").read_text())
 if canvas["sizesSha256"] != run["sizesSha256"] or canvas["candidate"] != run["candidate"]:
@@ -603,7 +603,7 @@ para("The same-page comparison was repeated with a clock around the demo’s hos
      "That method reads 176 × 176 pixels from Chromium and creates a JavaScript byte array. "
      "The remainder includes guest allocation and freeing, the copy into Wasm, binding checks, the loop and observer overhead. "
      f"Each cell is a median across {len(pages)} page medians. Columns are summarized independently. "
-     "[Raw instrumented samples](web/bench/results/canvas-control-browser.json)")
+     "[Raw instrumented samples](../web/bench/results/canvas-control-browser.json)")
 table(["Guest", "Bindings", "Full read (µs)", "Inside host (µs)", "Remainder (µs)", "Inside host (%)"], canvas_rows)
 para(f"The host accounted for {min(canvas_host_share):.1f}–{max(canvas_host_share):.1f}% of the full read across these builds. "
      f"The candidate spent {min(canvas_remainders['candidate']):.1f}–{max(canvas_remainders['candidate']):.1f} µs per read outside the host, "
@@ -613,7 +613,12 @@ host_run = json.loads((results / "canvas-host.json").read_text())
 if any(host_run[key] != run[key] for key in ("candidate", "cpu", "browser", "sizesSha256")):
     raise ValueError("Canvas host comparison used different builds or hardware")
 for path, digest in {**host_run["sources"], "bench/canvas-host-bench.mjs": host_run["runnerSha256"]}.items():
-    if sha256((bench.parent / path).read_bytes()).hexdigest() != digest:
+    source = (bench.parent / path).read_bytes()
+    if path == "bench/canvas-host-bench.mjs" and sha256(source).hexdigest() != digest:
+        # Later trials expanded this runner. Verify the version that recorded this archive.
+        from subprocess import check_output
+        source = check_output(["git", "show", "255eca61b14b5ab63567da558b5f561149cc5163:web/" + path], cwd=bench)
+    if sha256(source).hexdigest() != digest:
         raise ValueError(f"Canvas host source has changed: {path}")
 host_rounds = range(1, host_run["rounds"] + 1)
 host_passes = range(1, host_run["passes"] + 1)
@@ -648,11 +653,11 @@ para(f"Each call transfers a {region_size} × {region_size} RGBA region ({region
      "The original browser host copies the pixel array on both read and write. The alternate host creates a "
      "typed-array view over the browser’s readback or the binding’s write snapshot, preserving its offset and length. "
      "All four implementations still copy the bytes across the Wasm boundary. "
-     "[View adapter](web/bench/canvas-host.mjs) · [Direct shim](web/bench/dom-core-shim.mjs)")
+     "[View adapter](../web/bench/canvas-host.mjs) · [Direct shim](../web/bench/dom-core-shim.mjs)")
 para(f"For each guest, all four bindings use identical core Wasm. Each table cell is the median of "
      f"{len(host_rounds)} page medians, with one warm-up and {len(host_passes)} measured passes per page. "
      "The runner rotates the four bindings on each page, alternates the host order and checks every pixel on "
-     f"both canvases after each invocation. [Raw timings and pixel checks](web/bench/results/canvas-host.json)")
+     f"both canvases after each invocation. [Raw timings and pixel checks](../web/bench/results/canvas-host.json)")
 direct_ratios, savings = [], defaultdict(list)
 for lang in languages:
     for phase in range(2):
@@ -682,7 +687,7 @@ fig.legend(*axes[0].get_legend_handles_labels(), loc="outside upper center", nco
 fig.savefig(results / "canvas-host-runtime.png", dpi=155)
 plt.close(fig)
 para("![Canvas read and write times for the candidate with both hosts and the direct shim with pixel views]"
-     "(web/bench/results/canvas-host-runtime.png)")
+     "(../web/bench/results/canvas-host-runtime.png)")
 table(["Guest", "Bindings", "Original read (µs)", "View read (µs)", "Original write (µs)", "View write (µs)"], host_rows)
 
 para("<details><summary>All timed phases and string lengths</summary>")
@@ -711,7 +716,7 @@ para(f"Each Jco build generated its default and minified distribution from the s
      f"with {minified_run['rounds']} rounds for each of the 21 guest and workload combinations. "
      "The two ratio columns compare each format to that build’s default for the same guest and workload, then take "
      "the median of the 21 ratios. The final column compares workload times to the same format of 1.13.0. "
-     "[Distribution sizes](web/bench/results/minified-sizes.json) · [Timings and resource requests](web/bench/results/minified-browser.json)")
+     "[Distribution sizes](../web/bench/results/minified-sizes.json) · [Timings and resource requests](../web/bench/results/minified-browser.json)")
 distribution_names = {"baseline": "1.13.0", "main": "Stock main", "candidate": "Candidate"}
 distribution_rows, stage_rows = [], []
 for version, values in distribution.items():
@@ -750,7 +755,7 @@ for ax, metric, label in [(payload_ax, "gzip", "Total gzip (KiB)"), (load_ax, "s
 payload_ax.legend(loc="upper center", bbox_to_anchor=(1, -.22), ncol=2, frameon=False)
 fig.savefig(results / "minified-startup.png", dpi=155)
 plt.close(fig)
-para("![Default and minified gzip payloads and fresh-page startup for three Jco builds](web/bench/results/minified-startup.png)")
+para("![Default and minified gzip payloads and fresh-page startup for three Jco builds](../web/bench/results/minified-startup.png)")
 
 observer_path = results / "startup-observer.json"
 observer = json.loads(observer_path.read_bytes())
@@ -780,7 +785,7 @@ para(f"In {len(observer['samples']):,} fresh documents, the page timed its own d
      "The other disconnected before the first measured navigation. Both navigated the same tab, with matching "
      "Chrome flags, no-store responses and verified network transfers. The order of the two browsers alternated "
      f"over {observer['rounds']} rounds. Each table cell is the median of the 21 workload medians. "
-     "[Observer timings](web/bench/results/startup-observer.json)")
+     "[Observer timings](../web/bench/results/startup-observer.json)")
 observer_rows = []
 for version in observer_versions:
     base, _, mode = version.partition("-")
@@ -821,7 +826,7 @@ para("Each instant on a page counts once, including when several compile calls o
      "The time from the entry script’s response to the first Wasm call also includes loading its dependencies. "
      "Instrumented pages copy the interval records after import readiness and before calling the guest. "
      "Columns are medians across workload medians and can sum to a different value from the median import. "
-     "[Call intervals and ordinary control samples](web/bench/results/wasm-startup.json)")
+     "[Call intervals and ordinary control samples](../web/bench/results/wasm-startup.json)")
 
 fig, ax = plt.subplots(figsize=(9, 3.2), layout="constrained")
 offsets = [0.] * len(distribution_names)
@@ -841,7 +846,8 @@ ax.legend(loc="upper center", bbox_to_anchor=(.5, -.28), ncol=2, frameon=False)
 fig.savefig(results / "wasm-startup.png", dpi=155)
 plt.close(fig)
 para("![Share of module import time before, during and between WebAssembly calls for each Jco build]"
-     "(web/bench/results/wasm-startup.png)")
+     "(../web/bench/results/wasm-startup.png)")
+para('The C and C++ guests also instantiate a 24-byte Wasm module whose start function calls the guest initializer. Across all 126 candidate traces for these 14 workloads, that module’s compilation had already settled when the preceding instance finished. The median duration of its final instantiation, including the guest initializer, was 0.025 ms for the candidate and 0.015 ms for 1.13.0. Both figures summarize workload medians. This accounts for little of the measured import gap. The trace records this adapter as the third inline compile and the fourth instantiation. [Raw Wasm call intervals](../web/bench/results/wasm-startup.json)')
 
 body_trial = json.loads((results / "module-body.json").read_bytes())
 small_workloads = json.loads((results / "compile-hint-small.json").read_bytes())["workloads"]
@@ -864,7 +870,7 @@ if body_previous:
          f"**{median(previous_ratios):.3f}×**. The candidate finished sooner in "
          f"{sum(r < 1 for r in previous_ratios)}/{len(body_previous)} workload and language pairs. "
          f"Against 1.13.0 the median ratio was {median(release_ratios):.2f}×. "
-         "Each pair contributes one median across rounds. [Page timings and marked module hashes](web/bench/results/module-body.json)")
+         "Each pair contributes one median across rounds. [Page timings and marked module hashes](../web/bench/results/module-body.json)")
 
     fig, axes = plt.subplots(1, 2, sharey=True, figsize=(8.5, 5.8), layout="constrained")
     labels = [(lang, demo) for demo in small_workloads for lang in languages]
@@ -886,7 +892,7 @@ if body_previous:
     fig.savefig(results / "small-first-result.png", dpi=155)
     plt.close(fig)
     para("![Median first-result ratios and per-case 95% sign-test intervals in small workloads. "
-         "Left of one favors the candidate.](web/bench/results/small-first-result.png)")
+         "Left of one favors the candidate.](../web/bench/results/small-first-result.png)")
 
 para("### Time to the first guest result")
 para("Each fresh page called the guest immediately after import, using the same workload arguments across builds. "
@@ -940,7 +946,7 @@ axes[1].legend(loc="upper right", ncol=3, frameon=False, bbox_to_anchor=(1, -.18
 fig.savefig(results / "first-result.png", dpi=155)
 plt.close(fig)
 para("![Time to the first guest result for each workload and language relative to 1.13.0 and stock main. "
-     "Points left of 1 favor the candidate.](web/bench/results/first-result.png)")
+     "Points left of 1 favor the candidate.](../web/bench/results/first-result.png)")
 
 para("### Eager JavaScript compilation")
 hint_verification = json.loads((results / "compile-hint-verification.json").read_bytes())
@@ -958,14 +964,14 @@ para(f"The branch exposes `jco transpile --eager-compile` and the JS API option 
      f"Verification also checked {hint_verification['modules']} ordinary and minified JS outputs after removing the hint, "
      f"and all {hint_verification['wasm']} accompanying Wasm outputs against their original hashes. "
      f"[Jco transpile options at the verified revision](https://github.com/vados-cosmonic/jco/blob/{eager_commit}/docs/src/transpiling.md) · "
-     "[Verification](web/bench/verify-compile-hint.mjs)")
+     "[Verification](../web/bench/verify-compile-hint.mjs)")
 para("The server prepended `//# allFunctionsCalledOnLoad` and a newline to each ordinary entry module. "
      "Chromium can use these 29 bytes to compile functions while the module loads. Each guest used identical Wasm "
      "and the same browser host. DevTools was disconnected. The full run used the headline workloads. A second run "
      "measured a first call that writes attributes on eight elements twice, draws 16 rectangles, queries eight elements twice, "
      "traverses a seven-node tree, or creates and updates eight table rows. "
-     "[V8 compile hints](https://v8.dev/blog/explicit-compile-hints) · [Full workload timings](web/bench/results/compile-hint.json) · "
-     "[Small workload timings](web/bench/results/compile-hint-small.json)")
+     "[V8 compile hints](https://v8.dev/blog/explicit-compile-hints) · [Full workload timings](../web/bench/results/compile-hint.json) · "
+     "[Small workload timings](../web/bench/results/compile-hint-small.json)")
 para("Each cell summarizes the median hinted / ordinary ratio within rounds, then takes the median across "
      "language/workload pairs. A ratio below 1 favors eager compilation. The last column counts pairs for "
      "which the guest returned its first result sooner.")
@@ -1039,7 +1045,7 @@ ax.legend(loc="upper left", bbox_to_anchor=(1, 1), frameon=False)
 fig.savefig(results / "compile-hint.png", dpi=155)
 plt.close(fig)
 para("![Time to the first result with eager compilation relative to ordinary candidate bindings. "
-     "Each marker shows the median of three languages and the line spans their range.](web/bench/results/compile-hint.png)")
+     "Each marker shows the median of three languages and the line spans their range.](../web/bench/results/compile-hint.png)")
 
 field_path = results / "runtime-fields.json"
 field_check = json.loads(field_path.read_bytes()) if field_path.exists() else None
@@ -1068,7 +1074,7 @@ if field_check:
     ])
     para("Private methods, accessors and fields that supply a function or class name keep their spellings. "
          "Debug runtime builds retain the source names. "
-         "[Per-component verification](web/bench/results/runtime-fields.json) · [Verifier](web/bench/verify-runtime-fields.mjs)")
+         "[Per-component verification](../web/bench/results/runtime-fields.json) · [Verifier](../web/bench/verify-runtime-fields.mjs)")
 
 compiler_path = results / "transpile-time.json"
 compiler = json.loads(compiler_path.read_bytes()) if compiler_path.is_file() else None
@@ -1104,7 +1110,7 @@ if compiler:
                      f"{median(wall):.3f}×", interval_text(median_interval(wall)), f"{median(cpu):.3f}×"])
     table(["Input", "Previous (ms)", "Candidate (ms)", "Paired wall time", "95% median interval", "Paired CPU time"], compiler_rows)
     para("The intervals are per-input sign-test intervals for the median paired ratio. "
-         "[Timings and executable hashes](web/bench/results/transpile-time.json)")
+         "[Timings and executable hashes](../web/bench/results/transpile-time.json)")
 
 name_path = results / "runtime-names.json"
 name_check = json.loads(name_path.read_bytes()) if name_path.is_file() else None
@@ -1125,7 +1131,7 @@ if name_check:
          "preserves function names, so the shorter prefix can also reduce minified payloads. The table compares "
          "the recorded minified files for the same guest binaries. "
          f"[Previous minified inventory](https://github.com/vados-cosmonic/component-demos/blob/{name_check['previousBenchmark']}/web/bench/results/minified-sizes.json) · "
-         "[Per-input verification](web/bench/results/runtime-names.json)")
+         "[Per-input verification](../web/bench/results/runtime-names.json)")
     minified_savings = []
     for field, label in (("bytes", "Uncompressed"), ("gzip", "Gzip"), ("brotli", "Brotli")):
         differences = [r["minifiedSavings"][field] for r in name_inputs]
@@ -1179,7 +1185,7 @@ para(f"Chromium recorded block coverage on {len(used)} fresh pages in a separate
      "module and finished initialization. A second also ran the demo once and checked its output. The table reports "
      "medians over the 21 guest and workload combinations. Sizes count UTF-8 bytes in V8’s covered source ranges. "
      "A demo can leave error handling, shutdown or other supported operations unexercised. "
-     "[Per-module coverage and hashes](web/bench/results/js-coverage.json)")
+     "[Per-module coverage and hashes](../web/bench/results/js-coverage.json)")
 table(["Build", "Reached at init (KiB)", "Reached through first run (KiB)", "Share through first run",
        "Unreached through first run (KiB)"], coverage_rows)
 
@@ -1223,10 +1229,10 @@ table(["Operation", "Guest", "Startup median (ms)", "Warm phase p25", "Warm phas
     for demo, (metric, label, unit) in focus.items() for lang, title in languages.items()
 ])
 para("</details>")
-para("[Raw browser timings](web/bench/results/candidate-browser.json) · "
-     "[File sizes, digests and generator revision](web/bench/results/candidate-sizes.json)")
+para("[Raw browser timings](../web/bench/results/candidate-browser.json) · "
+     "[File sizes, digests and generator revision](../web/bench/results/candidate-sizes.json)")
 para("### Reproduce the candidate run")
-para("Run the dependency installation, main setup and size commands in [Reproduce the comparison](#reproduce-the-comparison), "
+para("Run the dependency installation, main setup and size commands in [Reproduce the comparison](reproduce.md#reproduce-the-comparison), "
      "then run the following from the repository root. Cargo uses the Jco checkout’s pinned toolchain and lockfile.")
 reference_setup = (
     f"git -C ../jco-candidate worktree add --detach ../jco-reference {reference['commit']}\n"
@@ -1283,9 +1289,7 @@ node node_modules/vitest/vitest.mjs run -c test/vitest.ts \\
   test/p3/stream-lifts.ts test/p3/stream-lowers.ts test/p3/stream-pass-through.ts test/p3/sync-stream-copy.ts
 ```""")
 para("</details>")
-readme = bench.parents[1] / "README.md"
+readme = bench.parents[1] / "docs" / "candidate-study.md"
 text = readme.read_text()
 a, b = "<!-- candidate:start -->", "<!-- candidate:end -->"
-if a not in text:
-    text = text.replace("<!-- benchmark:start -->", a + "\n" + b + "\n\n<!-- benchmark:start -->", 1)
 readme.write_text(text[:text.index(a)] + a + "\n\n" + "\n".join(lines) + "\n" + text[text.index(b):])

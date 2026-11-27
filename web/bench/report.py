@@ -1,4 +1,4 @@
-"""Regenerate the README snapshot and figures from the two benchmark JSON files."""
+"""Regenerate the baseline and module-size reports and figures from the two benchmark JSON files."""
 from argparse import ArgumentParser
 from collections import defaultdict
 from hashlib import sha256
@@ -123,7 +123,7 @@ paragraph(f"**jco {baseline} vs. main at `{commit[:8]}`** · {runtime['date'][:1
           f"[Transpiler build](https://github.com/bytecodealliance/jco/actions/runs/{pin['run']})")
 if "source" in runtime:
     paragraph("These stock and shim timings come from the same interleaved fresh-page trial as the performance branch. "
-              "[Full trial](web/bench/results/candidate-browser.json) · [Stock and shim samples](web/bench/results/browser.json)")
+              "[Full trial](../web/bench/results/candidate-browser.json) · [Stock and shim samples](../web/bench/results/browser.json)")
 changes = [(ratio(demo, lang), demo, lang) for demo in focus for lang in languages]
 largest, demo, lang = max(changes)
 paragraph(f"Across the seven operations below and three guest languages, main took longer in "
@@ -154,7 +154,7 @@ for i, row in enumerate(ratios):
 ax.set_title(f"Browser time on main relative to jco {baseline}", loc="left", pad=16)
 fig.savefig(RESULTS / "runtime.png", dpi=160)
 plt.close(fig)
-paragraph("![Median time on main divided by baseline time for seven operations and three guest languages](web/bench/results/runtime.png)")
+paragraph("![Median time on main divided by baseline time for seven operations and three guest languages](../web/bench/results/runtime.png)")
 headers = ["Operation"] + [display[i] for i in implementations]
 table(headers, [timing_row(demo, *cfg) for demo, cfg in focus.items()])
 paragraph("Embind and EM_JS are the C++ Emscripten variants. An em dash marks an unavailable combination. "
@@ -206,7 +206,7 @@ paragraph("Times come from the tables rendered by the demos and retain their ori
 for demo in focus:
     paragraph(f"**{demo}**")
     if demo == "string-marshalling":
-        paragraph("![Median DOM textContent set and get latency by payload length for each guest and jco version, on logarithmic axes](web/bench/results/strings.png)")
+        paragraph("![Median DOM textContent set and get latency by payload length for each guest and jco version, on logarithmic axes](../web/bench/results/strings.png)")
     rows = []
     for metric in metrics[demo]:
         is_total = "total" in metric or metric in ("build", "traverse (total)")
@@ -245,7 +245,7 @@ paragraph("Each page runs one warm-up, clears the document and performance entri
           "initialized module. The runner rotates the implementation order each round and reverses traversal on alternating rounds. "
           "Browser timings cover the work instrumented inside the demos. Canvas timings measure the API calls, which can finish "
           "before painting. Native Firefox execution was outside this Chromium run. "
-          "[Individual samples in seconds and load times in milliseconds](web/bench/results/browser.json)")
+          "[Individual samples in seconds and load times in milliseconds](../web/bench/results/browser.json)")
 paragraph("</details>")
 
 paragraph("## Module size")
@@ -280,7 +280,7 @@ axes[-1].legend(loc="lower right", bbox_to_anchor=(1, 1.1), ncols=2, frameon=Fal
 fig.suptitle("Compressed module payload by guest language", x=0.01, ha="left", fontweight="bold")
 fig.savefig(RESULTS / "payload.png", dpi=160)
 plt.close(fig)
-paragraph("![Gzip payload in KiB for the seven browser workloads, grouped by guest language](web/bench/results/payload.png)")
+paragraph("![Gzip payload in KiB for the seven browser workloads, grouped by guest language](../web/bench/results/payload.png)")
 
 paragraph("**DOM traversal download size** in KiB, gzip. Each row compares implementations from one guest language.")
 rows = []
@@ -318,12 +318,19 @@ rows = [[name, len(files), *[kib(total(files, f)) for f in ("bytes", "gzip", "br
         for name, files in sizes["alternatives"].items()]
 table(["Artifact directory", "Files", "Raw total", "Gzip", "Brotli"], rows)
 paragraph("</details>")
-paragraph("[Per-file byte counts and SHA-256 digests](web/bench/results/sizes.json)")
+paragraph("[Per-file byte counts and SHA-256 digests](../web/bench/results/sizes.json)")
 
 if args.from_candidate:
     (RESULTS / "browser.json").write_text(json.dumps(runtime, indent=2, ensure_ascii=False) + "\n")
 
-readme = BENCH.parents[1] / "README.md"
-before, rest = readme.read_text().split("<!-- benchmark:start -->")
-_, after = rest.split("<!-- benchmark:end -->")
-readme.write_text(before + "<!-- benchmark:start -->\n\n" + "\n".join(lines) + "\n<!-- benchmark:end -->" + after)
+docs = BENCH.parents[1] / "docs"
+browser, module_sizes = "\n".join(lines).split("## Module size", 1)
+for filename, marker, content in [
+    ("baseline-study.md", "benchmark", browser),
+    ("module-size.md", "size", "## Module size" + module_sizes),
+]:
+    path = docs / filename
+    start, end = f"<!-- {marker}:start -->", f"<!-- {marker}:end -->"
+    before, rest = path.read_text().split(start)
+    _, after = rest.split(end)
+    path.write_text(before + start + "\n\n" + content.strip() + "\n\n" + end + after)
