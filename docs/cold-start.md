@@ -2,6 +2,26 @@
 
 [Benchmark overview](../README.md)
 
+## Preloading the bindings from the navigation response
+
+A deployment that already knows the URLs can put a `Link` header on its HTML response. We tested this on the C table workload with the published PR assets, Chromium 156, Brotli responses and a fixed 10 ms server delay per asset. The header listed the generated entry and its runtime dependencies as `modulepreload` and the separately served guest core as `preload; as=fetch; crossorigin=anonymous`. Both arms loaded identical HTML and assets for each build. The timer began at navigation start, before the browser received the header. The server and browser each observed one transfer per asset. [Trial samples and requests](../web/bench/results/navigation-preload-3e25d8d82.json.gz)
+
+| Build | Navigation to first result, ordinary / hinted | Paired hinted / ordinary time (individual 95% interval) | Hinted / hinted 1.13.0 (individual 95% interval) |
+| --- | ---: | ---: | ---: |
+| Jco 1.13.0 | 446.47 / 367.54 ms | 0.919× (0.771–1.039) | 1.000× |
+| Internal Oxc | 436.30 / 370.45 ms | 0.854× (0.779–0.947) | 0.983× (0.766–1.118) |
+| External runtime | 509.33 / 478.23 ms | 0.915× (0.846–0.989) | 1.212× (1.103–1.365) |
+
+The internal and external first results arrived 14.6% and 8.5% sooner in the paired comparison. Applying the same hints to release and external Jco still left external Jco 21.2% slower. Internal Jco's interval included parity. Each cell used 12 fresh browser contexts across 12 balanced rounds, with all six treatments per round. The ratios pair observations within rounds, so they can differ from ratios of the displayed medians. Absolute times include loading the demo page and running the table guest. This single-workload deployment experiment leaves the default generator and the other 20 workloads open.
+
+To repeat, use the checked runtime and internal compiler at `3e25d8d82`, set `CHROME_BIN` to Chromium, and run from the repository root.
+
+```sh
+matrix=web/bench/results/review-matrix-sync-task-3e25d8d82.json.gz
+node web/bench/matrix-startup-phases.mjs "$checkout" "$matrix" c table-update /tmp/preload.json.gz --navigation-preload
+python3 web/bench/navigation-preload-report.py /tmp/preload.json.gz "$matrix"
+```
+
 ### When should the runtime define its shared classes?
 
 The runtime shares the implementation of `RepTable`, `ComponentAsyncState`, `AsyncTask` and `AsyncThread` across instances. Each store still has its own subclass, state and constructor identity. We tried defining the four implementation classes when their modules load. The standard package currently defines each one on first use. The trial rebuilt both the external runtime and the internal Oxc compiler from the same four source changes. The previous first-instance trace measured 0.15–0.37 ms in each external factory, including the work to construct the store-specific subclass. [Exact runtime patch](../web/bench/experiments/eager-class-definitions.patch) · [First-instance trace](../web/bench/results/init-task-trace-3e25d8d82.json.gz)

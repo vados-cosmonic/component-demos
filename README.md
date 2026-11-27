@@ -40,9 +40,13 @@ These are medians across the 21 workloads. JavaScript sizes include the generate
 
 Cold startup is the remaining gap. Import was measurably slower than 1.13.0 in both runs on 20/21 internal and 21/21 external workloads. Even with all cores compiled and the bindings imported, the first table instance took about 1.0 ms on release, 4.6–4.8 ms internally and 5.2–5.3 ms externally. Splitting seven synchronous task operations out of the external async driver saved 4,212 Brotli bytes and reduced paired import time by 6.7% against the preceding external build. [Runtime packaging](docs/runtime-packaging.md) · [HTTP, caching and application bundling](docs/browser-delivery.md)
 
+A deployment experiment measured time from navigation to the first C table result. Preload links in the HTML response reduced paired time by 14.6% internally and 8.5% externally. With the same hints applied to release, external Jco still took 21.2% longer. [Cold-navigation measurements](docs/cold-start.md#preloading-the-bindings-from-the-navigation-response)
+
 ## Review and remaining work
 
-The fork PR contains the synchronous task and resource optimizations. The lock-release follow-up at local revision `81c0d5d61` fixes duplicate callbacks when a waiter reenters the component. In the isolated Chromium probe the empty lock cycle fell from 36.39 to 19.54 ns and the 32-callback cycle from 1,464.84 to 673.22 ns. The one-callback interval included parity. Full-suite FIFO validation, separate upstream review of the changes, and cold-start parity with 1.13.0 are outstanding at this checkpoint. [Callback measurements and checks](docs/lock-release.md) · [Review history](docs/revision-comparisons.md)
+The integration PR contains the full compiler changes. Review begins with the shared task and resource operations on the pinned upstream main, followed by the separate package split on its integrated prerequisite. The runtime slice passed 509 checked tests, its packed-package consumer test and embedded snapshot verification. [Runtime operations PR](https://github.com/vados-cosmonic/jco/pull/63) · [Packaging PR](https://github.com/vados-cosmonic/jco/pull/64)
+
+The lock-release follow-up at local revision `81c0d5d61` fixes duplicate callbacks when a waiter reenters the component. In the isolated Chromium probe the empty lock cycle fell from 36.39 to 19.54 ns and the 32-callback cycle from 1,464.84 to 673.22 ns. The one-callback interval included parity. Full-suite FIFO validation, separate upstream review of the changes, and cold-start parity with 1.13.0 are outstanding at this checkpoint. [Callback measurements and checks](docs/lock-release.md) · [Review history](docs/revision-comparisons.md)
 
 ## Reproduce the comparison
 

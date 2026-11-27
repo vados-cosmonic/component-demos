@@ -9,8 +9,9 @@ import { pathToFileURL } from "node:url";
 import { gunzipSync, gzipSync } from "node:zlib";
 import puppeteer from "puppeteer-core";
 
-const [checkout, matrixPath, lang, demo, output] = process.argv.slice(2);
+const [checkout, matrixPath, lang, demo, output, mode] = process.argv.slice(2);
 assert(output, "Usage: matrix-startup-phases.mjs <built Jco> <matrix.gz> <language> <demo> <result.gz>");
+assert(mode === undefined || mode === "--navigation-preload");
 const digest = bytes => createHash("sha256").update(bytes).digest("hex");
 const matrixBytes = await readFile(matrixPath), matrix = JSON.parse(gunzipSync(matrixBytes));
 const web = join(import.meta.dirname, ".."), name = demo.replaceAll("-", "_");
@@ -81,7 +82,10 @@ const server = createServer((req, res) => {
 });
 let browser;
 const samples = [], coverage = [];
-try {
+if (mode === "--navigation-preload") {
+  const { measureNavigation } = await import("./navigation-preload.mjs");
+  await measureNavigation({ assets, imports, entries, expected, versions, matrix, matrixBytes, lang, demo, output });
+} else try {
   await new Promise((ok, fail) => server.once("error", fail).listen(0, "127.0.0.1", ok));
   browser = await puppeteer.launch({ executablePath: process.env.CHROME_BIN, pipe: true,
     args: process.env.CHROME_NO_SANDBOX === "1" ? ["--no-sandbox"] : [] });
